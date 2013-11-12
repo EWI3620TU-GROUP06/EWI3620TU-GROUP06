@@ -43,8 +43,6 @@ public class Camera extends GameObject {
 		vrpX = locationX + -Math.sin( Math.PI * horAngle / 180 ) * Math.cos( Math.PI * verAngle / 180 );
 		vrpY = locationY + Math.sin( Math.PI * verAngle / 180 );
 		vrpZ = locationZ + -Math.cos( Math.PI * horAngle / 180 ) * Math.cos( Math.PI * verAngle / 180 );
-
-		
 	}
 
 	/**

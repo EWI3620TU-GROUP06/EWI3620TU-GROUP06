@@ -21,8 +21,11 @@ import javax.media.opengl.GLCanvas;
 public class UserInput extends Control 
 		implements MouseListener, MouseMotionListener, KeyListener
 {
-	private double x1, y1, moveY, moveX, recX, recY;// TODO: Add fields to help calculate mouse movement
-	boolean drag = false;
+	// TODO: Add fields to help calculate mouse movement
+	int pos_x;
+	int pos_y;
+	int next_pos_x;
+	int next_pos_y;
 	
 	/**
 	 * UserInput constructor.
@@ -48,9 +51,11 @@ public class UserInput extends Control
 	@Override
 	public void update()
 	{
-		dY=  (int) (recY);
-		dX =  (int) (recX);
 		// TODO: Set dX and dY to values corresponding to mouse movement
+		this.dX = this.next_pos_x - this.pos_x;
+		this.dY = this.next_pos_y - this.pos_y;
+		this.pos_x = this.next_pos_x;
+		this.pos_y = this.next_pos_y;
 	}
 
 	/*
@@ -62,76 +67,49 @@ public class UserInput extends Control
 	@Override
 	public void mousePressed(MouseEvent event)
 	{
-		
-		if (event.getButton() == 1){
-		x1 = event.getX();
-		y1 = event.getY();
-		drag = true;
-		}
-		else if (event.getButton() != 1){
-			drag = false;
-		}
 		// TODO: Detect the location where the mouse has been pressed
+		this.pos_x = event.getX();
+		this.pos_y = event.getY();
+		this.next_pos_x = event.getX();
+		this.next_pos_y = event.getY();
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent event)
 	{		
-		if (drag == true){
-			moveX	= event.getX() - x1;
-			moveY = event.getY() - y1;
-			recX = moveX + recX;
-			recY = moveY + recY;
-		}
-		
-//			System.out.println(recX + " + " + recY );// TODO: Detect mouse movement while the mouse button is down
-		
+		// TODO: Detect mouse movement while the mouse button is down
+		this.pos_x = this.next_pos_x;
+		this.pos_y = this.next_pos_y;
+		this.next_pos_x = event.getX();
+		this.next_pos_y = event.getY();
 	}
 
 	@Override
 	public void keyPressed(KeyEvent event)
 	{
-		if (event.getKeyCode() == KeyEvent.VK_A){
-			left = true;
-			//System.out.println(getLeft());// TODO: Set forward, back, left and right to corresponding key presses
-		}
-		else if (event.getKeyCode() == KeyEvent.VK_S){
-			back = true;
-			//System.out.println(getBack());
-		}
-		else if (event.getKeyCode() == KeyEvent.VK_D){
-			right = true;
-			//System.out.println(getRight());
-		}
-		else if (event.getKeyCode() == KeyEvent.VK_W){
-			forward = true;
-			//System.out.println(getForward());
-		}
-		else if (event.getKeyCode() == KeyEvent.VK_ESCAPE){
-			System.exit(0);
+		// TODO: Set forward, back, left and right to corresponding key presses
+		char key = event.getKeyChar();
+		switch (key){
+		case 'w': this.forward = true; break;
+		case 's': this.back = true; break;
+		case 'a': this.left = true; break;
+		case 'd' :this.right = true; break;
+		default: break;
 		}
 	}
 
 	@Override
 	public void keyReleased(KeyEvent event)
 	{
-		if (event.getKeyCode() == KeyEvent.VK_A){
-			left = false;
-			//System.out.println(getLeft());
-		}
-		else if (event.getKeyCode() == KeyEvent.VK_S){
-			back = false;
-			//System.out.println(getBack());
-		}
-		else if (event.getKeyCode() == KeyEvent.VK_D){
-			right = false;
-			//System.out.println(getRight());
-		}
-		else if (event.getKeyCode() == KeyEvent.VK_W){
-			forward = false;
-			//System.out.println(getForward());
-		}
 		// TODO: Set forward, back, left and right to corresponding key presses
+		char key = event.getKeyChar();
+		switch (key){
+		case 'w': this.forward = false; break;
+		case 's': this.back = false; break;
+		case 'a': this.left = false; break;
+		case 'd' :this.right = false; break;
+		default: break;
+		}
 	}
 
 	/*
@@ -168,6 +146,8 @@ public class UserInput extends Control
 	@Override
 	public void mouseReleased(MouseEvent event)
 	{
+		this.next_pos_x = this.pos_x;
+		this.next_pos_y = this.pos_y;
 	}
 
 

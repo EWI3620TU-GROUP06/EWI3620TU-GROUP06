@@ -18,6 +18,7 @@
 public class Player extends GameObject {	
 	private double horAngle, verAngle;
 	private double speed;
+	
 	private Control control = null;
 	
 	/**
@@ -40,7 +41,7 @@ public class Player extends GameObject {
 		super( x, y, z );
 		horAngle = h;
 		verAngle = v;
-		speed = 0.05;
+		speed = 0.01;
 	}
 	
 	/**
@@ -116,44 +117,37 @@ public class Player extends GameObject {
 	 * @param deltaTime The time in milliseconds since the last update.
 	 */
 	public void update(int deltaTime)
-	{	
-		
+	{
 		if (control != null)
 		{
 			control.update();
-			 
-
-			 int dX = (control.getdX()/100)+90;
-			 int dY = control.getdY()/100; 
-			 setHorAngle(dX);
-			 if (-45 <= dY && dY <= 45){
-			 setVerAngle(dY);
-			 }
-//			 wSystem.out.println(getHorAngle()+ " + " + getVerAngle());// TODO: Rotate the player, according to control
 			
-//		if (getHorAngle() > 360){
-//			setHorAngle(getHorAngle() - 360);
-//		}
-		if (control != null){
-		if (control.getForward() == true){
-			setLocationZ((getLocationZ())- getSpeed()*Math.cos((getHorAngle()/180)*Math.PI));
-			setLocationX(getLocationX()- getSpeed()*Math.sin((getHorAngle()/180)*Math.PI));
-		}
-		else if (control.getBack() == true){
-			setLocationZ(getLocationZ()+ getSpeed()*Math.cos((getHorAngle()/180)*Math.PI));
-			setLocationX(getLocationX()+ getSpeed()*Math.sin((getHorAngle()/180)*Math.PI));
-		}
-		else if (control.getLeft() == true){
-			setLocationX(getLocationX()- getSpeed()*Math.cos((getHorAngle()/180)*Math.PI));
-			setLocationZ(getLocationZ()+ getSpeed()*Math.sin((getHorAngle()/180)*Math.PI));
-		}
-		else if (control.getRight() == true){
-			setLocationX(getLocationX()+ getSpeed()*Math.cos((getHorAngle()/180)*Math.PI));
-			setLocationZ(getLocationZ()- getSpeed()*Math.sin((getHorAngle()/180)*Math.PI));			
-		}
-		}
-		
-			 //TODO: Move the player, according to control
+			// Rotate the player, according to control
+			
+			this.setHorAngle(this.getHorAngle()+control.getdX()*deltaTime*this.speed*1.5);
+			this.setVerAngle(this.getVerAngle()+control.getdY()*deltaTime*this.speed*2.5);			
+			
+			// Move the player, according to control
+			if (control.getRight())
+			{
+				this.setLocationX(this.getLocationX() + Math.cos(Math.PI/180*this.getHorAngle())*deltaTime*this.getSpeed());
+				this.setLocationZ(this.getLocationZ() - Math.sin(Math.PI/180*this.getHorAngle())*deltaTime*this.getSpeed());
+			}
+			if (control.getLeft())
+			{
+				this.setLocationX(this.getLocationX() - Math.cos(Math.PI/180*this.getHorAngle())*deltaTime*this.getSpeed());
+				this.setLocationZ(this.getLocationZ() + Math.sin(Math.PI/180*this.getHorAngle())*deltaTime*this.getSpeed());
+			}
+			if (control.getBack())
+			{
+				this.setLocationX(this.getLocationX() + Math.sin(Math.PI/180*this.getHorAngle())*deltaTime*this.getSpeed());
+				this.setLocationZ(this.getLocationZ() + Math.cos(Math.PI/180*this.getHorAngle())*deltaTime*this.getSpeed());
+			}
+			if (control.getForward())
+			{
+				this.setLocationX(this.getLocationX() - Math.sin(Math.PI/180*this.getHorAngle())*deltaTime*this.getSpeed());
+				this.setLocationZ(this.getLocationZ() - Math.cos(Math.PI/180*this.getHorAngle())*deltaTime*this.getSpeed());
+			}
 		}
 	}
 }

@@ -5,7 +5,6 @@ import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
 
 import com.sun.opengl.util.*;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -277,45 +276,11 @@ public class MazeRunner extends Frame implements GLEventListener {
 	 */
 	private void updateMovement(int deltaTime)
 	{
-		player.update(deltaTime);
-		System.out.println(player.getLocationX() + " + " + player.getLocationZ());
-		if (maze.isWall((player.getLocationX() - 0.1), (player.getLocationZ() - 0.1)) == true){
-			player.setControl(null);
-			player.setLocationX(camera.getLocationX());
-			player.setLocationZ(camera.getLocationZ());
-			player.setControl(input);			
-		}
-		
-		else if (maze.isWall((player.getLocationX()+0.1), (player.getLocationZ()+0.1))== true){
-			player.setControl(null);
-			player.setLocationX(camera.getLocationX());
-			player.setLocationZ(camera.getLocationZ());
-			player.setControl(input);
-		}
-		
-		else if (maze.isWall((player.getLocationX()-0.1), (player.getLocationZ()+0.1))== true){
-			player.setControl(null);
-			player.setLocationX(camera.getLocationX());
-			player.setLocationZ(camera.getLocationZ());
-			player.setControl(input);
-		}
-		
-		else if (maze.isWall((player.getLocationX()+0.1), (player.getLocationZ()-0.1))== true){
-			player.setControl(null);
-			player.setLocationX(camera.getLocationX());
-			player.setLocationZ(camera.getLocationZ());
-			player.setControl(input);
-		}
-		
-		else {
-			player.setControl(input);
-			
-			
-		}
-		System.out.println(player.getLocationX() + " + " + player.getLocationZ());
-		
+		this.player.update(deltaTime);
 		
 		// TODO: implement collision
+		if (this.maze.isWall(this.player.getLocationX(),this.player.getLocationZ()))
+			this.player.update(-1*deltaTime);
 	}
 
 	/**
@@ -330,7 +295,6 @@ public class MazeRunner extends Frame implements GLEventListener {
 		camera.setHorAngle( player.getHorAngle() );
 		camera.setVerAngle( player.getVerAngle() );
 		camera.calculateVRP();
-		
 	}
 	
 /*

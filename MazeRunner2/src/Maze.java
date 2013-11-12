@@ -1,4 +1,5 @@
 import javax.media.opengl.GL;
+
 import com.sun.opengl.util.GLUT;
 
 /**
@@ -68,29 +69,24 @@ public class Maze implements VisibleObject {
 	 */
 	public boolean isWall( double x, double z )
 	{
-		int gX = convertToGridX( x );
-		int gZ = convertToGridZ( z );
+		int gX = convertToGrid( x );
+		int gZ = convertToGrid( z );
 		return isWall( gX, gZ );
-	}
-	 
-	/**
-	 * Converts the double x-coordinate to its correspondent integer coordinate.
-	 * @param x		the double x-coordinate
-	 * @return		the integer x-coordinate
-	 */
-	private int convertToGridX( double x )
-	{
-		return (int)Math.floor( x / SQUARE_SIZE );
 	}
 
 	/**
-	 * Converts the double z-coordinate to its correspondent integer coordinate.
-	 * @param z		the double z-coordinate
-	 * @return		the integer z-coordinate
+	 * Converts any coordinate to its correspondent integer coordinate. 
+	 * @param n		the double coordinate
+	 * @return		the integer coordinate
 	 */
-	private int convertToGridZ( double z )
+	private int convertToGrid( double n )
 	{
-		return (int)Math.floor( z / SQUARE_SIZE );
+		if (n / SQUARE_SIZE - Math.floor(n / SQUARE_SIZE)  > 0.95)
+			return (int) Math.floor(n / SQUARE_SIZE) + 1;
+		else if (n / SQUARE_SIZE - Math.floor(n / SQUARE_SIZE)  < 0.05)
+			return (int) Math.floor(n / SQUARE_SIZE) - 1;
+		else
+			return (int) Math.floor(n / SQUARE_SIZE);
 	}
 	
 	public void display(GL gl) {
