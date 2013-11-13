@@ -93,6 +93,11 @@ public class Maze implements VisibleObject {
 		return (int)Math.floor( z / SQUARE_SIZE );
 	}
 	
+	public double getSize()
+	{
+		return MAZE_SIZE*SQUARE_SIZE;
+	}
+	
 	public void display(GL gl) {
 		GLUT glut = new GLUT();
 

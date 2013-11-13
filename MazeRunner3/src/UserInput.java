@@ -19,7 +19,7 @@ import javax.media.opengl.GLCanvas;
  *
  */
 public class UserInput extends Control 
-		implements MouseListener, MouseMotionListener, KeyListener
+		implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 {
 	// TODO: Add fields to help calculate mouse movement
 	private int xPos;
@@ -28,6 +28,14 @@ public class UserInput extends Control
 	private int ydragPos;
 	private boolean inscreen;
 	
+	private int notches;
+	
+	public int getNotches() {
+		int res = notches;
+		notches = 0;
+		return res;
+	}
+
 	/**
 	 * UserInput constructor.
 	 * <p>
@@ -41,6 +49,7 @@ public class UserInput extends Control
 		canvas.addMouseListener(this);
 		canvas.addMouseMotionListener(this);
 		canvas.addKeyListener(this);
+		canvas.addMouseWheelListener(this);
 	}
 	
 	/*
@@ -94,7 +103,7 @@ public class UserInput extends Control
     	this.xPos = event.getX();
 		this.yPos = event.getY();
 		xdragPos = xPos;
-		ydragPos = yPos;	
+		ydragPos = yPos;
 	}
 
 	@Override
@@ -192,6 +201,12 @@ public class UserInput extends Control
 	@Override
 	public void mouseReleased(MouseEvent event)
 	{
+	}
+	
+	public void mouseWheelMoved(MouseWheelEvent event)
+	{
+		notches = event.getWheelRotation();
+		
 	}
 
 
