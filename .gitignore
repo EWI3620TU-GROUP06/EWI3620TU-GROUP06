@@ -4,6 +4,7 @@
 
 *.pydevproject
 .project
+*.class
 lib/
 *.dll
 *.jar
