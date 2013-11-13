@@ -49,7 +49,7 @@ public class MazeRunner extends Frame implements GLEventListener {
 	/**
 	 * Initializes the complete MazeRunner game.
 	 * <p>
-	 * MazeRunner extends Java AWT Frame, to function as the window. It creats a canvas on 
+	 * MazeRunner extends Java AWT Frame, to function as the window. It creates a canvas on 
 	 * itself where JOGL will be able to paint the OpenGL graphics. It then initializes all 
 	 * game components and initializes JOGL, giving it the proper settings to accurately 
 	 * display MazeRunner. Finally, it adds itself as the OpenGL event listener, to be able 
@@ -270,6 +270,22 @@ public class MazeRunner extends Frame implements GLEventListener {
  * *				Methods						*
  * **********************************************
  */
+	
+	public void setWidth(int w){
+		screenWidth = w;
+	}
+	
+	public void setHeight(int H){
+		screenHeight = H;
+	}
+	
+	public int getWidth(MazeRunner r){
+		return r.screenWidth;
+	}
+	
+	public int getHeight(MazeRunner r){
+		return r.screenHeight;
+	}
 
 	/**
 	 * updateMovement(int) updates the position of all objects that need moving.
@@ -293,6 +309,7 @@ public class MazeRunner extends Frame implements GLEventListener {
 	 * <p>
 	 * This is done by copying the locations from the Player, since MazeRunner runs on a first person view.
 	 */
+	
 	private void updateCamera() {
 		camera.setLocationX( player.getLocationX() );
 		camera.setLocationY( player.getLocationY() );  
