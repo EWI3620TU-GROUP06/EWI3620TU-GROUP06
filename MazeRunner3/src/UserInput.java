@@ -53,10 +53,14 @@ public class UserInput extends Control
 	public void update()
 	{
 		// TODO: Set dX and dY to values corresponding to mouse movement
-		  this.dX = (xdragPos - xPos);
-		  this.dY = (ydragPos - yPos);
-		  this.xPos = xdragPos;
-		  this.yPos = ydragPos;
+	  this.dX = (xdragPos - xPos);
+	  this.dY = (ydragPos - yPos);
+		if(this.inscreen){
+			//only reset for next mouse-drag if mouse in-screen!
+			//The rotation will continue when the mouse is off-screen now!
+			  this.xPos = xdragPos;
+			  this.yPos = ydragPos;	
+		}
 	}
 
 	/*
@@ -69,15 +73,10 @@ public class UserInput extends Control
 	public void mousePressed(MouseEvent event)
 	{
 		// Detect the location where the mouse has been pressed
-	    if(this.inscreen){
-	    	this.xPos = event.getX();
-			this.yPos = event.getY();
-			xdragPos = xPos;
-			ydragPos = yPos;	
-	    }
-	    else{
-	    	//do nothing out of screen continuing!
-	    }
+    	this.xPos = event.getX();
+		this.yPos = event.getY();
+		xdragPos = xPos;
+		ydragPos = yPos;	
 	}
 
 	@Override
