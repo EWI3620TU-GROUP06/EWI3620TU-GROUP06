@@ -108,21 +108,18 @@ public class UserInput extends Control
 	@Override
 	public void keyPressed(KeyEvent event)
 	{
-                char w = 'w';
-                char a = 'a';
-                char s = 's';
-                char d = 'd';
+
 		// TODO: Set forward, back, left and right to corresponding key presses
-		if (Character.compare(w,event.getKeyChar()) == 0){
+		if (event.getKeyChar() == 'w'){
                   this.forward = true;
                 }
-                else if (Character.compare(a,event.getKeyChar()) == 0){
+                else if (event.getKeyChar() == 'a'){
                   this.left = true;
                 }
-                else if (Character.compare(s,event.getKeyChar()) == 0){
+                else if (event.getKeyChar() == 's'){
                   this.back = true;
                 }
-                else if (Character.compare(d,event.getKeyChar()) == 0){
+                else if (event.getKeyChar() == 'd'){
                   this.right = true;
                 }
 	}
@@ -130,23 +127,20 @@ public class UserInput extends Control
 	@Override
 	public void keyReleased(KeyEvent event)
 	{
-                char w = 'w';
-                char a = 'a';
-                char s = 's';
-                char d = 'd';
+
 		// TODO: Set forward, back, left and right to corresponding key presses
-		if (Character.compare(w,event.getKeyChar()) == 0){
-                  this.forward = false;
-                }
-                else if (Character.compare(a,event.getKeyChar()) == 0){
-                  this.left = false;
-                }
-                else if (Character.compare(s,event.getKeyChar()) == 0){
-                  this.back = false;
-                }
-                else if (Character.compare(d,event.getKeyChar()) == 0){
-                  this.right = false;
-                }
+                if (event.getKeyChar() == 'w'){
+                    this.forward = false;
+                  }
+                  else if (event.getKeyChar() == 'a'){
+                    this.left = false;
+                  }
+                  else if (event.getKeyChar() == 's'){
+                    this.back = false;
+                  }
+                  else if (event.getKeyChar() == 'd'){
+                    this.right = false;
+                  }
 	}
 
 	/*
