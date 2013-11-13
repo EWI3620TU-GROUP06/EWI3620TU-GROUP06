@@ -5,8 +5,8 @@
 *.pydevproject
 .project
 lib/
-.dll
-.jar
+*.dll
+*.jar
 .metadata
 bin/
 tmp/
