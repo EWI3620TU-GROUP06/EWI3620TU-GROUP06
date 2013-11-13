@@ -68,7 +68,7 @@ public class UserInput extends Control
 	public void mousePressed(MouseEvent event)
 	{
 		// Detect the location where the mouse has been pressed
-	        this.xPos = event.getX();
+	    this.xPos = event.getX();
 		this.yPos = event.getY();
 		xdragPos = xPos;
 		ydragPos = yPos;
@@ -135,6 +135,9 @@ public class UserInput extends Control
 	@Override
 	public void mouseMoved(MouseEvent event)
 	{
+		//We wanna control without clicking!
+		this.xdragPos = event.getX();
+		this.ydragPos = event.getY();
 	}
 
 	@Override

@@ -78,8 +78,6 @@ public class UserInput extends Control
 	public void mouseDragged(MouseEvent event)
 	{		
 		// TODO: Detect mouse movement while the mouse button is down
-		this.pos_x = this.next_pos_x;
-		this.pos_y = this.next_pos_y;
 		this.next_pos_x = event.getX();
 		this.next_pos_y = event.getY();
 	}

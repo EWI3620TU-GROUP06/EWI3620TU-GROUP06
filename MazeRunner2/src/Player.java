@@ -124,8 +124,8 @@ public class Player extends GameObject {
 			
 			// Rotate the player, according to control
 			
-			this.setHorAngle(this.getHorAngle()+control.getdX()*deltaTime*this.speed*1.5);
-			this.setVerAngle(this.getVerAngle()+control.getdY()*deltaTime*this.speed*2.5);			
+			this.setHorAngle(this.getHorAngle()+control.getdX()/10);
+			this.setVerAngle(this.getVerAngle()+control.getdY()/10);			
 			
 			// Move the player, according to control
 			if (control.getRight())
