@@ -26,6 +26,7 @@ public class UserInput extends Control
 	private int yPos;
 	private int xdragPos;
 	private int ydragPos;
+	private boolean inscreen;
 	
 	/**
 	 * UserInput constructor.
@@ -68,10 +69,15 @@ public class UserInput extends Control
 	public void mousePressed(MouseEvent event)
 	{
 		// Detect the location where the mouse has been pressed
-	    this.xPos = event.getX();
-		this.yPos = event.getY();
-		xdragPos = xPos;
-		ydragPos = yPos;
+	    if(this.inscreen){
+	    	this.xPos = event.getX();
+			this.yPos = event.getY();
+			xdragPos = xPos;
+			ydragPos = yPos;	
+	    }
+	    else{
+	    	//do nothing out of screen continuing!
+	    }
 	}
 
 	@Override
@@ -128,7 +134,7 @@ public class UserInput extends Control
 
 	/*
 	 * **********************************************
-	 * *		Unused event handlers				*
+	 * *		Not so Unused event handlers		*
 	 * **********************************************
 	 */
 	
@@ -153,11 +159,15 @@ public class UserInput extends Control
 	@Override
 	public void mouseEntered(MouseEvent event)
 	{
+		this.inscreen = true;
 	}
 
 	@Override
 	public void mouseExited(MouseEvent event)
 	{
+		this.inscreen = false;
+		this.xdragPos = event.getX();
+		this.ydragPos = event.getY();
 	}
 
 	@Override
