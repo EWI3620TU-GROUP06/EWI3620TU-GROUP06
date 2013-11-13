@@ -53,14 +53,32 @@ public class UserInput extends Control
 	public void update()
 	{
 		// TODO: Set dX and dY to values corresponding to mouse movement
-	  this.dX = (xdragPos - xPos);
-	  this.dY = (ydragPos - yPos);
 		if(this.inscreen){
 			//only reset for next mouse-drag if mouse in-screen!
-			//The rotation will continue when the mouse is off-screen now!
+			  this.dX = (xdragPos - xPos);
+			  this.dY = (ydragPos - yPos);
 			  this.xPos = xdragPos;
 			  this.yPos = ydragPos;	
 		}
+		else{
+			//Now we still rotate when the mouse has left the screen!
+				if((xdragPos - xPos) != 0 && (ydragPos - yPos) == 0){
+					this.dX = 2*(xdragPos - xPos)/(Math.abs(xdragPos - xPos));
+					this.dY = 0;
+				}
+				else if((xdragPos - xPos) == 0 && (ydragPos - yPos) != 0){
+					this.dX = 0;
+					this.dY = 2*(ydragPos - yPos)/(Math.abs(ydragPos - yPos));
+				}
+				else if((xdragPos - xPos) != 0 && (ydragPos - yPos) != 0){
+					this.dX = 2*(xdragPos - xPos)/(Math.abs(xdragPos - xPos));
+					this.dY = 2*(ydragPos - yPos)/(Math.abs(ydragPos - yPos));
+				}
+				else{
+					this.dX = 0;
+					this.dY = 0;
+				}
+			}
 	}
 
 	/*
