@@ -63,16 +63,16 @@ public class UserInput extends Control
 		else{
 			//Now we still rotate when the mouse has left the screen!
 				if((xdragPos - xPos) != 0 && (ydragPos - yPos) == 0){
-					this.dX = 2*(xdragPos - xPos)/(Math.abs(xdragPos - xPos));
+					this.dX = 1*(xdragPos - xPos)/(Math.abs(xdragPos - xPos));
 					this.dY = 0;
 				}
 				else if((xdragPos - xPos) == 0 && (ydragPos - yPos) != 0){
 					this.dX = 0;
-					this.dY = 2*(ydragPos - yPos)/(Math.abs(ydragPos - yPos));
+					this.dY = 1*(ydragPos - yPos)/(Math.abs(ydragPos - yPos));
 				}
 				else if((xdragPos - xPos) != 0 && (ydragPos - yPos) != 0){
-					this.dX = 2*(xdragPos - xPos)/(Math.abs(xdragPos - xPos));
-					this.dY = 2*(ydragPos - yPos)/(Math.abs(ydragPos - yPos));
+					this.dX = 1*(xdragPos - xPos)/(Math.abs(xdragPos - xPos));
+					this.dY = 1*(ydragPos - yPos)/(Math.abs(ydragPos - yPos));
 				}
 				else{
 					this.dX = 0;

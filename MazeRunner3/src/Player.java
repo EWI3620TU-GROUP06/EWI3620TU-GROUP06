@@ -19,7 +19,7 @@ public class Player extends GameObject {
 	private double horAngle, verAngle;
 	private Vector3f speed;
 	private final double acceleration = 0.000075;
-	private final double friction = 0.0025;	
+	private final double friction = 0.0075;	
 	
 	private Control control = null;
 	
