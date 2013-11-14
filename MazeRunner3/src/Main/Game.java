@@ -21,7 +21,7 @@ public class Game extends Frame implements GLEventListener {
 	 */
 		public GLCanvas canvas;
 
-		private static int screenWidth = 600, screenHeight = 600;		// Screen size.
+		private int screenWidth = 600, screenHeight = 600;		// Screen size.
 		private gStateMan gsm;
 		
 	/*
@@ -196,12 +196,12 @@ public class Game extends Frame implements GLEventListener {
 			gl.glMatrixMode( GL.GL_MODELVIEW );
 		}
 		
-		public static int getScreenWidth(){
-			return screenWidth;
+		public int getScreenWidth(){
+			return this.screenWidth;
 		}
 		
-		public static int getScreenHeight(){
-			return screenHeight;
+		public int getScreenHeight(){
+			return this.screenHeight;
 		}
 		
 		public GLCanvas getCanvas(){

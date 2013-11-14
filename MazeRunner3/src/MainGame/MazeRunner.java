@@ -1,13 +1,9 @@
 package MainGame;
-import java.awt.*;
-import java.awt.event.*;
 
 import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
 
 import Main.Game;
-
-import com.sun.opengl.util.*;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -35,8 +31,7 @@ public class MazeRunner implements GLEventListener {
  * **********************************************
  */
 	private Game game;
-
-	private int screenWidth = 600, screenHeight = 600;		// Screen size.
+	private int screenWidth, screenHeight;					// Screen size for reshaping
 	private ArrayList<VisibleObject> visibleObjects;		// A list of objects that will be displayed on screen.
 	private Player player;									// The player object.
 	private Camera camera;									// The camera object.
@@ -75,6 +70,8 @@ public class MazeRunner implements GLEventListener {
 //			}
 //		});
 		this.game = game;
+		this.screenWidth = game.getScreenWidth();
+		this.screenHeight = game.getScreenHeight();
 		//initJOGL();							// Initialize JOGL.
 		initObjects();						// Initialize all the objects!
 		
