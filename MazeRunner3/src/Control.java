@@ -26,6 +26,10 @@ public abstract class Control
 	protected int dX = 0;
 	protected int dY = 0;
 	
+	protected int notches = 0;
+	
+	protected int mouseX = 0, mouseY = 0;
+	
 	/**
 	 * @return Returns true if forward motion is desired.
 	 */
@@ -76,9 +80,24 @@ public abstract class Control
 		return dY;
 	}
 	
+	public int getNotches() {
+		int res = notches;
+		notches = 0;
+		return res;
+	}
+	
 	/**
 	 * Updates the fields of the Control class to represent the
 	 * most up-to-date values. 
 	 */
 	public abstract void update();
+
+	public int getMouseX() {
+		return mouseX;
+	}
+
+	public int getMouseY() {
+		return mouseY;
+	}
+
 }

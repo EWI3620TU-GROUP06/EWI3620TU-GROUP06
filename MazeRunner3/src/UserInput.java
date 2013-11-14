@@ -28,14 +28,6 @@ public class UserInput extends Control
 	private int ydragPos;
 	private boolean inscreen;
 	
-	private int notches;
-	
-	public int getNotches() {
-		int res = notches;
-		notches = 0;
-		return res;
-	}
-
 	/**
 	 * UserInput constructor.
 	 * <p>
@@ -170,6 +162,9 @@ public class UserInput extends Control
 		//We wanna control without clicking!
 		this.xdragPos = event.getX();
 		this.ydragPos = event.getY();
+		
+		this.mouseX = event.getX();
+		this.mouseY = event.getY();
 	}
 
 	@Override
@@ -202,6 +197,7 @@ public class UserInput extends Control
 	public void mouseReleased(MouseEvent event)
 	{
 	}
+	
 	
 	public void mouseWheelMoved(MouseWheelEvent event)
 	{

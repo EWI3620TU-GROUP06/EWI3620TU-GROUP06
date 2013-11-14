@@ -36,6 +36,7 @@ public class MazeRunner extends Frame implements GLEventListener {
 
 	private int screenWidth = 600, screenHeight = 600; // Screen size.
 	private float buttonSize = screenHeight / 10.0f;
+	private float FOV = 45.0f;
 
 	private ArrayList<VisibleObject> visibleObjects; // A list of objects that
 	// will be displayed on
@@ -43,6 +44,7 @@ public class MazeRunner extends Frame implements GLEventListener {
 	private Player player; // The player object.
 	private Camera camera; // The camera object.
 	private UserInput input; // The user input object that controls the player.
+	private Editor editor; // The editor object;
 	private Maze maze; // The maze.
 	private long previousTime = Calendar.getInstance().getTimeInMillis(); // Used
 	// to
@@ -156,6 +158,8 @@ public class MazeRunner extends Frame implements GLEventListener {
 				maze.SQUARE_SIZE / 2, // y-position
 				5 * maze.SQUARE_SIZE + maze.SQUARE_SIZE / 2, // z-position
 				90, 0); // horizontal and vertical angle
+		
+		editor = new Editor(maze.getSize() / 2, 60, maze.getSize()/2, 0, -89.99999);
 
 		camera = new Camera(player.getLocationX(), player.getLocationY(),
 				player.getLocationZ(), player.getHorAngle(),
@@ -163,6 +167,11 @@ public class MazeRunner extends Frame implements GLEventListener {
 
 		input = new UserInput(canvas);
 		player.setControl(input);
+		editor.setControl(input);
+		editor.setScreenHeight(screenHeight);
+		editor.setFOV(FOV);
+		editor.setScreenWidth(screenWidth);
+		editor.setSquareSize(maze.SQUARE_SIZE);
 	}
 
 	/*
@@ -246,13 +255,15 @@ public class MazeRunner extends Frame implements GLEventListener {
 		// Update any movement since last frame.
 		updateMovement(deltaTime);
 		updateCamera();
+		
+		maze.select(editor.getSelectedX(), editor.getSelectedZ());
 
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		gl.glLoadIdentity();
 		gl.glViewport(0, 0, screenWidth, screenHeight);
 		gl.glMatrixMode(GL.GL_PROJECTION);
 		gl.glLoadIdentity();
-		glu.gluPerspective(45.0f, (float)screenWidth / (float)screenHeight, 0.001f, Float.MAX_VALUE); 
+		glu.gluPerspective(FOV, (float)screenWidth / (float)screenHeight, 0.001f, Float.MAX_VALUE); 
 		glu.gluLookAt(camera.getLocationX(), camera.getLocationY(),
 				camera.getLocationZ(), camera.getVrpX(), camera.getVrpY(),
 				camera.getVrpZ(), camera.getVuvX(), camera.getVuvY(),
@@ -317,7 +328,9 @@ public class MazeRunner extends Frame implements GLEventListener {
 		// Setting the new screen size and adjusting the viewport.
 		screenWidth = width;
 		screenHeight = height;
-		System.out.println(width + "," + height);
+		editor.setScreenHeight(height);
+		editor.setScreenWidth(width);
+		
 		gl.glViewport(0, 0, screenWidth, screenHeight);
 
 		// Set the new projection matrix.
@@ -338,6 +351,10 @@ public class MazeRunner extends Frame implements GLEventListener {
 	 * This includes rudimentary collision checking and collision reaction.
 	 */
 	private void updateMovement(int deltaTime) {
+		if(editing)
+			editor.update();
+		else
+		{
 		player.update(deltaTime);
 
 		// TODO: implement collision
@@ -346,6 +363,7 @@ public class MazeRunner extends Frame implements GLEventListener {
 				|| maze.isWall(player.getLocationX(), player.getLocationZ() + 1)
 				|| maze.isWall(player.getLocationX(), player.getLocationZ() - 1)) {
 			player.update(-deltaTime);
+		}
 		}
 	}
 
@@ -356,29 +374,22 @@ public class MazeRunner extends Frame implements GLEventListener {
 	 * runs on a first person view.
 	 */
 
-	private int editY = 65;
 	private void updateCamera() {
 
 		if (editing) {
-			int notches = input.getNotches();
-			if(editY + notches > 5){
-				editY += notches;
-			}
-			
-			camera.setLocationX(maze.getSize()/2);//-20);
-			camera.setLocationY(editY);//60);
-			camera.setLocationZ(maze.getSize()/2);//-20);
-			camera.setHorAngle(0);//-135);
-			camera.setVerAngle(-89.9999999);//-45);
-			camera.calculateVRP();
+			camera.setLocationX(editor.getLocationX());
+			camera.setLocationY(editor.getLocationY());
+			camera.setLocationZ(editor.getLocationZ());
+			camera.setHorAngle(editor.getHorAngle());
+			camera.setVerAngle(editor.getVerAngle());
 		} else {
 			camera.setLocationX(player.getLocationX());
 			camera.setLocationY(player.getLocationY());
 			camera.setLocationZ(player.getLocationZ());
 			camera.setHorAngle(player.getHorAngle());
 			camera.setVerAngle(player.getVerAngle());
-			camera.calculateVRP();
 		}
+		camera.calculateVRP();
 	}
 
 	/*

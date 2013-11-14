@@ -25,6 +25,8 @@ public class Maze implements VisibleObject {
 	
 	public final double MAZE_SIZE = 10;
 	public final double SQUARE_SIZE = 5;
+	
+	private int[] selected = {0,0};
 
 	private int[][] maze = 
 	{	{  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },
@@ -93,6 +95,12 @@ public class Maze implements VisibleObject {
 		return (int)Math.floor( z / SQUARE_SIZE );
 	}
 	
+	public void select(int x, int z)
+	{
+		selected[0] = x;
+		selected[1] = z;
+	}
+	
 	public double getSize()
 	{
 		return MAZE_SIZE*SQUARE_SIZE;
@@ -101,23 +109,37 @@ public class Maze implements VisibleObject {
 	public void display(GL gl) {
 		GLUT glut = new GLUT();
 
-        // Setting the wall colour and material.
-        float wallColour[] = { 0.5f, 0.0f, 0.7f, 1.0f };				// The walls are purple.
-        gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);	// Set the materials used by the wall.
-
         // draw the grid with the current material
 		for( int i = 0; i < MAZE_SIZE; i++ )
 		{
 	        for( int j = 0; j < MAZE_SIZE; j++ )
 			{
+	        	float wallColour[] =  { 0.5f, 0.0f, 0.7f, 1.0f };
+	        	float floorColour[] = {0.0f, 0.0f, 1.0f, 0.0f};
+	        	if(selected[0] == i && selected[1] == j)
+	        	{
+	            wallColour[1] = 0.5f;
+	            floorColour[1] = 1.0f;
+	        	}
+	        	else
+	        	{
+	        		wallColour[1] = 0.0f;
+	        		floorColour[1] = 0.0f;
+	        	}
+	        	 gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);// Set the materials used by the wall.
 	            gl.glPushMatrix();
-				gl.glTranslated( i * SQUARE_SIZE + SQUARE_SIZE / 2, SQUARE_SIZE / 2, j * SQUARE_SIZE + SQUARE_SIZE / 2 );
-				if ( isWall(i, j) )
+				
+				if ( isWall(i, j) ){
+					gl.glTranslated( i * SQUARE_SIZE + SQUARE_SIZE / 2, SQUARE_SIZE / 2, j * SQUARE_SIZE + SQUARE_SIZE / 2 );
 					glut.glutSolidCube( (float) SQUARE_SIZE );
+				}
+				else{
+					gl.glTranslated( i * SQUARE_SIZE, 0, j * SQUARE_SIZE);
+					paintSingleFloorTile( gl, SQUARE_SIZE , floorColour); // Paint the floor.
+				}
 				gl.glPopMatrix();
 			}
-		}
-		paintSingleFloorTile( gl, MAZE_SIZE * SQUARE_SIZE );			// Paint the floor.
+		}			
 	}
 	
 	/**
@@ -126,10 +148,9 @@ public class Maze implements VisibleObject {
 	 * @param gl	the GL context in which should be drawn
 	 * @param size	the size of the tile
 	 */
-	private void paintSingleFloorTile(GL gl, double size)
+	private void paintSingleFloorTile(GL gl, double size, float[] wallColour)
 	{
         // Setting the floor color and material.
-        float wallColour[] = { 0.0f, 0.0f, 1.0f, 1.0f };				// The floor is blue.
         gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);	// Set the materials used by the floor.
 
         gl.glNormal3d(0, 1, 0);
