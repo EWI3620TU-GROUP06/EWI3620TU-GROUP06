@@ -1,10 +1,6 @@
 
 public class Editor extends GameObject{
 	
-	private int screenHeight;
-	
-	private int screenWidth;
-	
 	private float FOV;
 	
 	private Control control; 
@@ -15,6 +11,8 @@ public class Editor extends GameObject{
 	
 	private double squareSize;
 	
+	private float buttonSize;
+	
 	public Editor(double x, double y, double z, double h, double v)
 	{
 		super(x, y, z);
@@ -22,19 +20,14 @@ public class Editor extends GameObject{
 		verAngle = v;
 	}
 	
-	public void setScreenHeight(int screenHeight)
-	{
-		this.screenHeight = screenHeight;
-	}
-	
-	public void setScreenWidth(int screenWidth)
-	{
-		this.screenWidth = screenWidth;
-	}
-	
 	public void setFOV(float FOV)
 	{
 		this.FOV = FOV;
+	}
+	
+	public void setButtonSize(float buttonSize)
+	{
+		this.buttonSize = buttonSize;
 	}
 	
 	public int getSelectedX() {
@@ -92,7 +85,7 @@ public class Editor extends GameObject{
 		this.verAngle = verAngle;
 	}
 	
-	public void update()
+	public void update(int screenWidth, int screenHeight )
 	{
 		if(control != null)
 		{
@@ -104,7 +97,19 @@ public class Editor extends GameObject{
 				double factor = (screenHeight/2) / (halfTan * locationY);
 				selectedX = (int) Math.floor(((control.getMouseX() - screenWidth/2)/factor + locationX)/squareSize);
 				selectedZ = (int) Math.floor(((control.getMouseY() - screenHeight/2)/factor + locationZ)/squareSize);
-				System.out.println(selectedX + ", " + selectedZ);
+			}
+			int button = control.getButtons(3, buttonSize);
+			if(button == 0)
+			{
+				System.out.println("Button 0 pressed!");
+			}
+			if(button == 1)
+			{
+				System.out.println("Button 1 pressed!");
+			}
+			if(button == 2)
+			{
+				System.out.println("Button 2 pressed!");
 			}
 		}
 

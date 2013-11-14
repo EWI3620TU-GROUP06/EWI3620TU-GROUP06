@@ -158,7 +158,7 @@ public class MazeRunner extends Frame implements GLEventListener {
 				maze.SQUARE_SIZE / 2, // y-position
 				5 * maze.SQUARE_SIZE + maze.SQUARE_SIZE / 2, // z-position
 				90, 0); // horizontal and vertical angle
-		
+
 		editor = new Editor(maze.getSize() / 2, 60, maze.getSize()/2, 0, -89.99999);
 
 		camera = new Camera(player.getLocationX(), player.getLocationY(),
@@ -168,9 +168,7 @@ public class MazeRunner extends Frame implements GLEventListener {
 		input = new UserInput(canvas);
 		player.setControl(input);
 		editor.setControl(input);
-		editor.setScreenHeight(screenHeight);
 		editor.setFOV(FOV);
-		editor.setScreenWidth(screenWidth);
 		editor.setSquareSize(maze.SQUARE_SIZE);
 	}
 
@@ -255,7 +253,7 @@ public class MazeRunner extends Frame implements GLEventListener {
 		// Update any movement since last frame.
 		updateMovement(deltaTime);
 		updateCamera();
-		
+
 		maze.select(editor.getSelectedX(), editor.getSelectedZ());
 
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
@@ -328,9 +326,10 @@ public class MazeRunner extends Frame implements GLEventListener {
 		// Setting the new screen size and adjusting the viewport.
 		screenWidth = width;
 		screenHeight = height;
-		editor.setScreenHeight(height);
-		editor.setScreenWidth(width);
 		
+		buttonSize = screenHeight / 10.0f;
+		editor.setButtonSize(buttonSize);
+
 		gl.glViewport(0, 0, screenWidth, screenHeight);
 
 		// Set the new projection matrix.
@@ -352,18 +351,18 @@ public class MazeRunner extends Frame implements GLEventListener {
 	 */
 	private void updateMovement(int deltaTime) {
 		if(editing)
-			editor.update();
+			editor.update(screenWidth, screenHeight);
 		else
 		{
-		player.update(deltaTime);
+			player.update(deltaTime);
 
-		// TODO: implement collision
-		if (maze.isWall(player.getLocationX() - 1, player.getLocationZ())
-				|| maze.isWall(player.getLocationX() + 1, player.getLocationZ())
-				|| maze.isWall(player.getLocationX(), player.getLocationZ() + 1)
-				|| maze.isWall(player.getLocationX(), player.getLocationZ() - 1)) {
-			player.update(-deltaTime);
-		}
+			// TODO: implement collision
+			if (maze.isWall(player.getLocationX() - 1, player.getLocationZ())
+					|| maze.isWall(player.getLocationX() + 1, player.getLocationZ())
+					|| maze.isWall(player.getLocationX(), player.getLocationZ() + 1)
+					|| maze.isWall(player.getLocationX(), player.getLocationZ() - 1)) {
+				player.update(-deltaTime);
+			}
 		}
 	}
 

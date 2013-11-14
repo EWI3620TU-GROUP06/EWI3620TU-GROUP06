@@ -22,14 +22,15 @@ public abstract class Control
 	protected boolean back = false;
 	protected boolean left = false;
 	protected boolean right = false;
-	
+
 	protected int dX = 0;
 	protected int dY = 0;
-	
+
 	protected int notches = 0;
-	
+
 	protected int mouseX = 0, mouseY = 0;
-	
+	protected boolean mouseClicked;
+
 	/**
 	 * @return Returns true if forward motion is desired.
 	 */
@@ -37,7 +38,7 @@ public abstract class Control
 	{
 		return forward;
 	}
-	
+
 	/**
 	 * @return Returns true if backwards motion is desired.
 	 */
@@ -45,7 +46,7 @@ public abstract class Control
 	{
 		return back;
 	}
-	
+
 	/**
 	 * @return Returns true if left sidestepping motion is desired.
 	 */
@@ -53,7 +54,7 @@ public abstract class Control
 	{
 		return left;
 	}
-	
+
 	/**
 	 * @return Returns true if right sidestepping motion is desired.
 	 */
@@ -61,7 +62,7 @@ public abstract class Control
 	{
 		return right;
 	}
-	
+
 	/**
 	 * Gets the amount of rotation desired on the horizontal plane.
 	 * @return The horizontal rotation.
@@ -70,7 +71,7 @@ public abstract class Control
 	{
 		return dX;
 	}
-	
+
 	/**
 	 * Gets the amount of rotation desired on the vertical plane.
 	 * @return The vertical rotation.
@@ -79,13 +80,13 @@ public abstract class Control
 	{
 		return dY;
 	}
-	
+
 	public int getNotches() {
 		int res = notches;
 		notches = 0;
 		return res;
 	}
-	
+
 	/**
 	 * Updates the fields of the Control class to represent the
 	 * most up-to-date values. 
@@ -98,6 +99,17 @@ public abstract class Control
 
 	public int getMouseY() {
 		return mouseY;
+	}
+
+	public int getButtons(int numberOfButtons, float buttonSize)
+	{
+		boolean clicked = mouseClicked;
+		mouseClicked = false;
+		if(clicked)
+			for(int i = 0; i < numberOfButtons; i++)
+				if( mouseX > (i * buttonSize) && mouseX < ((i + 1) * buttonSize) && mouseY < buttonSize)
+					return i;
+		return -1;
 	}
 
 }

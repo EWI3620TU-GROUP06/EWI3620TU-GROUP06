@@ -96,6 +96,7 @@ public class UserInput extends Control
 		this.yPos = event.getY();
 		xdragPos = xPos;
 		ydragPos = yPos;
+		mouseClicked = true;
 	}
 
 	@Override
