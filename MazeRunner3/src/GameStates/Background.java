@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.image.*;
 
 import javax.imageio.*;
+import javax.media.opengl.GLAutoDrawable;
 
 import Main.Game;
 
@@ -41,16 +42,16 @@ public class Background {
 		y += dy;
 	}
 	
-	public void draw(Graphics2D g){
+	public void draw(GLAutoDrawable g){
 		
-		g.drawImage(img,(int) x, (int) y, null);
-		
-		if (x < 0){
-			g.drawImage(img,(int)x + Game.getScreenWidth(), (int)y, null);
-		}
-		if (x > 0){
-			g.drawImage(img,(int)x- Game.getScreenWidth(), (int)y, null);
-		}
+//		g.drawImage(img,(int) x, (int) y, null);
+//		
+//		if (x < 0){
+//			g.drawImage(img,(int)x + Game.getScreenWidth(), (int)y, null);
+//		}
+//		if (x > 0){
+//			g.drawImage(img,(int)x- Game.getScreenWidth(), (int)y, null);
+//		}
 		
 	}
 }

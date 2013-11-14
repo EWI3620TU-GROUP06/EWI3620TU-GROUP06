@@ -3,6 +3,9 @@ package GameStates;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
+import javax.media.opengl.GLAutoDrawable;
+
+import Main.Game;
 import MainGame.MazeRunner;
 
 public class MenuState extends GameState {
@@ -18,8 +21,9 @@ public class MenuState extends GameState {
 	private Font titleFont;
 	private Font font;
 	
-	public MenuState(gStateMan g){
+	public MenuState(gStateMan g, Game game){
 		this.gsm = g;
+		
 		
 		try{
 			background = new Background("backgrounds/mainmenu.jpg",1);
@@ -34,35 +38,35 @@ public class MenuState extends GameState {
 	}
 
 	@Override
-	public void init() {
+	public void init(GLAutoDrawable drawable) {
 		// Kinda does nothing, in this case.
 	}
 
 	@Override
 	public void update() {
-		background.update();
+//		background.update();
 	}
 
 	@Override
-	public void draw(Graphics2D g) {
+	public void draw(GLAutoDrawable g) {
 		//draw the damn background
-		background.draw(g);
-		
-		g.setColor(titleColor);
-		g.setFont(titleFont);
-		g.drawString("Mazerunnert", 80, 70);
-		
-		//draw menu options
-		g.setFont(font);
-		for(int i = 0; i < options.length; i++){
-			if(i == currentChoice){
-				g.setColor(Color.BLACK);
-			}
-			else{
-				g.setColor(Color.RED);
-			}
-			g.drawString(options[i], 145, 140 + i*15);
-		}
+//		background.draw(g);
+//		
+//		g.setColor(titleColor);
+//		g.setFont(titleFont);
+//		g.drawString("Mazerunnert", 80, 70);
+//		
+//		//draw menu options
+//		g.setFont(font);
+//		for(int i = 0; i < options.length; i++){
+//			if(i == currentChoice){
+//				g.setColor(Color.BLACK);
+//			}
+//			else{
+//				g.setColor(Color.RED);
+//			}
+//			g.drawString(options[i], 145, 140 + i*15);
+//		}
 	}
 	
 	public void select(){
@@ -70,7 +74,7 @@ public class MenuState extends GameState {
 			//Continue
 		}
 		if(currentChoice == 1){
-			new MazeRunner();
+//			new MazeRunner();
 		}
 		if(currentChoice == 2){
 			System.exit(0);

@@ -1,6 +1,8 @@
 package Main;
 
+import GameStates.gStateMan;
 import MainGame.*;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -17,10 +19,11 @@ public class Game extends Frame implements GLEventListener {
 	 * *			Local variables					*
 	 * **********************************************
 	 */
-		private GLCanvas canvas;
+		public GLCanvas canvas;
 
 		private static int screenWidth = 600, screenHeight = 600;		// Screen size.
-
+		private gStateMan gsm;
+		
 	/*
 	 * **********************************************
 	 * *		Initialization methods				*
@@ -53,7 +56,7 @@ public class Game extends Frame implements GLEventListener {
 			});
 
 			initJOGL();							// Initialize JOGL.
-			
+			gsm = new gStateMan(this);
 			// Set the frame to visible. This automatically calls upon OpenGL to prevent a blank screen.
 			setVisible(true);
 		}
@@ -105,34 +108,36 @@ public class Game extends Frame implements GLEventListener {
 		 */
 		public void init(GLAutoDrawable drawable) {
 			drawable.setGL( new DebugGL(drawable.getGL() )); // We set the OpenGL pipeline to Debugging mode.
-	        GL gl = drawable.getGL();
-	        GLU glu = new GLU();
+	        gsm.init(drawable);
+	       
+			GL gl = drawable.getGL();
+//	        GLU glu = new GLU();
 	        
-	        gl.glClearColor(0, 0, 0, 0);								// Set the background color.
+//	        gl.glClearColor(0, 0, 0, 0);								// Set the background color.
 	        
 	        // Now we set up our viewpoint.
-	        gl.glMatrixMode( GL.GL_PROJECTION );						// We'll use orthogonal projection.
-	        gl.glLoadIdentity();										// Reset the current matrix.
-	        glu.gluPerspective( 60, screenWidth, screenHeight, 200);	// Set up the parameters for perspective viewing.
-	        gl.glMatrixMode( GL.GL_MODELVIEW );
+//	        gl.glMatrixMode( GL.GL_PROJECTION );						// We'll use orthogonal projection.
+//	        gl.glLoadIdentity();										// Reset the current matrix.
+//	        glu.gluPerspective( 60, screenWidth, screenHeight, 200);	// Set up the parameters for perspective viewing.
+//	        gl.glMatrixMode( GL.GL_MODELVIEW );
 	        
 	        // Enable back-face culling.
-	        gl.glCullFace( GL.GL_BACK );
-	        gl.glEnable( GL.GL_CULL_FACE );
+//	        gl.glCullFace( GL.GL_BACK );
+//	        gl.glEnable( GL.GL_CULL_FACE );
 	        
 	        // Enable Z-buffering.
-	        gl.glEnable( GL.GL_DEPTH_TEST );
+//	        gl.glDisable( GL.GL_DEPTH_TEST );
 	        
 	        // Set and enable the lighting.
-	        float lightPosition[] = { 0.0f, 50.0f, 0.0f, 1.0f }; 			// High up in the sky!
-	        float lightColour[] = { 1.0f, 1.0f, 1.0f, 0.0f };				// White light!
-	        gl.glLightfv( GL.GL_LIGHT0, GL.GL_POSITION, lightPosition, 0 );	// Note that we're setting Light0.
-	        gl.glLightfv( GL.GL_LIGHT0, GL.GL_AMBIENT, lightColour, 0);
-	        gl.glEnable( GL.GL_LIGHTING );
-	        gl.glEnable( GL.GL_LIGHT0 );
-	        
+//	        float lightPosition[] = { 0.0f, 50.0f, 0.0f, 1.0f }; 			// High up in the sky!
+//	        float lightColour[] = { 1.0f, 1.0f, 1.0f, 0.0f };				// White light!
+//	        gl.glLightfv( GL.GL_LIGHT0, GL.GL_POSITION, lightPosition, 0 );	// Note that we're setting Light0.
+//	        gl.glLightfv( GL.GL_LIGHT0, GL.GL_AMBIENT, lightColour, 0);
+//	        gl.glEnable( GL.GL_LIGHTING );
+//	        gl.glEnable( GL.GL_LIGHT0 );
+//	        
 	        // Set the shading model.
-	        gl.glShadeModel( GL.GL_SMOOTH );
+//	        gl.glShadeModel( GL.GL_SMOOTH );
 		}
 		
 		/**
@@ -152,6 +157,7 @@ public class Game extends Frame implements GLEventListener {
 
 	        // Display all the visible objects of MazeRunner.
 	        gl.glLoadIdentity();
+	        gsm.draw(drawable);
 	        // Flush the OpenGL buffer.
 	        gl.glFlush();
 		}
@@ -198,6 +204,9 @@ public class Game extends Frame implements GLEventListener {
 			return screenHeight;
 		}
 		
+		public GLCanvas getCanvas(){
+			return this.canvas;
+		}
 	/*
 	 * **********************************************
 	 * *				  Main						*
@@ -210,6 +219,6 @@ public class Game extends Frame implements GLEventListener {
 		 */
 		public static void main(String[] args) {
 			// Create and run MazeRunner.
-			new MazeRunner();
+			new Game();
 		}
 	}
