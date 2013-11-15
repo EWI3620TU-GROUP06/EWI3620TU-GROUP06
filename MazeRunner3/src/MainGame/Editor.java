@@ -1,3 +1,4 @@
+package MainGame;
 import java.io.File;
 
 import javax.swing.JFileChooser;
@@ -10,7 +11,7 @@ public class Editor extends GameObject{
 			"C:\\Users\\Kevin\\Dropbox\\TUDelft\\TI2735 - Computational Intelligence\\Assignment 3",
 			"C:\\Users\\Kevin van As\\Dropbox\\TUDelft\\TI2735 - Computational Intelligence\\Assignment 3"};
 	
-	private JFileChooser world_fc;
+	private JFileChooser fc;
 	
 	private float FOV;
 
@@ -32,6 +33,7 @@ public class Editor extends GameObject{
 		super(x, y, z);
 		horAngle = h;
 		verAngle = v;
+		selectDirectory();
 	}
 
 	public void setFOV(float FOV)
@@ -127,13 +129,11 @@ public class Editor extends GameObject{
 				}
 				if(button == 2)
 				{
-					selectDirectory();
 					if(save())
 						System.out.println("Maze saved!");
 				}
 				if(button == 3)
 				{
-					selectDirectory();
 					maze = read();
 				}
 				if(button == -1)
@@ -198,24 +198,25 @@ public class Editor extends GameObject{
 	
 	private void selectDirectory()
 	{
-		world_fc = new JFileChooser();
-		world_fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		world_fc.setDialogTitle("Select a world file");
+		fc = new JFileChooser();
+		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fc.setDialogTitle("Select a maze file");
 
 		File myMainDir;
 		for(int i = 0; i<myFileLocations.length; i++){
 			myMainDir = new File(myFileLocations[i]);
 			if(myMainDir.exists()){
-				world_fc.setCurrentDirectory(myMainDir);
+				fc.setCurrentDirectory(myMainDir);
 				break;
 			}
 		}
 	}
 	
 	public boolean save(){
-		int returnVal = world_fc.showSaveDialog(null);
+		int returnVal = fc.showSaveDialog(null);
+		File file = fc.getSelectedFile();		
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-            maze.save(world_fc.getSelectedFile());
+            maze.save(file);
             return true;
         }else{
         	return false;
@@ -223,9 +224,9 @@ public class Editor extends GameObject{
 	}
 	
 	public Maze read(){
-		int returnVal = world_fc.showOpenDialog(null);
+		int returnVal = fc.showOpenDialog(null);
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-           return Maze.read(world_fc.getSelectedFile());
+           return Maze.read(fc.getSelectedFile());
         }
 		return null;
 	}

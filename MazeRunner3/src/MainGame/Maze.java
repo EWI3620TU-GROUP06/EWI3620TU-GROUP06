@@ -1,3 +1,4 @@
+package MainGame;
 import javax.media.opengl.GL;
 
 import com.sun.opengl.util.GLUT;
@@ -32,6 +33,8 @@ public class Maze implements VisibleObject {
 	public final double SQUARE_SIZE = 5;
 
 	private int[] selected = {-1,-1};
+	
+	private int[] startPosition = {6, 5, 90};
 
 	private int[][] maze = 
 		{	{  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },
@@ -119,6 +122,15 @@ public class Maze implements VisibleObject {
 	public double getSize()
 	{
 		return MAZE_SIZE*SQUARE_SIZE;
+	}
+	
+	public double[] getStart()
+	{
+		double[] res= new double[3];
+		res[0] = (startPosition[0] + 0.5)* SQUARE_SIZE;
+		res[1] = (startPosition[1] + 0.5)* SQUARE_SIZE;
+		res[2] = startPosition[2];
+		return res;
 	}
 
 	public void addToSize(int n)

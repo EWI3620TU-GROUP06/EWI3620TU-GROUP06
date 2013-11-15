@@ -1,3 +1,4 @@
+package MainGame;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -25,7 +26,7 @@ import java.util.Iterator;
  * @author Bruno Scheele, revised by Mattijs Driel
  * 
  */
-public class MazeRunner extends Frame implements GLEventListener {
+public class MazeEditor extends Frame implements GLEventListener {
 	static final long serialVersionUID = 7526471155622776147L;
 
 	/*
@@ -39,13 +40,11 @@ public class MazeRunner extends Frame implements GLEventListener {
 	private float FOV = 45.0f;
 
 	private ArrayList<VisibleObject> visibleObjects; // A list of objects that will be displayed on screen.
-	private Player player; // The player object.
 	private Camera camera; // The camera object.
 	private Editor editor; // The editor object;
 	private UserInput input; // The user input object that controls the player/editor.
 	private Maze maze; // The maze.
 	private long previousTime = Calendar.getInstance().getTimeInMillis(); // Used to calculate elapsed time.
-	boolean editing = true;
 
 	/*
 	 * **********************************************
@@ -61,9 +60,9 @@ public class MazeRunner extends Frame implements GLEventListener {
 	 * as the OpenGL event listener, to be able to function as the view
 	 * controller.
 	 */
-	public MazeRunner() {
+	public MazeEditor() {
 		// Make a new window.
-		super("MazeRunner");
+		super("MazeEditor");
 
 		// Let's change the window to our liking.
 		setSize(screenWidth, screenHeight);
@@ -147,20 +146,13 @@ public class MazeRunner extends Frame implements GLEventListener {
 		maze = new Maze();
 		visibleObjects.add(maze);
 
-		// Initialize the player.
-		player = new Player(6 * maze.SQUARE_SIZE + maze.SQUARE_SIZE / 2, // x-position
-				maze.SQUARE_SIZE / 2, // y-position
-				5 * maze.SQUARE_SIZE + maze.SQUARE_SIZE / 2, // z-position
-				90, 0); // horizontal and vertical angle
-
 		editor = new Editor(maze.getSize() / 2, 60, maze.getSize()/2, 0, -89.99999);
 
-		camera = new Camera(player.getLocationX(), player.getLocationY(),
-				player.getLocationZ(), player.getHorAngle(),
-				player.getVerAngle());
+		camera = new Camera(editor.getLocationX(), editor.getLocationY(),
+				editor.getLocationZ(), editor.getHorAngle(),
+				editor.getVerAngle());
 
 		input = new UserInput(canvas);
-		player.setControl(input);
 		editor.setControl(input);
 		editor.setFOV(FOV);
 		editor.setMaze(maze);
@@ -237,7 +229,7 @@ public class MazeRunner extends Frame implements GLEventListener {
 		previousTime = currentTime;
 
 		// Update any movement since last frame.
-		updateMovement(deltaTime);
+		editor.update(screenWidth, screenHeight, deltaTime);
 		maze = editor.getMaze();
 		visibleObjects.clear();
 		visibleObjects.add(maze);
@@ -256,17 +248,16 @@ public class MazeRunner extends Frame implements GLEventListener {
 				.hasNext();) {
 			it.next().display(gl);
 		}
-		
+
 		// When editing: use an orthographic projection to draw the HUD on the screen, 
 		// then set the perspective projection back
-		if(editing){
-			gl.glLoadIdentity();
-			orthographicProjection(gl);
-			gl.glDisable(GL.GL_LIGHTING);
-			drawButtons(gl);
-			gl.glEnable(GL.GL_LIGHTING);
-			perspectiveProjection(gl, glu);
-		}
+		gl.glLoadIdentity();
+		orthographicProjection(gl);
+		gl.glDisable(GL.GL_LIGHTING);
+		drawButtons(gl);
+		gl.glEnable(GL.GL_LIGHTING);
+		perspectiveProjection(gl, glu);
+
 
 		// Flush the OpenGL buffer.
 		gl.glFlush();
@@ -315,26 +306,6 @@ public class MazeRunner extends Frame implements GLEventListener {
 	 */
 
 	/**
-	 * updateMovement(int) updates the position of all objects that need moving.
-	 * This includes rudimentary collision checking and collision reaction.
-	 */
-	private void updateMovement(int deltaTime) {
-		if(editing)
-			editor.update(screenWidth, screenHeight, deltaTime);
-		else
-		{
-			player.update(deltaTime);
-
-			if (maze.isWall(player.getLocationX() - 1, player.getLocationZ())
-					|| maze.isWall(player.getLocationX() + 1, player.getLocationZ())
-					|| maze.isWall(player.getLocationX(), player.getLocationZ() + 1)
-					|| maze.isWall(player.getLocationX(), player.getLocationZ() - 1)) {
-				player.update(-deltaTime);
-			}
-		}
-	}
-
-	/**
 	 * updateCamera() updates the camera position and orientation.
 	 * <p>
 	 * This is done by copying the locations from the Player, since MazeRunner
@@ -343,34 +314,22 @@ public class MazeRunner extends Frame implements GLEventListener {
 
 	private void updateCamera() {
 		// Use either the location of the player or the editor to update the camera
-		if (editing) {
-			camera.setLocationX(editor.getLocationX());
-			camera.setLocationY(editor.getLocationY());
-			camera.setLocationZ(editor.getLocationZ());
-			camera.setHorAngle(editor.getHorAngle());
-			camera.setVerAngle(editor.getVerAngle());
-		} else {
-			camera.setLocationX(player.getLocationX());
-			camera.setLocationY(player.getLocationY());
-			camera.setLocationZ(player.getLocationZ());
-			camera.setHorAngle(player.getHorAngle());
-			camera.setVerAngle(player.getVerAngle());
-		}
+		camera.setLocationX(editor.getLocationX());
+		camera.setLocationY(editor.getLocationY());
+		camera.setLocationZ(editor.getLocationZ());
+		camera.setHorAngle(editor.getHorAngle());
+		camera.setVerAngle(editor.getVerAngle());
+
 		camera.calculateVRP();
 	}
-
+	
 	/*
-	 * **********************************************
-	 * * Main * **********************************************
+	 * Main
 	 */
-	/**
-	 * Program entry point
-	 * 
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// Create and run MazeRunner.
-		new MazeRunner();
+	
+	public static void main(String[] args)
+	{
+		new MazeEditor();
 	}
 
 	/**
@@ -400,7 +359,7 @@ public class MazeRunner extends Frame implements GLEventListener {
 
 		gl.glColor3f(0.5f, 0, 0);
 		boxOnScreen(gl, 2*buttonSize, screenHeight - buttonSize, buttonSize);
-		
+
 		gl.glColor3f(0.5f, 0.5f, 0);
 		boxOnScreen(gl, 3*buttonSize, screenHeight - buttonSize, buttonSize);
 
@@ -440,7 +399,7 @@ public class MazeRunner extends Frame implements GLEventListener {
 		gl.glOrtho(0.0f, screenWidth, 0.0f, screenHeight, 0.0f, 1.0f);
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 	}
-	
+
 	/**
 	 * Convenience method to perform a perspective projection
 	 */
