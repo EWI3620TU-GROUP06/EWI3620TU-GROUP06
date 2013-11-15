@@ -5,14 +5,16 @@ import javax.media.opengl.GLAutoDrawable;
 import Main.Game;
 import MainGame.MainMenu;
 
-public class MenuState extends GameState /*implements MouseListener*/ {
+public class MenuState extends GameState {
 	private MainMenu mm;
-	public MenuState(gStateMan gsm){
+	private Game game;
+	public MenuState(gStateMan gsm,Game game){
 		this.gsm = gsm;
+		this.game = game;
 	}
 	@Override
 	
-	public void update(Game game){
+	public void update(){
 		mm = new MainMenu(game);
 		System.out.println("Mainmenu is geactiveerd");
 	}
@@ -27,16 +29,8 @@ public class MenuState extends GameState /*implements MouseListener*/ {
 		mm.display(drawable);
 		//System.out.println("drawgedaan mainmenu");
 	}
-
-	@Override
-	public void keyPressed(int k) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void keyReleased(int k) {
-		// TODO Auto-generated method stub
-
+	
+	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height){
+		mm.reshape(drawable, x, y, width, height);
 	}
 }

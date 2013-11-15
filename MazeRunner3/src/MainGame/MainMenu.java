@@ -1,14 +1,19 @@
 package MainGame;
 
-import javax.media.opengl.GL;
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLEventListener;
+import java.io.InputStream;
+
+import javax.media.opengl.*;
+
+import com.sun.opengl.util.texture.Texture;
+import com.sun.opengl.util.texture.TextureData;
+import com.sun.opengl.util.texture.TextureIO;
 
 import Main.Game;
 
 public class MainMenu implements GLEventListener {
 	
 	private int screenWidth, screenHeight;				// Screen size to handle reshaping
+	private Texture backgroundTexture;
 	
 	public MainMenu(Game game) {
 		this.screenWidth = game.getScreenWidth();
@@ -24,18 +29,42 @@ public class MainMenu implements GLEventListener {
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		gl.glDisable(GL.GL_DEPTH_TEST);
+		
+		// Preload the texture we want to use!
+		try{
+		InputStream stream = getClass().getResourceAsStream("mainmenu.jpg");
+        TextureData data = TextureIO.newTextureData(stream, false, "jpg");
+        this.backgroundTexture = TextureIO.newTexture(data);
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			System.exit(0);
+		}
 	}
 		
 	@Override
 	public void display(GLAutoDrawable drawable) {
-		// Here we call to the drawPlane function to draw a background plane, with texture (background.jpg)
 		GL gl = drawable.getGL();
 		
 		// set the 'clear screen color' not really necessary but useful to make all the clear colors the same!
 		gl.glClearColor(1f,1f,1f,1);
 		
-		gl.glColor3f(1.0f, 0f, 0f);
+		//The ambient color is white light
+        float[] lightColorAmbient = {1f, 1f, 1f, 1f};
+
+        // The Ambient light is created here.
+        gl.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, lightColorAmbient, 0);
+        
+        // Enable lighting in GL.
+        gl.glEnable(GL.GL_LIGHT1);
+        gl.glEnable(GL.GL_LIGHTING);
+		
+		float[] rgba = {1f, 0f, 0f}; //Sets the material color
+        gl.glMaterialfv(GL.GL_FRONT, GL.GL_AMBIENT, rgba, 0);
+		backgroundTexture.enable();
+		backgroundTexture.bind();
 		drawPlane(gl); // draw the background plane
+		
 		drawMenu(gl); // draw the menu buttons with text and stuff.
 		gl.glFlush();
 	}
@@ -43,9 +72,9 @@ public class MainMenu implements GLEventListener {
 	private void drawPlane(GL gl){
 		gl.glBegin(GL.GL_QUADS);
 		gl.glVertex2f(0, 0);
-		gl.glVertex2f(0,screenHeight);
-		gl.glVertex2f(screenWidth,screenHeight);
 		gl.glVertex2f(screenWidth,0);
+		gl.glVertex2f(screenWidth,screenHeight);
+		gl.glVertex2f(0,screenHeight);
 		gl.glEnd();
 	}
 

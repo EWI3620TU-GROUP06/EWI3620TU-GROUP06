@@ -6,9 +6,13 @@ import Main.Game;
 import MainGame.MazeRunner;
 
 public class PlayState extends GameState {
+	
 	private MazeRunner mz;
-	public PlayState(gStateMan gsm){
+	private Game game;
+	
+	public PlayState(gStateMan gsm, Game game){
 		this.gsm = gsm;
+		this.game = game;
 	}
 	@Override
 	public void init(GLAutoDrawable drawable) {
@@ -17,7 +21,7 @@ public class PlayState extends GameState {
 
 	}
 
-	public void update(Game game){
+	public void update(){
 		mz = new MazeRunner(game);
 		System.out.println("mazerunnen is geactiveerd");
 	}
@@ -27,17 +31,8 @@ public class PlayState extends GameState {
 		mz.display(drawable);
 		//System.out.println("drawgedaan mazerunner");
 	}
-
-	@Override
-	public void keyPressed(int k) {
-		// TODO Auto-generated method stub
-
+	
+	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height){
+		mz.reshape(drawable,x,y,width,height);
 	}
-
-	@Override
-	public void keyReleased(int k) {
-		// TODO Auto-generated method stub
-
-	}
-
 }

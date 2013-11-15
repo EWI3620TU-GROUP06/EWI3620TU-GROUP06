@@ -6,7 +6,6 @@ import java.awt.*;
 import java.awt.event.*;
 
 import javax.media.opengl.*;
-import javax.media.opengl.glu.*;
 
 import com.sun.opengl.util.*;
 
@@ -180,19 +179,7 @@ public class Game extends Frame implements GLEventListener {
 		 * that OpenGL associates with it). It adjust the projection matrix to accomodate the new shape.
 		 */
 		public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-			GL gl = drawable.getGL();
-			GLU glu = new GLU();
-			
-			// Setting the new screen size and adjusting the viewport.
-			screenWidth = width;
-			screenHeight = height;
-			gl.glViewport( 0, 0, screenWidth, screenHeight );
-			
-			// Set the new projection matrix.
-			gl.glMatrixMode( GL.GL_PROJECTION );
-			gl.glLoadIdentity();
-			glu.gluPerspective( 60, screenWidth/screenHeight, .1, 200 );
-			gl.glMatrixMode( GL.GL_MODELVIEW );
+			gsm.reshape(drawable, x, y, width, height);
 		}
 		
 		public int getScreenWidth(){
