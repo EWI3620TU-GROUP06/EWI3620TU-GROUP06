@@ -19,15 +19,14 @@ import javax.media.opengl.GLCanvas;
  *
  */
 public class UserInput extends Control 
-		implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
+implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 {
-	// TODO: Add fields to help calculate mouse movement
 	private int xPos;
 	private int yPos;
 	private int xdragPos;
 	private int ydragPos;
 	private boolean inscreen;
-	
+
 	/**
 	 * UserInput constructor.
 	 * <p>
@@ -43,7 +42,7 @@ public class UserInput extends Control
 		canvas.addKeyListener(this);
 		canvas.addMouseWheelListener(this);
 	}
-	
+
 	/*
 	 * **********************************************
 	 * *				Updating					*
@@ -53,33 +52,32 @@ public class UserInput extends Control
 	@Override
 	public void update()
 	{
-		// TODO: Set dX and dY to values corresponding to mouse movement
 		if(this.inscreen){
 			//only reset for next mouse-drag if mouse in-screen!
-			  this.dX = (xdragPos - xPos);
-			  this.dY = (ydragPos - yPos);
-			  this.xPos = xdragPos;
-			  this.yPos = ydragPos;	
+			this.dX = (xdragPos - xPos);
+			this.dY = (ydragPos - yPos);
+			this.xPos = xdragPos;
+			this.yPos = ydragPos;	
 		}
 		else{
 			//Now we still rotate when the mouse has left the screen!
-				if((xdragPos - xPos) != 0 && (ydragPos - yPos) == 0){
-					this.dX = 1*(xdragPos - xPos)/(Math.abs(xdragPos - xPos));
-					this.dY = 0;
-				}
-				else if((xdragPos - xPos) == 0 && (ydragPos - yPos) != 0){
-					this.dX = 0;
-					this.dY = 1*(ydragPos - yPos)/(Math.abs(ydragPos - yPos));
-				}
-				else if((xdragPos - xPos) != 0 && (ydragPos - yPos) != 0){
-					this.dX = 1*(xdragPos - xPos)/(Math.abs(xdragPos - xPos));
-					this.dY = 1*(ydragPos - yPos)/(Math.abs(ydragPos - yPos));
-				}
-				else{
-					this.dX = 0;
-					this.dY = 0;
-				}
+			if((xdragPos - xPos) != 0 && (ydragPos - yPos) == 0){
+				this.dX = 1*(xdragPos - xPos)/(Math.abs(xdragPos - xPos));
+				this.dY = 0;
 			}
+			else if((xdragPos - xPos) == 0 && (ydragPos - yPos) != 0){
+				this.dX = 0;
+				this.dY = 1*(ydragPos - yPos)/(Math.abs(ydragPos - yPos));
+			}
+			else if((xdragPos - xPos) != 0 && (ydragPos - yPos) != 0){
+				this.dX = 1*(xdragPos - xPos)/(Math.abs(xdragPos - xPos));
+				this.dY = 1*(ydragPos - yPos)/(Math.abs(ydragPos - yPos));
+			}
+			else{
+				this.dX = 0;
+				this.dY = 0;
+			}
+		}
 	}
 
 	/*
@@ -91,18 +89,20 @@ public class UserInput extends Control
 	@Override
 	public void mousePressed(MouseEvent event)
 	{
+		if(event.getButton() == 3)
+			rightButtonDragged = true;
 		// Detect the location where the mouse has been pressed
-    	this.xPos = event.getX();
+		this.xPos = event.getX();
 		this.yPos = event.getY();
 		xdragPos = xPos;
 		ydragPos = yPos;
-		mouseClicked = true;
+
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent event)
 	{
-		// TODO: Detect mouse movement while the mouse button is down
+		
 		this.xdragPos = event.getX();
 		this.ydragPos = event.getY();
 	}
@@ -110,45 +110,45 @@ public class UserInput extends Control
 	@Override
 	public void keyPressed(KeyEvent event)
 	{
-                char w = 'w';
-                char a = 'a';
-                char s = 's';
-                char d = 'd';
-		// TODO: Set forward, back, left and right to corresponding key presses
+		char w = 'w';
+		char a = 'a';
+		char s = 's';
+		char d = 'd';
+
 		if (Character.compare(w,event.getKeyChar()) == 0){
-                  this.forward = true;
-                }
-                else if (Character.compare(a,event.getKeyChar()) == 0){
-                  this.left = true;
-                }
-                else if (Character.compare(s,event.getKeyChar()) == 0){
-                  this.back = true;
-                }
-                else if (Character.compare(d,event.getKeyChar()) == 0){
-                  this.right = true;
-                }
+			this.forward = true;
+		}
+		else if (Character.compare(a,event.getKeyChar()) == 0){
+			this.left = true;
+		}
+		else if (Character.compare(s,event.getKeyChar()) == 0){
+			this.back = true;
+		}
+		else if (Character.compare(d,event.getKeyChar()) == 0){
+			this.right = true;
+		}
 	}
 
 	@Override
 	public void keyReleased(KeyEvent event)
 	{
-                char w = 'w';
-                char a = 'a';
-                char s = 's';
-                char d = 'd';
-		// TODO: Set forward, back, left and right to corresponding key presses
+		char w = 'w';
+		char a = 'a';
+		char s = 's';
+		char d = 'd';
+
 		if (Character.compare(w,event.getKeyChar()) == 0){
-                  this.forward = false;
-                }
-                else if (Character.compare(a,event.getKeyChar()) == 0){
-                  this.left = false;
-                }
-                else if (Character.compare(s,event.getKeyChar()) == 0){
-                  this.back = false;
-                }
-                else if (Character.compare(d,event.getKeyChar()) == 0){
-                  this.right = false;
-                }
+			this.forward = false;
+		}
+		else if (Character.compare(a,event.getKeyChar()) == 0){
+			this.left = false;
+		}
+		else if (Character.compare(s,event.getKeyChar()) == 0){
+			this.back = false;
+		}
+		else if (Character.compare(d,event.getKeyChar()) == 0){
+			this.right = false;
+		}
 	}
 
 	/*
@@ -156,14 +156,14 @@ public class UserInput extends Control
 	 * *		Not so Unused event handlers		*
 	 * **********************************************
 	 */
-	
+
 	@Override
 	public void mouseMoved(MouseEvent event)
 	{
 		//We wanna control without clicking!
 		this.xdragPos = event.getX();
 		this.ydragPos = event.getY();
-		
+
 		this.mouseX = event.getX();
 		this.mouseY = event.getY();
 	}
@@ -176,6 +176,9 @@ public class UserInput extends Control
 	@Override
 	public void mouseClicked(MouseEvent event)
 	{
+		this.mouseX = event.getX();
+		this.mouseY = event.getY();
+		mouseClicked = (byte)event.getButton();
 	}
 
 	@Override
@@ -183,9 +186,9 @@ public class UserInput extends Control
 	{
 		this.inscreen = true;
 	}
-	
+
 	//Comment
-	
+
 	@Override
 	public void mouseExited(MouseEvent event)
 	{
@@ -197,13 +200,14 @@ public class UserInput extends Control
 	@Override
 	public void mouseReleased(MouseEvent event)
 	{
+		if(event.getButton() == 3)
+			rightButtonDragged = false;
 	}
-	
-	
+
+
 	public void mouseWheelMoved(MouseWheelEvent event)
 	{
-		notches = event.getWheelRotation();
-		
+		notches += event.getWheelRotation();
 	}
 
 

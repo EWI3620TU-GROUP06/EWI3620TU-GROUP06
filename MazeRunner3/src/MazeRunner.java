@@ -38,19 +38,13 @@ public class MazeRunner extends Frame implements GLEventListener {
 	private float buttonSize = screenHeight / 10.0f;
 	private float FOV = 45.0f;
 
-	private ArrayList<VisibleObject> visibleObjects; // A list of objects that
-	// will be displayed on
-	// screen.
+	private ArrayList<VisibleObject> visibleObjects; // A list of objects that will be displayed on screen.
 	private Player player; // The player object.
 	private Camera camera; // The camera object.
-	private UserInput input; // The user input object that controls the player.
 	private Editor editor; // The editor object;
+	private UserInput input; // The user input object that controls the player/editor.
 	private Maze maze; // The maze.
-	private long previousTime = Calendar.getInstance().getTimeInMillis(); // Used
-	// to
-	// calculate
-	// elapsed
-	// time.
+	private long previousTime = Calendar.getInstance().getTimeInMillis(); // Used to calculate elapsed time.
 	boolean editing = true;
 
 	/*
@@ -169,7 +163,7 @@ public class MazeRunner extends Frame implements GLEventListener {
 		player.setControl(input);
 		editor.setControl(input);
 		editor.setFOV(FOV);
-		editor.setSquareSize(maze.SQUARE_SIZE);
+		editor.setMaze(maze);
 	}
 
 	/*
@@ -199,11 +193,7 @@ public class MazeRunner extends Frame implements GLEventListener {
 		// Now we set up our viewpoint.
 		gl.glMatrixMode(GL.GL_PROJECTION); // We'll use orthogonal projection.
 		gl.glLoadIdentity(); // Reset the current matrix.
-		glu.gluPerspective(60, screenWidth, screenHeight, 200); // Set up the
-		// parameters
-		// for
-		// perspective
-		// viewing.
+		glu.gluPerspective(60, screenWidth, screenHeight, 200); // Set up the parameters for perspective viewing.
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 
 		// Enable back-face culling.
@@ -217,11 +207,7 @@ public class MazeRunner extends Frame implements GLEventListener {
 		float lightPosition[] = { 0.0f, 50.0f, 0.0f, 1.0f }; // High up in the
 		// sky!
 		float lightColour[] = { 1.0f, 1.0f, 1.0f, 0.0f }; // White light!
-		gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, lightPosition, 0); // Note
-		// that
-		// we're
-		// setting
-		// Light0.
+		gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, lightPosition, 0); // Note that we're setting Light0.
 		gl.glLightfv(GL.GL_LIGHT0, GL.GL_AMBIENT, lightColour, 0);
 		gl.glEnable(GL.GL_LIGHTING);
 		gl.glEnable(GL.GL_LIGHT0);
@@ -252,46 +238,35 @@ public class MazeRunner extends Frame implements GLEventListener {
 
 		// Update any movement since last frame.
 		updateMovement(deltaTime);
+		maze = editor.getMaze();
+		visibleObjects.clear();
+		visibleObjects.add(maze);
 		updateCamera();
-
-		maze.select(editor.getSelectedX(), editor.getSelectedZ());
 
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		gl.glLoadIdentity();
-		gl.glViewport(0, 0, screenWidth, screenHeight);
-		gl.glMatrixMode(GL.GL_PROJECTION);
-		gl.glLoadIdentity();
-		glu.gluPerspective(FOV, (float)screenWidth / (float)screenHeight, 0.001f, Float.MAX_VALUE); 
+
 		glu.gluLookAt(camera.getLocationX(), camera.getLocationY(),
 				camera.getLocationZ(), camera.getVrpX(), camera.getVrpY(),
 				camera.getVrpZ(), camera.getVuvX(), camera.getVuvY(),
 				camera.getVuvZ());
-		gl.glMatrixMode(GL.GL_MODELVIEW);
-
 
 		// Display all the visible objects of MazeRunner.
 		for (Iterator<VisibleObject> it = visibleObjects.iterator(); it
 				.hasNext();) {
 			it.next().display(gl);
 		}
-
-
-
-		gl.glLoadIdentity();
-
+		
+		// When editing: use an orthographic projection to draw the HUD on the screen, 
+		// then set the perspective projection back
 		if(editing){
-			//gl.glClear(gl.GL_DEPTH_BUFFER_BIT);
-			gl.glViewport(0, 0, screenWidth, screenHeight);
-			gl.glMatrixMode(GL.GL_PROJECTION);
 			gl.glLoadIdentity();
-			gl.glOrtho(0.0f, screenWidth,    0.0f, screenHeight, 0.0f, 1.0f);
-			gl.glMatrixMode(GL.GL_MODELVIEW);
+			orthographicProjection(gl);
 			gl.glDisable(GL.GL_LIGHTING);
 			drawButtons(gl);
 			gl.glEnable(GL.GL_LIGHTING);
-			gl.glLoadIdentity();
+			perspectiveProjection(gl, glu);
 		}
-
 
 		// Flush the OpenGL buffer.
 		gl.glFlush();
@@ -326,18 +301,12 @@ public class MazeRunner extends Frame implements GLEventListener {
 		// Setting the new screen size and adjusting the viewport.
 		screenWidth = width;
 		screenHeight = height;
-		
+
 		buttonSize = screenHeight / 10.0f;
 		editor.setButtonSize(buttonSize);
 
-		gl.glViewport(0, 0, screenWidth, screenHeight);
-
 		// Set the new projection matrix.
-		gl.glMatrixMode(GL.GL_PROJECTION);
-
-		gl.glLoadIdentity();
-		glu.gluPerspective(60, screenWidth / screenHeight, .1, 200);
-		gl.glMatrixMode(GL.GL_MODELVIEW);
+		perspectiveProjection(gl, glu);
 	}
 
 	/*
@@ -351,12 +320,11 @@ public class MazeRunner extends Frame implements GLEventListener {
 	 */
 	private void updateMovement(int deltaTime) {
 		if(editing)
-			editor.update(screenWidth, screenHeight);
+			editor.update(screenWidth, screenHeight, deltaTime);
 		else
 		{
 			player.update(deltaTime);
 
-			// TODO: implement collision
 			if (maze.isWall(player.getLocationX() - 1, player.getLocationZ())
 					|| maze.isWall(player.getLocationX() + 1, player.getLocationZ())
 					|| maze.isWall(player.getLocationX(), player.getLocationZ() + 1)
@@ -374,7 +342,7 @@ public class MazeRunner extends Frame implements GLEventListener {
 	 */
 
 	private void updateCamera() {
-
+		// Use either the location of the player or the editor to update the camera
 		if (editing) {
 			camera.setLocationX(editor.getLocationX());
 			camera.setLocationY(editor.getLocationY());
@@ -411,24 +379,17 @@ public class MazeRunner extends Frame implements GLEventListener {
 	 * @param gl
 	 */
 	private void drawButtons(GL gl) {
-		// Draw a point on top of the first box
-		gl.glPointSize(5.0f);
+		// Draw a puls on top of the first box
+		gl.glLineWidth(4);
 		gl.glColor3f(1.0f, 1.0f, 1.0f);
-		pointOnScreen(gl, buttonSize / 2.0f, screenHeight - buttonSize / 2.0f);
+		lineOnScreen(gl, buttonSize / 10.0f, screenHeight - buttonSize / 2.0f,
+				buttonSize * 9.0f / 10.0f, screenHeight - buttonSize / 2.0f);
+		lineOnScreen(gl, buttonSize / 2.0f, screenHeight - buttonSize / 10.0f,
+				buttonSize / 2.0f, screenHeight - buttonSize * 9.0f / 10.0f);
 
-		// Draw a line on top of the second box.
-		gl.glLineWidth(3);
-		gl.glColor3f(1.0f, 1.0f, 1.0f);
-		lineOnScreen(gl, buttonSize + 4.0f, screenHeight - 4.0f,
-				2 * buttonSize - 4.0f, screenHeight - buttonSize + 4.0f);
-
-		// Draw a polygon on top of the third box.
-		gl.glColor3f(1.0f, 1.0f, 1.0f);
-		gl.glBegin(GL.GL_LINE_LOOP);
-		gl.glVertex2f(2 * buttonSize + 4.0f, screenHeight - buttonSize + 4.0f);
-		gl.glVertex2f(3 * buttonSize - 4.0f, screenHeight - buttonSize + 4.0f);
-		gl.glVertex2f(2.5f * buttonSize, screenHeight - 8.0f);
-		gl.glEnd();
+		// Draw a minus on top of the second box.
+		lineOnScreen(gl, buttonSize * 11.0f / 10.0f, screenHeight - buttonSize / 2.0f,
+				buttonSize * 19.0f / 10.0f, screenHeight - buttonSize / 2.0f);
 
 		// Draw the background boxes
 		gl.glColor3f(0, 0.5f, 0f);
@@ -439,18 +400,10 @@ public class MazeRunner extends Frame implements GLEventListener {
 
 		gl.glColor3f(0.5f, 0, 0);
 		boxOnScreen(gl, 2*buttonSize, screenHeight - buttonSize, buttonSize);
+		
+		gl.glColor3f(0.5f, 0.5f, 0);
+		boxOnScreen(gl, 3*buttonSize, screenHeight - buttonSize, buttonSize);
 
-
-
-	}
-
-	/**
-	 * Help method that uses GL calls to draw a point.
-	 */
-	private void pointOnScreen(GL gl, float x, float y) {
-		gl.glBegin(GL.GL_POINTS);
-		gl.glVertex2f(x, y);
-		gl.glEnd();
 	}
 
 	/**
@@ -466,12 +419,37 @@ public class MazeRunner extends Frame implements GLEventListener {
 	/**
 	 * Help method that uses GL calls to draw a square
 	 */
-	private void boxOnScreen(GL gl, float x, float y, float size) {
+	private void boxOnScreen(GL gl, float x, float y, float size)
+	{
 		gl.glBegin(GL.GL_QUADS);
 		gl.glVertex2f(x, y);
 		gl.glVertex2f(x + size, y);
 		gl.glVertex2f(x + size, y + size);
 		gl.glVertex2f(x, y + size);
 		gl.glEnd();
+	}
+	/**
+	 * Convenience method to perform an orthographic projection
+	 */
+
+	private void orthographicProjection(GL gl)
+	{
+		gl.glViewport(0, 0, screenWidth, screenHeight);
+		gl.glMatrixMode(GL.GL_PROJECTION);
+		gl.glLoadIdentity();
+		gl.glOrtho(0.0f, screenWidth, 0.0f, screenHeight, 0.0f, 1.0f);
+		gl.glMatrixMode(GL.GL_MODELVIEW);
+	}
+	
+	/**
+	 * Convenience method to perform a perspective projection
+	 */
+	private void perspectiveProjection(GL gl, GLU glu)
+	{
+		gl.glViewport(0, 0, screenWidth, screenHeight);
+		gl.glMatrixMode(GL.GL_PROJECTION);
+		gl.glLoadIdentity();
+		glu.gluPerspective(FOV, (float)screenWidth / (float)screenHeight, 0.001f, Float.MAX_VALUE); 
+		gl.glMatrixMode(GL.GL_MODELVIEW);
 	}
 }

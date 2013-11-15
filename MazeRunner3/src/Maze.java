@@ -1,5 +1,10 @@
 import javax.media.opengl.GL;
+
 import com.sun.opengl.util.GLUT;
+
+import java.io.*;
+import java.util.NoSuchElementException;
+import java.util.Scanner;
 
 /**
  * Maze represents the maze used by MazeRunner.
@@ -22,25 +27,35 @@ import com.sun.opengl.util.GLUT;
  *
  */
 public class Maze implements VisibleObject {
-	
-	public final double MAZE_SIZE = 10;
+
+	public int MAZE_SIZE = 10;
 	public final double SQUARE_SIZE = 5;
-	
-	private int[] selected = {0,0};
+
+	private int[] selected = {-1,-1};
 
 	private int[][] maze = 
-	{	{  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },
-		{  1,  0,  0,  0,  0,  0,  0,  0,  0,  1 },
-		{  1,  0,  0,  0,  0,  0,  1,  1,  1,  1 },
-		{  1,  0,  1,  0,  0,  0,  1,  0,  0,  1 },
-		{  1,  0,  1,  0,  1,  0,  1,  0,  0,  1 },
-		{  1,  0,  1,  0,  1,  0,  1,  0,  0,  1 },
-		{  1,  0,  0,  0,  1,  0,  1,  0,  0,  1 },
-		{  1,  0,  0,  0,  1,  1,  1,  0,  0,  1 },
-		{  1,  0,  0,  0,  0,  0,  0,  0,  0,  1 },
-		{  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 }	};
+		{	{  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },
+			{  1,  0,  0,  0,  0,  0,  0,  0,  0,  1 },
+			{  1,  0,  0,  0,  0,  0,  1,  1,  1,  1 },
+			{  1,  0,  1,  0,  0,  0,  1,  0,  0,  1 },
+			{  1,  0,  1,  0,  1,  0,  1,  0,  0,  1 },
+			{  1,  0,  1,  0,  1,  0,  1,  0,  0,  1 },
+			{  1,  0,  0,  0,  1,  0,  1,  0,  0,  1 },
+			{  1,  0,  0,  0,  1,  1,  1,  0,  0,  1 },
+			{  1,  0,  0,  0,  0,  0,  0,  0,  0,  1 },
+			{  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 }	};
 
+	public Maze()
+	{
+		super();
+	}
 	
+	public Maze(int[][] maze, int mazeSize)
+	{
+		super();
+		MAZE_SIZE = mazeSize;
+		this.maze = maze;
+	}
 	/**
 	 * isWall(int x, int z) checks for a wall.
 	 * <p>
@@ -57,7 +72,7 @@ public class Maze implements VisibleObject {
 		else
 			return false;
 	}
-	
+
 	/**
 	 * isWall(double x, double z) checks for a wall by converting the double values to integer coordinates.
 	 * <p>
@@ -74,7 +89,7 @@ public class Maze implements VisibleObject {
 		int gZ = convertToGridZ( z );
 		return isWall( gX, gZ );
 	}
-	 
+
 	/**
 	 * Converts the double x-coordinate to its correspondent integer coordinate.
 	 * @param x		the double x-coordinate
@@ -94,41 +109,124 @@ public class Maze implements VisibleObject {
 	{
 		return (int)Math.floor( z / SQUARE_SIZE );
 	}
-	
+
 	public void select(int x, int z)
 	{
 		selected[0] = x;
 		selected[1] = z;
 	}
-	
+
 	public double getSize()
 	{
 		return MAZE_SIZE*SQUARE_SIZE;
 	}
+
+	public void addToSize(int n)
+	{
+		if(MAZE_SIZE + n > 0)
+		{
+			MAZE_SIZE += n;
+			int[][]newMaze = new int[MAZE_SIZE][MAZE_SIZE];
+			for (int i = 0; i < newMaze.length && i < maze.length; i++)
+			{
+				for (int j = 0; j < newMaze.length && j < maze.length; j++)
+					newMaze[i][j] = maze[i][j];
+			}
+			maze = newMaze;
+		}
+	}
 	
+	public void toggleSelected()
+	{
+		if(selected[0] >= 0 && selected[0] < MAZE_SIZE && selected[1] >= 0 && selected[1] < MAZE_SIZE)
+		{
+			if(maze[selected[0]][selected[1]] == 0)
+				maze[selected[0]][selected[1]] = 1;
+			else
+				maze[selected[0]][selected[1]] = 0;
+		}
+	}
+	
+	public void save(File file)
+	{
+		try{
+			PrintWriter wr = new PrintWriter(file);
+			wr.write(MAZE_SIZE + "\n");
+			for(int i = 0; i < MAZE_SIZE; i++)
+			{
+				for(int j = 0; j < MAZE_SIZE; j++)
+				{
+					Integer tempInt = maze[i][j];
+					String tempString = tempInt.toString();
+					wr.write(tempString);
+					if(j < MAZE_SIZE - 1)
+						wr.write(" ");
+					else
+						wr.write("\n");
+				}
+			}
+			wr.close();
+		}
+		catch(IOException e){
+			e.printStackTrace();
+		}
+	}
+	
+	public static Maze read(File file)
+	{
+		try{
+			Scanner sc = new Scanner(file);
+			String temp = sc.next();
+			int mazeSize = Integer.parseInt(temp);
+			sc.nextLine();
+			int[][] mazeArray = new int[mazeSize][mazeSize];
+			for(int i = 0; i < mazeSize; i++)
+			{
+				for(int j = 0; j < mazeSize; j++)
+				{
+					temp = sc.next();
+					mazeArray[i][j] = Integer.parseInt(temp);
+				}
+				if(sc.hasNextLine())
+					sc.nextLine();
+			}
+			sc.close();
+			return new Maze(mazeArray, mazeSize);
+		}
+		catch(NoSuchElementException e){
+			System.err.println("Invalid file.");
+		}
+		catch(FileNotFoundException e){
+			System.err.println("File not founs.");
+		}
+		return null;
+	}
+
 	public void display(GL gl) {
 		GLUT glut = new GLUT();
 
-        // draw the grid with the current material
+		// draw the grid with the current material
 		for( int i = 0; i < MAZE_SIZE; i++ )
 		{
-	        for( int j = 0; j < MAZE_SIZE; j++ )
+			for( int j = 0; j < MAZE_SIZE; j++ )
 			{
-	        	float wallColour[] =  { 0.5f, 0.0f, 0.7f, 1.0f };
-	        	float floorColour[] = {0.0f, 0.0f, 1.0f, 0.0f};
-	        	if(selected[0] == i && selected[1] == j)
-	        	{
-	            wallColour[1] = 0.5f;
-	            floorColour[1] = 1.0f;
-	        	}
-	        	else
-	        	{
-	        		wallColour[1] = 0.0f;
-	        		floorColour[1] = 0.0f;
-	        	}
-	        	 gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);// Set the materials used by the wall.
-	            gl.glPushMatrix();
-				
+				float wallColour[] =  { 0.5f, 0.0f, 0.7f, 1.0f };
+				float floorColour[] = {0.0f, 0.0f, 1.0f, 0.0f};
+				if(selected[0] == i && selected[1] == j)
+				{
+					wallColour[0] = 1.0f;
+					wallColour[2] = 1.0f;
+					floorColour[1] = 0.9f;
+				}
+				else
+				{
+					wallColour[0] = 0.5f;
+					wallColour[2] = 0.7f;
+					floorColour[1] = 0.0f;
+				}
+				gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);// Set the materials used by the wall.
+				gl.glPushMatrix();
+
 				if ( isWall(i, j) ){
 					gl.glTranslated( i * SQUARE_SIZE + SQUARE_SIZE / 2, SQUARE_SIZE / 2, j * SQUARE_SIZE + SQUARE_SIZE / 2 );
 					glut.glutSolidCube( (float) SQUARE_SIZE );
@@ -141,7 +239,7 @@ public class Maze implements VisibleObject {
 			}
 		}			
 	}
-	
+
 	/**
 	 * paintSingleFloorTile(GL, double) paints a single floor tile, to represent the floor of the entire maze.
 	 * 
@@ -150,15 +248,15 @@ public class Maze implements VisibleObject {
 	 */
 	private void paintSingleFloorTile(GL gl, double size, float[] wallColour)
 	{
-        // Setting the floor color and material.
-        gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);	// Set the materials used by the floor.
+		// Setting the floor color and material.
+		gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);	// Set the materials used by the floor.
 
-        gl.glNormal3d(0, 1, 0);
+		gl.glNormal3d(0, 1, 0);
 		gl.glBegin(GL.GL_QUADS);
-	        gl.glVertex3d(0, 0, 0);
-	        gl.glVertex3d(0, 0, size);
-	        gl.glVertex3d(size, 0, size);
-	        gl.glVertex3d(size, 0, 0);		
+		gl.glVertex3d(0, 0, 0);
+		gl.glVertex3d(0, 0, size);
+		gl.glVertex3d(size, 0, size);
+		gl.glVertex3d(size, 0, 0);		
 		gl.glEnd();	
-	}	
+	}
 }

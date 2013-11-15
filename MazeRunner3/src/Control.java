@@ -29,7 +29,8 @@ public abstract class Control
 	protected int notches = 0;
 
 	protected int mouseX = 0, mouseY = 0;
-	protected boolean mouseClicked;
+	protected byte mouseClicked;
+	protected boolean rightButtonDragged = false;
 
 	/**
 	 * @return Returns true if forward motion is desired.
@@ -80,11 +81,43 @@ public abstract class Control
 	{
 		return dY;
 	}
-
+	/**
+	 * Gets the X position of the mouse in the screen.
+	 * @return X position of the mouse
+	 */
+	public int getMouseX() {
+		return mouseX;
+	}
+	/**
+	 * Gets the Y position of the mouse in the screen.
+	 * @return Y position of the mouse
+	 */
+	public int getMouseY() {
+		return mouseY;
+	}
+	/**
+	 * Gets which mouse button was clicked the last, since the last time this function was called.
+	 * @return	The mouse button number: 1 = left, 2 = middle, 3 = right and 0 = none.
+	 */
+	public byte getClicked()
+	{
+		byte clicked = mouseClicked;
+		mouseClicked = 0;
+		return clicked;
+	}
+	
+	/**
+	 * Gets the amount of notches the mouse wheel has turned since the last time this function was called.
+	 * @return	The amount of notches the mouse wheel turned
+	 */
 	public int getNotches() {
 		int res = notches;
 		notches = 0;
 		return res;
+	}
+	
+	public boolean isRightButtonDragged() {
+		return rightButtonDragged;
 	}
 
 	/**
@@ -93,23 +126,9 @@ public abstract class Control
 	 */
 	public abstract void update();
 
-	public int getMouseX() {
-		return mouseX;
-	}
+	
 
-	public int getMouseY() {
-		return mouseY;
-	}
 
-	public int getButtons(int numberOfButtons, float buttonSize)
-	{
-		boolean clicked = mouseClicked;
-		mouseClicked = false;
-		if(clicked)
-			for(int i = 0; i < numberOfButtons; i++)
-				if( mouseX > (i * buttonSize) && mouseX < ((i + 1) * buttonSize) && mouseY < buttonSize)
-					return i;
-		return -1;
-	}
+
 
 }

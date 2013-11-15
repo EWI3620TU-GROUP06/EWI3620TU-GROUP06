@@ -1,47 +1,53 @@
+import java.io.File;
+
+import javax.swing.JFileChooser;
+
 
 public class Editor extends GameObject{
 	
-	private float FOV;
+	private final String[] myFileLocations = new String[]{ //TODO: Hard-coded file locations. Remove eventually.
+			"C:\\Users\\Victor\\Documents\\MATLAB\\Computational Intelligence\\Assignment3",
+			"C:\\Users\\Kevin\\Dropbox\\TUDelft\\TI2735 - Computational Intelligence\\Assignment 3",
+			"C:\\Users\\Kevin van As\\Dropbox\\TUDelft\\TI2735 - Computational Intelligence\\Assignment 3"};
 	
+	private JFileChooser world_fc;
+	
+	private float FOV;
+
 	private Control control; 
 
 	private double horAngle, verAngle;
-	
+
 	private int selectedX, selectedZ;
 	
-	private double squareSize;
-	
+	private double dragSpeed = 0.0225;
+
+	private Maze maze;
+
 	private float buttonSize;
-	
+	private int numButtons = 4;
+
 	public Editor(double x, double y, double z, double h, double v)
 	{
 		super(x, y, z);
 		horAngle = h;
 		verAngle = v;
 	}
-	
+
 	public void setFOV(float FOV)
 	{
 		this.FOV = FOV;
 	}
-	
+
 	public void setButtonSize(float buttonSize)
 	{
 		this.buttonSize = buttonSize;
 	}
-	
-	public int getSelectedX() {
-		return selectedX;
+
+	public void setMaze(Maze maze) {
+		this.maze = maze;
 	}
 
-	public int getSelectedZ() {
-		return selectedZ;
-	}
-	
-	public void setSquareSize(double squareSize) {
-		this.squareSize = squareSize;
-	}
-	
 	/**
 	 * Sets the Control object that will control the player's motion
 	 * <p>
@@ -52,7 +58,7 @@ public class Editor extends GameObject{
 	{
 		this.control = control;
 	}
-	
+
 	/**
 	 * Returns the horizontal angle of the orientation.
 	 * @return the horAngle
@@ -85,34 +91,142 @@ public class Editor extends GameObject{
 		this.verAngle = verAngle;
 	}
 	
-	public void update(int screenWidth, int screenHeight )
+	public Maze getMaze()
+	{
+		return maze;
+	}
+
+	public void update(int screenWidth, int screenHeight, int deltaTime)
 	{
 		if(control != null)
 		{
 			control.update();
+
 			int notches = control.getNotches();
-			if(locationY + notches > 5){
+			// The Y position can never be lower then the highest wall
+			if(locationY + notches > 2*maze.SQUARE_SIZE)
 				locationY += notches;
-				double halfTan = Math.tan(Math.toRadians(FOV/2));
-				double factor = (screenHeight/2) / (halfTan * locationY);
-				selectedX = (int) Math.floor(((control.getMouseX() - screenWidth/2)/factor + locationX)/squareSize);
-				selectedZ = (int) Math.floor(((control.getMouseY() - screenHeight/2)/factor + locationZ)/squareSize);
-			}
-			int button = control.getButtons(3, buttonSize);
-			if(button == 0)
+			
+			if(control.isRightButtonDragged())
 			{
-				System.out.println("Button 0 pressed!");
+				locationX -= control.getdX()*deltaTime*dragSpeed;
+				locationZ -= control.getdY()*deltaTime*dragSpeed * screenHeight / screenWidth;
 			}
-			if(button == 1)
+			else
 			{
-				System.out.println("Button 1 pressed!");
-			}
-			if(button == 2)
-			{
-				System.out.println("Button 2 pressed!");
+				updateCursor(screenHeight, screenWidth);
+				
+				int button = getButtons();
+				if(button == 0)
+				{
+					maze.addToSize(1);
+				}
+				if(button == 1)
+				{
+					maze.addToSize(-1);
+				}
+				if(button == 2)
+				{
+					selectDirectory();
+					if(save())
+						System.out.println("Maze saved!");
+				}
+				if(button == 3)
+				{
+					selectDirectory();
+					maze = read();
+				}
+				if(button == -1)
+				{
+					maze.toggleSelected();
+				}
+				if(button == -2)
+				{
+					System.out.println("Clicked middle mouse button!");
+				}
 			}
 		}
-
 	}
 
+	/**
+	 * Calculates whether a button in the screen or a mouse button was pressed.
+	 * @return	A value between 0 and numOfButtons - 1 is returned when a button is pressed,
+	 *  -1, -2 or -3 is returned when mouse button left, middle or right respectively is clicked anywhere else.
+	 *  numOfButtons is returned when the mouse is not clicked.
+	 */
+
+	private int getButtons()
+	{
+		byte mouseButton = control.getClicked();
+		if(mouseButton > 0)
+		{
+			for(int i = 0; i < numButtons; i++)
+			{
+				// check for every button if it is clicked on.
+				if( control.getMouseX() > (i * buttonSize) && control.getMouseX() < ((i + 1) * buttonSize) && control.getMouseY() < buttonSize)
+					return i;
+			}
+			return -mouseButton;	// clicked somewhere else on the screen 
+		}
+		return numButtons; 
+	}
+
+	/**
+	 * Calculates at which position in the maze the mouse is currently pointing, and highlights that position.
+	 * When the mouse points at a position outside the maze, nothing is highlighted.
+	 * @param screenHeight	Height of the current window
+	 * @param screenWidth	Width of the current window
+	 */
+
+	private void updateCursor(int screenHeight, int screenWidth)
+	{
+		// The field of view relates to the portion of the map that is visible:
+		double halfTan = Math.tan(Math.toRadians(FOV/2));
+		double pixelsPerUnit = (screenHeight/2) / (halfTan * locationY); 
+
+		// cursor position in ogl coordinates:
+		double cursorPositionX = (control.getMouseX() - screenWidth / 2) / pixelsPerUnit + locationX;
+		double cursorPositionZ = (control.getMouseY() - screenHeight / 2) / pixelsPerUnit + locationZ;
+
+		// cursor position in maze coordinates:
+		selectedX = (int)(cursorPositionX / maze.SQUARE_SIZE);
+		selectedZ = (int)(cursorPositionZ / maze.SQUARE_SIZE);
+
+		// highlight the selection:
+		maze.select(selectedX, selectedZ);
+	}
+	
+	private void selectDirectory()
+	{
+		world_fc = new JFileChooser();
+		world_fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		world_fc.setDialogTitle("Select a world file");
+
+		File myMainDir;
+		for(int i = 0; i<myFileLocations.length; i++){
+			myMainDir = new File(myFileLocations[i]);
+			if(myMainDir.exists()){
+				world_fc.setCurrentDirectory(myMainDir);
+				break;
+			}
+		}
+	}
+	
+	public boolean save(){
+		int returnVal = world_fc.showSaveDialog(null);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+            maze.save(world_fc.getSelectedFile());
+            return true;
+        }else{
+        	return false;
+        }
+	}
+	
+	public Maze read(){
+		int returnVal = world_fc.showOpenDialog(null);
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+           return Maze.read(world_fc.getSelectedFile());
+        }
+		return null;
+	}
 }
