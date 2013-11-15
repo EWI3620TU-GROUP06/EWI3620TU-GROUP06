@@ -7,28 +7,25 @@ import MainGame.MazeRunner;
 
 public class PlayState extends GameState {
 	private MazeRunner mz;
-	public PlayState(gStateMan g, Game game){
-		mz = new MazeRunner(game);
-		System.out.println("mazerunnen is geactiveerd");
+	public PlayState(gStateMan gsm){
+		this.gsm = gsm;
 	}
 	@Override
 	public void init(GLAutoDrawable drawable) {
 		mz.init(drawable);
-		System.out.println("init gedaan");
+		System.out.println("init gedaan mazerunner");
 
 	}
 
-	@Override
-	public void update() {
-		// TODO Auto-generated method stub
-
+	public void update(Game game){
+		mz = new MazeRunner(game);
+		System.out.println("mazerunnen is geactiveerd");
 	}
 
 	@Override
 	public void draw(GLAutoDrawable drawable) {
 		mz.display(drawable);
-		System.out.println("drawgedaan");
-
+		//System.out.println("drawgedaan mazerunner");
 	}
 
 	@Override

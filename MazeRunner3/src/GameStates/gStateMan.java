@@ -10,14 +10,15 @@ public class gStateMan {
 	
 	private ArrayList<GameState> gameStates;
 	private int currentState;
-	public static final int MENUSTATE = 1;
-	public static final int PLAYSTATE = 0;
+	public static final int MENUSTATE = 0;
+	public static final int PLAYSTATE = 1;
 	
 	public gStateMan(Game game){
 		gameStates = new ArrayList<GameState>();
-		currentState = PLAYSTATE;
-//		gameStates.add(new MenuState(this,game));
-		gameStates.add(new PlayState(this,game));
+		currentState = MENUSTATE;
+		gameStates.add(new MenuState(this));
+		gameStates.add(new PlayState(this));
+		update(game);
 	}
 	
 	public void setState(int s,GLAutoDrawable drawable){
@@ -25,8 +26,8 @@ public class gStateMan {
 		this.gameStates.get(currentState).init(drawable);
 	}
 	
-	public void update(){
-		gameStates.get(currentState).update();
+	public void update(Game game){
+		gameStates.get(currentState).update(game);
 	}
 	
 	public void draw(GLAutoDrawable drawable){

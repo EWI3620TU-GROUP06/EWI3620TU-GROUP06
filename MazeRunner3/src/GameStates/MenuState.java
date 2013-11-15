@@ -1,38 +1,31 @@
 package GameStates;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-
 import javax.media.opengl.GLAutoDrawable;
 
 import Main.Game;
 import MainGame.MainMenu;
-import MainGame.MazeRunner;
 
 public class MenuState extends GameState /*implements MouseListener*/ {
 	private MainMenu mm;
-	public MenuState(gStateMan gsm, Game game){
+	public MenuState(gStateMan gsm){
+		this.gsm = gsm;
+	}
+	@Override
+	
+	public void update(Game game){
 		mm = new MainMenu(game);
 		System.out.println("Mainmenu is geactiveerd");
 	}
-	@Override
+	
 	public void init(GLAutoDrawable drawable) {
 		mm.init(drawable);
-		System.out.println("init gedaan");
-
-	}
-
-	@Override
-	public void update() {
-		// TODO Auto-generated method stub
-
+		System.out.println("init gedaan mainmenu");
 	}
 
 	@Override
 	public void draw(GLAutoDrawable drawable) {
 		mm.display(drawable);
-		System.out.println("drawgedaan");
-
+		//System.out.println("drawgedaan mainmenu");
 	}
 
 	@Override

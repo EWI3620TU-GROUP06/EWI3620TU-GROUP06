@@ -1,7 +1,6 @@
 package Main;
 
 import GameStates.gStateMan;
-import MainGame.*;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -110,7 +109,7 @@ public class Game extends Frame implements GLEventListener {
 			drawable.setGL( new DebugGL(drawable.getGL() )); // We set the OpenGL pipeline to Debugging mode.
 	        gsm.init(drawable);
 	       
-			GL gl = drawable.getGL();
+//			GL gl = drawable.getGL();
 //	        GLU glu = new GLU();
 	        
 //	        gl.glClearColor(0, 0, 0, 0);								// Set the background color.
