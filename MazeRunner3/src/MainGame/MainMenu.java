@@ -59,27 +59,33 @@ public class MainMenu implements GLEventListener {
         gl.glEnable(GL.GL_LIGHT1);
         gl.glEnable(GL.GL_LIGHTING);
 		
-		float[] rgba = {1f, 0f, 0f}; //Sets the material color
+		float[] rgba = {1f, 1.0f, 1.0f}; //Sets the material color
         gl.glMaterialfv(GL.GL_FRONT, GL.GL_AMBIENT, rgba, 0);
-		backgroundTexture.enable();
-		backgroundTexture.bind();
+		backgroundTexture.enable(); // Enable the background texture
+		backgroundTexture.bind(); // Bind the background texture to the next object
 		drawPlane(gl); // draw the background plane
+		backgroundTexture.disable(); // Disable the background texture again, such that the next object is textureless
 		
 		drawMenu(gl); // draw the menu buttons with text and stuff.
 		gl.glFlush();
 	}
 	
 	private void drawPlane(GL gl){
+		//Draws a background-plane with a texture
 		gl.glBegin(GL.GL_QUADS);
 		gl.glVertex2f(0, 0);
+		gl.glTexCoord2f(1, 1);
 		gl.glVertex2f(screenWidth,0);
+		gl.glTexCoord2f(1, 0);
 		gl.glVertex2f(screenWidth,screenHeight);
+		gl.glTexCoord2f(0, 0);
 		gl.glVertex2f(0,screenHeight);
+		gl.glTexCoord2f(0, 1);
 		gl.glEnd();
 	}
 
 	private void drawMenu(GL gl){
-		
+		//Teken nu het menu over de achtergrond heen
 	}
 	
 	@Override
