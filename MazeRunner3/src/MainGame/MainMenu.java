@@ -53,13 +53,14 @@ public class MainMenu implements GLEventListener {
         float[] lightColorAmbient = {1f, 1f, 1f, 1f};
 
         // The Ambient light is created here.
-        gl.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, lightColorAmbient, 0);
+        gl.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT_AND_DIFFUSE, lightColorAmbient, 0);
         
         // Enable lighting in GL.
         gl.glEnable(GL.GL_LIGHT1);
         gl.glEnable(GL.GL_LIGHTING);
+        
 		
-		float[] rgba = {1f, 1.0f, 1.0f}; //Sets the material color
+		float[] rgba = {1f, 1f, 1f}; //Sets the material color
         gl.glMaterialfv(GL.GL_FRONT, GL.GL_AMBIENT, rgba, 0);
 		backgroundTexture.enable(); // Enable the background texture
 		backgroundTexture.bind(); // Bind the background texture to the next object
@@ -67,6 +68,7 @@ public class MainMenu implements GLEventListener {
 		backgroundTexture.disable(); // Disable the background texture again, such that the next object is textureless
 		
 		drawMenu(gl); // draw the menu buttons with text and stuff.
+		
 		gl.glFlush();
 	}
 	
@@ -86,6 +88,44 @@ public class MainMenu implements GLEventListener {
 
 	private void drawMenu(GL gl){
 		//Teken nu het menu over de achtergrond heen
+		
+		//De onderstaande functies
+		//zorgen voor de doorzichtigheid van de menu
+		//elementen, tesamen met kleur etc.
+		gl.glEnable(GL.GL_BLEND);
+		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+		gl.glColorMaterial(GL.GL_FRONT, GL.GL_AMBIENT_AND_DIFFUSE);
+		gl.glEnable(GL.GL_COLOR_MATERIAL);
+		
+		// zet alle textboxes dezelfde kleur (met alpha!)
+		// het vierde getal bepaalt de alpha ofwel opaque, 1 is ondoorzichtig, 0 onzichtbaar.
+		gl.glColor4f(0.2f,0.2f,0.2f,0.75f);
+		
+		// De vier menu texts "New game (of play ofzo" "Load level" "options" "quit"
+		drawTextBox(gl,(screenWidth/2.0f) - 0.15f*screenWidth, 
+				(screenHeight*0.60f) - 0.05f*screenHeight, 0.3f*screenWidth, 0.1f*screenHeight);
+		drawTextBox(gl,(screenWidth/2.0f) - 0.15f*screenWidth, 
+				(screenHeight*0.45f) - 0.05f*screenHeight, 0.3f*screenWidth, 0.1f*screenHeight);
+		drawTextBox(gl,(screenWidth/2.0f) - 0.15f*screenWidth, 
+				(screenHeight*0.30f) - 0.05f*screenHeight, 0.3f*screenWidth, 0.1f*screenHeight);
+		drawTextBox(gl,(screenWidth/2.0f) - 0.15f*screenWidth, 
+				(screenHeight*0.15f) - 0.05f*screenHeight, 0.3f*screenWidth, 0.1f*screenHeight);
+		
+		// Disable alle crap voordat 
+		//de volgende flush plaats vindt en 
+		//de settings doorgegeven worden aan
+		//de achtergrond
+		gl.glDisable(GL.GL_COLOR_MATERIAL);
+		gl.glDisable(GL.GL_BLEND);
+	}
+	
+	private void drawTextBox(GL gl, float x, float y, float width, float height){
+		gl.glBegin(GL.GL_QUADS);
+		gl.glVertex2f(x,y);
+		gl.glVertex2f(x + width, y);
+		gl.glVertex2f(x + width, y + height);
+		gl.glVertex2f(x, y + height);
+		gl.glEnd();
 	}
 	
 	@Override
