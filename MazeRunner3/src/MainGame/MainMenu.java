@@ -35,14 +35,7 @@ public class MainMenu implements GLEventListener {
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		gl.glDisable(GL.GL_DEPTH_TEST);
-		
-		//To render title
-		Trenderer = new TextRenderer(new Font("Lucida", Font.BOLD, screenWidth/titleScale)); 
-		
-		//To render texts
-		//Set the font type shizzle here
-		renderer = new TextRenderer(new Font("ARIAL", Font.BOLD, screenWidth/textScale)); 
-		
+			
 		// Preload the texture we want to use!
 		try{
 		InputStream stream = getClass().getResourceAsStream("mainmenu.jpg");
@@ -196,7 +189,7 @@ public class MainMenu implements GLEventListener {
 		gl.glDisable(GL.GL_DEPTH_TEST);
 		
 		//To render title
-		Trenderer = new TextRenderer(new Font("ARIAL", Font.BOLD, screenWidth/titleScale)); 
+		Trenderer = new TextRenderer(new Font("Impact", Font.BOLD, screenWidth/titleScale)); 
 		
 		//To render texts
 		//Set the font type shizzle here
