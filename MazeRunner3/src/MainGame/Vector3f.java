@@ -32,26 +32,45 @@ public class Vector3f {
 		this.z = z;
 	}
 	
-	public void add(Vector3f that)
+	public Vector3f add(Vector3f that)
 	{
-		this.x += that.getX();
-		this.y += that.getY();
-		this.z += that.getZ();
+		float x = this.x + that.getX();
+		float y = this.y + that.getY();
+		float z = this.z + that.getZ();
+		return new Vector3f(x, y, z);
 	}
 	
-	public void mul(float factor)
+	public Vector3f sub(Vector3f that)
 	{
-		this.x *= factor;
-		this.y *= factor;
-		this.z *= factor;
+		float x = this.x - that.getX();
+		float y = this.y - that.getY();
+		float z = this.z - that.getZ();
+		return new Vector3f(x, y, z);
+	}
+	
+	public Vector3f mul(float factor)
+	{
+		float x = this.x * factor;
+		float y = this.y * factor;
+		float z = this.z * factor;
+		return new Vector3f(x, y, z);
 	}
 	
 	public Vector3f out(Vector3f that)
 	{
-		float x = this.y * that.z - that.y * this.z;
-		float y = this.z * that.x - that.z * this.x;
-		float z = this.x * that.y - that.x * this.y;
+		float x = this.z * that.y - that.z * this.y;
+		float y = this.x * that.z - that.x * this.z;
+		float z = this.y * that.x - that.y * this.x;
 		return new Vector3f(x, y, z);
+	}
+	
+	public Vector3f normalize()
+	{
+		float length = (float)Math.sqrt(x*x + y*y + z*z);
+		float x = this.x / length;
+		float y = this.y / length;
+		float z = this.z / length;
+		return  new Vector3f(x, y, z);
 	}
 
 	

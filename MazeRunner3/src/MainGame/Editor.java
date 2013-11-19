@@ -2,17 +2,18 @@ package MainGame;
 import java.io.File;
 
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 
 public class Editor extends GameObject{
-	
+
 	private final String[] myFileLocations = new String[]{ //TODO: Hard-coded file locations. Remove eventually.
 			"C:\\Users\\Victor\\Documents\\MATLAB\\Computational Intelligence\\Assignment3",
-			"C:\\Users\\Kevin\\Dropbox\\TUDelft\\TI2735 - Computational Intelligence\\Assignment 3",
-			"C:\\Users\\Kevin van As\\Dropbox\\TUDelft\\TI2735 - Computational Intelligence\\Assignment 3"};
-	
+	"C:\\Users\\Tom2\\Documents\\Java\\workspace\\MazeRunner3\\levels"};
+
 	private JFileChooser fc;
-	
+
 	private float FOV;
 
 	private Control control; 
@@ -20,13 +21,21 @@ public class Editor extends GameObject{
 	private double horAngle, verAngle;
 
 	private int selectedX, selectedZ;
-	
-	private double dragSpeed = 0.0225;
 
 	private Maze maze;
 
 	private float buttonSize;
-	private int numButtons = 4;
+	private final int numButtons = 11;
+	
+	private byte drawMode;
+	
+	private final byte DRAW_EMPTY = 0;
+	private final byte DRAW_BOX = 1;
+	private final byte DRAW_START = 2;
+	private final byte DRAW_FINISH = 3;
+	private final byte DRAW_HIGH_RAMP = 4;
+	private final byte DRAW_LOW_RAMP = 5;
+	private final byte DRAW_FLAT_BOX = 6;
 
 	public Editor(double x, double y, double z, double h, double v)
 	{
@@ -92,13 +101,8 @@ public class Editor extends GameObject{
 	public void setVerAngle(double verAngle) {
 		this.verAngle = verAngle;
 	}
-	
-	public Maze getMaze()
-	{
-		return maze;
-	}
 
-	public void update(int screenWidth, int screenHeight, int deltaTime)
+	public void update(int screenWidth, int screenHeight)
 	{
 		if(control != null)
 		{
@@ -106,44 +110,52 @@ public class Editor extends GameObject{
 
 			int notches = control.getNotches();
 			// The Y position can never be lower then the highest wall
-			if(locationY + notches > 2*maze.SQUARE_SIZE)
+			if(locationY + notches > maze.SQUARE_SIZE)
 				locationY += notches;
 			
-			if(control.isRightButtonDragged())
-			{
-				locationX -= control.getdX()*deltaTime*dragSpeed;
-				locationZ -= control.getdY()*deltaTime*dragSpeed * screenHeight / screenWidth;
+			// When dragging the left mouse button, the camera is moved.
+			if(control.isRightButtonDragged()){
+				updateLocation(screenHeight);
+			}
+			// When a selection of squares made by dragging is released, the selected squares are toggled
+			else if(control.isLeftReleased()){
+				maze.addBlock(drawMode);
 			}
 			else
 			{
 				updateCursor(screenHeight, screenWidth);
+				// When dragging, the selected squares are remembered:
+				if(!control.isLeftButtonDragged()){
+						maze.clearSelected();
+						// highlight the selection:
+						maze.select(selectedX, selectedZ);
+				}
+				else{
+					if(!(drawMode == DRAW_START || drawMode == DRAW_FINISH || drawMode == DRAW_HIGH_RAMP || drawMode == DRAW_LOW_RAMP))
+					{
+						maze.select(selectedX, selectedZ);
+					}
+				}
 				
+
 				int button = getButtons();
-				if(button == 0)
-				{
-					maze.addToSize(1);
+				switch(button){
+				case(0): maze.addToSize(1); break;
+				case(1): maze.addToSize(-1); break;
+				case(2): drawMode = DRAW_EMPTY; break;
+				case(3): drawMode = DRAW_BOX; break;
+				case(4): drawMode = DRAW_START; break;
+				case(5): drawMode = DRAW_FINISH; break;
+				case(6): drawMode = DRAW_HIGH_RAMP; break;
+				case(7): drawMode = DRAW_LOW_RAMP; break;
+				case(8): drawMode = DRAW_FLAT_BOX; break;
+				case(9): save(); break;
+				case(10): read(); break;
+				case(-1): maze.addBlock(drawMode); break;
+				case(-2): System.out.println("Clicked middle mouse button!"); break;
+				default: break;
 				}
-				if(button == 1)
-				{
-					maze.addToSize(-1);
-				}
-				if(button == 2)
-				{
-					if(save())
-						System.out.println("Maze saved!");
-				}
-				if(button == 3)
-				{
-					maze = read();
-				}
-				if(button == -1)
-				{
-					maze.toggleSelected();
-				}
-				if(button == -2)
-				{
-					System.out.println("Clicked middle mouse button!");
-				}
+
 			}
 		}
 	}
@@ -191,19 +203,29 @@ public class Editor extends GameObject{
 		// cursor position in maze coordinates:
 		selectedX = (int)(cursorPositionX / maze.SQUARE_SIZE);
 		selectedZ = (int)(cursorPositionZ / maze.SQUARE_SIZE);
-
-		// highlight the selection:
-		maze.select(selectedX, selectedZ);
 	}
-	
+
+	private void updateLocation(int screenHeight)
+	{
+		// The field of view relates to the portion of the map that is visible:
+		double halfTan = Math.tan(Math.toRadians(FOV/2));
+		double pixelsPerUnit = (screenHeight/2) / (halfTan * locationY); 
+
+		// camera position in ogl coordinates:
+		locationX = locationX - control.getdX() / pixelsPerUnit;
+		locationZ = locationZ - control.getdY() / pixelsPerUnit;
+	}
+
 	private void selectDirectory()
 	{
 		fc = new JFileChooser();
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fc.setMultiSelectionEnabled(false);
 		fc.setDialogTitle("Select a maze file");
-
+		FileFilter filter = new FileNameExtensionFilter("Maze file", "mz", "maze");
+		fc.setFileFilter(filter);
 		File myMainDir;
-		for(int i = 0; i<myFileLocations.length; i++){
+		for(int i = 0; i < myFileLocations.length; i++){
 			myMainDir = new File(myFileLocations[i]);
 			if(myMainDir.exists()){
 				fc.setCurrentDirectory(myMainDir);
@@ -211,23 +233,42 @@ public class Editor extends GameObject{
 			}
 		}
 	}
-	
+
 	public boolean save(){
-		int returnVal = fc.showSaveDialog(null);
-		File file = fc.getSelectedFile();		
+		int returnVal = fc.showDialog(fc, "Save");
+		File file = fc.getSelectedFile();
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-            maze.save(file);
-            return true;
-        }else{
-        	return false;
-        }
+			maze.save(file);
+			return true;
+		}
+		return false;
+	}
+
+	public boolean read(){
+		int returnVal = fc.showDialog(fc, "Open");
+		File file = fc.getSelectedFile();
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			maze.read(file);
+			return true;
+		}
+		return false;
 	}
 	
-	public Maze read(){
-		int returnVal = fc.showOpenDialog(null);
+	public static Maze readMaze(){
+		JFileChooser fc = new JFileChooser();
+		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fc.setMultiSelectionEnabled(false);
+		fc.setDialogTitle("Select a maze file");
+		FileFilter filter = new FileNameExtensionFilter("Maze file", "mz", "maze");
+		fc.setFileFilter(filter);
+		
+		int returnVal = fc.showDialog(fc, "Open");
+		File file = fc.getSelectedFile();
+		Maze maze = new Maze();
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-           return Maze.read(fc.getSelectedFile());
-        }
-		return null;
+			
+			maze.read(file);
+		}
+		return maze;
 	}
 }

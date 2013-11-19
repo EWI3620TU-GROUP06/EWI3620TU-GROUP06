@@ -4,8 +4,6 @@ import javax.media.opengl.GL;
 import com.sun.opengl.util.GLUT;
 
 import java.io.*;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
 
 /**
  * Maze represents the maze used by MazeRunner.
@@ -27,20 +25,25 @@ import java.util.Scanner;
  * @author Bruno Scheele, revised by Mattijs Driel
  *
  */
-public class Maze implements VisibleObject {
+public class Maze implements VisibleObject, Serializable {
 
 	public int MAZE_SIZE = 10;
 	public final double SQUARE_SIZE = 5;
 
-	private int[] selected = {-1,-1};
-	
-	private int[] startPosition = {6, 5, 90};
+	private boolean[][] selected = new boolean[MAZE_SIZE][MAZE_SIZE];
 
-	private int[][] maze = 
+	private int[] startPosition = {6, 5, 90};
+	
+	private final Box box = new Box((float) SQUARE_SIZE,(float) SQUARE_SIZE); 
+	private final Ramp ramp = new Ramp((float) SQUARE_SIZE, (float) SQUARE_SIZE);
+	private final Box flatBox = new Box((float) SQUARE_SIZE,  (float) SQUARE_SIZE / 2);
+	private final Ramp lowRamp = new Ramp((float) SQUARE_SIZE,  (float) SQUARE_SIZE / 2);
+
+	private byte[][] maze = 
 		{	{  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },
 			{  1,  0,  0,  0,  0,  0,  0,  0,  0,  1 },
 			{  1,  0,  0,  0,  0,  0,  1,  1,  1,  1 },
-			{  1,  0,  1,  0,  0,  0,  1,  0,  0,  1 },
+			{  1,  0,  1,  0,  4,  0,  1,  0,  0,  1 },
 			{  1,  0,  1,  0,  1,  0,  1,  0,  0,  1 },
 			{  1,  0,  1,  0,  1,  0,  1,  0,  0,  1 },
 			{  1,  0,  0,  0,  1,  0,  1,  0,  0,  1 },
@@ -48,17 +51,6 @@ public class Maze implements VisibleObject {
 			{  1,  0,  0,  0,  0,  0,  0,  0,  0,  1 },
 			{  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 }	};
 
-	public Maze()
-	{
-		super();
-	}
-	
-	public Maze(int[][] maze, int mazeSize)
-	{
-		super();
-		MAZE_SIZE = mazeSize;
-		this.maze = maze;
-	}
 	/**
 	 * isWall(int x, int z) checks for a wall.
 	 * <p>
@@ -115,15 +107,15 @@ public class Maze implements VisibleObject {
 
 	public void select(int x, int z)
 	{
-		selected[0] = x;
-		selected[1] = z;
+		if(x >= 0 && x < MAZE_SIZE && z >= 0 && z < MAZE_SIZE)
+			selected[x][z] = true;
 	}
 
 	public double getSize()
 	{
 		return MAZE_SIZE*SQUARE_SIZE;
 	}
-	
+
 	public double[] getStart()
 	{
 		double[] res= new double[3];
@@ -138,93 +130,89 @@ public class Maze implements VisibleObject {
 		if(MAZE_SIZE + n > 0)
 		{
 			MAZE_SIZE += n;
-			int[][]newMaze = new int[MAZE_SIZE][MAZE_SIZE];
-			for (int i = 0; i < newMaze.length && i < maze.length; i++)
+			byte[][]newMaze = new byte[MAZE_SIZE][MAZE_SIZE];
+			boolean[][]newSelected = new boolean[MAZE_SIZE][MAZE_SIZE];
+			for (int i = 0; i < newMaze[0].length && i < maze[0].length; i++)
 			{
 				for (int j = 0; j < newMaze.length && j < maze.length; j++)
+				{
 					newMaze[i][j] = maze[i][j];
+					newSelected[i][j] = false;
+				}
 			}
 			maze = newMaze;
+			selected = newSelected;
 		}
 	}
 	
+	public void clearSelected()
+	{
+		for( int i = 0; i < MAZE_SIZE; i++ )
+			for( int j = 0; j < MAZE_SIZE; j++ )
+				selected[i][j] = false;
+	}
+
 	public void toggleSelected()
 	{
-		if(selected[0] >= 0 && selected[0] < MAZE_SIZE && selected[1] >= 0 && selected[1] < MAZE_SIZE)
-		{
-			if(maze[selected[0]][selected[1]] == 0)
-				maze[selected[0]][selected[1]] = 1;
-			else
-				maze[selected[0]][selected[1]] = 0;
-		}
+		for(int i = 0; i < MAZE_SIZE; i++)
+			for(int j = 0; j < MAZE_SIZE; j++)
+				if(selected[i][j])
+				{
+					if(maze[i][j] == 0)
+						maze[i][j] = 1;
+					else
+						maze[i][j] = 0;
+				}
 	}
 	
+	public void addBlock(byte drawMode)
+	{
+		for(int i = 0; i < MAZE_SIZE; i++)
+			for(int j = 0; j < MAZE_SIZE; j++)
+				if(selected[i][j])
+				{
+					maze[i][j] = drawMode;
+				}
+	}
+
 	public void save(File file)
 	{
 		try{
-			PrintWriter wr = new PrintWriter(file);
-			wr.write(MAZE_SIZE + "\n");
-			for(int i = 0; i < MAZE_SIZE; i++)
-			{
-				for(int j = 0; j < MAZE_SIZE; j++)
-				{
-					Integer tempInt = maze[i][j];
-					String tempString = tempInt.toString();
-					wr.write(tempString);
-					if(j < MAZE_SIZE - 1)
-						wr.write(" ");
-					else
-						wr.write("\n");
-				}
-			}
-			wr.close();
+			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
+			out.writeObject(this);
+			out.close();
 		}
-		catch(IOException e){
+		catch(Exception e){
 			e.printStackTrace();
 		}
 	}
-	
-	public static Maze read(File file)
+
+	public void read(File file)
 	{
 		try{
-			Scanner sc = new Scanner(file);
-			String temp = sc.next();
-			int mazeSize = Integer.parseInt(temp);
-			sc.nextLine();
-			int[][] mazeArray = new int[mazeSize][mazeSize];
-			for(int i = 0; i < mazeSize; i++)
-			{
-				for(int j = 0; j < mazeSize; j++)
-				{
-					temp = sc.next();
-					mazeArray[i][j] = Integer.parseInt(temp);
-				}
-				if(sc.hasNextLine())
-					sc.nextLine();
-			}
-			sc.close();
-			return new Maze(mazeArray, mazeSize);
+			ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
+			Maze newMaze = (Maze) in.readObject();
+			this.maze = newMaze.maze;
+			this.selected = newMaze.selected;
+			this.MAZE_SIZE = newMaze.MAZE_SIZE;
+			this.startPosition = newMaze.startPosition;
+			in.close();
 		}
-		catch(NoSuchElementException e){
-			System.err.println("Invalid file.");
+		catch(Exception e)
+		{
+			e.printStackTrace();
 		}
-		catch(FileNotFoundException e){
-			System.err.println("File not founs.");
-		}
-		return null;
 	}
 
 	public void display(GL gl) {
-		GLUT glut = new GLUT();
-
 		// draw the grid with the current material
 		for( int i = 0; i < MAZE_SIZE; i++ )
 		{
 			for( int j = 0; j < MAZE_SIZE; j++ )
 			{
-				float wallColour[] =  { 0.5f, 0.0f, 0.7f, 1.0f };
+				float wallColour[] =  { 1.0f, 0.0f, 0.0f, 1.0f };
 				float floorColour[] = {0.0f, 0.0f, 1.0f, 0.0f};
-				if(selected[0] == i && selected[1] == j)
+				if(selected[i][j])
 				{
 					wallColour[0] = 1.0f;
 					wallColour[2] = 1.0f;
@@ -238,14 +226,14 @@ public class Maze implements VisibleObject {
 				}
 				gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);// Set the materials used by the wall.
 				gl.glPushMatrix();
-
-				if ( isWall(i, j) ){
-					gl.glTranslated( i * SQUARE_SIZE + SQUARE_SIZE / 2, SQUARE_SIZE / 2, j * SQUARE_SIZE + SQUARE_SIZE / 2 );
-					glut.glutSolidCube( (float) SQUARE_SIZE );
-				}
-				else{
-					gl.glTranslated( i * SQUARE_SIZE, 0, j * SQUARE_SIZE);
-					paintSingleFloorTile( gl, SQUARE_SIZE , floorColour); // Paint the floor.
+				gl.glTranslated( i * SQUARE_SIZE, 0, j * SQUARE_SIZE);
+				switch(maze[i][j])
+				{
+				case 1: box.draw(gl, wallColour); break;
+				case 4: ramp.draw(gl, wallColour); break;
+				case 5: lowRamp.draw(gl, wallColour); break;
+				case 6: flatBox.draw(gl, wallColour); break;
+				default: paintSingleFloorTile( gl, SQUARE_SIZE , floorColour); break;
 				}
 				gl.glPopMatrix();
 			}

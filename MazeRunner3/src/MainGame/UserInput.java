@@ -90,6 +90,8 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	@Override
 	public void mousePressed(MouseEvent event)
 	{
+		if(event.getButton() == 1)
+			leftButtonDragged = true;
 		if(event.getButton() == 3)
 			rightButtonDragged = true;
 		// Detect the location where the mouse has been pressed
@@ -106,6 +108,9 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 		
 		this.xdragPos = event.getX();
 		this.ydragPos = event.getY();
+		
+		this.mouseX = event.getX();
+		this.mouseY = event.getY();
 	}
 
 	@Override
@@ -180,6 +185,8 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 		this.mouseX = event.getX();
 		this.mouseY = event.getY();
 		mouseClicked = (byte)event.getButton();
+		if(event.getButton() == 1)
+			leftReleased = false;
 	}
 
 	@Override
@@ -201,6 +208,10 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	@Override
 	public void mouseReleased(MouseEvent event)
 	{
+		if(event.getButton() == 1){
+			leftButtonDragged = false;
+			leftReleased = true;
+		}
 		if(event.getButton() == 3)
 			rightButtonDragged = false;
 	}

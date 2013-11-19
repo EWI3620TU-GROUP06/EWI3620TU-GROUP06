@@ -6,6 +6,7 @@ import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
 
 import com.sun.opengl.util.*;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -36,15 +37,18 @@ public class MazeEditor extends Frame implements GLEventListener {
 	private GLCanvas canvas;
 
 	private int screenWidth = 600, screenHeight = 600; // Screen size.
-	private float buttonSize = screenHeight / 10.0f;
+	private float buttonSize = screenWidth / 11.0f < screenHeight / 10.f ? screenWidth / 11.0f : screenHeight / 10.f;
 	private float FOV = 45.0f;
 
 	private ArrayList<VisibleObject> visibleObjects; // A list of objects that will be displayed on screen.
+	private Player player;
 	private Camera camera; // The camera object.
 	private Editor editor; // The editor object;
 	private UserInput input; // The user input object that controls the player/editor.
 	private Maze maze; // The maze.
-	private long previousTime = Calendar.getInstance().getTimeInMillis(); // Used to calculate elapsed time.
+	private long previousTime = Calendar.getInstance().getTimeInMillis();
+	
+	boolean editing = true;
 
 	/*
 	 * **********************************************
@@ -71,6 +75,7 @@ public class MazeEditor extends Frame implements GLEventListener {
 		// The window also has to close when we want to.
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
+				//editor.save();
 				System.exit(0);
 			}
 		});
@@ -145,6 +150,8 @@ public class MazeEditor extends Frame implements GLEventListener {
 		// Add the maze that we will be using.
 		maze = new Maze();
 		visibleObjects.add(maze);
+		
+		player = new Player(maze.getStart()[0], maze.SQUARE_SIZE/2.0f, maze.getStart()[1], maze.getStart()[2],0);
 
 		editor = new Editor(maze.getSize() / 2, 60, maze.getSize()/2, 0, -89.99999);
 
@@ -153,6 +160,7 @@ public class MazeEditor extends Frame implements GLEventListener {
 				editor.getVerAngle());
 
 		input = new UserInput(canvas);
+		player.setControl(input);
 		editor.setControl(input);
 		editor.setFOV(FOV);
 		editor.setMaze(maze);
@@ -222,17 +230,16 @@ public class MazeEditor extends Frame implements GLEventListener {
 		GL gl = drawable.getGL();
 		GLU glu = new GLU();
 
-		// Calculating time since last frame.
-		Calendar now = Calendar.getInstance();
-		long currentTime = now.getTimeInMillis();
-		int deltaTime = (int) (currentTime - previousTime);
-		previousTime = currentTime;
-
 		// Update any movement since last frame.
-		editor.update(screenWidth, screenHeight, deltaTime);
-		maze = editor.getMaze();
-		visibleObjects.clear();
-		visibleObjects.add(maze);
+		editor.update(screenWidth, screenHeight);
+		// Calculating time since last frame.
+		Calendar now = Calendar.getInstance();		
+		long currentTime = now.getTimeInMillis();
+		int deltaTime = (int)(currentTime - previousTime);
+		previousTime = currentTime;
+				
+		// Update any movement since last frame.
+		player.update(deltaTime);
 		updateCamera();
 
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
@@ -293,7 +300,7 @@ public class MazeEditor extends Frame implements GLEventListener {
 		screenWidth = width;
 		screenHeight = height;
 
-		buttonSize = screenHeight / 10.0f;
+		buttonSize = screenWidth / 11.0f < screenHeight / 10.f ? screenWidth / 11.0f : screenHeight / 10.f;
 		editor.setButtonSize(buttonSize);
 
 		// Set the new projection matrix.
@@ -314,19 +321,30 @@ public class MazeEditor extends Frame implements GLEventListener {
 
 	private void updateCamera() {
 		// Use either the location of the player or the editor to update the camera
-		camera.setLocationX(editor.getLocationX());
-		camera.setLocationY(editor.getLocationY());
-		camera.setLocationZ(editor.getLocationZ());
-		camera.setHorAngle(editor.getHorAngle());
-		camera.setVerAngle(editor.getVerAngle());
+		if(editing)
+		{
+			camera.setLocationX(editor.getLocationX());
+			camera.setLocationY(editor.getLocationY());
+			camera.setLocationZ(editor.getLocationZ());
+			camera.setHorAngle(editor.getHorAngle());
+			camera.setVerAngle(editor.getVerAngle());
+		} 
+		else
+		{
+			camera.setLocationX(player.getLocationX());
+			camera.setLocationY(player.getLocationY());
+			camera.setLocationZ(player.getLocationZ());
+			camera.setHorAngle(player.getHorAngle());
+			camera.setVerAngle(player.getVerAngle());
+		}
 
 		camera.calculateVRP();
 	}
-	
+
 	/*
 	 * Main
 	 */
-	
+
 	public static void main(String[] args)
 	{
 		new MazeEditor();
@@ -347,8 +365,20 @@ public class MazeEditor extends Frame implements GLEventListener {
 				buttonSize / 2.0f, screenHeight - buttonSize * 9.0f / 10.0f);
 
 		// Draw a minus on top of the second box.
-		lineOnScreen(gl, buttonSize * 11.0f / 10.0f, screenHeight - buttonSize / 2.0f,
+		lineOnScreen(gl, buttonSize * 1.10f, screenHeight - buttonSize / 2.0f,
 				buttonSize * 19.0f / 10.0f, screenHeight - buttonSize / 2.0f);
+
+		// Draw a cube on the fourth box.
+		boxOnScreen(gl, buttonSize * 3.10f, screenHeight - buttonSize* 0.9f, buttonSize * 0.8f);
+
+		// Draw a slope on the seventh box.
+		slopeOnScreen(gl, buttonSize * 6.10f, screenHeight - buttonSize * 0.9f, buttonSize * 0.8f, buttonSize * 0.8f);
+
+		// Draw a slope on the eighth box.
+		slopeOnScreen(gl, buttonSize * 7.10f, screenHeight - buttonSize * 0.9f, buttonSize * 0.8f, buttonSize * 0.4f);
+
+		//Draw a rectangle on the ninth box.
+		rectangleOnScreen(gl, buttonSize * 8.10f, screenHeight - buttonSize * 0.9f, buttonSize * 0.8f, buttonSize * 0.4f);
 
 		// Draw the background boxes
 		gl.glColor3f(0, 0.5f, 0f);
@@ -363,6 +393,31 @@ public class MazeEditor extends Frame implements GLEventListener {
 		gl.glColor3f(0.5f, 0.5f, 0);
 		boxOnScreen(gl, 3*buttonSize, screenHeight - buttonSize, buttonSize);
 
+		gl.glColor3f(0, 0.5f, 0f);
+		boxOnScreen(gl, 4*buttonSize, screenHeight - buttonSize, buttonSize);
+
+		gl.glColor3f(0, 0, 0.5f);
+		boxOnScreen(gl, 5*buttonSize, screenHeight - buttonSize, buttonSize);
+
+		gl.glColor3f(0.5f, 0, 0);
+		boxOnScreen(gl, 6*buttonSize, screenHeight - buttonSize, buttonSize);
+
+		gl.glColor3f(0.5f, 0.5f, 0);
+		boxOnScreen(gl, 7*buttonSize, screenHeight - buttonSize, buttonSize);
+
+		gl.glColor3f(0, 0.5f, 0f);
+		boxOnScreen(gl, 8*buttonSize, screenHeight - buttonSize, buttonSize);
+
+		gl.glColor3f(0, 0, 0.5f);
+		boxOnScreen(gl, 9*buttonSize, screenHeight - buttonSize, buttonSize);
+
+		gl.glColor3f(0.5f, 0, 0);
+		boxOnScreen(gl, 10*buttonSize, screenHeight - buttonSize, buttonSize);
+
+		// Draw line around buttons
+		gl.glColor3f(0.8f,  0.8f,  0.8f);
+		rectangleOnScreen(gl, 0, screenHeight - buttonSize * 1.1f, buttonSize * 11, buttonSize * 0.1f);
+		rectangleOnScreen(gl, buttonSize*11, screenHeight - buttonSize * 1.1f, buttonSize * 0.1f, buttonSize * 1.1f);
 	}
 
 	/**
@@ -387,6 +442,31 @@ public class MazeEditor extends Frame implements GLEventListener {
 		gl.glVertex2f(x, y + size);
 		gl.glEnd();
 	}
+	/**
+	 * Help method that uses GL calls to draw a slope
+	 */
+	private void slopeOnScreen(GL gl, float x, float y, float xSize, float ySize)
+	{
+		gl.glBegin(GL.GL_TRIANGLES);
+		gl.glVertex2f(x, y);
+		gl.glVertex2f(x + xSize, y);
+		gl.glVertex2f(x, y + ySize);
+		gl.glEnd();
+	}
+
+	/**
+	 * Help method that uses GL calls to draw a rectangle
+	 */
+	private void rectangleOnScreen(GL gl, float x, float y, float xSize, float ySize)
+	{
+		gl.glBegin(GL.GL_QUADS);
+		gl.glVertex2f(x, y);
+		gl.glVertex2f(x + xSize, y);
+		gl.glVertex2f(x + xSize, y + ySize);
+		gl.glVertex2f(x, y + ySize);
+		gl.glEnd();
+	}
+
 	/**
 	 * Convenience method to perform an orthographic projection
 	 */

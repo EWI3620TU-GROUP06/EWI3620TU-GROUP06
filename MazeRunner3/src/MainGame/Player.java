@@ -134,7 +134,7 @@ public class Player extends GameObject {
 
                       //Update speed according to friction
             			
-            			speed.mul( 1 - (float) friction);
+            			speed = speed.mul( 1 - (float) friction);
             			
             			// Move the player according to speed
             			

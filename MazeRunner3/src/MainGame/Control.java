@@ -32,6 +32,8 @@ public abstract class Control
 	protected int mouseX = 0, mouseY = 0;
 	protected byte mouseClicked;
 	protected boolean rightButtonDragged = false;
+	protected boolean leftButtonDragged = false;
+	protected boolean leftReleased = false;
 
 	/**
 	 * @return Returns true if forward motion is desired.
@@ -119,6 +121,16 @@ public abstract class Control
 	
 	public boolean isRightButtonDragged() {
 		return rightButtonDragged;
+	}
+	
+	public boolean isLeftButtonDragged() {
+		return leftButtonDragged;
+	}
+	
+	public boolean isLeftReleased(){
+		boolean res = leftReleased;
+		leftReleased = false;
+		return res;
 	}
 
 	/**
