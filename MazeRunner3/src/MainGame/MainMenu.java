@@ -104,19 +104,19 @@ public class MainMenu implements GLEventListener {
 		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
 		gl.glColorMaterial(GL.GL_FRONT, GL.GL_AMBIENT_AND_DIFFUSE);
 		gl.glEnable(GL.GL_COLOR_MATERIAL);
-		
-		// zet alle textboxes dezelfde kleur (met alpha!)
-		// het vierde getal bepaalt de alpha ofwel opaque, 1 is ondoorzichtig, 0 onzichtbaar.
-		gl.glColor4f(0.3f,0.3f,0.3f,0.75f);
-		
+			
 		// De vier menu texts "New game (of play ofzo" "Load level" "options" "quit"
+		gl.glColor4f(0.3f,0.3f,0.3f,0.75f);
 		drawTextBox(gl,(screenWidth/2.0f) - 0.15f*screenWidth, 
 				(screenHeight*0.60f) - 0.05f*screenHeight, 0.3f*screenWidth, 0.1f*screenHeight);
 		drawText("Text", 1f, 1f, 1f, 1f,(int)( (screenWidth/2.0) - 0.10*screenWidth),(int)( (screenHeight*0.60) - 0.0*screenHeight), drawable);
+		gl.glColor4f(0.3f,0.3f,0.3f,0.75f);
 		drawTextBox(gl,(screenWidth/2.0f) - 0.15f*screenWidth, 
 				(screenHeight*0.45f) - 0.05f*screenHeight, 0.3f*screenWidth, 0.1f*screenHeight);
+		gl.glColor4f(0.3f,0.3f,0.3f,0.75f);
 		drawTextBox(gl,(screenWidth/2.0f) - 0.15f*screenWidth, 
 				(screenHeight*0.30f) - 0.05f*screenHeight, 0.3f*screenWidth, 0.1f*screenHeight);
+		gl.glColor4f(0.3f,0.3f,0.3f,0.75f);
 		drawTextBox(gl,(screenWidth/2.0f) - 0.15f*screenWidth, 
 				(screenHeight*0.15f) - 0.05f*screenHeight, 0.3f*screenWidth, 0.1f*screenHeight);
 		
