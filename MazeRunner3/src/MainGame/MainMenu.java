@@ -50,10 +50,11 @@ public class MainMenu implements GLEventListener {
 		gl.glClearColor(1f,1f,1f,1);
 		
 		//The ambient color is white light
-        float[] lightColorAmbient = {1f, 1f, 1f, 1f};
+        float[] lightColor = {1f, 1f, 1f, 1f};
 
         // The Ambient light is created here.
-        gl.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT_AND_DIFFUSE, lightColorAmbient, 0);
+        gl.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, lightColor, 0);
+        gl.glLightfv(GL.GL_LIGHT1, GL.GL_DIFFUSE, lightColor, 0);
         
         // Enable lighting in GL.
         gl.glEnable(GL.GL_LIGHT1);
@@ -99,7 +100,7 @@ public class MainMenu implements GLEventListener {
 		
 		// zet alle textboxes dezelfde kleur (met alpha!)
 		// het vierde getal bepaalt de alpha ofwel opaque, 1 is ondoorzichtig, 0 onzichtbaar.
-		gl.glColor4f(0.2f,0.2f,0.2f,0.75f);
+		gl.glColor4f(0.3f,0.3f,0.3f,0.75f);
 		
 		// De vier menu texts "New game (of play ofzo" "Load level" "options" "quit"
 		drawTextBox(gl,(screenWidth/2.0f) - 0.15f*screenWidth, 
