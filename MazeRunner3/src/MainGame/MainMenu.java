@@ -97,10 +97,10 @@ public class MainMenu implements GLEventListener {
 		//Teken nu het menu over de achtergrond heen
 		
 		//Draw a nice transparent surface over the background
-		drawTrans(gl,0,0,screenWidth,screenHeight,0.1f,0.1f,0.1f,0.5f);
+		drawTrans(gl,0,0,screenWidth,screenHeight,0.1f,0.1f,0.1f,0.4f);
 		
 		//Draw the epic title
-		drawTitle("MadBalls", 1f, 1f, 1f, 1f, (int)(screenWidth*0.26),(int)(screenHeight*0.8));
+		drawTitle("MadBalls", 0.9f, 0.4f, 0.4f, 1f, (int)(screenWidth*0.315),(int)(screenHeight*0.8));
 			
 		// De vier menu texts "New game (of play ofzo" "Load level" "options" "quit"
 		drawText("Play", 1f, 1f, 1f, 1f,(int)(screenWidth*0.445),
@@ -109,7 +109,7 @@ public class MainMenu implements GLEventListener {
 		drawText("Load", 1f, 1f, 1f, 1f,(int)(screenWidth*0.432),
 				(int)(screenHeight*0.48));
 		
-		drawText("Options", 1f, 1f, 1f, 1f,(int)(screenWidth*0.399),
+		drawText("Options", 1f, 1f, 1f, 1f,(int)(screenWidth*0.397),
 				(int)(screenHeight*0.33));
 	
 		drawText("Quit", 1f, 1f, 1f, 1f,(int)(screenWidth*0.442),
@@ -189,11 +189,11 @@ public class MainMenu implements GLEventListener {
 		gl.glDisable(GL.GL_DEPTH_TEST);
 		
 		//To render title
-		Trenderer = new TextRenderer(new Font("Impact", Font.BOLD, screenWidth/titleScale)); 
+		Trenderer = new TextRenderer(new Font("Impact", Font.PLAIN, (screenWidth)/titleScale)); 
 		
 		//To render texts
 		//Set the font type shizzle here
-		renderer = new TextRenderer(new Font("ARIAL", Font.BOLD, screenWidth/textScale)); 
+		renderer = new TextRenderer(new Font("Arial", Font.BOLD, (screenWidth)/textScale)); 
 	}
 
 }
