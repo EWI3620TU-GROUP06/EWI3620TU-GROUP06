@@ -17,6 +17,9 @@ public class MainMenu implements GLEventListener {
 	private int screenWidth, screenHeight;				// Screen size to handle reshaping
 	private Texture backgroundTexture;
 	private TextRenderer renderer;
+	private TextRenderer Trenderer;
+	private int titleScale = 10;
+	private int textScale = 18;
 	
 	public MainMenu(Game game) {
 		this.screenWidth = game.getScreenWidth();
@@ -33,9 +36,12 @@ public class MainMenu implements GLEventListener {
 		gl.glLoadIdentity();
 		gl.glDisable(GL.GL_DEPTH_TEST);
 		
+		//To render title
+		Trenderer = new TextRenderer(new Font("Lucida", Font.BOLD, screenWidth/titleScale)); 
+		
 		//To render texts
 		//Set the font type shizzle here
-		renderer = new TextRenderer(new Font("ARIAL", Font.BOLD, 40)); 
+		renderer = new TextRenderer(new Font("ARIAL", Font.BOLD, screenWidth/textScale)); 
 		
 		// Preload the texture we want to use!
 		try{
@@ -75,7 +81,7 @@ public class MainMenu implements GLEventListener {
 		drawPlane(gl); // draw the background plane
 		backgroundTexture.disable(); // Disable the background texture again, such that the next object is textureless
 		
-		drawMenu(gl, drawable); // draw the menu buttons with text and stuff.
+		drawMenu(gl); // draw the menu buttons with text and stuff.
 		
 		gl.glFlush();
 	}
@@ -94,31 +100,48 @@ public class MainMenu implements GLEventListener {
 		gl.glEnd();
 	}
 
-	private void drawMenu(GL gl, GLAutoDrawable drawable){
+	private void drawMenu(GL gl){
 		//Teken nu het menu over de achtergrond heen
 		
+		//Draw a nice transparent surface over the background
+		drawTrans(gl,0,0,screenWidth,screenHeight,0.1f,0.1f,0.1f,0.5f);
+		
+		//Draw the epic title
+		drawTitle("MadBalls", 1f, 1f, 1f, 1f, (int)(screenWidth*0.26),(int)(screenHeight*0.8));
+			
+		// De vier menu texts "New game (of play ofzo" "Load level" "options" "quit"
+		drawText("Play", 1f, 1f, 1f, 1f,(int)(screenWidth*0.445),
+				(int)(screenHeight*0.625));
+		
+		drawText("Load", 1f, 1f, 1f, 1f,(int)(screenWidth*0.432),
+				(int)(screenHeight*0.48));
+		
+		drawText("Options", 1f, 1f, 1f, 1f,(int)(screenWidth*0.399),
+				(int)(screenHeight*0.33));
+	
+		drawText("Quit", 1f, 1f, 1f, 1f,(int)(screenWidth*0.442),
+				(int)(screenHeight*0.18));
+	}
+	
+	private void drawTrans(GL gl, float x, float y, float width, float height
+			,float r, float g, float b, float a){
 		//De onderstaande functies
 		//zorgen voor de doorzichtigheid van de menu
 		//elementen, tesamen met kleur etc.
+		
+		gl.glColor4f(r,g,b,a);
 		gl.glEnable(GL.GL_BLEND);
 		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
 		gl.glColorMaterial(GL.GL_FRONT, GL.GL_AMBIENT_AND_DIFFUSE);
 		gl.glEnable(GL.GL_COLOR_MATERIAL);
-			
-		// De vier menu texts "New game (of play ofzo" "Load level" "options" "quit"
-		gl.glColor4f(0.3f,0.3f,0.3f,0.75f);
-		drawTextBox(gl,(screenWidth/2.0f) - 0.15f*screenWidth, 
-				(screenHeight*0.60f) - 0.05f*screenHeight, 0.3f*screenWidth, 0.1f*screenHeight);
-		drawText("Text", 1f, 1f, 1f, 1f,(int)( (screenWidth/2.0) - 0.10*screenWidth),(int)( (screenHeight*0.60) - 0.0*screenHeight), drawable);
-		gl.glColor4f(0.3f,0.3f,0.3f,0.75f);
-		drawTextBox(gl,(screenWidth/2.0f) - 0.15f*screenWidth, 
-				(screenHeight*0.45f) - 0.05f*screenHeight, 0.3f*screenWidth, 0.1f*screenHeight);
-		gl.glColor4f(0.3f,0.3f,0.3f,0.75f);
-		drawTextBox(gl,(screenWidth/2.0f) - 0.15f*screenWidth, 
-				(screenHeight*0.30f) - 0.05f*screenHeight, 0.3f*screenWidth, 0.1f*screenHeight);
-		gl.glColor4f(0.3f,0.3f,0.3f,0.75f);
-		drawTextBox(gl,(screenWidth/2.0f) - 0.15f*screenWidth, 
-				(screenHeight*0.15f) - 0.05f*screenHeight, 0.3f*screenWidth, 0.1f*screenHeight);
+		
+		//draw the actual surface
+		gl.glBegin(GL.GL_QUADS);
+		gl.glVertex2f(x,y);
+		gl.glVertex2f(x + width, y);
+		gl.glVertex2f(x + width, y + height);
+		gl.glVertex2f(x, y + height);
+		gl.glEnd();
 		
 		// Disable alle crap voordat 
 		//de volgende flush plaats vindt en 
@@ -128,23 +151,24 @@ public class MainMenu implements GLEventListener {
 		gl.glDisable(GL.GL_BLEND);
 	}
 	
-	private void drawTextBox(GL gl, float x, float y, float width, float height){
-		gl.glBegin(GL.GL_QUADS);
-		gl.glVertex2f(x,y);
-		gl.glVertex2f(x + width, y);
-		gl.glVertex2f(x + width, y + height);
-		gl.glVertex2f(x, y + height);
-		gl.glEnd();
-	}
-	
-	private void drawText(String text, float r, float g, float b, float a, int x, int y, GLAutoDrawable drawable){
+	private void drawText(String text, float r, float g, float b, float a, int x, int y){
 		//Renderer alvast in init gemaakt, anders wordt ie na elke glFlush() opnieuw gemaakt!
 		
-		renderer.beginRendering(drawable.getWidth(), drawable.getHeight());
+		renderer.beginRendering(screenWidth, screenHeight);
 		renderer.setColor(r, g, b, a);
 		renderer.draw(text, x, y);
 		renderer.flush();
 		renderer.endRendering();
+	}
+	
+	private void drawTitle(String text, float r, float g, float b, float a, int x, int y){
+		//Renderer alvast in init gemaakt, anders wordt ie na elke glFlush() opnieuw gemaakt!
+		
+		Trenderer.beginRendering(screenWidth, screenHeight);
+		Trenderer.setColor(r, g, b, a);
+		Trenderer.draw(text, x, y);
+		Trenderer.flush();
+		Trenderer.endRendering();
 	}
 	
 	@Override
@@ -170,6 +194,13 @@ public class MainMenu implements GLEventListener {
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 		gl.glLoadIdentity();
 		gl.glDisable(GL.GL_DEPTH_TEST);
+		
+		//To render title
+		Trenderer = new TextRenderer(new Font("ARIAL", Font.BOLD, screenWidth/titleScale)); 
+		
+		//To render texts
+		//Set the font type shizzle here
+		renderer = new TextRenderer(new Font("ARIAL", Font.BOLD, screenWidth/textScale)); 
 	}
 
 }
