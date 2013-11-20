@@ -4,6 +4,7 @@ import javax.media.opengl.GLAutoDrawable;
 
 import Main.Game;
 import MainGame.MazeRunner;
+import MainGame.UserInput;
 
 public class PlayState extends GameState {
 	
@@ -22,10 +23,14 @@ public class PlayState extends GameState {
 	}
 
 	public void update(){
-		mz = new MazeRunner(game);
+		mz = new MazeRunner(game,this);
 		System.out.println("mazerunnen is geactiveerd");
 	}
 
+	public UserInput getInput(){
+		return this.gsm.getInput();
+	}
+	
 	@Override
 	public void draw(GLAutoDrawable drawable) {
 		mz.display(drawable);

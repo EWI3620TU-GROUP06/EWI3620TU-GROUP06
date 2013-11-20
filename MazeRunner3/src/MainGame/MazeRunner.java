@@ -3,7 +3,7 @@ package MainGame;
 import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
 
-import GameStates.gStateMan;
+import GameStates.GameState;
 import Main.Game;
 
 import java.util.ArrayList;
@@ -31,7 +31,6 @@ public class MazeRunner implements GLEventListener {
  * *			Local variables					*
  * **********************************************
  */
-	private Game game;
 	private int screenWidth, screenHeight;					// Screen size for reshaping
 	private ArrayList<VisibleObject> visibleObjects;		// A list of objects that will be displayed on screen.
 	private Player player;									// The player object.
@@ -39,7 +38,7 @@ public class MazeRunner implements GLEventListener {
 	private UserInput input;								// The user input object that controls the player.
 	private Maze maze; 										// The maze.
 	private long previousTime = Calendar.getInstance().getTimeInMillis(); // Used to calculate elapsed time.
-	private gStateMan gsm;
+	private GameState state;
 	
 /*
  * **********************************************
@@ -55,7 +54,7 @@ public class MazeRunner implements GLEventListener {
 	 * display MazeRunner. Finally, it adds itself as the OpenGL event listener, to be able 
 	 * to function as the view controller.
 	 */
-	public MazeRunner(Game game) {
+	public MazeRunner(Game game, GameState state) {
 		// Make a new window.
 //		super("MazeRunner");
 //		
@@ -71,7 +70,7 @@ public class MazeRunner implements GLEventListener {
 //				System.exit(0);
 //			}
 //		});
-		this.game = game;
+		this.state = state;
 		this.screenWidth = game.getScreenWidth();
 		this.screenHeight = game.getScreenHeight();
 		//initJOGL();							// Initialize JOGL.
@@ -114,7 +113,7 @@ public class MazeRunner implements GLEventListener {
 		camera = new Camera( player.getLocationX(), player.getLocationY(), player.getLocationZ(), 
 				             player.getHorAngle(), player.getVerAngle() );
 		
-		input = new UserInput(game.getCanvas(), gsm);
+		input = state.getInput();
 		player.setControl(input);
 	}
 

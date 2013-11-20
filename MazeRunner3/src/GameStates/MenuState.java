@@ -4,6 +4,7 @@ import javax.media.opengl.GLAutoDrawable;
 
 import Main.Game;
 import MainGame.MainMenu;
+import MainGame.UserInput;
 
 
 public class MenuState extends GameState {
@@ -25,6 +26,10 @@ public class MenuState extends GameState {
 		System.out.println("init gedaan mainmenu");
 	}
 
+	public UserInput getInput(){
+		return this.gsm.getInput();
+	}
+	
 	@Override
 	public void draw(GLAutoDrawable drawable) {
 		mm.display(drawable);

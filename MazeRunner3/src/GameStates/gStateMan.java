@@ -29,6 +29,10 @@ public class gStateMan {
 		update();
 	}
 	
+	public UserInput getInput(){
+		return this.input;
+	}
+	
 	public void update(){
 		gameStates.get(currentState).update();
 	}
