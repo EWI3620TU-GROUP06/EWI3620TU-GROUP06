@@ -29,6 +29,10 @@ public class gStateMan {
 		update();
 	}
 	
+	public int getCurState(){
+		return currentState;
+	}
+	
 	public UserInput getInput(){
 		return this.input;
 	}
