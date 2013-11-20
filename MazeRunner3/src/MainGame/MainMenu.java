@@ -3,6 +3,7 @@ package MainGame;
 import java.io.InputStream;
 import java.awt.Font;
 
+import com.sun.opengl.util.Animator;
 import com.sun.opengl.util.j2d.TextRenderer;
 
 import javax.media.opengl.*;
@@ -11,20 +12,53 @@ import com.sun.opengl.util.texture.Texture;
 import com.sun.opengl.util.texture.TextureData;
 import com.sun.opengl.util.texture.TextureIO;
 
+import GameStates.GameState;
 import Main.Game;
 
 public class MainMenu implements GLEventListener {
 	
 	private int screenWidth, screenHeight;				// Screen size to handle reshaping
+	private Game game;
+	private GLCanvas canvas;
 	private Texture backgroundTexture;
 	private TextRenderer renderer;
 	private TextRenderer Trenderer;
 	private int titleScale = 10;
 	private int textScale = 18;
+	private GameState state;
 	
-	public MainMenu(Game game) {
+	public MainMenu(Game game, GameState state) {
+		this.game = game;
+		this.state = state;
 		this.screenWidth = game.getScreenWidth();
 		this.screenHeight = game.getScreenHeight();
+		initJOGL();
+	}
+	
+	private void initJOGL()	{
+		// First, we set up JOGL. We start with the default settings.
+		GLCapabilities caps = new GLCapabilities();
+		// Then we make sure that JOGL is hardware accelerated and uses double buffering.
+		caps.setDoubleBuffered( true );
+		caps.setHardwareAccelerated( true );
+
+		// Now we add the canvas, where OpenGL will actually draw for us. We'll use settings we've just defined. 
+		canvas = new GLCanvas( caps );
+		game.add( canvas );
+		/* We need to add a GLEventListener to interpret OpenGL events for us. Since MazeRunner implements
+		 * GLEventListener, this means that we add the necesary init(), display(), displayChanged() and reshape()
+		 * methods to this class.
+		 * These will be called when we are ready to perform the OpenGL phases of MazeRunner. 
+		 */
+		canvas.addGLEventListener( this );
+		
+		new UserInput(canvas, state.getGSM());
+		
+		/* We need to create an internal thread that instructs OpenGL to continuously repaint itself.
+		 * The Animator class handles that for JOGL.
+		 */
+		Animator anim = new Animator( canvas );
+		anim.start();
 	}
 	
 	@Override
@@ -195,6 +229,10 @@ public class MainMenu implements GLEventListener {
 		//To render texts
 		//Set the font type shizzle here
 		renderer = new TextRenderer(new Font("Arial", Font.BOLD, (screenWidth)/textScale)); 
+	}
+	
+	public GLCanvas getCanvas(){
+		return this.canvas;
 	}
 
 }

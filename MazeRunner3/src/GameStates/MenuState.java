@@ -1,11 +1,10 @@
 package GameStates;
 
 import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLCanvas;
 
 import Main.Game;
 import MainGame.MainMenu;
-import MainGame.UserInput;
-
 
 public class MenuState extends GameState {
 	private MainMenu mm;
@@ -17,26 +16,28 @@ public class MenuState extends GameState {
 	@Override
 	
 	public void update(){
-		mm = new MainMenu(game);
-		System.out.println("Mainmenu is geactiveerd");
+		mm = new MainMenu(game, this);
 	}
 	
 	public void init(GLAutoDrawable drawable) {
 		mm.init(drawable);
 		System.out.println("init gedaan mainmenu");
 	}
-
-	public UserInput getInput(){
-		return this.gsm.getInput();
-	}
 	
 	@Override
 	public void draw(GLAutoDrawable drawable) {
 		mm.display(drawable);
-		//System.out.println("drawgedaan mainmenu");
 	}
 	
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height){
 		mm.reshape(drawable, x, y, width, height);
+	}
+	
+	public GLCanvas getCanvas(){
+		return mm.getCanvas();
+	}
+	
+	public gStateMan getGSM(){
+		return this.gsm;
 	}
 }
