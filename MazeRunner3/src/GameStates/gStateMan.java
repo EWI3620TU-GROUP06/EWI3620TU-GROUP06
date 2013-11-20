@@ -18,9 +18,9 @@ public class gStateMan {
 	public gStateMan(Game game){
 		gameStates = new ArrayList<GameState>();
 		currentState = MENUSTATE;
-		gameStates.add(new MenuState(this,game));
-		gameStates.add(new PlayState(this,game));
 		input = new UserInput(game.getCanvas(), this);
+		gameStates.add(new MenuState(this, game));
+		gameStates.add(new PlayState(this, game));
 		update();
 	}
 	
@@ -44,5 +44,9 @@ public class gStateMan {
 	
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height){
 		gameStates.get(currentState).reshape(drawable,x,y,width,height);
+	}
+	
+	public UserInput getInput(){
+		return input;
 	}
 }
