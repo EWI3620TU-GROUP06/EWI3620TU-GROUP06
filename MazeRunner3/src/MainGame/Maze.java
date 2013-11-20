@@ -4,6 +4,7 @@ import javax.media.opengl.GL;
 import com.sun.opengl.util.GLUT;
 
 import java.io.*;
+import java.util.Scanner;
 
 /**
  * Maze represents the maze used by MazeRunner.
@@ -33,17 +34,24 @@ public class Maze implements VisibleObject, Serializable {
 	private boolean[][] selected = new boolean[MAZE_SIZE][MAZE_SIZE];
 
 	private int[] startPosition = {6, 5, 90};
-	
+	private int[] finishPosition = {8,8};
+
 	private final Box box = new Box((float) SQUARE_SIZE,(float) SQUARE_SIZE); 
-	private final Ramp ramp = new Ramp((float) SQUARE_SIZE, (float) SQUARE_SIZE);
+	private final Ramp ramp0 = new Ramp((float) SQUARE_SIZE, (float) SQUARE_SIZE, 0);
+	private final Ramp ramp1 = new Ramp((float) SQUARE_SIZE, (float) SQUARE_SIZE, 1);
+	private final Ramp ramp2 = new Ramp((float) SQUARE_SIZE, (float) SQUARE_SIZE, 2);
+	private final Ramp ramp3 = new Ramp((float) SQUARE_SIZE, (float) SQUARE_SIZE, 3);
 	private final Box flatBox = new Box((float) SQUARE_SIZE,  (float) SQUARE_SIZE / 2);
-	private final Ramp lowRamp = new Ramp((float) SQUARE_SIZE,  (float) SQUARE_SIZE / 2);
+	private final Ramp lowRamp0 = new Ramp((float) SQUARE_SIZE,  (float) SQUARE_SIZE / 2, 0);
+	private final Ramp lowRamp1 = new Ramp((float) SQUARE_SIZE,  (float) SQUARE_SIZE / 2, 1);
+	private final Ramp lowRamp2 = new Ramp((float) SQUARE_SIZE,  (float) SQUARE_SIZE / 2, 2);
+	private final Ramp lowRamp3 = new Ramp((float) SQUARE_SIZE,  (float) SQUARE_SIZE / 2, 3);
 
 	private byte[][] maze = 
 		{	{  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },
 			{  1,  0,  0,  0,  0,  0,  0,  0,  0,  1 },
 			{  1,  0,  0,  0,  0,  0,  1,  1,  1,  1 },
-			{  1,  0,  1,  0,  4,  0,  1,  0,  0,  1 },
+			{  1,  0,  1,  0,  0,  0,  1,  0,  0,  1 },
 			{  1,  0,  1,  0,  1,  0,  1,  0,  0,  1 },
 			{  1,  0,  1,  0,  1,  0,  1,  0,  0,  1 },
 			{  1,  0,  0,  0,  1,  0,  1,  0,  0,  1 },
@@ -144,7 +152,7 @@ public class Maze implements VisibleObject, Serializable {
 			selected = newSelected;
 		}
 	}
-	
+
 	public void clearSelected()
 	{
 		for( int i = 0; i < MAZE_SIZE; i++ )
@@ -164,99 +172,176 @@ public class Maze implements VisibleObject, Serializable {
 						maze[i][j] = 0;
 				}
 	}
-	
-	public void addBlock(byte drawMode)
+
+	public void addBlock(byte drawMode, int angle)
 	{
 		for(int i = 0; i < MAZE_SIZE; i++)
-			for(int j = 0; j < MAZE_SIZE; j++)
-				if(selected[i][j])
-				{
-					maze[i][j] = drawMode;
+			for (int j = 0; j < MAZE_SIZE; j++)
+				if (selected[i][j]) {
+					if (drawMode < 3)
+						maze[i][j] = drawMode;
+					if (drawMode == 3) {
+						maze[i][j] = 0;
+						startPosition[0] = i;
+						startPosition[1] = j;
+						startPosition[2] = angle;
+					}
+					if (drawMode == 4) {
+						maze[i][j] = 0;
+						finishPosition[0] = i;
+						finishPosition[1] = j;
+					}
+					if (drawMode == 5 || drawMode == 6) {
+						int orientation = (angle / 45 + 1) / 2;
+
+						maze[i][j] = (byte) (4 * (drawMode - 4) + orientation);
+					}
 				}
 	}
 
-	public void save(File file)
-	{
-		try{
-			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
-			out.writeObject(this);
-			out.close();
+	// TODO: niet saven als start of finish buiten maze ligt
+	public void save(File file) {
+		if (startPosition[0] < 0 || startPosition[0] >= MAZE_SIZE
+				|| startPosition[1] < 0 || startPosition[1] >= MAZE_SIZE) {
+			System.err.println("Invalid start position.");
+		} else if (finishPosition[0] < 0 || finishPosition[0] >= MAZE_SIZE
+				|| finishPosition[1] < 0 || finishPosition[1] >= MAZE_SIZE) {
+			System.err.println("Invalid finish position.");
+		} else {
+			try {
+				PrintWriter wr = new PrintWriter(file);
+				wr.write(MAZE_SIZE + "\n");
+				wr.write(startPosition[0] + " " + startPosition[1] + " "
+						+ startPosition[2] + "\n");
+				wr.write(finishPosition[0] + " " + finishPosition[1] + "\n");
+				for (int i = 0; i < maze[0].length; i++) {
+					for (int j = 0; j < maze.length; j++) {
+						if (j < maze.length - 1)
+							wr.print(maze[i][j] + " ");
+						else
+							wr.print(maze[i][j] + "\n");
+					}
+				}
+				wr.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
-		catch(Exception e){
-			e.printStackTrace();
-		}
+
 	}
 
-	public void read(File file)
-	{
-		try{
-			ObjectInputStream in = new ObjectInputStream(new FileInputStream(file));
-			Maze newMaze = (Maze) in.readObject();
-			this.maze = newMaze.maze;
-			this.selected = newMaze.selected;
-			this.MAZE_SIZE = newMaze.MAZE_SIZE;
-			this.startPosition = newMaze.startPosition;
-			in.close();
-		}
-		catch(Exception e)
-		{
+	public void read(File file) {
+		try {
+			Scanner sc = new Scanner(file);
+			this.MAZE_SIZE = sc.nextInt();
+			int[] newStart = new int[3];
+			newStart[0] = sc.nextInt();
+			newStart[1] = sc.nextInt();
+			newStart[2] = sc.nextInt();
+			this.startPosition = newStart;
+			int[] newFinish = new int[2];
+			newFinish[0] = sc.nextInt();
+			newFinish[1] = sc.nextInt();
+			this.finishPosition = newFinish;
+			byte[][] newMaze = new byte[MAZE_SIZE][MAZE_SIZE];
+			for (int i = 0; i < MAZE_SIZE; i++) {
+				for (int j = 0; j < MAZE_SIZE; j++) {
+					newMaze[i][j] = sc.nextByte();
+				}
+			}
+			this.maze = newMaze;
+			this.selected = new boolean[MAZE_SIZE][MAZE_SIZE];
+			sc.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	public void display(GL gl) {
 		// draw the grid with the current material
-		for( int i = 0; i < MAZE_SIZE; i++ )
-		{
-			for( int j = 0; j < MAZE_SIZE; j++ )
-			{
-				float wallColour[] =  { 1.0f, 0.0f, 0.0f, 1.0f };
-				float floorColour[] = {0.0f, 0.0f, 1.0f, 0.0f};
-				if(selected[i][j])
-				{
+		for (int i = 0; i < MAZE_SIZE; i++) {
+			for (int j = 0; j < MAZE_SIZE; j++) {
+				float wallColour[] = { 1.0f, 0.0f, 0.0f, 1.0f };
+				float floorColour[] = { 0.0f, 0.0f, 1.0f, 1.0f };
+				float startColour[] = { 0.0f, 1.0f, 0.0f, 1.0f };
+				float finishColour[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+				if (selected[i][j]) {
 					wallColour[0] = 1.0f;
 					wallColour[2] = 1.0f;
 					floorColour[1] = 0.9f;
-				}
-				else
-				{
+				} else {
 					wallColour[0] = 0.5f;
 					wallColour[2] = 0.7f;
 					floorColour[1] = 0.0f;
 				}
-				gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);// Set the materials used by the wall.
+				gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);// Set the materials used by the wall.
 				gl.glPushMatrix();
-				gl.glTranslated( i * SQUARE_SIZE, 0, j * SQUARE_SIZE);
-				switch(maze[i][j])
-				{
-				case 1: box.draw(gl, wallColour); break;
-				case 4: ramp.draw(gl, wallColour); break;
-				case 5: lowRamp.draw(gl, wallColour); break;
-				case 6: flatBox.draw(gl, wallColour); break;
-				default: paintSingleFloorTile( gl, SQUARE_SIZE , floorColour); break;
+				gl.glTranslated(i * SQUARE_SIZE, 0, j * SQUARE_SIZE);
+				if (i == startPosition[0] && j == startPosition[1])
+					paintSingleFloorTile(gl, SQUARE_SIZE, startColour);
+				else if (i == finishPosition[0] && j == finishPosition[1])
+					paintSingleFloorTile(gl, SQUARE_SIZE, finishColour);
+				else{
+					switch (maze[i][j]) {
+					case 1:
+						box.draw(gl, wallColour);
+						break;
+					case 2:
+						flatBox.draw(gl, wallColour);
+						break;
+					case 4:
+						ramp0.draw(gl, wallColour);
+						break;
+					case 5:
+						ramp1.draw(gl, wallColour);
+						break;
+					case 6:
+						ramp2.draw(gl, wallColour);
+						break;
+					case 7:
+						ramp3.draw(gl, wallColour);
+						break;
+					case 8:
+						lowRamp0.draw(gl, wallColour);
+						break;
+					case 9:
+						lowRamp1.draw(gl, wallColour);
+						break;
+					case 10:
+						lowRamp2.draw(gl, wallColour);
+						break;
+					case 11:
+						lowRamp3.draw(gl, wallColour);
+						break;
+					default:
+						paintSingleFloorTile(gl, SQUARE_SIZE, floorColour);
+						break;
+					}
 				}
 				gl.glPopMatrix();
 			}
-		}			
+		}
 	}
 
 	/**
-	 * paintSingleFloorTile(GL, double) paints a single floor tile, to represent the floor of the entire maze.
+	 * paintSingleFloorTile(GL, double) paints a single floor tile, to represent
+	 * the floor of the entire maze.
 	 * 
-	 * @param gl	the GL context in which should be drawn
-	 * @param size	the size of the tile
+	 * @param gl
+	 *            the GL context in which should be drawn
+	 * @param size
+	 *            the size of the tile
 	 */
-	private void paintSingleFloorTile(GL gl, double size, float[] wallColour)
-	{
+	private void paintSingleFloorTile(GL gl, double size, float[] wallColour) {
 		// Setting the floor color and material.
-		gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);	// Set the materials used by the floor.
+		gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0); // Set the materials used by the floor.
 
 		gl.glNormal3d(0, 1, 0);
 		gl.glBegin(GL.GL_QUADS);
 		gl.glVertex3d(0, 0, 0);
 		gl.glVertex3d(0, 0, size);
 		gl.glVertex3d(size, 0, size);
-		gl.glVertex3d(size, 0, 0);		
-		gl.glEnd();	
+		gl.glVertex3d(size, 0, 0);
+		gl.glEnd();
 	}
 }

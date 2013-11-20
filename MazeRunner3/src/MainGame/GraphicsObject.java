@@ -44,10 +44,7 @@ public abstract class GraphicsObject {
 				return;
 			}
 		}
-		int p1 = face[0];
-		int p2 = face[1];
-		int p3 = face[2];
-		normals.add(calculateNormal(vertices.get(p1),vertices.get(p2),vertices.get(p3)));
+		normals.add(calculateNormal(face));
 		this.faces.add(face);
 		
 	}
@@ -57,10 +54,6 @@ public abstract class GraphicsObject {
 		for(int j = 0; j < faces.size(); j++)
 		{
 			int[] face = faces.get(j);
-			//if(j == faces.size() - 1){
-			//wallColour[0] = 1.0f;
-			//wallColour[2] = 0.0f;
-			//}
 			gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);
 			//System.out.println("grootte van face " + j + ": " + face.length);
 			Vector3f normal = normals.get(j);
@@ -78,13 +71,30 @@ public abstract class GraphicsObject {
 		}
 	}
 	
-	private Vector3f calculateNormal(Vector3f p1, Vector3f p2, Vector3f p3)
+	private Vector3f calculateNormal(int[] face)
 	{
+		Vector3f p1 = vertices.get(face[0]);
+		Vector3f p2 =vertices.get(face[1]);
+		Vector3f p3 =vertices.get(face[2]);
 		Vector3f v1 = p2.sub(p1); 
 		Vector3f v2 = p3.sub(p1);
-		Vector3f v3 = v2.out(v1);
+		Vector3f v3 = v1.out(v2);
 		v3 = v3.normalize();
 		return v3;
+	}
+	
+	protected void rotateVerticesY(float angle)
+	{
+		for(int i = 0; i < vertices.size(); i++)
+		{
+			Vector3f vertex = vertices.get(i);
+			float x = vertex.getX();
+			float z = vertex.getZ();
+			double cos = Math.cos(Math.toRadians(angle));
+			double sin = Math.sin(Math.toRadians(angle));
+			vertex.setX((float)(x*cos - z * sin - 2.5 * cos + 2.5 * sin + 2.5));
+			vertex.setZ((float)(x*sin + z * cos - 2.5 * cos - 2.5 * sin + 2.5));
+		}
 	}
 
 }

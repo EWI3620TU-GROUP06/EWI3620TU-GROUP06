@@ -90,8 +90,10 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	@Override
 	public void mousePressed(MouseEvent event)
 	{
-		if(event.getButton() == 1)
+		if(event.getButton() == 1){
 			leftButtonDragged = true;
+			leftButtonPressed = true;
+		}
 		if(event.getButton() == 3)
 			rightButtonDragged = true;
 		// Detect the location where the mouse has been pressed

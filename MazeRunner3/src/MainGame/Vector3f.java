@@ -58,9 +58,9 @@ public class Vector3f {
 	
 	public Vector3f out(Vector3f that)
 	{
-		float x = this.z * that.y - that.z * this.y;
-		float y = this.x * that.z - that.x * this.z;
-		float z = this.y * that.x - that.y * this.x;
+		float x = this.y * that.z - that.y * this.z;
+		float y = this.z * that.x - that.z * this.x;
+		float z = this.x * that.y - that.x * this.y;
 		return new Vector3f(x, y, z);
 	}
 	

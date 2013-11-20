@@ -22,20 +22,24 @@ public class Editor extends GameObject{
 
 	private int selectedX, selectedZ;
 
+	private int pressedX, pressedY;
+	int angle;
+
 	private Maze maze;
 
 	private float buttonSize;
 	private final int numButtons = 11;
-	
+
 	private byte drawMode;
-	
+
 	private final byte DRAW_EMPTY = 0;
 	private final byte DRAW_BOX = 1;
-	private final byte DRAW_START = 2;
-	private final byte DRAW_FINISH = 3;
-	private final byte DRAW_HIGH_RAMP = 4;
-	private final byte DRAW_LOW_RAMP = 5;
-	private final byte DRAW_FLAT_BOX = 6;
+	private final byte DRAW_FLAT_BOX = 2;
+	private final byte DRAW_START = 3;
+	private final byte DRAW_FINISH = 4;
+	private final byte DRAW_HIGH_RAMP = 5;
+	private final byte DRAW_LOW_RAMP = 6;
+
 
 	public Editor(double x, double y, double z, double h, double v)
 	{
@@ -106,37 +110,62 @@ public class Editor extends GameObject{
 	{
 		if(control != null)
 		{
+			
 			control.update();
 
 			int notches = control.getNotches();
 			// The Y position can never be lower then the highest wall
 			if(locationY + notches > maze.SQUARE_SIZE)
 				locationY += notches;
-			
-			// When dragging the left mouse button, the camera is moved.
+
+			if(control.isLeftButtonPressed())
+			{
+				pressedX = control.getMouseX();
+				pressedY = control.getMouseY();
+			}
+			// When dragging the right mouse button, the camera is moved.
 			if(control.isRightButtonDragged()){
 				updateLocation(screenHeight);
 			}
 			// When a selection of squares made by dragging is released, the selected squares are toggled
-			else if(control.isLeftReleased()){
-				maze.addBlock(drawMode);
+			else if(control.isLeftReleased() && ! hooverButtons()){
+				maze.addBlock(drawMode, angle);
 			}
 			else
 			{
 				updateCursor(screenHeight, screenWidth);
 				// When dragging, the selected squares are remembered:
 				if(!control.isLeftButtonDragged()){
-						maze.clearSelected();
-						// highlight the selection:
-						maze.select(selectedX, selectedZ);
+					maze.clearSelected();
+					// highlight the selection:
+					maze.select(selectedX, selectedZ);
 				}
 				else{
 					if(!(drawMode == DRAW_START || drawMode == DRAW_FINISH || drawMode == DRAW_HIGH_RAMP || drawMode == DRAW_LOW_RAMP))
 					{
 						maze.select(selectedX, selectedZ);
 					}
+					else if(!hooverButtons())
+					{
+						int dX = control.getMouseX() - pressedX;
+						int dY = control.getMouseY() - pressedY;
+						if(Math.abs(dX) > Math.abs(dY) )
+						{
+							if(dX > 0)
+								angle = 90;
+							else
+								angle = 270;
+						}
+						else
+						{
+							if(dY > 0)
+								angle = 180;
+							else
+								angle = 0;
+						}
+						maze.addBlock(drawMode, angle);
+					}
 				}
-				
 
 				int button = getButtons();
 				switch(button){
@@ -151,13 +180,18 @@ public class Editor extends GameObject{
 				case(8): drawMode = DRAW_FLAT_BOX; break;
 				case(9): save(); break;
 				case(10): read(); break;
-				case(-1): maze.addBlock(drawMode); break;
+				case(-1): maze.addBlock(drawMode, angle); System.out.println(angle);break;
 				case(-2): System.out.println("Clicked middle mouse button!"); break;
 				default: break;
 				}
 
 			}
 		}
+	}
+	
+	private boolean hooverButtons()
+	{
+		return control.getMouseX() < (numButtons * buttonSize) && control.getMouseY() < buttonSize;
 	}
 
 	/**
@@ -253,7 +287,7 @@ public class Editor extends GameObject{
 		}
 		return false;
 	}
-	
+
 	public static Maze readMaze(){
 		JFileChooser fc = new JFileChooser();
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -261,12 +295,12 @@ public class Editor extends GameObject{
 		fc.setDialogTitle("Select a maze file");
 		FileFilter filter = new FileNameExtensionFilter("Maze file", "mz", "maze");
 		fc.setFileFilter(filter);
-		
+
 		int returnVal = fc.showDialog(fc, "Open");
 		File file = fc.getSelectedFile();
 		Maze maze = new Maze();
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			
+
 			maze.read(file);
 		}
 		return maze;

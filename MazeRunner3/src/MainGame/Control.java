@@ -34,6 +34,7 @@ public abstract class Control
 	protected boolean rightButtonDragged = false;
 	protected boolean leftButtonDragged = false;
 	protected boolean leftReleased = false;
+	protected boolean leftButtonPressed = false;
 
 	/**
 	 * @return Returns true if forward motion is desired.
@@ -130,6 +131,12 @@ public abstract class Control
 	public boolean isLeftReleased(){
 		boolean res = leftReleased;
 		leftReleased = false;
+		return res;
+	}
+	
+	public boolean isLeftButtonPressed(){
+		boolean res = leftButtonPressed;
+		leftButtonPressed = false;
 		return res;
 	}
 
