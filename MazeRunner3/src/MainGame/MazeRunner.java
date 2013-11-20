@@ -3,6 +3,7 @@ package MainGame;
 import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
 
+import GameStates.gStateMan;
 import Main.Game;
 
 import java.util.ArrayList;
@@ -38,7 +39,8 @@ public class MazeRunner implements GLEventListener {
 	private UserInput input;								// The user input object that controls the player.
 	private Maze maze; 										// The maze.
 	private long previousTime = Calendar.getInstance().getTimeInMillis(); // Used to calculate elapsed time.
-
+	private gStateMan gsm;
+	
 /*
  * **********************************************
  * *		Initialization methods				*
@@ -79,37 +81,7 @@ public class MazeRunner implements GLEventListener {
 //		setVisible(true);
 	}
 	
-	/**
-	 * initJOGL() sets up JOGL to work properly.
-	 * <p>
-	 * It sets the capabilities we want for MazeRunner, and uses these to create the GLCanvas upon which 
-	 * MazeRunner will actually display our screen. To indicate to OpenGL that is has to enter a 
-	 * continuous loop, it uses an Animator, which is part of the JOGL api.
-	 */
-//	private void initJOGL()	{
-//		// First, we set up JOGL. We start with the default settings.
-//		GLCapabilities caps = new GLCapabilities();
-//		// Then we make sure that JOGL is hardware accelerated and uses double buffering.
-//		caps.setDoubleBuffered( true );
-//		caps.setHardwareAccelerated( true );
-//
-//		// Now we add the canvas, where OpenGL will actually draw for us. We'll use settings we've just defined. 
-////		canvas = new GLCanvas( caps );
-////		add( canvas );
-//		/* We need to add a GLEventListener to interpret OpenGL events for us. Since MazeRunner implements
-//		 * GLEventListener, this means that we add the necesary init(), display(), displayChanged() and reshape()
-//		 * methods to this class.
-//		 * These will be called when we are ready to perform the OpenGL phases of MazeRunner. 
-//		 */
-//		//canvas.addGLEventListener( this );
-//		
-//		/* We need to create an internal thread that instructs OpenGL to continuously repaint itself.
-//		 * The Animator class handles that for JOGL.
-//		 */
-//		Animator anim = new Animator( canvas );
-//		anim.start();
-//	}
-	
+
 	/**
 	 * initializeObjects() creates all the objects needed for the game to start normally.
 	 * <p>
@@ -142,7 +114,7 @@ public class MazeRunner implements GLEventListener {
 		camera = new Camera( player.getLocationX(), player.getLocationY(), player.getLocationZ(), 
 				             player.getHorAngle(), player.getVerAngle() );
 		
-		input = new UserInput(game.getCanvas());
+		input = new UserInput(game.getCanvas(), gsm);
 		player.setControl(input);
 	}
 
@@ -319,18 +291,4 @@ public class MazeRunner implements GLEventListener {
 		camera.calculateVRP();
 	}
 	
-/*
- * **********************************************
- * *				  Main						*
- * **********************************************
- */
-//	/**
-//	 * Program entry point
-//	 * 
-//	 * @param args
-//	 */
-//	public static void main(String[] args) {
-//		// Create and run MazeRunner.
-//		new MazeRunner();
-//	}
 }

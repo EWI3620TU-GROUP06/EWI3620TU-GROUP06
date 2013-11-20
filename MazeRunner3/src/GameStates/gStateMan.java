@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import javax.media.opengl.GLAutoDrawable;
 
 import Main.Game;
+import MainGame.UserInput;
 
 public class gStateMan {
 	
 	private ArrayList<GameState> gameStates;
 	private int currentState;
+	private UserInput input;
 	public static final int MENUSTATE = 0;
 	public static final int PLAYSTATE = 1;
 	
@@ -18,6 +20,7 @@ public class gStateMan {
 		currentState = MENUSTATE;
 		gameStates.add(new MenuState(this,game));
 		gameStates.add(new PlayState(this,game));
+		input = new UserInput(game.getCanvas(), this);
 		update();
 	}
 	

@@ -108,34 +108,6 @@ public class Game extends Frame implements GLEventListener {
 			drawable.setGL( new DebugGL(drawable.getGL() )); // We set the OpenGL pipeline to Debugging mode.
 	        gsm.init(drawable);
 	       
-//			GL gl = drawable.getGL();
-//	        GLU glu = new GLU();
-	        
-//	        gl.glClearColor(0, 0, 0, 0);								// Set the background color.
-	        
-	        // Now we set up our viewpoint.
-//	        gl.glMatrixMode( GL.GL_PROJECTION );						// We'll use orthogonal projection.
-//	        gl.glLoadIdentity();										// Reset the current matrix.
-//	        glu.gluPerspective( 60, screenWidth, screenHeight, 200);	// Set up the parameters for perspective viewing.
-//	        gl.glMatrixMode( GL.GL_MODELVIEW );
-	        
-	        // Enable back-face culling.
-//	        gl.glCullFace( GL.GL_BACK );
-//	        gl.glEnable( GL.GL_CULL_FACE );
-	        
-	        // Enable Z-buffering.
-//	        gl.glDisable( GL.GL_DEPTH_TEST );
-	        
-	        // Set and enable the lighting.
-//	        float lightPosition[] = { 0.0f, 50.0f, 0.0f, 1.0f }; 			// High up in the sky!
-//	        float lightColour[] = { 1.0f, 1.0f, 1.0f, 0.0f };				// White light!
-//	        gl.glLightfv( GL.GL_LIGHT0, GL.GL_POSITION, lightPosition, 0 );	// Note that we're setting Light0.
-//	        gl.glLightfv( GL.GL_LIGHT0, GL.GL_AMBIENT, lightColour, 0);
-//	        gl.glEnable( GL.GL_LIGHTING );
-//	        gl.glEnable( GL.GL_LIGHT0 );
-//	        
-	        // Set the shading model.
-//	        gl.glShadeModel( GL.GL_SMOOTH );
 		}
 		
 		/**

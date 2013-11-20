@@ -3,6 +3,8 @@ import java.awt.event.*;
 
 import javax.media.opengl.GLCanvas;
 
+import GameStates.gStateMan;
+
 /**
  * The UserInput class is an extension of the Control class. It also implements three 
  * interfaces, each providing handler methods for the different kinds of user input.
@@ -28,6 +30,7 @@ public class UserInput extends Control
 	private int xdragPos;
 	private int ydragPos;
 	private boolean inscreen;
+	private gStateMan gsm;
 	
 	/**
 	 * UserInput constructor.
@@ -37,11 +40,12 @@ public class UserInput extends Control
 	 * 
 	 * @param canvas The GLCanvas to which to add the listeners.
 	 */
-	public UserInput(GLCanvas canvas)
+	public UserInput(GLCanvas canvas, gStateMan gsm)
 	{
 		canvas.addMouseListener(this);
 		canvas.addMouseMotionListener(this);
 		canvas.addKeyListener(this);
+		this.gsm = gsm;
 	}
 	
 	/*
