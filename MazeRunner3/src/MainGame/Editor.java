@@ -152,16 +152,16 @@ public class Editor extends GameObject{
 						if(Math.abs(dX) > Math.abs(dY) )
 						{
 							if(dX > 0)
-								angle = 90;
-							else
 								angle = 270;
+							else
+								angle = 90;
 						}
 						else
 						{
 							if(dY > 0)
-								angle = 180;
-							else
 								angle = 0;
+							else
+								angle = 180;
 						}
 						maze.addBlock(drawMode, angle);
 					}
@@ -180,8 +180,8 @@ public class Editor extends GameObject{
 				case(8): drawMode = DRAW_FLAT_BOX; break;
 				case(9): save(); break;
 				case(10): read(); break;
-				case(-1): maze.addBlock(drawMode, angle); System.out.println(angle);break;
-				case(-2): System.out.println("Clicked middle mouse button!"); break;
+				case(-1): maze.addBlock(drawMode, angle);break;
+				case(-2): maze.rotateSelected(); break;
 				default: break;
 				}
 

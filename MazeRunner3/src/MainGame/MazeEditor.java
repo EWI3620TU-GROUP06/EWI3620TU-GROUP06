@@ -48,7 +48,7 @@ public class MazeEditor extends Frame implements GLEventListener {
 	private Maze maze; // The maze.
 	private long previousTime = Calendar.getInstance().getTimeInMillis();
 	
-	boolean editing = true;
+	boolean editing = false;
 
 	/*
 	 * **********************************************
@@ -149,6 +149,8 @@ public class MazeEditor extends Frame implements GLEventListener {
 		visibleObjects = new ArrayList<VisibleObject>();
 		// Add the maze that we will be using.
 		maze = new Maze();
+		if(!editing)
+			maze = Editor.readMaze();
 		visibleObjects.add(maze);
 		
 		player = new Player(maze.getStart()[0], maze.SQUARE_SIZE/2.0f, maze.getStart()[1], maze.getStart()[2],0);

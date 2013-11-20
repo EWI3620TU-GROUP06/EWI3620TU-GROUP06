@@ -177,7 +177,8 @@ public class Maze implements VisibleObject, Serializable {
 	{
 		for(int i = 0; i < MAZE_SIZE; i++)
 			for (int j = 0; j < MAZE_SIZE; j++)
-				if (selected[i][j]) {
+				if (selected[i][j] && !(drawMode != 3 && i == startPosition[0] && j == startPosition[1])
+						&& !(i == finishPosition[0] && j == finishPosition[1])) {
 					if (drawMode < 3)
 						maze[i][j] = drawMode;
 					if (drawMode == 3) {
@@ -191,11 +192,22 @@ public class Maze implements VisibleObject, Serializable {
 						finishPosition[0] = i;
 						finishPosition[1] = j;
 					}
-					if (drawMode == 5 || drawMode == 6) {
+					if (drawMode > 4) {
 						int orientation = (angle / 45 + 1) / 2;
 
 						maze[i][j] = (byte) (4 * (drawMode - 4) + orientation);
 					}
+				}
+	}
+
+	public void rotateSelected()
+	{
+		for(int i = 0; i < MAZE_SIZE; i++)
+			for (int j = 0; j < MAZE_SIZE; j++)
+				if (selected[i][j])
+				{
+					if(maze[i][j] > 3)
+						maze[i][j] = (byte)(maze[i][j] - maze[i][j] % 4 + (maze[i][j] + 1) % 4); 
 				}
 	}
 
@@ -278,7 +290,12 @@ public class Maze implements VisibleObject, Serializable {
 				gl.glPushMatrix();
 				gl.glTranslated(i * SQUARE_SIZE, 0, j * SQUARE_SIZE);
 				if (i == startPosition[0] && j == startPosition[1])
+				{
+					gl.glDisable(GL.GL_LIGHTING);
+					paintArrow(gl, startPosition[2]);
+					gl.glEnable(GL.GL_LIGHTING);
 					paintSingleFloorTile(gl, SQUARE_SIZE, startColour);
+				}
 				else if (i == finishPosition[0] && j == finishPosition[1])
 					paintSingleFloorTile(gl, SQUARE_SIZE, finishColour);
 				else{
@@ -344,4 +361,45 @@ public class Maze implements VisibleObject, Serializable {
 		gl.glVertex3d(size, 0, 0);
 		gl.glEnd();
 	}
+	
+	private void paintArrow(GL gl, int angle){
+		float arrowColour[] = {1.0f, 0.0f, 0.0f, 1.0f };
+		
+		Vector3f v1 = new Vector3f((float)(SQUARE_SIZE / 3), 0, (float)(SQUARE_SIZE / 3));
+		Vector3f v2 = new Vector3f((float)(SQUARE_SIZE / 2), 0,(float)(SQUARE_SIZE));
+		Vector3f v3 = new Vector3f((float)(SQUARE_SIZE * 2 / 3), 0, (float)(SQUARE_SIZE / 3));
+		
+		double cos = Math.cos(Math.toRadians(angle));
+		double sin = Math.sin(Math.toRadians(angle));
+
+		float x = v1.getX();
+		float z = v1.getZ();
+		
+		v1.setX((float)(x*cos - z * sin - 2.5 * cos + 2.5 * sin + 2.5));
+		v1.setZ((float)(x*sin + z * cos - 2.5 * cos - 2.5 * sin + 2.5));
+		
+		x = v2.getX();
+		z = v2.getZ();
+		
+		v2.setX((float)(x*cos - z * sin - 2.5 * cos + 2.5 * sin + 2.5));
+		v2.setZ((float)(x*sin + z * cos - 2.5 * cos - 2.5 * sin + 2.5));
+		
+		x = v3.getX();
+		z = v3.getZ();
+		
+		v3.setX((float)(x*cos - z * sin - 2.5 * cos + 2.5 * sin + 2.5));
+		v3.setZ((float)(x*sin + z * cos - 2.5 * cos - 2.5 * sin + 2.5));
+		
+		gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, arrowColour, 0);
+		gl.glBegin(GL.GL_POLYGON);
+		gl.glVertex3d(0.5*SQUARE_SIZE, 0, 0.5*SQUARE_SIZE);
+		gl.glVertex3d(v1.getX(), 0.01, v1.getZ());
+		gl.glVertex3d(v2.getX(), 0.01, v2.getZ());
+		gl.glVertex3d(v3.getX(), 0.01, v3.getZ());
+		gl.glEnd();
+		
+		
+	}
+	
+	
 }
