@@ -49,8 +49,4 @@ public class gStateMan {
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height){
 		gameStates.get(currentState).reshape(drawable,x,y,width,height);
 	}
-	
-	public UserInput getInput(){
-		return input;
-	}
 }
