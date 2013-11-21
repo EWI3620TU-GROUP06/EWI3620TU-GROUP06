@@ -213,7 +213,7 @@ public class UserInput extends Control
 	public void mouseClicked(MouseEvent event)
 	{
 		if(this.gsm.getCurState() == 0){
-			this.gsm.setState(2);
+			this.gsm.setState(1);
 			System.out.println("klik");
 		}
 		if(this.gsm.getCurState() == 2){

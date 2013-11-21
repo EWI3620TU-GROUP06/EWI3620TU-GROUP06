@@ -53,6 +53,7 @@ public abstract class GraphicsObject {
 	{
 		for(int j = 0; j < faces.size(); j++)
 		{
+			
 			int[] face = faces.get(j);
 			gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);
 			Vector3f normal = normals.get(j);
@@ -79,7 +80,7 @@ public abstract class GraphicsObject {
 		return v3;
 	}
 	
-	protected void rotateVerticesY(float angle)
+	protected void rotateVerticesY(float angle, double xRotate, double zRotate)
 	{
 		for(int i = 0; i < vertices.size(); i++)
 		{
@@ -88,8 +89,8 @@ public abstract class GraphicsObject {
 			float z = vertex.getZ();
 			double cos = Math.cos(Math.toRadians(angle));
 			double sin = Math.sin(Math.toRadians(angle));
-			vertex.setX((float)(x*cos - z * sin - 2.5 * cos + 2.5 * sin + 2.5));
-			vertex.setZ((float)(x*sin + z * cos - 2.5 * cos - 2.5 * sin + 2.5));
+			vertex.setX((float)(x*cos - z * sin - xRotate * cos + zRotate * sin + xRotate));
+			vertex.setZ((float)(x*sin + z * cos - zRotate * cos - xRotate * sin + zRotate));
 		}
 	}
 

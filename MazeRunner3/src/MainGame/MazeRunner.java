@@ -39,6 +39,7 @@ public class MazeRunner implements GLEventListener {
 	private Camera camera;									// The camera object.
 	private UserInput input;								// The user input object that controls the player.
 	private Maze maze; 										// The maze.
+	private PlayerSprite playerSprite;
 	private long previousTime = Calendar.getInstance().getTimeInMillis(); // Used to calculate elapsed time.
 	private GameState state;
 	private GLCanvas canvas;
@@ -130,12 +131,16 @@ public class MazeRunner implements GLEventListener {
 		visibleObjects = new ArrayList<VisibleObject>();
 		// Add the maze that we will be using.
 		maze = new Maze();
+		
 		visibleObjects.add( maze );
 
 		// Initialize the player.
 		player = new Player(maze.getStart()[0], maze.SQUARE_SIZE/2.0f, maze.getStart()[1], maze.getStart()[2],0);
-
-		camera = new Camera( player.getLocationX(), player.getLocationY(), player.getLocationZ(), 
+		
+		playerSprite = new PlayerSprite((float)maze.SQUARE_SIZE, player.getLocationX(), player.getLocationZ(), (float) player.getHorAngle());
+		visibleObjects.add(playerSprite);
+		
+		camera = new Camera(player.getLocationX(), player.getLocationY(), player.getLocationZ(), 
 				             player.getHorAngle(), player.getVerAngle() );
 		
 		input = new UserInput(canvas, state.getGSM());
@@ -285,6 +290,7 @@ public class MazeRunner implements GLEventListener {
                     maze.isWall(player.getLocationX(),player.getLocationZ()-1)){
                   player.update(-deltaTime);
                 }
+		playerSprite.update(player.getLocationX() - 2.5, player.getLocationZ() - 2.5, -(player.getHorAngle() - 180));
 	}
 
 	/**
@@ -294,9 +300,13 @@ public class MazeRunner implements GLEventListener {
 	 */
 	
 	private void updateCamera() {
-		camera.setLocationX( player.getLocationX() );
-		camera.setLocationY( player.getLocationY() );  
-		camera.setLocationZ( player.getLocationZ() );
+		double cameraX = player.getLocationX() + 3 *Math.sin( Math.toRadians(player.getHorAngle())) * Math.cos( Math.toRadians(player.getVerAngle()) );
+		double cameraY = player.getLocationY() + Math.sin(Math.toRadians(player.getVerAngle()));
+		double cameraZ = player.getLocationZ() + 3 *Math.cos( Math.toRadians(player.getHorAngle())) * Math.cos(Math.toRadians(player.getVerAngle()));
+		
+		camera.setLocationX( cameraX);
+		camera.setLocationY( cameraY );  
+		camera.setLocationZ( cameraZ );
 		camera.setHorAngle( player.getHorAngle() );
 		camera.setVerAngle( player.getVerAngle() );
 		camera.calculateVRP();
