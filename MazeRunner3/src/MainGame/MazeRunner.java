@@ -208,10 +208,10 @@ public class MazeRunner implements GLEventListener {
 	 * knows where to draw.
 	 */
 	public void display(GLAutoDrawable drawable) {
-		if (anim.isAnimating()){
-			GL gl = drawable.getGL();
-			GLU glu = new GLU();
-			
+		
+		GL gl = drawable.getGL();
+		GLU glu = new GLU();
+		if (anim.isAnimating()){	
 			// Calculating time since last frame.
 			Calendar now = Calendar.getInstance();		
 			long currentTime = now.getTimeInMillis();

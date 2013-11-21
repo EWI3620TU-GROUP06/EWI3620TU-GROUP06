@@ -209,10 +209,9 @@ public class MazeEditor implements GLEventListener {
 	 * reference of the GL context, so it knows where to draw.
 	 */
 	public void display(GLAutoDrawable drawable) {
+		GL gl = drawable.getGL();
+		GLU glu = new GLU();
 		if (anim.isAnimating()){
-			GL gl = drawable.getGL();
-			GLU glu = new GLU();
-	
 			// Update any movement since last frame.
 			editor.update(screenWidth, screenHeight);
 			updateCamera();
