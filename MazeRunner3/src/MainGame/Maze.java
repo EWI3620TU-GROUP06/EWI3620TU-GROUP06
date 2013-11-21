@@ -1,8 +1,6 @@
 package MainGame;
 import javax.media.opengl.GL;
 
-import com.sun.opengl.util.GLUT;
-
 import java.io.*;
 import java.util.Scanner;
 
@@ -26,7 +24,7 @@ import java.util.Scanner;
  * @author Bruno Scheele, revised by Mattijs Driel
  *
  */
-public class Maze implements VisibleObject, Serializable {
+public class Maze implements VisibleObject {
 
 	public int MAZE_SIZE = 10;
 	public final double SQUARE_SIZE = 5;
@@ -35,7 +33,9 @@ public class Maze implements VisibleObject, Serializable {
 
 	private int[] startPosition = {6, 5, 90};
 	private int[] finishPosition = {8,8};
-
+	
+	private StartArrow arrow = new StartArrow((float) SQUARE_SIZE, startPosition[2]);
+	
 	private final Box box = new Box((float) SQUARE_SIZE,(float) SQUARE_SIZE); 
 	private final Ramp ramp0 = new Ramp((float) SQUARE_SIZE, (float) SQUARE_SIZE, 0);
 	private final Ramp ramp1 = new Ramp((float) SQUARE_SIZE, (float) SQUARE_SIZE, 1);
@@ -186,6 +186,7 @@ public class Maze implements VisibleObject, Serializable {
 						startPosition[0] = i;
 						startPosition[1] = j;
 						startPosition[2] = angle;
+						arrow.setAngle(angle);
 					}
 					if (drawMode == 4) {
 						maze[i][j] = 0;
@@ -277,6 +278,7 @@ public class Maze implements VisibleObject, Serializable {
 				float floorColour[] = { 0.0f, 0.0f, 1.0f, 1.0f };
 				float startColour[] = { 0.0f, 1.0f, 0.0f, 1.0f };
 				float finishColour[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+				float arrowColour[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 				if (selected[i][j]) {
 					wallColour[0] = 1.0f;
 					wallColour[2] = 1.0f;
@@ -291,9 +293,7 @@ public class Maze implements VisibleObject, Serializable {
 				gl.glTranslated(i * SQUARE_SIZE, 0, j * SQUARE_SIZE);
 				if (i == startPosition[0] && j == startPosition[1])
 				{
-					gl.glDisable(GL.GL_LIGHTING);
-					paintArrow(gl, startPosition[2]);
-					gl.glEnable(GL.GL_LIGHTING);
+					arrow.draw(gl, arrowColour);
 					paintSingleFloorTile(gl, SQUARE_SIZE, startColour);
 				}
 				else if (i == finishPosition[0] && j == finishPosition[1])
@@ -360,46 +360,6 @@ public class Maze implements VisibleObject, Serializable {
 		gl.glVertex3d(size, 0, size);
 		gl.glVertex3d(size, 0, 0);
 		gl.glEnd();
-	}
-	
-	private void paintArrow(GL gl, int angle){
-		float arrowColour[] = {1.0f, 0.0f, 0.0f, 1.0f };
-		
-		Vector3f v1 = new Vector3f((float)(SQUARE_SIZE / 3), 0, (float)(SQUARE_SIZE / 3));
-		Vector3f v2 = new Vector3f((float)(SQUARE_SIZE / 2), 0,(float)(SQUARE_SIZE));
-		Vector3f v3 = new Vector3f((float)(SQUARE_SIZE * 2 / 3), 0, (float)(SQUARE_SIZE / 3));
-		
-		double cos = Math.cos(Math.toRadians(angle));
-		double sin = Math.sin(Math.toRadians(angle));
-
-		float x = v1.getX();
-		float z = v1.getZ();
-		
-		v1.setX((float)(x*cos - z * sin - 2.5 * cos + 2.5 * sin + 2.5));
-		v1.setZ((float)(x*sin + z * cos - 2.5 * cos - 2.5 * sin + 2.5));
-		
-		x = v2.getX();
-		z = v2.getZ();
-		
-		v2.setX((float)(x*cos - z * sin - 2.5 * cos + 2.5 * sin + 2.5));
-		v2.setZ((float)(x*sin + z * cos - 2.5 * cos - 2.5 * sin + 2.5));
-		
-		x = v3.getX();
-		z = v3.getZ();
-		
-		v3.setX((float)(x*cos - z * sin - 2.5 * cos + 2.5 * sin + 2.5));
-		v3.setZ((float)(x*sin + z * cos - 2.5 * cos - 2.5 * sin + 2.5));
-		
-		gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, arrowColour, 0);
-		gl.glBegin(GL.GL_POLYGON);
-		gl.glVertex3d(0.5*SQUARE_SIZE, 0, 0.5*SQUARE_SIZE);
-		gl.glVertex3d(v1.getX(), 0.01, v1.getZ());
-		gl.glVertex3d(v2.getX(), 0.01, v2.getZ());
-		gl.glVertex3d(v3.getX(), 0.01, v3.getZ());
-		gl.glEnd();
-		
-		
-	}
-	
+	}	
 	
 }

@@ -55,17 +55,13 @@ public abstract class GraphicsObject {
 		{
 			int[] face = faces.get(j);
 			gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);
-			//System.out.println("grootte van face " + j + ": " + face.length);
 			Vector3f normal = normals.get(j);
 			gl.glNormal3d(normal.getX(), normal.getY(), normal.getZ());
-			//System.out.println(normal.getX() + ", " + normal.getY()  + ", " + normal.getZ());
 			gl.glBegin(GL.GL_POLYGON);
 			for(int i = 0; i < face.length; i++)
 			{
-				//System.out.println("Vertex " + face[i]);
 				Vector3f pos = vertices.get(face[i]);
 				gl.glVertex3f(pos.getX(), pos.getY(), pos.getZ());
-				//System.out.println(pos.getX() + ", " + pos.getY()  + ", " + pos.getZ());
 			}
 			gl.glEnd();
 		}

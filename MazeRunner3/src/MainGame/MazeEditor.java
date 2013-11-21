@@ -48,7 +48,7 @@ public class MazeEditor extends Frame implements GLEventListener {
 	private Maze maze; // The maze.
 	private long previousTime = Calendar.getInstance().getTimeInMillis();
 	
-	boolean editing = false;
+	boolean editing = true;
 
 	/*
 	 * **********************************************

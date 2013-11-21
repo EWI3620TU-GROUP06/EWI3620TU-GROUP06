@@ -27,7 +27,7 @@ public class Ramp extends GraphicsObject{
 		int[] face4 = {2, 3, 4, 5};
 		addFace(face4);
 		
-		this.rotateVerticesY(orientation * 90);
+		this.rotateVerticesY(orientation * 90 + 180);
 	}
 
 }
