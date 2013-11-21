@@ -22,7 +22,7 @@ import GameStates.gStateMan;
  *
  */
 public class UserInput extends Control 
-		implements MouseListener, MouseMotionListener, KeyListener
+		implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 {
 	// TODO: Add fields to help calculate mouse movement
 	private int xPos;
@@ -45,6 +45,7 @@ public class UserInput extends Control
 		canvas.addMouseListener(this);
 		canvas.addMouseMotionListener(this);
 		canvas.addKeyListener(this);
+		canvas.addMouseWheelListener(this);
 		this.gsm = gsm;
 	}
 	
@@ -105,6 +106,19 @@ public class UserInput extends Control
 			xdragPos = xPos;
 			ydragPos = yPos;	
 		}
+		if(this.gsm.getCurrentState() == EDITOR_STATE){
+		if(event.getButton() == 1){
+			leftButtonDragged = true;
+			leftButtonPressed = true;
+		}
+		if(event.getButton() == 3)
+			rightButtonDragged = true;
+		// Detect the location where the mouse has been pressed
+		this.xPos = event.getX();
+		this.yPos = event.getY();
+		xdragPos = xPos;
+		ydragPos = yPos;
+		}
 	}
 
 	@Override
@@ -115,6 +129,13 @@ public class UserInput extends Control
 		if (this.gsm.getCurState() == 1){
 			this.xdragPos = event.getX();
 			this.ydragPos = event.getY();
+		}
+		if(this.gsm.getCurrentState() == EDITOR_STATE){
+		this.xdragPos = event.getX();
+		this.ydragPos = event.getY();
+		
+		this.mouseX = event.getX();
+		this.mouseY = event.getY();
 		}
 	}
 
@@ -174,6 +195,13 @@ public class UserInput extends Control
 			this.xdragPos = event.getX();
 			this.ydragPos = event.getY();
 		}
+		if(this.gsm.getCurrentState() == EDITOR_STATE){
+		this.xdragPos = event.getX();
+		this.ydragPos = event.getY();
+
+		this.mouseX = event.getX();
+		this.mouseY = event.getY();
+		}
 	}
 
 	@Override
@@ -187,6 +215,13 @@ public class UserInput extends Control
 		if(this.gsm.getCurState() == 0){
 			this.gsm.setState(1);
 			System.out.println("klik");
+		}
+		if(this.gsm.getCurrentState() == EDITOR_STATE){
+		this.mouseX = event.getX();
+		this.mouseY = event.getY();
+		mouseClicked = (byte)event.getButton();
+		if(event.getButton() == 1)
+			leftReleased = false;
 		}
 	}
 
@@ -212,6 +247,19 @@ public class UserInput extends Control
 	@Override
 	public void mouseReleased(MouseEvent event)
 	{
+		if(this.gsm.getCurrentState() == EDITOR_STATE){
+		if(event.getButton() == 1){
+			leftButtonDragged = false;
+			leftReleased = true;
+		}
+		if(event.getButton() == 3)
+			rightButtonDragged = false;
+		}
+	}
+	
+	public void mouseWheelMoved(MouseWheelEvent event)
+	{
+		notches += event.getWheelRotation();
 	}
 
 
