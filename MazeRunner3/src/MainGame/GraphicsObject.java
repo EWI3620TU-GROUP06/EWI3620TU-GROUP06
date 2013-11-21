@@ -6,29 +6,29 @@ import javax.media.opengl.*;
 import java.util.ArrayList;
 
 public abstract class GraphicsObject {
-	
+
 	ArrayList<Vector3f> vertices;
 	ArrayList<int[]> faces;
 	ArrayList<Vector3f> normals;
-	
+
 	public GraphicsObject()
 	{
 		vertices = new ArrayList<Vector3f>();
 		normals = new ArrayList<Vector3f>();
 		faces = new ArrayList<int[]>();
-		
+
 	}
-	
+
 	public void addVertex(Vector3f point)
 	{
 		vertices.add(point);
 	}
-	
+
 	public int getNumVertices()
 	{
 		return vertices.size();
 	}
-	
+
 	public void addFace(int[] face)
 	{
 		if(face.length < 3)
@@ -46,14 +46,14 @@ public abstract class GraphicsObject {
 		}
 		normals.add(calculateNormal(face));
 		this.faces.add(face);
-		
+
 	}
-	
+
 	public void draw(GL gl, float[] wallColour)
 	{
 		for(int j = 0; j < faces.size(); j++)
 		{
-			
+
 			int[] face = faces.get(j);
 			gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);
 			Vector3f normal = normals.get(j);
@@ -62,12 +62,23 @@ public abstract class GraphicsObject {
 			for(int i = 0; i < face.length; i++)
 			{
 				Vector3f pos = vertices.get(face[i]);
+				if( this instanceof Box)
+				{
+					if(i == 0)
+						gl.glTexCoord2f(1, 1);
+					if(i == 1)
+						gl.glTexCoord2f(1, 0);
+					if(i == 2)
+						gl.glTexCoord2f(0, 0);
+					if(i == 3)
+						gl.glTexCoord2f(0, 1);
+				}
 				gl.glVertex3f(pos.getX(), pos.getY(), pos.getZ());
 			}
 			gl.glEnd();
 		}
 	}
-	
+
 	private Vector3f calculateNormal(int[] face)
 	{
 		Vector3f p1 = vertices.get(face[0]);
@@ -79,7 +90,7 @@ public abstract class GraphicsObject {
 		v3 = v3.normalize();
 		return v3;
 	}
-	
+
 	protected void rotateVerticesY(float angle, double xRotate, double zRotate)
 	{
 		for(int i = 0; i < vertices.size(); i++)

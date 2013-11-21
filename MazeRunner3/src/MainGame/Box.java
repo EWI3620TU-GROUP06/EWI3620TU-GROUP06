@@ -14,22 +14,22 @@ public class Box extends GraphicsObject{
 		addVertex(new Vector3f(width, height, width));
 		addVertex(new Vector3f(0, height, width));
 		
-		int[] face0 = {0, 3, 2, 1};
+		int[] face0 = {0, 1, 5, 4};
 		addFace(face0);
 		
 		int[] face1 = {1, 2, 6, 5};
 		addFace(face1);
 		
-		int[] face2 = {0, 1, 5, 4};
+		int[] face2 = {0, 3, 2, 1};
 		addFace(face2);
 		
-		int[] face3 = {0, 4, 7, 3};
+		int[] face3 = {4, 7, 3, 0};
 		addFace(face3);
 		
-		int[] face4 = {3, 7, 6, 2};
+		int[] face4 = {5, 6, 7, 4};
 		addFace(face4);
 		
-		int[] face5 = {5, 6, 7, 4};
+		int[] face5 = {3, 7, 6, 2};
 		addFace(face5);
 	}
 

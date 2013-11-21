@@ -168,6 +168,7 @@ public class MazeEditor implements GLEventListener {
 		// mode.
 		GL gl = drawable.getGL();
 		GLU glu = new GLU();
+		maze.initTextures(gl);
 
 		gl.glClearColor(0, 0, 0, 0); // Set the background color.
 

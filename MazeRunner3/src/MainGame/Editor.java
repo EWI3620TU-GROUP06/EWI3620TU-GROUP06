@@ -110,7 +110,6 @@ public class Editor extends GameObject{
 	{
 		if(control != null)
 		{
-			
 			control.update();
 
 			int notches = control.getNotches();
@@ -125,6 +124,7 @@ public class Editor extends GameObject{
 			}
 			// When dragging the right mouse button, the camera is moved.
 			if(control.isRightButtonDragged()){
+				
 				updateLocation(screenHeight);
 			}
 			// When a selection of squares made by dragging is released, the selected squares are toggled

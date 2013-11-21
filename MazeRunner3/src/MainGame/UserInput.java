@@ -22,7 +22,7 @@ import GameStates.gStateMan;
  *
  */
 public class UserInput extends Control 
-		implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
+implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 {
 	// TODO: Add fields to help calculate mouse movement
 	private int xPos;
@@ -31,7 +31,7 @@ public class UserInput extends Control
 	private int ydragPos;
 	private boolean inscreen;
 	private gStateMan gsm;
-	
+
 	/**
 	 * UserInput constructor.
 	 * <p>
@@ -48,7 +48,7 @@ public class UserInput extends Control
 		canvas.addMouseWheelListener(this);
 		this.gsm = gsm;
 	}
-	
+
 	/*
 	 * **********************************************
 	 * *				Updating					*
@@ -58,35 +58,41 @@ public class UserInput extends Control
 	@Override
 	public void update()
 	{
-	
+
 		// TODO: Set dX and dY to values corresponding to mouse movement
 		if (this.gsm.getCurState() == 1){
 			if(this.inscreen){
 				//only reset for next mouse-drag if mouse in-screen!
-				  this.dX = (xdragPos - xPos);
-				  this.dY = (ydragPos - yPos);
-				  this.xPos = xdragPos;
-				  this.yPos = ydragPos;	
+				this.dX = (xdragPos - xPos);
+				this.dY = (ydragPos - yPos);
+				this.xPos = xdragPos;
+				this.yPos = ydragPos;	
 			}
 			else{
 				//Now we still rotate when the mouse has left the screen!
-					if((xdragPos - xPos) != 0 && (ydragPos - yPos) == 0){
-						this.dX = 1*(xdragPos - xPos)/(Math.abs(xdragPos - xPos));
-						this.dY = 0;
-					}
-					else if((xdragPos - xPos) == 0 && (ydragPos - yPos) != 0){
-						this.dX = 0;
-						this.dY = 1*(ydragPos - yPos)/(Math.abs(ydragPos - yPos));
-					}
-					else if((xdragPos - xPos) != 0 && (ydragPos - yPos) != 0){
-						this.dX = 1*(xdragPos - xPos)/(Math.abs(xdragPos - xPos));
-						this.dY = 1*(ydragPos - yPos)/(Math.abs(ydragPos - yPos));
-					}
-					else{
-						this.dX = 0;
-						this.dY = 0;
-					}
+				if((xdragPos - xPos) != 0 && (ydragPos - yPos) == 0){
+					this.dX = 1*(xdragPos - xPos)/(Math.abs(xdragPos - xPos));
+					this.dY = 0;
 				}
+				else if((xdragPos - xPos) == 0 && (ydragPos - yPos) != 0){
+					this.dX = 0;
+					this.dY = 1*(ydragPos - yPos)/(Math.abs(ydragPos - yPos));
+				}
+				else if((xdragPos - xPos) != 0 && (ydragPos - yPos) != 0){
+					this.dX = 1*(xdragPos - xPos)/(Math.abs(xdragPos - xPos));
+					this.dY = 1*(ydragPos - yPos)/(Math.abs(ydragPos - yPos));
+				}
+				else{
+					this.dX = 0;
+					this.dY = 0;
+				}
+			}
+		}
+		if (this.gsm.getCurState() == 2){
+			this.dX = (xdragPos - xPos);
+			this.dY = (ydragPos - yPos);
+			this.xPos = xdragPos;
+			this.yPos = ydragPos;	
 		}
 	}
 
@@ -101,62 +107,61 @@ public class UserInput extends Control
 	{
 		// Detect the location where the mouse has been pressed
 		if (this.gsm.getCurState() == 1){
-	    	this.xPos = event.getX();
+			this.xPos = event.getX();
 			this.yPos = event.getY();
 			xdragPos = xPos;
 			ydragPos = yPos;	
 		}
 		if(this.gsm.getCurState() == 2){
-		if(event.getButton() == 1){
-			leftButtonDragged = true;
-			leftButtonPressed = true;
-		}
-		if(event.getButton() == 3)
-			rightButtonDragged = true;
-		// Detect the location where the mouse has been pressed
-		this.xPos = event.getX();
-		this.yPos = event.getY();
-		xdragPos = xPos;
-		ydragPos = yPos;
+			if(event.getButton() == 1){
+				leftButtonDragged = true;
+				leftButtonPressed = true;
+			}
+			if(event.getButton() == 3)
+				rightButtonDragged = true;
+			this.xPos = event.getX();
+			this.yPos = event.getY();
+			xdragPos = xPos;
+			ydragPos = yPos;
 		}
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent event)
 	{
-		
+
 		// TODO: Detect mouse movement while the mouse button is down
 		if (this.gsm.getCurState() == 1){
 			this.xdragPos = event.getX();
 			this.ydragPos = event.getY();
 		}
 		if(this.gsm.getCurState() == 2){
-		this.xdragPos = event.getX();
-		this.ydragPos = event.getY();
-		
-		this.mouseX = event.getX();
-		this.mouseY = event.getY();
+			this.xdragPos = event.getX();
+			this.ydragPos = event.getY();
+
+			this.mouseX = event.getX();
+			this.mouseY = event.getY();
 		}
 	}
 
 	@Override
 	public void keyPressed(KeyEvent event)
 	{
-		
+
 		// TODO: Set forward, back, left and right to corresponding key presses
 		if (this.gsm.getCurState() == 1){
 			if (event.getKeyChar() == 'w'){
-              this.forward = true;
-            }
-            else if (event.getKeyChar() == 'a'){
-              this.left = true;
-            }
-            else if (event.getKeyChar() == 's'){
-              this.back = true;
-            }
-            else if (event.getKeyChar() == 'd'){
-              this.right = true;
-            }
+				this.forward = true;
+			}
+			else if (event.getKeyChar() == 'a'){
+				this.left = true;
+			}
+			else if (event.getKeyChar() == 's'){
+				this.back = true;
+			}
+			else if (event.getKeyChar() == 'd'){
+				this.right = true;
+			}
 		}	
 	}
 
@@ -166,18 +171,18 @@ public class UserInput extends Control
 
 		// TODO: Set forward, back, left and right to corresponding key presses
 		if (this.gsm.getCurState() == 1){
-                if (event.getKeyChar() == 'w'){
-                    this.forward = false;
-                  }
-                  else if (event.getKeyChar() == 'a'){
-                    this.left = false;
-                  }
-                  else if (event.getKeyChar() == 's'){
-                    this.back = false;
-                  }
-                  else if (event.getKeyChar() == 'd'){
-                    this.right = false;
-                  }
+			if (event.getKeyChar() == 'w'){
+				this.forward = false;
+			}
+			else if (event.getKeyChar() == 'a'){
+				this.left = false;
+			}
+			else if (event.getKeyChar() == 's'){
+				this.back = false;
+			}
+			else if (event.getKeyChar() == 'd'){
+				this.right = false;
+			}
 		}       
 	}
 
@@ -186,7 +191,7 @@ public class UserInput extends Control
 	 * *		Not so Unused event handlers		*
 	 * **********************************************
 	 */
-	
+
 	@Override
 	public void mouseMoved(MouseEvent event)
 	{
@@ -196,11 +201,11 @@ public class UserInput extends Control
 			this.ydragPos = event.getY();
 		}
 		if(this.gsm.getCurState() == 2){
-		this.xdragPos = event.getX();
-		this.ydragPos = event.getY();
+			this.xdragPos = event.getX();
+			this.ydragPos = event.getY();
 
-		this.mouseX = event.getX();
-		this.mouseY = event.getY();
+			this.mouseX = event.getX();
+			this.mouseY = event.getY();
 		}
 	}
 
@@ -217,11 +222,11 @@ public class UserInput extends Control
 			System.out.println("klik");
 		}
 		if(this.gsm.getCurState() == 2){
-		this.mouseX = event.getX();
-		this.mouseY = event.getY();
-		mouseClicked = (byte)event.getButton();
-		if(event.getButton() == 1)
-			leftReleased = false;
+			this.mouseX = event.getX();
+			this.mouseY = event.getY();
+			mouseClicked = (byte)event.getButton();
+			if(event.getButton() == 1)
+				leftReleased = false;
 		}
 	}
 
@@ -230,14 +235,14 @@ public class UserInput extends Control
 	{
 		this.inscreen = true;
 	}
-	
+
 	//Comment
-	
+
 	@Override
 	public void mouseExited(MouseEvent event)
 	{
 		this.inscreen = false;
-		
+
 		if (this.gsm.getCurState() == 1){
 			this.xdragPos = event.getX();
 			this.ydragPos = event.getY();
@@ -248,15 +253,15 @@ public class UserInput extends Control
 	public void mouseReleased(MouseEvent event)
 	{
 		if(this.gsm.getCurState() == 2){
-		if(event.getButton() == 1){
-			leftButtonDragged = false;
-			leftReleased = true;
-		}
-		if(event.getButton() == 3)
-			rightButtonDragged = false;
+			if(event.getButton() == 1){
+				leftButtonDragged = false;
+				leftReleased = true;
+			}
+			if(event.getButton() == 3)
+				rightButtonDragged = false;
 		}
 	}
-	
+
 	public void mouseWheelMoved(MouseWheelEvent event)
 	{
 		notches += event.getWheelRotation();

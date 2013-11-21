@@ -132,6 +132,7 @@ public class MazeRunner implements GLEventListener {
 		// Add the maze that we will be using.
 		maze = new Maze();
 		
+		
 		visibleObjects.add( maze );
 
 		// Initialize the player.
@@ -168,6 +169,8 @@ public class MazeRunner implements GLEventListener {
 	public void init(GLAutoDrawable drawable) {
         GL gl = drawable.getGL();
         GLU glu = new GLU();
+        
+        maze.initTextures(gl);
         
         gl.glClearColor(0, 0, 0, 0);								// Set the background color.
         
