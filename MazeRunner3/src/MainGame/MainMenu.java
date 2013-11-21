@@ -144,7 +144,7 @@ public class MainMenu implements GLEventListener {
 		drawText("Load", 1f, 1f, 1f, 1f,(int)(screenWidth*0.432),
 				(int)(screenHeight*0.48));
 		
-		drawText("Options", 1f, 1f, 1f, 1f,(int)(screenWidth*0.397),
+		drawText("Editor", 1f, 1f, 1f, 1f,(int)(screenWidth*0.42),
 				(int)(screenHeight*0.33));
 	
 		drawText("Quit", 1f, 1f, 1f, 1f,(int)(screenWidth*0.442),
@@ -213,6 +213,8 @@ public class MainMenu implements GLEventListener {
 		// Setting the new screen size and adjusting the viewport.
 		screenWidth = width;
 		screenHeight = height;
+		this.game.setScreenHeight(screenHeight);
+		this.game.setScreenWidth(screenWidth);
 		gl.glViewport( 0, 0, screenWidth, screenHeight );
 		
 		// Set the new projection matrix.

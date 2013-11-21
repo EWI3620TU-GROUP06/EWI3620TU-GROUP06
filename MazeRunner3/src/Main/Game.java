@@ -53,6 +53,14 @@ public class Game extends Frame{
 			return this.screenHeight;
 		}
 		
+		public void setScreenHeight(int ScHeight){
+			this.screenHeight = ScHeight;
+		}
+		
+		public void setScreenWidth(int ScWidth){
+			this.screenWidth = ScWidth;
+		}
+		
 		public static void main(String[] args) {
 			// Create and run MazeRunner.
 			new Game();

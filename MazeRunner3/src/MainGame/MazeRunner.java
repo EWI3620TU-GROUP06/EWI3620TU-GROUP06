@@ -255,6 +255,8 @@ public class MazeRunner implements GLEventListener {
 		// Setting the new screen size and adjusting the viewport.
 		screenWidth = width;
 		screenHeight = height;
+		this.game.setScreenHeight(screenHeight);
+		this.game.setScreenWidth(screenWidth);
 		gl.glViewport( 0, 0, screenWidth, screenHeight );
 		
 		// Set the new projection matrix.

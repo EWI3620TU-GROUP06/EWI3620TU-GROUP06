@@ -5,6 +5,7 @@ import javax.media.opengl.GLCanvas;
 
 import GameStates.gStateMan;
 
+
 /**
  * The UserInput class is an extension of the Control class. It also implements three 
  * interfaces, each providing handler methods for the different kinds of user input.
@@ -107,17 +108,17 @@ public class UserInput extends Control
 			ydragPos = yPos;	
 		}
 		if(this.gsm.getCurState() == 2){
-		if(event.getButton() == 1){
-			leftButtonDragged = true;
-			leftButtonPressed = true;
+			if(event.getButton() == 1){
+				leftButtonDragged = true;
+				leftButtonPressed = true;
 		}
 		if(event.getButton() == 3)
 			rightButtonDragged = true;
-		// Detect the location where the mouse has been pressed
-		this.xPos = event.getX();
-		this.yPos = event.getY();
-		xdragPos = xPos;
-		ydragPos = yPos;
+			// Detect the location where the mouse has been pressed
+			this.xPos = event.getX();
+			this.yPos = event.getY();
+			xdragPos = xPos;
+			ydragPos = yPos;
 		}
 	}
 
@@ -131,11 +132,11 @@ public class UserInput extends Control
 			this.ydragPos = event.getY();
 		}
 		if(this.gsm.getCurState() == 2){
-		this.xdragPos = event.getX();
-		this.ydragPos = event.getY();
-		
-		this.mouseX = event.getX();
-		this.mouseY = event.getY();
+			this.xdragPos = event.getX();
+			this.ydragPos = event.getY();
+			
+			this.mouseX = event.getX();
+			this.mouseY = event.getY();
 		}
 	}
 
@@ -196,11 +197,12 @@ public class UserInput extends Control
 			this.ydragPos = event.getY();
 		}
 		if(this.gsm.getCurState() == 2){
-		this.xdragPos = event.getX();
-		this.ydragPos = event.getY();
-
-		this.mouseX = event.getX();
-		this.mouseY = event.getY();
+			
+			this.xdragPos = event.getX();
+			this.ydragPos = event.getY();
+	
+			this.mouseX = event.getX();
+			this.mouseY = event.getY();
 		}
 	}
 
@@ -213,13 +215,36 @@ public class UserInput extends Control
 	public void mouseClicked(MouseEvent event)
 	{
 		if(this.gsm.getCurState() == 0){
-			this.gsm.setState(2);
-			System.out.println("klik");
+			
+			double x = ((double)event.getX())/((double)this.gsm.getGame().getScreenWidth());
+			double y = ((double)this.gsm.getGame().getScreenHeight() - (double)event.getY())/((double)this.gsm.getGame().getScreenHeight());
+			
+			System.out.println(event.getX() + " " + event.getY());
+			System.out.println(x + " " + y);
+			
+			if (x > 0.445 && x < 0.555 && y > 0.625 && y < 0.705){
+				this.gsm.setState(1);
+			}
+			
+			else if (x > 0.432 && x < 0.568 && y > 0.48 && y < 0.56){
+				this.gsm.setState(0); // create load state nu wordt hier nog niks gedaan.
+			}
+			
+			else if (x > 0.42 && x < 0.58 && y > 0.33 && y < 0.41){
+				this.gsm.setState(2); 
+			}
+			
+			else if (x > 0.442 && x < 0.558 && y > 0.18 && y < 0.26){
+				System.exit(0);
+			}
+			
+			
 		}
 		if(this.gsm.getCurState() == 2){
-		this.mouseX = event.getX();
-		this.mouseY = event.getY();
-		mouseClicked = (byte)event.getButton();
+			this.mouseX = event.getX();
+			this.mouseY = event.getY();
+			mouseClicked = (byte)event.getButton();
+			
 		if(event.getButton() == 1)
 			leftReleased = false;
 		}
@@ -248,13 +273,13 @@ public class UserInput extends Control
 	public void mouseReleased(MouseEvent event)
 	{
 		if(this.gsm.getCurState() == 2){
-		if(event.getButton() == 1){
-			leftButtonDragged = false;
-			leftReleased = true;
-		}
-		if(event.getButton() == 3)
-			rightButtonDragged = false;
-		}
+			if(event.getButton() == 1){
+				leftButtonDragged = false;
+				leftReleased = true;
+			}
+			if(event.getButton() == 3)
+				rightButtonDragged = false;
+			}
 	}
 	
 	public void mouseWheelMoved(MouseWheelEvent event)

@@ -272,6 +272,8 @@ public class MazeEditor implements GLEventListener {
 		// Setting the new screen size and adjusting the viewport.
 		screenWidth = width;
 		screenHeight = height;
+		this.game.setScreenHeight(screenHeight);
+		this.game.setScreenWidth(screenWidth);
 
 		buttonSize = screenWidth / 11.0f < screenHeight / 10.f ? screenWidth / 11.0f : screenHeight / 10.f;
 		editor.setButtonSize(buttonSize);
