@@ -12,6 +12,7 @@ public class gStateMan {
 	private int currentState;
 	public static final int MENUSTATE = 0;
 	public static final int PLAYSTATE = 1;
+	public static final int EDITSTATE = 2;
 	public Game game;
 	
 	public gStateMan(Game game){
@@ -20,6 +21,7 @@ public class gStateMan {
 		currentState = MENUSTATE;
 		gameStates.add(new MenuState(this, game));
 		gameStates.add(new PlayState(this, game));
+		gameStates.add(new EditState(this, game));
 		update();
 	}
 	

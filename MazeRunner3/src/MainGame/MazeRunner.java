@@ -133,10 +133,7 @@ public class MazeRunner implements GLEventListener {
 		visibleObjects.add( maze );
 
 		// Initialize the player.
-		player = new Player( 6 * maze.SQUARE_SIZE + maze.SQUARE_SIZE / 2, 	// x-position
-							 maze.SQUARE_SIZE / 2,							// y-position
-							 5 * maze.SQUARE_SIZE + maze.SQUARE_SIZE / 2, 	// z-position
-							 90, 0 );										// horizontal and vertical angle
+		player = new Player(maze.getStart()[0], maze.SQUARE_SIZE/2.0f, maze.getStart()[1], maze.getStart()[2],0);
 
 		camera = new Camera( player.getLocationX(), player.getLocationY(), player.getLocationZ(), 
 				             player.getHorAngle(), player.getVerAngle() );
@@ -272,22 +269,6 @@ public class MazeRunner implements GLEventListener {
  * *				Methods						*
  * **********************************************
  */
-	
-	public void setWidth(int w){
-		screenWidth = w;
-	}
-	
-	public void setHeight(int H){
-		screenHeight = H;
-	}
-	
-	public int getWidth(MazeRunner r){
-		return r.screenWidth;
-	}
-	
-	public int getHeight(MazeRunner r){
-		return r.screenHeight;
-	}
 
 	/**
 	 * updateMovement(int) updates the position of all objects that need moving.

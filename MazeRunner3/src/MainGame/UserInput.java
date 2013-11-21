@@ -106,7 +106,7 @@ public class UserInput extends Control
 			xdragPos = xPos;
 			ydragPos = yPos;	
 		}
-		if(this.gsm.getCurrentState() == EDITOR_STATE){
+		if(this.gsm.getCurState() == 2){
 		if(event.getButton() == 1){
 			leftButtonDragged = true;
 			leftButtonPressed = true;
@@ -130,7 +130,7 @@ public class UserInput extends Control
 			this.xdragPos = event.getX();
 			this.ydragPos = event.getY();
 		}
-		if(this.gsm.getCurrentState() == EDITOR_STATE){
+		if(this.gsm.getCurState() == 2){
 		this.xdragPos = event.getX();
 		this.ydragPos = event.getY();
 		
@@ -195,7 +195,7 @@ public class UserInput extends Control
 			this.xdragPos = event.getX();
 			this.ydragPos = event.getY();
 		}
-		if(this.gsm.getCurrentState() == EDITOR_STATE){
+		if(this.gsm.getCurState() == 2){
 		this.xdragPos = event.getX();
 		this.ydragPos = event.getY();
 
@@ -213,10 +213,10 @@ public class UserInput extends Control
 	public void mouseClicked(MouseEvent event)
 	{
 		if(this.gsm.getCurState() == 0){
-			this.gsm.setState(1);
+			this.gsm.setState(2);
 			System.out.println("klik");
 		}
-		if(this.gsm.getCurrentState() == EDITOR_STATE){
+		if(this.gsm.getCurState() == 2){
 		this.mouseX = event.getX();
 		this.mouseY = event.getY();
 		mouseClicked = (byte)event.getButton();
@@ -247,7 +247,7 @@ public class UserInput extends Control
 	@Override
 	public void mouseReleased(MouseEvent event)
 	{
-		if(this.gsm.getCurrentState() == EDITOR_STATE){
+		if(this.gsm.getCurState() == 2){
 		if(event.getButton() == 1){
 			leftButtonDragged = false;
 			leftReleased = true;

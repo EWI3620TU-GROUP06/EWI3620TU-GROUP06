@@ -25,7 +25,7 @@ public class Game extends Frame{
 		 */
 		public Game() {
 			// Make a new window.
-			super("Main");
+			super("MadBalls");
 			
 			// Let's change the window to our liking.
 			setSize( screenWidth, screenHeight);

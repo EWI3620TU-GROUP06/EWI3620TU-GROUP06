@@ -1,14 +1,14 @@
 package MainGame;
-import java.awt.*;
-import java.awt.event.*;
 
 import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
 
+import GameStates.GameState;
+import Main.Game;
+
 import com.sun.opengl.util.*;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Iterator;
 
 /**
@@ -27,7 +27,7 @@ import java.util.Iterator;
  * @author Bruno Scheele, revised by Mattijs Driel
  * 
  */
-public class MazeEditor extends Frame implements GLEventListener {
+public class MazeEditor implements GLEventListener {
 	static final long serialVersionUID = 7526471155622776147L;
 
 	/*
@@ -41,14 +41,12 @@ public class MazeEditor extends Frame implements GLEventListener {
 	private float FOV = 45.0f;
 
 	private ArrayList<VisibleObject> visibleObjects; // A list of objects that will be displayed on screen.
-	private Player player;
 	private Camera camera; // The camera object.
 	private Editor editor; // The editor object;
 	private UserInput input; // The user input object that controls the player/editor.
 	private Maze maze; // The maze.
-	private long previousTime = Calendar.getInstance().getTimeInMillis();
-	
-	boolean editing = true;
+	private GameState state;
+	private Game game;
 
 	/*
 	 * **********************************************
@@ -64,28 +62,12 @@ public class MazeEditor extends Frame implements GLEventListener {
 	 * as the OpenGL event listener, to be able to function as the view
 	 * controller.
 	 */
-	public MazeEditor() {
-		// Make a new window.
-		super("MazeEditor");
-
-		// Let's change the window to our liking.
-		setSize(screenWidth, screenHeight);
-		setBackground(Color.white);
-
-		// The window also has to close when we want to.
-		this.addWindowListener(new WindowAdapter() {
-			public void windowClosing(WindowEvent e) {
-				//editor.save();
-				System.exit(0);
-			}
-		});
-
+	public MazeEditor(Game game, GameState state) {
+		//No window anymore!
+		this.game = game;
+		this.state = state;
 		initJOGL(); // Initialize JOGL.
 		initObjects(); // Initialize all the objects!
-
-		// Set the frame to visible. This automatically calls upon OpenGL to
-		// prevent a blank screen.
-		setVisible(true);
 	}
 
 	/**
@@ -107,7 +89,7 @@ public class MazeEditor extends Frame implements GLEventListener {
 		// Now we add the canvas, where OpenGL will actually draw for us. We'll
 		// use settings we've just defined.
 		canvas = new GLCanvas(caps);
-		add(canvas);
+		game.add(canvas);
 		/*
 		 * We need to add a GLEventListener to interpret OpenGL events for us.
 		 * Since MazeRunner implements GLEventListener, this means that we add
@@ -116,6 +98,7 @@ public class MazeEditor extends Frame implements GLEventListener {
 		 * perform the OpenGL phases of MazeRunner.
 		 */
 		canvas.addGLEventListener(this);
+		canvas.requestFocus();
 
 		/*
 		 * We need to create an internal thread that instructs OpenGL to
@@ -149,11 +132,8 @@ public class MazeEditor extends Frame implements GLEventListener {
 		visibleObjects = new ArrayList<VisibleObject>();
 		// Add the maze that we will be using.
 		maze = new Maze();
-		if(!editing)
-			maze = Editor.readMaze();
+
 		visibleObjects.add(maze);
-		
-		player = new Player(maze.getStart()[0], maze.SQUARE_SIZE/2.0f, maze.getStart()[1], maze.getStart()[2],0);
 
 		editor = new Editor(maze.getSize() / 2, 60, maze.getSize()/2, 0, -89.99999);
 
@@ -161,8 +141,7 @@ public class MazeEditor extends Frame implements GLEventListener {
 				editor.getLocationZ(), editor.getHorAngle(),
 				editor.getVerAngle());
 
-		input = new UserInput(canvas);
-		player.setControl(input);
+		input = new UserInput(canvas, state.getGSM());
 		editor.setControl(input);
 		editor.setFOV(FOV);
 		editor.setMaze(maze);
@@ -234,14 +213,6 @@ public class MazeEditor extends Frame implements GLEventListener {
 
 		// Update any movement since last frame.
 		editor.update(screenWidth, screenHeight);
-		// Calculating time since last frame.
-		Calendar now = Calendar.getInstance();		
-		long currentTime = now.getTimeInMillis();
-		int deltaTime = (int)(currentTime - previousTime);
-		previousTime = currentTime;
-				
-		// Update any movement since last frame.
-		player.update(deltaTime);
 		updateCamera();
 
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
@@ -322,34 +293,14 @@ public class MazeEditor extends Frame implements GLEventListener {
 	 */
 
 	private void updateCamera() {
-		// Use either the location of the player or the editor to update the camera
-		if(editing)
-		{
-			camera.setLocationX(editor.getLocationX());
-			camera.setLocationY(editor.getLocationY());
-			camera.setLocationZ(editor.getLocationZ());
-			camera.setHorAngle(editor.getHorAngle());
-			camera.setVerAngle(editor.getVerAngle());
-		} 
-		else
-		{
-			camera.setLocationX(player.getLocationX());
-			camera.setLocationY(player.getLocationY());
-			camera.setLocationZ(player.getLocationZ());
-			camera.setHorAngle(player.getHorAngle());
-			camera.setVerAngle(player.getVerAngle());
-		}
+
+		camera.setLocationX(editor.getLocationX());
+		camera.setLocationY(editor.getLocationY());
+		camera.setLocationZ(editor.getLocationZ());
+		camera.setHorAngle(editor.getHorAngle());
+		camera.setVerAngle(editor.getVerAngle());
 
 		camera.calculateVRP();
-	}
-
-	/*
-	 * Main
-	 */
-
-	public static void main(String[] args)
-	{
-		new MazeEditor();
 	}
 
 	/**
@@ -492,5 +443,11 @@ public class MazeEditor extends Frame implements GLEventListener {
 		gl.glLoadIdentity();
 		glu.gluPerspective(FOV, (float)screenWidth / (float)screenHeight, 0.001f, Float.MAX_VALUE); 
 		gl.glMatrixMode(GL.GL_MODELVIEW);
+	}
+	
+	// Getter functions
+	
+	public GLCanvas getCanvas(){
+		return canvas;
 	}
 }
