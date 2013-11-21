@@ -10,10 +10,12 @@ public class PlayState extends GameState {
 	
 	private MazeRunner mz;
 	private Game game;
+	private boolean paused;
 	
 	public PlayState(gStateMan gsm, Game game){
 		this.gsm = gsm;
 		this.game = game;
+		this.paused = false;
 	}
 	@Override
 	public void init(GLAutoDrawable drawable) {
@@ -39,5 +41,19 @@ public class PlayState extends GameState {
 	
 	public gStateMan getGSM(){
 		return this.gsm;
+	}
+	
+	public boolean getPaused(){
+		return paused;
+	}
+	
+	public void setPaused() throws InterruptedException{
+		this.paused = true;
+		mz.Pause();
+	}
+	
+	public void unPause(){
+		this.paused = false;
+		mz.unPause();
 	}
 }

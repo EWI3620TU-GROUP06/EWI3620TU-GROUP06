@@ -11,4 +11,7 @@ public abstract class GameState {
 	public abstract void reshape(GLAutoDrawable drawable, int x, int y, int width, int height);
 	public abstract GLCanvas getCanvas();
 	public abstract gStateMan getGSM();
+	public abstract boolean getPaused();
+	public abstract void setPaused() throws InterruptedException;
+	public abstract void unPause();
 }

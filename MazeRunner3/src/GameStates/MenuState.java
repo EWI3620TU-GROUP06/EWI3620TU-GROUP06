@@ -40,4 +40,16 @@ public class MenuState extends GameState {
 	public gStateMan getGSM(){
 		return this.gsm;
 	}
+	@Override
+	public boolean getPaused() {
+		return false;
+	}
+	@Override
+	public void setPaused() {
+		//do nothing
+	}
+	
+	public void unPause(){
+		//do nothing
+	}
 }

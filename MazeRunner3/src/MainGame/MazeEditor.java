@@ -47,6 +47,7 @@ public class MazeEditor implements GLEventListener {
 	private Maze maze; // The maze.
 	private GameState state;
 	private Game game;
+	private Animator anim;
 
 	/*
 	 * **********************************************
@@ -105,7 +106,7 @@ public class MazeEditor implements GLEventListener {
 		 * continuously repaint itself. The Animator class handles that for
 		 * JOGL.
 		 */
-		Animator anim = new Animator(canvas);
+		anim = new Animator(canvas);
 		anim.start();
 	}
 
@@ -208,39 +209,44 @@ public class MazeEditor implements GLEventListener {
 	 * reference of the GL context, so it knows where to draw.
 	 */
 	public void display(GLAutoDrawable drawable) {
-		GL gl = drawable.getGL();
-		GLU glu = new GLU();
-
-		// Update any movement since last frame.
-		editor.update(screenWidth, screenHeight);
-		updateCamera();
-
-		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-		gl.glLoadIdentity();
-
-		glu.gluLookAt(camera.getLocationX(), camera.getLocationY(),
-				camera.getLocationZ(), camera.getVrpX(), camera.getVrpY(),
-				camera.getVrpZ(), camera.getVuvX(), camera.getVuvY(),
-				camera.getVuvZ());
-
-		// Display all the visible objects of MazeRunner.
-		for (Iterator<VisibleObject> it = visibleObjects.iterator(); it
-				.hasNext();) {
-			it.next().display(gl);
+		if (anim.isAnimating()){
+			GL gl = drawable.getGL();
+			GLU glu = new GLU();
+	
+			// Update any movement since last frame.
+			editor.update(screenWidth, screenHeight);
+			updateCamera();
+	
+			gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+			gl.glLoadIdentity();
+	
+			glu.gluLookAt(camera.getLocationX(), camera.getLocationY(),
+					camera.getLocationZ(), camera.getVrpX(), camera.getVrpY(),
+					camera.getVrpZ(), camera.getVuvX(), camera.getVuvY(),
+					camera.getVuvZ());
+	
+			// Display all the visible objects of MazeRunner.
+			for (Iterator<VisibleObject> it = visibleObjects.iterator(); it
+					.hasNext();) {
+				it.next().display(gl);
+			}
+	
+			// When editing: use an orthographic projection to draw the HUD on the screen, 
+			// then set the perspective projection back
+			gl.glLoadIdentity();
+			orthographicProjection(gl);
+			gl.glDisable(GL.GL_LIGHTING);
+			drawButtons(gl);
+			gl.glEnable(GL.GL_LIGHTING);
+			perspectiveProjection(gl, glu);
+	
+	
+			// Flush the OpenGL buffer.
+			gl.glFlush();
 		}
-
-		// When editing: use an orthographic projection to draw the HUD on the screen, 
-		// then set the perspective projection back
-		gl.glLoadIdentity();
-		orthographicProjection(gl);
-		gl.glDisable(GL.GL_LIGHTING);
-		drawButtons(gl);
-		gl.glEnable(GL.GL_LIGHTING);
-		perspectiveProjection(gl, glu);
-
-
-		// Flush the OpenGL buffer.
-		gl.glFlush();
+		else{
+			//draw the overlay menu.
+		}
 	}
 
 	/**
@@ -451,5 +457,16 @@ public class MazeEditor implements GLEventListener {
 	
 	public GLCanvas getCanvas(){
 		return canvas;
+	}
+	
+	public void Pause() throws InterruptedException{
+		if (anim.isAnimating() == true)
+			anim.stop();
+	}
+	
+	public void unPause(){
+		if (anim.isAnimating() == false){
+			anim.start();
+		}
 	}
 }

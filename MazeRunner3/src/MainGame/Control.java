@@ -145,10 +145,4 @@ public abstract class Control
 	 * most up-to-date values. 
 	 */
 	public abstract void update();
-
-	
-
-
-
-
 }

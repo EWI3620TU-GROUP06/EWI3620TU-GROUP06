@@ -32,6 +32,10 @@ public class gStateMan {
 		game.validate();
 	}
 	
+	public void setPauseState() throws InterruptedException{
+		gameStates.get(currentState).setPaused();
+	}
+	
 	public int getCurState(){
 		return currentState;
 	}
@@ -55,5 +59,9 @@ public class gStateMan {
 	
 	public Game getGame(){
 		return this.game;
+	}
+	
+	public GameState getState(int i){
+		return gameStates.get(i);		
 	}
 }

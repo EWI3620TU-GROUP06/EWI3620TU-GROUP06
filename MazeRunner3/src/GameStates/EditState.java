@@ -10,10 +10,12 @@ public class EditState extends GameState {
 
 	private MazeEditor me;
 	private Game game;
+	private boolean paused;
 	
 	public EditState(gStateMan gsm, Game game){
 		this.gsm = gsm;
 		this.game = game;
+		this.paused = false;
 	}
 	
 	@Override
@@ -46,5 +48,18 @@ public class EditState extends GameState {
 	public gStateMan getGSM() {
 		return this.gsm;
 	}
+	
+	public boolean getPaused(){
+		return this.paused;
+	}
 
+	public void setPaused() throws InterruptedException{
+		this.paused = true;
+		me.Pause();
+	}
+	
+	public void unPause(){
+		this.paused = false;
+		me.unPause();
+	}
 }

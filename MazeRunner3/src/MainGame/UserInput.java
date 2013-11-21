@@ -144,21 +144,48 @@ public class UserInput extends Control
 	public void keyPressed(KeyEvent event)
 	{
 		
-		// TODO: Set forward, back, left and right to corresponding key presses
-		if (this.gsm.getCurState() == 1){
-			if (event.getKeyChar() == 'w'){
-              this.forward = true;
-            }
-            else if (event.getKeyChar() == 'a'){
-              this.left = true;
-            }
-            else if (event.getKeyChar() == 's'){
-              this.back = true;
-            }
-            else if (event.getKeyChar() == 'd'){
-              this.right = true;
-            }
-		}	
+		if (this.gsm.getCurState() != 0){
+			if (this.gsm.getCurState() == 1){
+					if (event.getKeyChar() == 'w'){
+		              this.forward = true;
+		            }
+		            else if (event.getKeyChar() == 'a'){
+		              this.left = true;
+		            }
+		            else if (event.getKeyChar() == 's'){
+		              this.back = true;
+		            }
+		            else if (event.getKeyChar() == 'd'){
+		              this.right = true;
+		            }
+		            if (event.getKeyCode() == 27){
+		            	if (this.gsm.getState(1).getPaused() == true){
+		            		this.gsm.getState(1).unPause();
+		            	}
+		            	else{
+	            			try {
+								this.gsm.setPauseState();
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							} // Set the state to Edit-Pause - overlay!
+		            	}
+		            }
+			}
+			else if (this.gsm.getCurState() == 2){
+	            if (event.getKeyCode() == 27){
+	            	if (this.gsm.getState(2).getPaused() == true){
+	            		this.gsm.getState(2).unPause();
+	            	}
+	            	else{
+            			try {
+							this.gsm.setPauseState();
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						} // Set the state to Edit-Pause - overlay!
+	            	}
+	            }
+			}
+		}
 	}
 
 	@Override

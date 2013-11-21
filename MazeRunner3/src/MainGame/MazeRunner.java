@@ -43,6 +43,7 @@ public class MazeRunner implements GLEventListener {
 	private GameState state;
 	private GLCanvas canvas;
 	private Game game;
+	private Animator anim;
 	
 /*
  * **********************************************
@@ -105,7 +106,7 @@ public class MazeRunner implements GLEventListener {
 		/* We need to create an internal thread that instructs OpenGL to continuously repaint itself.
 		 * The Animator class handles that for JOGL.
 		 */
-		Animator anim = new Animator( canvas );
+		anim = new Animator( canvas );
 		anim.start();
 	}
 	
@@ -207,33 +208,38 @@ public class MazeRunner implements GLEventListener {
 	 * knows where to draw.
 	 */
 	public void display(GLAutoDrawable drawable) {
-		GL gl = drawable.getGL();
-		GLU glu = new GLU();
-		
-		// Calculating time since last frame.
-		Calendar now = Calendar.getInstance();		
-		long currentTime = now.getTimeInMillis();
-		int deltaTime = (int)(currentTime - previousTime);
-		previousTime = currentTime;
-		
-		// Update any movement since last frame.
-		updateMovement(deltaTime);
-		updateCamera();
-		 
-		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT );
-		gl.glLoadIdentity();
-        glu.gluLookAt( camera.getLocationX(), camera.getLocationY(), camera.getLocationZ(), 
- 			   camera.getVrpX(), camera.getVrpY(), camera.getVrpZ(),
- 			   camera.getVuvX(), camera.getVuvY(), camera.getVuvZ() );
-
-        // Display all the visible objects of MazeRunner.
-        for( Iterator<VisibleObject> it = visibleObjects.iterator(); it.hasNext(); ) {
-        	it.next().display(gl);
-        }
-
-        gl.glLoadIdentity();
-        // Flush the OpenGL buffer.
-        gl.glFlush();
+		if (anim.isAnimating()){
+			GL gl = drawable.getGL();
+			GLU glu = new GLU();
+			
+			// Calculating time since last frame.
+			Calendar now = Calendar.getInstance();		
+			long currentTime = now.getTimeInMillis();
+			int deltaTime = (int)(currentTime - previousTime);
+			previousTime = currentTime;
+			
+			// Update any movement since last frame.
+			updateMovement(deltaTime);
+			updateCamera();
+			 
+			gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT );
+			gl.glLoadIdentity();
+	        glu.gluLookAt( camera.getLocationX(), camera.getLocationY(), camera.getLocationZ(), 
+	 			   camera.getVrpX(), camera.getVrpY(), camera.getVrpZ(),
+	 			   camera.getVuvX(), camera.getVuvY(), camera.getVuvZ() );
+	
+	        // Display all the visible objects of MazeRunner.
+	        for( Iterator<VisibleObject> it = visibleObjects.iterator(); it.hasNext(); ) {
+	        	it.next().display(gl);
+	        }
+	
+	        gl.glLoadIdentity();
+	        // Flush the OpenGL buffer.
+	        gl.glFlush();
+		}
+		else{
+			//draw the overlay menu
+		}
 	}
 
 	
@@ -310,4 +316,15 @@ public class MazeRunner implements GLEventListener {
 		camera.calculateVRP();
 	}
 	
+	public void Pause() throws InterruptedException{
+		if (anim.isAnimating() == true){
+			anim.stop();;
+		}
+	}
+	
+	public void unPause(){
+		if (anim.isAnimating() == false){
+			anim.start();
+		}
+	}
 }
