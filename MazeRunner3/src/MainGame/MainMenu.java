@@ -51,7 +51,7 @@ public class MainMenu implements GLEventListener {
 		 * These will be called when we are ready to perform the OpenGL phases of MazeRunner. 
 		 */
 		canvas.addGLEventListener( this );
-		
+		canvas.requestFocus();
 		new UserInput(canvas, state.getGSM());
 		
 		/* We need to create an internal thread that instructs OpenGL to continuously repaint itself.

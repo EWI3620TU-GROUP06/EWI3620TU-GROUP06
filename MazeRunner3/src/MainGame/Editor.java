@@ -282,7 +282,7 @@ public class Editor extends GameObject{
 		int returnVal = fc.showDialog(fc, "Open");
 		File file = fc.getSelectedFile();
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			maze.read(file);
+			Maze.read(file);
 			return true;
 		}
 		return false;
@@ -298,11 +298,12 @@ public class Editor extends GameObject{
 
 		int returnVal = fc.showDialog(fc, "Open");
 		File file = fc.getSelectedFile();
-		Maze maze = new Maze();
+		Maze maze = null;
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 
-			maze.read(file);
+			maze = Maze.read(file);
 		}
+		
 		return maze;
 	}
 }

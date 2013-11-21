@@ -26,13 +26,13 @@ import java.util.Scanner;
  */
 public class Maze implements VisibleObject {
 
-	public int MAZE_SIZE = 10;
+	public static int MAZE_SIZE = 10;
 	public final double SQUARE_SIZE = 5;
 
-	private boolean[][] selected = new boolean[MAZE_SIZE][MAZE_SIZE];
+	private static boolean[][] selected = new boolean[MAZE_SIZE][MAZE_SIZE];
 
-	private int[] startPosition = {6, 5, 90};
-	private int[] finishPosition = {8,8};
+	private static int[] startPosition = {6, 5, 90};
+	private static int[] finishPosition = {8,8};
 	
 	private StartArrow arrow = new StartArrow((float) SQUARE_SIZE, startPosition[2]);
 	
@@ -47,7 +47,7 @@ public class Maze implements VisibleObject {
 	private final Ramp lowRamp2 = new Ramp((float) SQUARE_SIZE,  (float) SQUARE_SIZE / 2, 2);
 	private final Ramp lowRamp3 = new Ramp((float) SQUARE_SIZE,  (float) SQUARE_SIZE / 2, 3);
 
-	private byte[][] maze = 
+	private static byte[][] maze = 
 		{	{  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },
 			{  1,  0,  0,  0,  0,  0,  0,  0,  0,  1 },
 			{  1,  0,  0,  0,  0,  0,  1,  1,  1,  1 },
@@ -243,31 +243,33 @@ public class Maze implements VisibleObject {
 
 	}
 
-	public void read(File file) {
+	public static Maze read(File file) {
 		try {
 			Scanner sc = new Scanner(file);
-			this.MAZE_SIZE = sc.nextInt();
+			MAZE_SIZE = sc.nextInt();
 			int[] newStart = new int[3];
 			newStart[0] = sc.nextInt();
 			newStart[1] = sc.nextInt();
 			newStart[2] = sc.nextInt();
-			this.startPosition = newStart;
+			startPosition = newStart;
 			int[] newFinish = new int[2];
 			newFinish[0] = sc.nextInt();
 			newFinish[1] = sc.nextInt();
-			this.finishPosition = newFinish;
+			finishPosition = newFinish;
 			byte[][] newMaze = new byte[MAZE_SIZE][MAZE_SIZE];
 			for (int i = 0; i < MAZE_SIZE; i++) {
 				for (int j = 0; j < MAZE_SIZE; j++) {
 					newMaze[i][j] = sc.nextByte();
 				}
 			}
-			this.maze = newMaze;
-			this.selected = new boolean[MAZE_SIZE][MAZE_SIZE];
+			maze = newMaze;
+			selected = new boolean[MAZE_SIZE][MAZE_SIZE];
 			sc.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		return new Maze();
 	}
 
 	public void display(GL gl) {

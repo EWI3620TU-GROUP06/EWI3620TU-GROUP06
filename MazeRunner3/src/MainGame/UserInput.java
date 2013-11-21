@@ -223,18 +223,26 @@ public class UserInput extends Control
 			System.out.println(x + " " + y);
 			
 			if (x > 0.445 && x < 0.555 && y > 0.625 && y < 0.705){
+				//GOTO playstate
 				this.gsm.setState(1);
 			}
 			
 			else if (x > 0.432 && x < 0.568 && y > 0.48 && y < 0.56){
-				this.gsm.setState(0); // create load state nu wordt hier nog niks gedaan.
+				//Load level to static maze-variable, and GOTO playstate
+				Maze maze = Editor.readMaze();
+				MazeRunner.setMaze(maze);
+				if(maze != null) { // If level loaded, play, else choose some other menu option
+					this.gsm.setState(1);
+				}
 			}
 			
 			else if (x > 0.42 && x < 0.58 && y > 0.33 && y < 0.41){
+				//GOTO EditState
 				this.gsm.setState(2); 
 			}
 			
 			else if (x > 0.442 && x < 0.558 && y > 0.18 && y < 0.26){
+				//exit the game
 				System.exit(0);
 			}
 			

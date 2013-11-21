@@ -38,7 +38,7 @@ public class MazeRunner implements GLEventListener {
 	private Player player;									// The player object.
 	private Camera camera;									// The camera object.
 	private UserInput input;								// The user input object that controls the player.
-	private Maze maze; 										// The maze.
+	private static Maze maze; 										// The maze.
 	private long previousTime = Calendar.getInstance().getTimeInMillis(); // Used to calculate elapsed time.
 	private GameState state;
 	private GLCanvas canvas;
@@ -108,6 +108,10 @@ public class MazeRunner implements GLEventListener {
 		Animator anim = new Animator( canvas );
 		anim.start();
 	}
+	
+	public static void setMaze(Maze mz){
+		maze = mz;
+	}
 
 	/**
 	 * initializeObjects() creates all the objects needed for the game to start normally.
@@ -129,7 +133,9 @@ public class MazeRunner implements GLEventListener {
 		// displayed by MazeRunner.
 		visibleObjects = new ArrayList<VisibleObject>();
 		// Add the maze that we will be using.
-		maze = new Maze();
+		if (maze == null){
+			maze = new Maze();
+		}
 		visibleObjects.add( maze );
 
 		// Initialize the player.
