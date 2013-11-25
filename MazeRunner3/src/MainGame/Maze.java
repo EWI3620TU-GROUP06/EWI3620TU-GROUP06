@@ -30,10 +30,10 @@ import java.util.Scanner;
  */
 public class Maze implements VisibleObject {
 
-	public static int MAZE_SIZE = 10;
+	public int MAZE_SIZE = 10;
 	public final double SQUARE_SIZE = 5;
 
-	private static boolean[][] selected = new boolean[MAZE_SIZE][MAZE_SIZE];
+	private boolean[][] selected = new boolean[MAZE_SIZE][MAZE_SIZE];
 
 	private int[] startPosition = {6, 5, 90};
 	private int[] finishPosition = {8,8};
@@ -67,13 +67,26 @@ public class Maze implements VisibleObject {
 			{  1,  0,  0,  0,  1,  1,  1,  0,  0,  1 },
 			{  1,  0,  0,  0,  0,  0,  0,  0,  0,  1 },
 			{  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 }	};
+	
+	public Maze()
+	{
+		//Standard maze is loaded
+	}
 			
 	public Maze(int mazeSize, int[] start, int[] finish, byte[][] newMaze)
 	{
 		MAZE_SIZE = mazeSize;
 		startPosition = start;
 		finishPosition = finish;
-		maze = newMaze;
+		maze = new byte[MAZE_SIZE][MAZE_SIZE];
+		for(int i = 0; i < MAZE_SIZE; i++)
+		{
+			for(int j = 0; j < MAZE_SIZE; j++){
+				System.out.print(newMaze[i][j] + ",");
+				maze[i][j] = newMaze[i][j];
+			}
+			System.out.println("");
+		}
 		selected = new boolean[MAZE_SIZE][MAZE_SIZE];
 	}
 
@@ -289,24 +302,29 @@ public class Maze implements VisibleObject {
 			int[] newFinish = new int[2];
 			newFinish[0] = sc.nextInt();
 			newFinish[1] = sc.nextInt();
-			byte[][] newMaze = new byte[MAZE_SIZE][MAZE_SIZE];
-			for (int i = 0; i < MAZE_SIZE; i++) {
-				for (int j = 0; j < MAZE_SIZE; j++) {
+			byte[][] newMaze = new byte[mazeSize][mazeSize];
+			for (int i = 0; i < mazeSize; i++) {
+				for (int j = 0; j < mazeSize; j++) {
 					newMaze[i][j] = sc.nextByte();
 				}
 			}
 			sc.close();
+			return new Maze(mazeSize, newStart, newFinish, newMaze);
 		} catch (Exception e) {
 			e.printStackTrace();
+			return new Maze();
 		}
 		
-		return new Maze(mazeSize, newStart, newFinish, newMaze);
+		
 	}
 
 	public void display(GL gl) {
+		if(maze.length != selected.length)
+			System.out.println("Fout!" + maze.length + "!=" + selected.length);
 		// draw the grid with the current material
 		for (int i = 0; i < MAZE_SIZE; i++) {
 			for (int j = 0; j < MAZE_SIZE; j++) {
+				
 				float wallColour[] = new float[4];
 				wallColour[3] = 1.0f;
 				float floorColour[] = new float[4];

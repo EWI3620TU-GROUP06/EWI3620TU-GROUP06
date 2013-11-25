@@ -117,6 +117,7 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 			if(event.getButton() == 1){
 				leftButtonDragged = true;
 				leftButtonPressed = true;
+			}
 			if(event.getButton() == 3)
 				rightButtonDragged = true;
 

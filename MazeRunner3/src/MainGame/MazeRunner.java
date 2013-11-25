@@ -38,7 +38,7 @@ public class MazeRunner implements GLEventListener {
 	private Player player;									// The player object.
 	private Camera camera;									// The camera object.
 	private UserInput input;								// The user input object that controls the player.
-	private Maze maze; 										// The maze.
+	private static Maze maze; 										// The maze.
 	private PlayerSprite playerSprite;
 	private long previousTime = Calendar.getInstance().getTimeInMillis(); // Used to calculate elapsed time.
 	private GameState state;
@@ -178,6 +178,7 @@ public class MazeRunner implements GLEventListener {
         GLU glu = new GLU();
         
         maze.initTextures(gl);
+        playerSprite.init(gl);
         
         gl.glClearColor(0, 0, 0, 0);								// Set the background color.
         
