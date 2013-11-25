@@ -1,6 +1,10 @@
 package MainGame;
 import javax.media.opengl.GL;
 
+import com.sun.opengl.util.texture.Texture;
+import com.sun.opengl.util.texture.TextureData;
+import com.sun.opengl.util.texture.TextureIO;
+
 import java.io.*;
 import java.util.Scanner;
 
@@ -31,11 +35,12 @@ public class Maze implements VisibleObject {
 
 	private static boolean[][] selected = new boolean[MAZE_SIZE][MAZE_SIZE];
 
-	private static int[] startPosition = {6, 5, 90};
-	private static int[] finishPosition = {8,8};
-	
+	private int[] startPosition = {6, 5, 90};
+	private int[] finishPosition = {8,8};
+
+
 	private StartArrow arrow = new StartArrow((float) SQUARE_SIZE, startPosition[2]);
-	
+
 	private final Box box = new Box((float) SQUARE_SIZE,(float) SQUARE_SIZE); 
 	private final Ramp ramp0 = new Ramp((float) SQUARE_SIZE, (float) SQUARE_SIZE, 0);
 	private final Ramp ramp1 = new Ramp((float) SQUARE_SIZE, (float) SQUARE_SIZE, 1);
@@ -47,7 +52,11 @@ public class Maze implements VisibleObject {
 	private final Ramp lowRamp2 = new Ramp((float) SQUARE_SIZE,  (float) SQUARE_SIZE / 2, 2);
 	private final Ramp lowRamp3 = new Ramp((float) SQUARE_SIZE,  (float) SQUARE_SIZE / 2, 3);
 
-	private static byte[][] maze = 
+	private Texture boxTexture;
+	private Texture floorTexture;
+
+	private byte[][] maze = 
+
 		{	{  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },
 			{  1,  0,  0,  0,  0,  0,  0,  0,  0,  1 },
 			{  1,  0,  0,  0,  0,  0,  1,  1,  1,  1 },
@@ -58,6 +67,32 @@ public class Maze implements VisibleObject {
 			{  1,  0,  0,  0,  1,  1,  1,  0,  0,  1 },
 			{  1,  0,  0,  0,  0,  0,  0,  0,  0,  1 },
 			{  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 }	};
+			
+	public Maze(int mazeSize, int[] start, int[] finish, byte[][] newMaze)
+	{
+		MAZE_SIZE = mazeSize;
+		startPosition = start;
+		finishPosition = finish;
+		maze = newMaze;
+		selected = new boolean[MAZE_SIZE][MAZE_SIZE];
+	}
+
+	public void initTextures(GL gl)
+	{
+		try{
+			InputStream stream = getClass().getResourceAsStream("wall.jpg");
+			TextureData data = TextureIO.newTextureData(stream, false, "jpg");
+			this.boxTexture = TextureIO.newTexture(data);
+			stream = getClass().getResourceAsStream("floor.jpg");
+			data = TextureIO.newTextureData(stream, false, "jpg");
+			this.floorTexture = TextureIO.newTexture(data);
+			stream.close();
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			System.exit(0);
+		}
+	}
 
 	/**
 	 * isWall(int x, int z) checks for a wall.
@@ -181,6 +216,7 @@ public class Maze implements VisibleObject {
 						&& !(i == finishPosition[0] && j == finishPosition[1])) {
 					if (drawMode < 3)
 						maze[i][j] = drawMode;
+
 					if (drawMode == 3) {
 						maze[i][j] = 0;
 						startPosition[0] = i;
@@ -212,7 +248,6 @@ public class Maze implements VisibleObject {
 				}
 	}
 
-	// TODO: niet saven als start of finish buiten maze ligt
 	public void save(File file) {
 		if (startPosition[0] < 0 || startPosition[0] >= MAZE_SIZE
 				|| startPosition[1] < 0 || startPosition[1] >= MAZE_SIZE) {
@@ -246,49 +281,53 @@ public class Maze implements VisibleObject {
 	public static Maze read(File file) {
 		try {
 			Scanner sc = new Scanner(file);
-			MAZE_SIZE = sc.nextInt();
+			int mazeSize = sc.nextInt();
 			int[] newStart = new int[3];
 			newStart[0] = sc.nextInt();
 			newStart[1] = sc.nextInt();
 			newStart[2] = sc.nextInt();
-			startPosition = newStart;
 			int[] newFinish = new int[2];
 			newFinish[0] = sc.nextInt();
 			newFinish[1] = sc.nextInt();
-			finishPosition = newFinish;
 			byte[][] newMaze = new byte[MAZE_SIZE][MAZE_SIZE];
 			for (int i = 0; i < MAZE_SIZE; i++) {
 				for (int j = 0; j < MAZE_SIZE; j++) {
 					newMaze[i][j] = sc.nextByte();
 				}
 			}
-			maze = newMaze;
-			selected = new boolean[MAZE_SIZE][MAZE_SIZE];
 			sc.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return new Maze();
+		return new Maze(mazeSize, newStart, newFinish, newMaze);
 	}
 
 	public void display(GL gl) {
 		// draw the grid with the current material
 		for (int i = 0; i < MAZE_SIZE; i++) {
 			for (int j = 0; j < MAZE_SIZE; j++) {
-				float wallColour[] = { 1.0f, 0.0f, 0.0f, 1.0f };
-				float floorColour[] = { 0.0f, 0.0f, 1.0f, 1.0f };
-				float startColour[] = { 0.0f, 1.0f, 0.0f, 1.0f };
+				float wallColour[] = new float[4];
+				wallColour[3] = 1.0f;
+				float floorColour[] = new float[4];
+				floorColour[3] = 1.0f;
+				float startColour[] = {0.0f, 1.0f, 0.0f, 1.0f };
 				float finishColour[] = { 0.5f, 0.5f, 0.5f, 1.0f };
 				float arrowColour[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 				if (selected[i][j]) {
 					wallColour[0] = 1.0f;
+					wallColour[1] = 1.0f;
 					wallColour[2] = 1.0f;
-					floorColour[1] = 0.9f;
+					floorColour[0] = 1.0f;
+					floorColour[1] = 1.0f;
+					floorColour[2] = 1.0f;
 				} else {
-					wallColour[0] = 0.5f;
-					wallColour[2] = 0.7f;
-					floorColour[1] = 0.0f;
+					wallColour[0] = 0.8f;
+					wallColour[1] = 0.8f;
+					wallColour[2] = 0.8f;
+					floorColour[0] = 0.8f;
+					floorColour[1] = 0.8f;
+					floorColour[2] = 0.8f;
 				}
 				gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);// Set the materials used by the wall.
 				gl.glPushMatrix();
@@ -303,7 +342,10 @@ public class Maze implements VisibleObject {
 				else{
 					switch (maze[i][j]) {
 					case 1:
+						boxTexture.enable(); // Enable the background texture
+						boxTexture.bind(); // Bind the background texture to the next object
 						box.draw(gl, wallColour);
+						boxTexture.disable(); 
 						break;
 					case 2:
 						flatBox.draw(gl, wallColour);
@@ -333,7 +375,10 @@ public class Maze implements VisibleObject {
 						lowRamp3.draw(gl, wallColour);
 						break;
 					default:
+						floorTexture.enable(); // Enable the background texture
+						floorTexture.bind(); // Bind the background texture to the next object
 						paintSingleFloorTile(gl, SQUARE_SIZE, floorColour);
+						floorTexture.disable(); 
 						break;
 					}
 				}
@@ -358,10 +403,14 @@ public class Maze implements VisibleObject {
 		gl.glNormal3d(0, 1, 0);
 		gl.glBegin(GL.GL_QUADS);
 		gl.glVertex3d(0, 0, 0);
+		gl.glTexCoord2f(1, 1);
 		gl.glVertex3d(0, 0, size);
+		gl.glTexCoord2f(1, 0);
 		gl.glVertex3d(size, 0, size);
+		gl.glTexCoord2f(0, 0);
 		gl.glVertex3d(size, 0, 0);
+		gl.glTexCoord2f(0, 1);
 		gl.glEnd();
 	}	
-	
+
 }
