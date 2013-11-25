@@ -8,12 +8,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Editor extends GameObject{
 
-	private final String[] myFileLocations = new String[]{ //TODO: Hard-coded file locations. Remove eventually.
-			"C:\\Users\\Victor\\Documents\\MATLAB\\Computational Intelligence\\Assignment3",
-	"C:\\Users\\Tom2\\Documents\\Java\\workspace\\MazeRunner3\\levels"};
-
-	private JFileChooser fc;
-
 	private float FOV;
 
 	private Control control; 
@@ -46,18 +40,32 @@ public class Editor extends GameObject{
 		super(x, y, z);
 		horAngle = h;
 		verAngle = v;
-		selectDirectory();
 	}
+
+	/**
+	 * Sets the Field of View of the editor
+	 * @param FOV	Field of View
+	 */
 
 	public void setFOV(float FOV)
 	{
 		this.FOV = FOV;
 	}
 
+	/**
+	 * Sets the size of the buttons in the heads up display
+	 * @param buttonSize	Size of the buttons
+	 */
+
 	public void setButtonSize(float buttonSize)
 	{
 		this.buttonSize = buttonSize;
 	}
+
+	/**
+	 * Sets the maze
+	 * @param maze	Maze
+	 */
 
 	public void setMaze(Maze maze) {
 		this.maze = maze;
@@ -105,6 +113,20 @@ public class Editor extends GameObject{
 	public void setVerAngle(double verAngle) {
 		this.verAngle = verAngle;
 	}
+	/**
+	 * Gets the maze
+	 * @return	Maze
+	 */
+
+	public Maze getMaze(){
+		return maze;
+	}
+
+	/**
+	 * Updates the editor according to the inputs and current state of the editor
+	 * @param screenWidth	Width of the current window
+	 * @param screenHeight	Height of the current window
+	 */
 
 	public void update(int screenWidth, int screenHeight)
 	{
@@ -116,7 +138,8 @@ public class Editor extends GameObject{
 			// The Y position can never be lower then the highest wall
 			if(locationY + notches > maze.SQUARE_SIZE)
 				locationY += notches;
-
+			// Store the position where the left button was originally pressed
+			// This information is used while rotating slope that are to be placed. 
 			if(control.isLeftButtonPressed())
 			{
 				pressedX = control.getMouseX();
@@ -124,7 +147,7 @@ public class Editor extends GameObject{
 			}
 			// When dragging the right mouse button, the camera is moved.
 			if(control.isRightButtonDragged()){
-				
+
 				updateLocation(screenHeight);
 			}
 			// When a selection of squares made by dragging is released, the selected squares are toggled
@@ -141,32 +164,38 @@ public class Editor extends GameObject{
 					maze.select(selectedX, selectedZ);
 				}
 				else{
-					if(!(drawMode == DRAW_START || drawMode == DRAW_FINISH || drawMode == DRAW_HIGH_RAMP || drawMode == DRAW_LOW_RAMP))
+					if(!hooverButtons())
 					{
-						maze.select(selectedX, selectedZ);
-					}
-					else if(!hooverButtons())
-					{
-						int dX = control.getMouseX() - pressedX;
-						int dY = control.getMouseY() - pressedY;
-						if(Math.abs(dX) > Math.abs(dY) )
+						// If the left button is dragged and the elements to be drawn non-rotatable and the mouse 
+						// isn't located over the buttons: keep selecting more elements
+						if(drawMode == DRAW_BOX || drawMode == DRAW_EMPTY || drawMode == DRAW_FLAT_BOX)
 						{
-							if(dX > 0)
-								angle = 270;
-							else
-								angle = 90;
+							maze.select(selectedX, selectedZ);
 						}
-						else
+						else 
 						{
-							if(dY > 0)
-								angle = 0;
+							// If the element to be added is rotatable: find the correct orientation.
+							int dX = control.getMouseX() - pressedX;
+							int dY = control.getMouseY() - pressedY;
+							if(Math.abs(dX) > Math.abs(dY) )
+							{
+								if(dX > 0)
+									angle = 270;
+								else
+									angle = 90;
+							}
 							else
-								angle = 180;
+							{
+								if(dY > 0)
+									angle = 0;
+								else
+									angle = 180;
+							}
+							maze.addBlock(drawMode, angle);
 						}
-						maze.addBlock(drawMode, angle);
 					}
 				}
-
+				// Take actions according to the pressed button.
 				int button = getButtons();
 				switch(button){
 				case(0): maze.addToSize(1); break;
@@ -179,7 +208,7 @@ public class Editor extends GameObject{
 				case(7): drawMode = DRAW_LOW_RAMP; break;
 				case(8): drawMode = DRAW_FLAT_BOX; break;
 				case(9): save(); break;
-				case(10): read(); break;
+				case(10): maze = readMaze(); break;
 				case(-1): maze.addBlock(drawMode, angle);break;
 				case(-2): maze.rotateSelected(); break;
 				default: break;
@@ -188,7 +217,12 @@ public class Editor extends GameObject{
 			}
 		}
 	}
-	
+
+	/**
+	 * Checks whether the mouse is currently over one of the Heads Up Display buttons.
+	 * @return	boolean that tells if the mouse is located over a button
+	 */
+
 	private boolean hooverButtons()
 	{
 		return control.getMouseX() < (numButtons * buttonSize) && control.getMouseY() < buttonSize;
@@ -239,6 +273,12 @@ public class Editor extends GameObject{
 		selectedZ = (int)(cursorPositionZ / maze.SQUARE_SIZE);
 	}
 
+	/**
+	 * Update the x and z location of the editor according to the amount the mouse is moved (while the right
+	 * mouse button is dragged).
+	 * @param screenHeight	Height of the current window.
+	 */
+
 	private void updateLocation(int screenHeight)
 	{
 		// The field of view relates to the portion of the map that is visible:
@@ -250,9 +290,17 @@ public class Editor extends GameObject{
 		locationZ = locationZ - control.getdY() / pixelsPerUnit;
 	}
 
-	private void selectDirectory()
+	/**
+	 * Initialize the JFileChooser to be used for maze files. Standard file locations can be selected.
+	 * @param fc	JFileChooser to be initialized.
+	 */
+
+	private static void selectDirectory(JFileChooser fc)
 	{
-		fc = new JFileChooser();
+		String[] myFileLocations = new String[]{ //TODO: Hard-coded file locations. Remove eventually.
+				"C:\\Users\\Victor\\Documents\\MATLAB\\Computational Intelligence\\Assignment3",
+		"C:\\Users\\Tom2\\Documents\\Java\\workspace\\MazeRunner3\\levels"};
+
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fc.setMultiSelectionEnabled(false);
 		fc.setDialogTitle("Select a maze file");
@@ -268,7 +316,15 @@ public class Editor extends GameObject{
 		}
 	}
 
+	/**
+	 * Selects a file with a JFileChooser and save the maze to this file.
+	 * @return	boolean the represents whether the save was successfull.
+	 */
+
 	public boolean save(){
+		JFileChooser fc = new JFileChooser();
+		selectDirectory(fc);
+
 		int returnVal = fc.showDialog(fc, "Save");
 		File file = fc.getSelectedFile();
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -278,32 +334,23 @@ public class Editor extends GameObject{
 		return false;
 	}
 
-	public boolean read(){
-		int returnVal = fc.showDialog(fc, "Open");
-		File file = fc.getSelectedFile();
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			Maze.read(file);
-			return true;
-		}
-		return false;
-	}
+	/**
+	 * Selects a file with a JFileChooser and reads the maze from this file. If the file selection is cancelled
+	 * or otherwise interrupted, null is returned.
+	 * @return	Maze that was read from the chosen file.
+	 */
 
 	public static Maze readMaze(){
 		JFileChooser fc = new JFileChooser();
-		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		fc.setMultiSelectionEnabled(false);
-		fc.setDialogTitle("Select a maze file");
-		FileFilter filter = new FileNameExtensionFilter("Maze file", "mz", "maze");
-		fc.setFileFilter(filter);
+		selectDirectory(fc);
 
 		int returnVal = fc.showDialog(fc, "Open");
 		File file = fc.getSelectedFile();
 		Maze maze = null;
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-
 			maze = Maze.read(file);
 		}
-		
+
 		return maze;
 	}
 }

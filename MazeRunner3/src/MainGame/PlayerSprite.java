@@ -4,14 +4,16 @@ import java.io.InputStream;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.glu.GLU;
-import javax.media.opengl.glu.GLUquadric;
-
 import com.sun.opengl.impl.GLUquadricImpl;
-import com.sun.opengl.util.GLUT;
+//import com.sun.opengl.util.GLUT;
 import com.sun.opengl.util.texture.Texture;
 import com.sun.opengl.util.texture.TextureData;
 import com.sun.opengl.util.texture.TextureIO;
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Single;
+
+/**
+ * Class containing the texture, shape and position of the sprite that represents the player. 
+ *
+ */
 
 public class PlayerSprite implements VisibleObject {
 
@@ -33,6 +35,11 @@ public class PlayerSprite implements VisibleObject {
 		totalRotation = 0;
 
 	}
+	
+	/**
+	 * Initialize the shape and the textures of the sprite
+	 * @param gl	instance of opengl
+	 */
 
 	public void init(GL gl)
 	{
@@ -62,7 +69,7 @@ public class PlayerSprite implements VisibleObject {
 		sphereTexture.bind(); 
 		gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, ballColour, 0);
 		gl.glPushMatrix();
-		gl.glTranslated(posX + 2.5, 1, posZ + 2.5);
+		gl.glTranslated(posX, 1, posZ);
 
 
 		gl.glRotated(-Math.toDegrees(orientation), 0, 1, 0);
@@ -75,8 +82,13 @@ public class PlayerSprite implements VisibleObject {
 		gl.glPopMatrix();
 
 	}
-
-	public void update(double x, double z, double angle)
+	
+	/**
+	 * Updates the location of the sprite
+	 * @param x	new X coordinate of the sprite
+	 * @param z	new Z coordinate of the sprite
+	 */
+	public void update(double x, double z)
 	{
 		dX = posX - x;
 		dZ = posZ - z;

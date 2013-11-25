@@ -308,7 +308,7 @@ public class MazeRunner implements GLEventListener {
                     maze.isWall(player.getLocationX(),player.getLocationZ()-1)){
                   player.update(-deltaTime);
                 }
-		playerSprite.update(player.getLocationX() - 2.5, player.getLocationZ() - 2.5, -(player.getHorAngle() - 180));
+		playerSprite.update(player.getLocationX(), player.getLocationZ());
 	}
 
 	/**

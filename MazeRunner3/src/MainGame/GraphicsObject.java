@@ -5,6 +5,11 @@ import javax.media.opengl.*;
 
 import java.util.ArrayList;
 
+/**
+ *	Class that contains the a number of points, represented by vectors, and faces, represented by arrays of numbers
+ *	referencing those points, to create three dimensional objects that are in the maze.
+ *
+ */
 public abstract class GraphicsObject {
 
 	ArrayList<Vector3f> vertices;
@@ -16,18 +21,32 @@ public abstract class GraphicsObject {
 		vertices = new ArrayList<Vector3f>();
 		normals = new ArrayList<Vector3f>();
 		faces = new ArrayList<int[]>();
-
 	}
+	
+	/**
+	 * Add a vertex to the vertices list
+	 * @param point	vertex to be added
+	 */
 
 	public void addVertex(Vector3f point)
 	{
 		vertices.add(point);
 	}
+	
+	/**
+	 * Get the number of vertices contain in this object
+	 * @return	number of vertices
+	 */
 
 	public int getNumVertices()
 	{
 		return vertices.size();
 	}
+	
+	/**
+	 * Add a face to the list of faces
+	 * @param face	face to be added
+	 */
 
 	public void addFace(int[] face)
 	{
@@ -48,6 +67,12 @@ public abstract class GraphicsObject {
 		this.faces.add(face);
 
 	}
+	
+	/**
+	 * Draw the object
+	 * @param gl
+	 * @param wallColour	Colour the object should get
+	 */
 
 	public void draw(GL gl, float[] wallColour)
 	{
@@ -78,6 +103,12 @@ public abstract class GraphicsObject {
 			gl.glEnd();
 		}
 	}
+	
+	/**
+	 * Calculate the normal of a given face
+	 * @param face	Face of which the normal is the be calculated
+	 * @return	Vector representing the normal.
+	 */
 
 	private Vector3f calculateNormal(int[] face)
 	{
@@ -90,6 +121,13 @@ public abstract class GraphicsObject {
 		v3 = v3.normalize();
 		return v3;
 	}
+	
+	/**
+	 * Rotates all vertices around the vertical axis in a given point.
+	 * @param angle		Angle with which needs to be rotated
+	 * @param xRotate	X coordinate of the point around which is to be rotated
+	 * @param zRotate	Z coordinate of the point around which is to be rotated
+	 */
 
 	protected void rotateVerticesY(float angle, double xRotate, double zRotate)
 	{

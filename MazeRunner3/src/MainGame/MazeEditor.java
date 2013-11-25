@@ -215,6 +215,14 @@ public class MazeEditor implements GLEventListener {
 		if (anim.isAnimating()){
 			// Update any movement since last frame.
 			editor.update(screenWidth, screenHeight);
+			if(editor.getMaze() != visibleObjects.get(0))
+			{
+				maze = editor.getMaze();
+				maze.initTextures(gl);
+				
+				visibleObjects.remove(0);
+				visibleObjects.add(0, maze);
+			}
 			updateCamera();
 	
 			gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);

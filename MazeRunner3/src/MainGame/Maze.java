@@ -79,16 +79,17 @@ public class Maze implements VisibleObject {
 		startPosition = start;
 		finishPosition = finish;
 		maze = new byte[MAZE_SIZE][MAZE_SIZE];
-		for(int i = 0; i < MAZE_SIZE; i++)
-		{
+		for(int i = 0; i < MAZE_SIZE; i++){
 			for(int j = 0; j < MAZE_SIZE; j++){
-				System.out.print(newMaze[i][j] + ",");
 				maze[i][j] = newMaze[i][j];
 			}
-			System.out.println("");
 		}
 		selected = new boolean[MAZE_SIZE][MAZE_SIZE];
 	}
+	/**
+	 * Initialize the textures used by the maze.
+	 * @param gl	instance of opengl.
+	 */
 
 	public void initTextures(GL gl)
 	{
@@ -160,17 +161,33 @@ public class Maze implements VisibleObject {
 	{
 		return (int)Math.floor( z / SQUARE_SIZE );
 	}
+	
+	/**
+	 * Sets the 'selected' flag for the maze element with the given coordinate
+	 * @param x	X coordinate of the element to be selected
+	 * @param z	Z coordinate of the element to be selected
+	 */
 
 	public void select(int x, int z)
 	{
 		if(x >= 0 && x < MAZE_SIZE && z >= 0 && z < MAZE_SIZE)
 			selected[x][z] = true;
 	}
+	
+	/**
+	 * Returns the size of the maze in opengl units
+	 * @return	the size of the maze in opengl units
+	 */
 
 	public double getSize()
 	{
 		return MAZE_SIZE*SQUARE_SIZE;
 	}
+	
+	/**
+	 * Gets the start position in opengl units and the initiial orientation of the player in the maze.
+	 * @return	double array containing 1: the x and 2: the z coordinate of the startposition and 3: the initial angle. 
+	 */
 
 	public double[] getStart()
 	{
@@ -180,6 +197,11 @@ public class Maze implements VisibleObject {
 		res[2] = startPosition[2];
 		return res;
 	}
+	
+	/**
+	 * Changes the size of the maze with the given amount. The maze must alway contain at least one square.
+	 * @param n	the amount by which the maze size needs to be changed. 
+	 */
 
 	public void addToSize(int n)
 	{
@@ -200,6 +222,10 @@ public class Maze implements VisibleObject {
 			selected = newSelected;
 		}
 	}
+	
+	/**
+	 * Sets the 'selected' flag of all elements in the maze to false.
+	 */
 
 	public void clearSelected()
 	{
@@ -207,19 +233,12 @@ public class Maze implements VisibleObject {
 			for( int j = 0; j < MAZE_SIZE; j++ )
 				selected[i][j] = false;
 	}
-
-	public void toggleSelected()
-	{
-		for(int i = 0; i < MAZE_SIZE; i++)
-			for(int j = 0; j < MAZE_SIZE; j++)
-				if(selected[i][j])
-				{
-					if(maze[i][j] == 0)
-						maze[i][j] = 1;
-					else
-						maze[i][j] = 0;
-				}
-	}
+	
+	/**
+	 * Adds an element to the maze at the selected position(s). 
+	 * @param drawMode	Which element needs to be added. See Editor for drawMode declarations.
+	 * @param angle		Orientation of the element the needs to be added: This value is always a multiple of ninety degrees.
+	 */
 
 	public void addBlock(byte drawMode, int angle)
 	{
@@ -249,6 +268,10 @@ public class Maze implements VisibleObject {
 					}
 				}
 	}
+	
+	/**
+	 * Rotates the selected element(s) by ninety degrees, is the selected element(s) can  be rotated.
+	 */
 
 	public void rotateSelected()
 	{
@@ -260,6 +283,12 @@ public class Maze implements VisibleObject {
 						maze[i][j] = (byte)(maze[i][j] - maze[i][j] % 4 + (maze[i][j] + 1) % 4); 
 				}
 	}
+	
+	/**
+	 * Writes the maze to a file. First the size is written, then the start and finish positions and finally
+	 * the maze data.
+	 * @param file	File to be written.
+	 */
 
 	public void save(File file) {
 		if (startPosition[0] < 0 || startPosition[0] >= MAZE_SIZE
@@ -290,6 +319,14 @@ public class Maze implements VisibleObject {
 		}
 
 	}
+	
+	/**
+	 * Reads maze from file. The syntax should be as the save method writes it: first the size, followd by start
+	 * position (three elements) and finish position (two elements) and finilly the maze data, written in a matrix 
+	 * with the size of the maze.
+	 * @param file	File from which is to be read.
+	 * @return		Maze that was read-in.
+	 */
 
 	public static Maze read(File file) {
 		try {
@@ -314,23 +351,22 @@ public class Maze implements VisibleObject {
 			e.printStackTrace();
 			return new Maze();
 		}
-		
-		
 	}
 
+	/**
+	 * Draws the maze.
+	 * TODO: betere beschrijving.
+	 */
 	public void display(GL gl) {
-		if(maze.length != selected.length)
-			System.out.println("Fout!" + maze.length + "!=" + selected.length);
-		// draw the grid with the current material
 		for (int i = 0; i < MAZE_SIZE; i++) {
 			for (int j = 0; j < MAZE_SIZE; j++) {
-				
+				//Define all colours and change them if the element is selected
 				float wallColour[] = new float[4];
 				wallColour[3] = 1.0f;
 				float floorColour[] = new float[4];
 				floorColour[3] = 1.0f;
 				float startColour[] = {0.0f, 1.0f, 0.0f, 1.0f };
-				float finishColour[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+				float finishColour[] = { 1.0f, 0.0f, 0.0f, 1.0f };
 				float arrowColour[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 				if (selected[i][j]) {
 					wallColour[0] = 1.0f;
@@ -347,9 +383,9 @@ public class Maze implements VisibleObject {
 					floorColour[1] = 0.8f;
 					floorColour[2] = 0.8f;
 				}
-				gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);// Set the materials used by the wall.
 				gl.glPushMatrix();
 				gl.glTranslated(i * SQUARE_SIZE, 0, j * SQUARE_SIZE);
+				//Draw the start and finish squares
 				if (i == startPosition[0] && j == startPosition[1])
 				{
 					arrow.draw(gl, arrowColour);
@@ -358,10 +394,11 @@ public class Maze implements VisibleObject {
 				else if (i == finishPosition[0] && j == finishPosition[1])
 					paintSingleFloorTile(gl, SQUARE_SIZE, finishColour);
 				else{
+					//draw the element
 					switch (maze[i][j]) {
 					case 1:
-						boxTexture.enable(); // Enable the background texture
-						boxTexture.bind(); // Bind the background texture to the next object
+						boxTexture.enable(); 
+						boxTexture.bind();
 						box.draw(gl, wallColour);
 						boxTexture.disable(); 
 						break;
@@ -393,10 +430,7 @@ public class Maze implements VisibleObject {
 						lowRamp3.draw(gl, wallColour);
 						break;
 					default:
-						floorTexture.enable(); // Enable the background texture
-						floorTexture.bind(); // Bind the background texture to the next object
 						paintSingleFloorTile(gl, SQUARE_SIZE, floorColour);
-						floorTexture.disable(); 
 						break;
 					}
 				}
@@ -415,7 +449,10 @@ public class Maze implements VisibleObject {
 	 *            the size of the tile
 	 */
 	private void paintSingleFloorTile(GL gl, double size, float[] wallColour) {
-		// Setting the floor color and material.
+		
+		floorTexture.enable(); // Enable the background texture
+		floorTexture.bind(); // Bind the background texture to the next object
+		
 		gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0); // Set the materials used by the floor.
 
 		gl.glNormal3d(0, 1, 0);
@@ -429,6 +466,7 @@ public class Maze implements VisibleObject {
 		gl.glVertex3d(size, 0, 0);
 		gl.glTexCoord2f(0, 1);
 		gl.glEnd();
+		floorTexture.disable(); // Setting the floor color and material.
 	}	
 
 }
