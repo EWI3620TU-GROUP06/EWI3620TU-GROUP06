@@ -192,7 +192,7 @@ public class MazeRunner implements GLEventListener {
         // Now we set up our viewpoint.
         gl.glMatrixMode( GL.GL_PROJECTION );						// We'll use orthogonal projection.
         gl.glLoadIdentity();										// Reset the current matrix.
-        glu.gluPerspective( 60, screenWidth, screenHeight, 200);	// Set up the parameters for perspective viewing.
+        glu.gluPerspective( 60, (float)screenWidth/(float)screenHeight, 0.1, 200);	// Set up the parameters for perspective viewing.
         gl.glMatrixMode( GL.GL_MODELVIEW );
         
         // Enable back-face culling.
@@ -279,7 +279,7 @@ public class MazeRunner implements GLEventListener {
 			gl.glViewport( 0, 0, screenWidth, screenHeight );
 			gl.glMatrixMode( GL.GL_PROJECTION );
 			gl.glLoadIdentity();
-			glu.gluPerspective( 60, screenWidth/screenHeight, .1, 200 );
+			glu.gluPerspective( 60, (float)screenWidth/(float)screenHeight, .1, 200 );
 			gl.glMatrixMode( GL.GL_MODELVIEW );
 			gl.glEnable(GL.GL_DEPTH_TEST);
         }
@@ -322,7 +322,7 @@ public class MazeRunner implements GLEventListener {
 		// Set the new projection matrix.
 		gl.glMatrixMode( GL.GL_PROJECTION );
 		gl.glLoadIdentity();
-		glu.gluPerspective( 60, screenWidth/screenHeight, .1, 200 );
+		glu.gluPerspective( 60, (float)screenWidth/(float)screenHeight, .1, 200 );
 		gl.glMatrixMode( GL.GL_MODELVIEW );
 		
 		//To render title
