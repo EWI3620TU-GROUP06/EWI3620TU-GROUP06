@@ -45,6 +45,7 @@ public class MazeRunner implements GLEventListener {
 	private GLCanvas canvas;
 	private Game game;
 	private Animator anim;
+	private long pauseTime;
 	
 /*
  * **********************************************
@@ -220,7 +221,6 @@ public class MazeRunner implements GLEventListener {
 		
 		GL gl = drawable.getGL();
 		GLU glu = new GLU();
-		if (anim.isAnimating()){	
 			// Calculating time since last frame.
 			Calendar now = Calendar.getInstance();		
 			long currentTime = now.getTimeInMillis();
@@ -245,10 +245,7 @@ public class MazeRunner implements GLEventListener {
 	        gl.glLoadIdentity();
 	        // Flush the OpenGL buffer.
 	        gl.glFlush();
-		}
-		else{
-			//draw the overlay menu
-		}
+		
 	}
 
 	
@@ -300,7 +297,6 @@ public class MazeRunner implements GLEventListener {
 	private void updateMovement(int deltaTime)
 	{
 		player.update(deltaTime);
-		
 		// TODO: implement collision
 		if (maze.isWall(player.getLocationX()-1,player.getLocationZ()) ||
                     maze.isWall(player.getLocationX()+1,player.getLocationZ()) ||
@@ -309,6 +305,7 @@ public class MazeRunner implements GLEventListener {
                   player.update(-deltaTime);
                 }
 		playerSprite.update(player.getLocationX(), player.getLocationZ());
+		
 	}
 
 	/**
@@ -328,6 +325,7 @@ public class MazeRunner implements GLEventListener {
 		camera.setHorAngle( player.getHorAngle() );
 		camera.setVerAngle( player.getVerAngle() );
 		camera.calculateVRP();
+		
 	}
 	
 	public void Pause() throws InterruptedException{
@@ -338,6 +336,7 @@ public class MazeRunner implements GLEventListener {
 	
 	public void unPause(){
 		if (anim.isAnimating() == false){
+			previousTime = Calendar.getInstance().getTimeInMillis();
 			anim.start();
 		}
 	}
