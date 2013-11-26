@@ -45,7 +45,7 @@ public class MazeRunner implements GLEventListener {
 	private GLCanvas canvas;
 	private Game game;
 	private Animator anim;
-	private long pauseTime;
+	private boolean pause;
 	
 /*
  * **********************************************
@@ -221,31 +221,46 @@ public class MazeRunner implements GLEventListener {
 		
 		GL gl = drawable.getGL();
 		GLU glu = new GLU();
-			// Calculating time since last frame.
-			Calendar now = Calendar.getInstance();		
-			long currentTime = now.getTimeInMillis();
-			int deltaTime = (int)(currentTime - previousTime);
-			previousTime = currentTime;
-			
-			// Update any movement since last frame.
-			updateMovement(deltaTime);
-			updateCamera();
-			 
-			gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT );
-			gl.glLoadIdentity();
-	        glu.gluLookAt( camera.getLocationX(), camera.getLocationY(), camera.getLocationZ(), 
-	 			   camera.getVrpX(), camera.getVrpY(), camera.getVrpZ(),
-	 			   camera.getVuvX(), camera.getVuvY(), camera.getVuvZ() );
-	
-	        // Display all the visible objects of MazeRunner.
-	        for( Iterator<VisibleObject> it = visibleObjects.iterator(); it.hasNext(); ) {
-	        	it.next().display(gl);
-	        }
-	
-	        gl.glLoadIdentity();
-	        // Flush the OpenGL buffer.
-	        gl.glFlush();
 		
+		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT );
+		gl.glLoadIdentity();
+		
+		//Only update the movement&camera when not in pause state
+		if (!pause){
+				// Calculating time since last frame.
+				Calendar now = Calendar.getInstance();		
+				long currentTime = now.getTimeInMillis();
+				int deltaTime = (int)(currentTime - previousTime);
+				previousTime = currentTime;
+				
+				// Update any movement since last frame.
+				updateMovement(deltaTime);
+				updateCamera();
+		}
+		
+		//Always change the camera and draw the game-world
+        glu.gluLookAt( camera.getLocationX(), camera.getLocationY(), camera.getLocationZ(), 
+ 			   camera.getVrpX(), camera.getVrpY(), camera.getVrpZ(),
+ 			   camera.getVuvX(), camera.getVuvY(), camera.getVuvZ() );
+
+        // Display all the visible objects of MazeRunner.
+        for( Iterator<VisibleObject> it = visibleObjects.iterator(); it.hasNext(); ) {
+        	it.next().display(gl);
+        }
+        
+        //Draw the menu if pause state
+        if(pause){
+			drawTrans(gl,(float)camera.getVrpX(),
+					(float)camera.getVrpY(),
+					(float)camera.getVrpZ()-1,
+					screenWidth,screenHeight, 
+					0.2f, 0.2f, 0.2f, 0.4f);
+        }
+        
+        gl.glLoadIdentity();
+        
+        // Flush the OpenGL buffer.
+        gl.glFlush();
 	}
 
 	
@@ -329,15 +344,39 @@ public class MazeRunner implements GLEventListener {
 	}
 	
 	public void Pause() throws InterruptedException{
-		if (anim.isAnimating() == true){
-			anim.stop();;
-		}
+			pause = true;
+	}
+	
+	private void drawTrans(GL gl, float x, float y, float z, float width, float height
+			,float r, float g, float b, float a){
+		//De onderstaande functies
+		//zorgen voor de doorzichtigheid van de menu
+		//elementen, tesamen met kleur etc.
+		
+		gl.glColor4f(r,g,b,a);
+		gl.glEnable(GL.GL_BLEND);
+		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+		gl.glColorMaterial(GL.GL_FRONT, GL.GL_AMBIENT_AND_DIFFUSE);
+		gl.glEnable(GL.GL_COLOR_MATERIAL);
+		
+		//draw the actual surface
+		gl.glBegin(GL.GL_QUADS);
+		gl.glVertex3f(x-width/2,y-height/2,z);
+		gl.glVertex3f(x + width/2, y-height/2,z);
+		gl.glVertex3f(x + width/2, y + height/2,z);
+		gl.glVertex3f(x-width/2, y + height/2,z);
+		gl.glEnd();
+		
+		// Disable alle crap voordat 
+		//de volgende flush plaats vindt en 
+		//de settings doorgegeven worden aan
+		//de achtergrond
+		gl.glDisable(GL.GL_COLOR_MATERIAL);
+		gl.glDisable(GL.GL_BLEND);
 	}
 	
 	public void unPause(){
-		if (anim.isAnimating() == false){
 			previousTime = Calendar.getInstance().getTimeInMillis();
-			anim.start();
-		}
+			pause = false;
 	}
 }
