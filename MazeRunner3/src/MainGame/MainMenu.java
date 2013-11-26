@@ -76,6 +76,7 @@ public class MainMenu implements GLEventListener {
 		InputStream stream = getClass().getResourceAsStream("mainmenu.jpg");
         TextureData data = TextureIO.newTextureData(stream, false, "jpg");
         this.backgroundTexture = TextureIO.newTexture(data);
+        stream.close();
 		}
 		catch(Exception e){
 			e.printStackTrace();

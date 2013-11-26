@@ -1,4 +1,7 @@
 package MainGame;
+
+import javax.vecmath.Vector3f;
+
 /**
  * Player represents the actual player in MazeRunner.
  * <p>
@@ -18,12 +21,13 @@ package MainGame;
  */
 public class Player extends GameObject {	
 	private double horAngle, verAngle;
-	private Vector3f speed;
-	private final double acceleration = 0.000075;
-	private final double friction = 0.0075;	
-	
+	//private Vector3f speed;
+	//private final double acceleration = 0.000075;
+	//private final double friction = 0.0075;
+	Physics physics = null;
+
 	private Control control = null;
-	
+
 	/**
 	 * The Player constructor.
 	 * <p>
@@ -39,14 +43,16 @@ public class Player extends GameObject {
 	 * @param h		the horizontal angle of the orientation in degrees
 	 * @param v		the vertical angle of the orientation in degrees
 	 */
-	public Player( double x, double y, double z, double h, double v ) {
+	public Player( double x, double y, double z, double h, double v, Maze maze) {
 		// Set the initial position and viewing direction of the player.
 		super( x, y, z );
 		horAngle = h;
 		verAngle = v;
-		speed = new Vector3f(0.0f, 0.0f, 0.0f);
+		//speed = new Vector3f(0.0f, 0.0f, 0.0f);
+		//TODO: juiste startpositie bepalen
+		physics = new Physics(maze);
 	}
-	
+
 	/**
 	 * Sets the Control object that will control the player's motion
 	 * <p>
@@ -57,7 +63,7 @@ public class Player extends GameObject {
 	{
 		this.control = control;
 	}
-	
+
 	/**
 	 * Gets the Control object currently controlling the player
 	 * @return
@@ -98,21 +104,21 @@ public class Player extends GameObject {
 	public void setVerAngle(double verAngle) {
 		this.verAngle = verAngle;
 	}
-	
+
 	/**
 	 * Returns the speed.
 	 * @return the speed
 	 */
-	public Vector3f getSpeed() {
+	/*public Vector3f getSpeed() {
 		return speed;
-	}
+	}*/
 	/**
 	 * Sets the speed.
 	 * @param speed the speed to set
 	 */
-	public void setSpeed(Vector3f speed) {
+	/*	public void setSpeed(Vector3f speed) {
 		this.speed = speed;
-	}
+	}*/
 
 
 	/**
@@ -126,45 +132,79 @@ public class Player extends GameObject {
 			control.update();
 
 			// Rotate the player, according to control
-                        int dX = control.getdX();
-                        int dY = control.getdY();
-                        // Set the new angles according to path length = r*phi, phi = pathlength/r, r=1.
-                        setHorAngle(horAngle - (double) dX/10);
-                        setVerAngle(verAngle - (double) dY/10);
+			int dX = control.getdX();
+			int dY = control.getdY();
+			// Set the new angles according to path length = r*phi, phi = pathlength/r, r=1.
+			setHorAngle(horAngle - (double) dX/10);
+			setVerAngle(verAngle - (double) dY/10);
+			
+			physics.update(deltaTime);
+			
+			Vector3f position = physics.getPlayerPosition();
+			
+			float[] pos = new float[3];
+			
+			position.get(pos);
+			
+			locationX = pos[0];
+			locationY = pos[1];
+			locationZ = pos[2];
+			
+			double cos = Math.cos(Math.toRadians(this.getHorAngle()));
+			double sin = Math.sin(Math.toRadians(this.getHorAngle()));
+			
+			int power = 2; 
+			
+			if (control.getRight())
+			{
+				physics.applyForce(power*(float)cos , 0, -power* (float)sin);
+			}
+			if (control.getLeft())
+			{
+				physics.applyForce(-power*(float)cos , 0, power*(float)sin);
+			}
+			if (control.getBack())
+			{
+				physics.applyForce(power*(float)sin , 0, power*(float)cos);
+			}
+			if (control.getForward())
+			{
+				physics.applyForce(-power*(float)sin , 0, -power*(float)cos);
+			}
 
-                      //Update speed according to friction
-            			
-            			speed = speed.mul( 1 - (float) friction);
-            			
-            			// Move the player according to speed
-            			
-            			this.setLocationX(this.getLocationX() + deltaTime * speed.getX());
-            			this.setLocationZ(this.getLocationZ() + deltaTime * speed.getZ());
-            			
-            			// Update speed according to control
-            			double cos = Math.cos(Math.toRadians(this.getHorAngle()));
-            			double sin = Math.sin(Math.toRadians(this.getHorAngle()));
-            			
-            			if (control.getRight())
-            			{
-            				speed.setX(speed.getX() + (float)(acceleration*cos));
-            				speed.setZ(speed.getZ() - (float)(acceleration*sin));
-            			}
-            			if (control.getLeft())
-            			{
-            				speed.setX(speed.getX() - (float)(acceleration*cos));
-            				speed.setZ(speed.getZ() + (float)(acceleration*sin));
-            			}
-            			if (control.getBack())
-            			{
-            				speed.setX(speed.getX() + (float)(acceleration*sin));
-            				speed.setZ(speed.getZ() + (float)(acceleration*cos));
-            			}
-            			if (control.getForward())
-            			{
-            				speed.setX(speed.getX() - (float)(acceleration*sin));
-            				speed.setZ(speed.getZ() - (float)(acceleration*cos));
-            			}
+//			//Update speed according to friction
+//
+//			//speed = speed.mul( 1 - (float) friction);
+//
+//			// Move the player according to speed
+
+			/*this.setLocationX(this.getLocationX() + deltaTime * speed.getX());
+			this.setLocationZ(this.getLocationZ() + deltaTime * speed.getZ());
+
+			// Update speed according to control
+			double cos = Math.cos(Math.toRadians(this.getHorAngle()));
+			double sin = Math.sin(Math.toRadians(this.getHorAngle()));
+
+			if (control.getRight())
+			{
+				speed.setX(speed.getX() + (float)(acceleration*cos));
+				speed.setZ(speed.getZ() - (float)(acceleration*sin));
+			}
+			if (control.getLeft())
+			{
+				speed.setX(speed.getX() - (float)(acceleration*cos));
+				speed.setZ(speed.getZ() + (float)(acceleration*sin));
+			}
+			if (control.getBack())
+			{
+				speed.setX(speed.getX() + (float)(acceleration*sin));
+				speed.setZ(speed.getZ() + (float)(acceleration*cos));
+			}
+			if (control.getForward())
+			{
+				speed.setX(speed.getX() - (float)(acceleration*sin));
+				speed.setZ(speed.getZ() - (float)(acceleration*cos));
+			}*/
 		}
 	}
 }

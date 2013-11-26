@@ -180,16 +180,16 @@ public class Editor extends GameObject{
 							if(Math.abs(dX) > Math.abs(dY) )
 							{
 								if(dX > 0)
-									angle = 270;
-								else
 									angle = 90;
+								else
+									angle = 270;
 							}
 							else
 							{
 								if(dY > 0)
-									angle = 0;
-								else
 									angle = 180;
+								else
+									angle = 0;
 							}
 							maze.addBlock(drawMode, angle);
 						}
@@ -208,7 +208,10 @@ public class Editor extends GameObject{
 				case(7): drawMode = DRAW_LOW_RAMP; break;
 				case(8): drawMode = DRAW_FLAT_BOX; break;
 				case(9): save(); break;
-				case(10): maze = readMaze(); break;
+				case(10): maze = readMaze();
+				if(maze == null)
+					maze = new Maze();
+				break;
 				case(-1): maze.addBlock(drawMode, angle);break;
 				case(-2): maze.rotateSelected(); break;
 				default: break;

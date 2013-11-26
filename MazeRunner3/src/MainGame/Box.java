@@ -1,18 +1,24 @@
 package MainGame;
 
-public class Box extends GraphicsObject{
+import javax.vecmath.Vector3f;
+
+public class Box extends MazeObject{
 	
-	public Box(float width, float height)
+	protected float height;
+	
+	public Box(float width, float height, float x, float z)
 	{
 		super();
-		addVertex(new Vector3f(0, 0, 0));
-		addVertex(new Vector3f(width, 0, 0));
-		addVertex(new Vector3f(width, height, 0));
-		addVertex(new Vector3f(0, height, 0));
-		addVertex(new Vector3f(0, 0, width));
-		addVertex(new Vector3f(width, 0, width));
-		addVertex(new Vector3f(width, height, width));
-		addVertex(new Vector3f(0, height, width));
+		addVertex(new Vector3f(x, 0, z));
+		addVertex(new Vector3f(x+width, 0, z));
+		addVertex(new Vector3f(x+width, height, z));
+		addVertex(new Vector3f(x, height, z));
+		addVertex(new Vector3f(x, 0, z+width));
+		addVertex(new Vector3f(x+width, 0, z+width));
+		addVertex(new Vector3f(x+width, height, z+width));
+		addVertex(new Vector3f(x, height, z+width));
+		
+		this.height= height;
 		
 		int[] face0 = {0, 1, 5, 4};
 		addFace(face0);

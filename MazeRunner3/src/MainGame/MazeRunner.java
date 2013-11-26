@@ -143,9 +143,9 @@ public class MazeRunner implements GLEventListener {
 		visibleObjects.add( maze );
 
 		// Initialize the player.
-		player = new Player(maze.getStart()[0], maze.SQUARE_SIZE/2.0f, maze.getStart()[1], maze.getStart()[2],0);
+		player = new Player(maze.getStart()[0], maze.SQUARE_SIZE/2.0f, maze.getStart()[1], maze.getStart()[2],0, maze);
 		
-		playerSprite = new PlayerSprite((float)maze.SQUARE_SIZE, player.getLocationX(), player.getLocationZ(), (float) player.getHorAngle());
+		playerSprite = new PlayerSprite((float)maze.SQUARE_SIZE, player.getLocationX(),player.getLocationY(), player.getLocationZ(), (float) player.getHorAngle());
 		visibleObjects.add(playerSprite);
 		
 		camera = new Camera(player.getLocationX(), player.getLocationY(), player.getLocationZ(), 
@@ -301,14 +301,15 @@ public class MazeRunner implements GLEventListener {
 	{
 		player.update(deltaTime);
 		
-		// TODO: implement collision
+	/*	// TODO: implement collision
 		if (maze.isWall(player.getLocationX()-1,player.getLocationZ()) ||
                     maze.isWall(player.getLocationX()+1,player.getLocationZ()) ||
                     maze.isWall(player.getLocationX(),player.getLocationZ()+1) ||
                     maze.isWall(player.getLocationX(),player.getLocationZ()-1)){
                   player.update(-deltaTime);
                 }
-		playerSprite.update(player.getLocationX(), player.getLocationZ());
+		*/
+		playerSprite.update(player.getLocationX(), player.getLocationY(), player.getLocationZ());
 	}
 
 	/**
@@ -319,7 +320,7 @@ public class MazeRunner implements GLEventListener {
 	
 	private void updateCamera() {
 		double cameraX = player.getLocationX() + 3 *Math.sin( Math.toRadians(player.getHorAngle())) * Math.cos( Math.toRadians(player.getVerAngle()) );
-		double cameraY = player.getLocationY() + Math.sin(Math.toRadians(player.getVerAngle()));
+		double cameraY = player.getLocationY() + Math.sin(Math.toRadians(player.getVerAngle())) + 2;
 		double cameraZ = player.getLocationZ() + 3 *Math.cos( Math.toRadians(player.getHorAngle())) * Math.cos(Math.toRadians(player.getVerAngle()));
 		
 		camera.setLocationX( cameraX);

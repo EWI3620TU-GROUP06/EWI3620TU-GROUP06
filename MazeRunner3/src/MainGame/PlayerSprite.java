@@ -17,7 +17,7 @@ import com.sun.opengl.util.texture.TextureIO;
 
 public class PlayerSprite implements VisibleObject {
 
-	private double posX, posZ;
+	private double posX, posY, posZ;
 
 	private double dX, dZ;
 	private double orientation;
@@ -26,9 +26,10 @@ public class PlayerSprite implements VisibleObject {
 	private Texture sphereTexture;
 	GLUquadricImpl sphere;
 
-	public PlayerSprite(float squareSize, double x, double z, float angle)
+	public PlayerSprite(float squareSize, double x, double y, double z, float angle)
 	{
 		posX = x;
+		posY = y;
 		posZ = z;
 
 		orientation = angle;
@@ -69,7 +70,7 @@ public class PlayerSprite implements VisibleObject {
 		sphereTexture.bind(); 
 		gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, ballColour, 0);
 		gl.glPushMatrix();
-		gl.glTranslated(posX, 1, posZ);
+		gl.glTranslated(posX, posY, posZ);
 
 
 		gl.glRotated(-Math.toDegrees(orientation), 0, 1, 0);
@@ -88,7 +89,7 @@ public class PlayerSprite implements VisibleObject {
 	 * @param x	new X coordinate of the sprite
 	 * @param z	new Z coordinate of the sprite
 	 */
-	public void update(double x, double z)
+	public void update(double x, double y, double z)
 	{
 		dX = posX - x;
 		dZ = posZ - z;
@@ -96,6 +97,7 @@ public class PlayerSprite implements VisibleObject {
 			orientation = Math.atan2(dZ,dX);
 
 		posX = x;
+		posY = y;
 		posZ = z;
 	}
 

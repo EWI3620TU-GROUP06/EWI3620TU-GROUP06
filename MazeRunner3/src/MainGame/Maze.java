@@ -31,7 +31,7 @@ import java.util.Scanner;
 public class Maze implements VisibleObject {
 
 	public int MAZE_SIZE = 10;
-	public final double SQUARE_SIZE = 5;
+	public final int SQUARE_SIZE = 5;
 
 	private boolean[][] selected = new boolean[MAZE_SIZE][MAZE_SIZE];
 
@@ -39,8 +39,9 @@ public class Maze implements VisibleObject {
 	private int[] finishPosition = {8,8};
 
 
-	private StartArrow arrow = new StartArrow((float) SQUARE_SIZE, startPosition[2]);
-
+	/*private StartArrow arrow = new StartArrow((float) SQUARE_SIZE, startPosition[2]);
+	
+	private final Floor floor = new Floor((float) SQUARE_SIZE);
 	private final Box box = new Box((float) SQUARE_SIZE,(float) SQUARE_SIZE); 
 	private final Ramp ramp0 = new Ramp((float) SQUARE_SIZE, (float) SQUARE_SIZE, 0);
 	private final Ramp ramp1 = new Ramp((float) SQUARE_SIZE, (float) SQUARE_SIZE, 1);
@@ -50,38 +51,45 @@ public class Maze implements VisibleObject {
 	private final Ramp lowRamp0 = new Ramp((float) SQUARE_SIZE,  (float) SQUARE_SIZE / 2, 0);
 	private final Ramp lowRamp1 = new Ramp((float) SQUARE_SIZE,  (float) SQUARE_SIZE / 2, 1);
 	private final Ramp lowRamp2 = new Ramp((float) SQUARE_SIZE,  (float) SQUARE_SIZE / 2, 2);
-	private final Ramp lowRamp3 = new Ramp((float) SQUARE_SIZE,  (float) SQUARE_SIZE / 2, 3);
+	private final Ramp lowRamp3 = new Ramp((float) SQUARE_SIZE,  (float) SQUARE_SIZE / 2, 3);*/
 
 	private Texture boxTexture;
 	private Texture floorTexture;
 
-	private byte[][] maze = 
+	private MazeObject[][] maze = null;
 
-		{	{  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 },
-			{  1,  0,  0,  0,  0,  0,  0,  0,  0,  1 },
-			{  1,  0,  0,  0,  0,  0,  1,  1,  1,  1 },
-			{  1,  0,  1,  0,  0,  0,  1,  0,  0,  1 },
-			{  1,  0,  1,  0,  1,  0,  1,  0,  0,  1 },
-			{  1,  0,  1,  0,  1,  0,  1,  0,  0,  1 },
-			{  1,  0,  0,  0,  1,  0,  1,  0,  0,  1 },
-			{  1,  0,  0,  0,  1,  1,  1,  0,  0,  1 },
-			{  1,  0,  0,  0,  0,  0,  0,  0,  0,  1 },
-			{  1,  1,  1,  1,  1,  1,  1,  1,  1,  1 }	};
-	
+
+
 	public Maze()
 	{
-		//Standard maze is loaded
+		maze = new MazeObject[MAZE_SIZE][MAZE_SIZE];
+		for(int i = 0; i < MAZE_SIZE; i++)
+			for(int j = 0; j < MAZE_SIZE; j++)
+				maze[i][j] = new Floor(SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE);
 	}
-			
+
 	public Maze(int mazeSize, int[] start, int[] finish, byte[][] newMaze)
 	{
 		MAZE_SIZE = mazeSize;
 		startPosition = start;
 		finishPosition = finish;
-		maze = new byte[MAZE_SIZE][MAZE_SIZE];
+		maze = new MazeObject[MAZE_SIZE][MAZE_SIZE];
 		for(int i = 0; i < MAZE_SIZE; i++){
 			for(int j = 0; j < MAZE_SIZE; j++){
-				maze[i][j] = newMaze[i][j];
+				switch(newMaze[i][j])
+				{
+				case 1 : maze[i][j] = new Box(SQUARE_SIZE, SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
+				case 2 : maze[i][j] = new Box(SQUARE_SIZE, SQUARE_SIZE/2, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
+				case 4 : maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE, 0, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
+				case 5 : maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE, 90, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
+				case 6 : maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE, 180, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
+				case 7 : maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE, 270, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
+				case 8 : maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE/2, 0, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
+				case 9 : maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE/2, 90, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
+				case 10 : maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE/2, 180, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
+				case 11 : maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE/2, 270, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
+				default : maze[i][j] = new Floor(SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE);
+				}
 			}
 		}
 		selected = new boolean[MAZE_SIZE][MAZE_SIZE];
@@ -116,7 +124,7 @@ public class Maze implements VisibleObject {
 	 * @param x		the x-coordinate of the location to check
 	 * @param z		the z-coordinate of the location to check
 	 * @return		whether there is a wall at maze[x][z]
-	 */
+	 *//*
 	public boolean isWall( int x, int z )
 	{
 		if( x >= 0 && x < MAZE_SIZE && z >= 0 && z < MAZE_SIZE )
@@ -125,16 +133,16 @@ public class Maze implements VisibleObject {
 			return false;
 	}
 
-	/**
-	 * isWall(double x, double z) checks for a wall by converting the double values to integer coordinates.
-	 * <p>
-	 * This method first converts the x and z to values that correspond with the grid 
-	 * defined by maze[][]. Then it calls upon isWall(int, int) to check for a wall.
-	 * 
-	 * @param x		the x-coordinate of the location to check
-	 * @param z		the z-coordinate of the location to check
-	 * @return		whether there is a wall at maze[x][z]
-	 */
+	  *//**
+	  * isWall(double x, double z) checks for a wall by converting the double values to integer coordinates.
+	  * <p>
+	  * This method first converts the x and z to values that correspond with the grid 
+	  * defined by maze[][]. Then it calls upon isWall(int, int) to check for a wall.
+	  * 
+	  * @param x		the x-coordinate of the location to check
+	  * @param z		the z-coordinate of the location to check
+	  * @return		whether there is a wall at maze[x][z]
+	  *//*
 	public boolean isWall( double x, double z )
 	{
 		int gX = convertToGridX( x );
@@ -142,26 +150,26 @@ public class Maze implements VisibleObject {
 		return isWall( gX, gZ );
 	}
 
-	/**
-	 * Converts the double x-coordinate to its correspondent integer coordinate.
-	 * @param x		the double x-coordinate
-	 * @return		the integer x-coordinate
-	 */
+	   *//**
+	   * Converts the double x-coordinate to its correspondent integer coordinate.
+	   * @param x		the double x-coordinate
+	   * @return		the integer x-coordinate
+	   *//*
 	private int convertToGridX( double x )
 	{
 		return (int)Math.floor( x / SQUARE_SIZE );
 	}
 
-	/**
-	 * Converts the double z-coordinate to its correspondent integer coordinate.
-	 * @param z		the double z-coordinate
-	 * @return		the integer z-coordinate
-	 */
+	    *//**
+	    * Converts the double z-coordinate to its correspondent integer coordinate.
+	    * @param z		the double z-coordinate
+	    * @return		the integer z-coordinate
+	    *//*
 	private int convertToGridZ( double z )
 	{
 		return (int)Math.floor( z / SQUARE_SIZE );
 	}
-	
+	     */
 	/**
 	 * Sets the 'selected' flag for the maze element with the given coordinate
 	 * @param x	X coordinate of the element to be selected
@@ -173,7 +181,7 @@ public class Maze implements VisibleObject {
 		if(x >= 0 && x < MAZE_SIZE && z >= 0 && z < MAZE_SIZE)
 			selected[x][z] = true;
 	}
-	
+
 	/**
 	 * Returns the size of the maze in opengl units
 	 * @return	the size of the maze in opengl units
@@ -183,7 +191,7 @@ public class Maze implements VisibleObject {
 	{
 		return MAZE_SIZE*SQUARE_SIZE;
 	}
-	
+
 	/**
 	 * Gets the start position in opengl units and the initiial orientation of the player in the maze.
 	 * @return	double array containing 1: the x and 2: the z coordinate of the startposition and 3: the initial angle. 
@@ -197,7 +205,7 @@ public class Maze implements VisibleObject {
 		res[2] = startPosition[2];
 		return res;
 	}
-	
+
 	/**
 	 * Changes the size of the maze with the given amount. The maze must alway contain at least one square.
 	 * @param n	the amount by which the maze size needs to be changed. 
@@ -208,7 +216,7 @@ public class Maze implements VisibleObject {
 		if(MAZE_SIZE + n > 0)
 		{
 			MAZE_SIZE += n;
-			byte[][]newMaze = new byte[MAZE_SIZE][MAZE_SIZE];
+			MazeObject[][]newMaze = new MazeObject[MAZE_SIZE][MAZE_SIZE];
 			boolean[][]newSelected = new boolean[MAZE_SIZE][MAZE_SIZE];
 			for (int i = 0; i < newMaze[0].length && i < maze[0].length; i++)
 			{
@@ -222,7 +230,7 @@ public class Maze implements VisibleObject {
 			selected = newSelected;
 		}
 	}
-	
+
 	/**
 	 * Sets the 'selected' flag of all elements in the maze to false.
 	 */
@@ -233,7 +241,7 @@ public class Maze implements VisibleObject {
 			for( int j = 0; j < MAZE_SIZE; j++ )
 				selected[i][j] = false;
 	}
-	
+
 	/**
 	 * Adds an element to the maze at the selected position(s). 
 	 * @param drawMode	Which element needs to be added. See Editor for drawMode declarations.
@@ -246,29 +254,27 @@ public class Maze implements VisibleObject {
 			for (int j = 0; j < MAZE_SIZE; j++)
 				if (selected[i][j] && !(drawMode != 3 && i == startPosition[0] && j == startPosition[1])
 						&& !(i == finishPosition[0] && j == finishPosition[1])) {
-					if (drawMode < 3)
-						maze[i][j] = drawMode;
-
-					if (drawMode == 3) {
-						maze[i][j] = 0;
-						startPosition[0] = i;
-						startPosition[1] = j;
-						startPosition[2] = angle;
-						arrow.setAngle(angle);
-					}
-					if (drawMode == 4) {
-						maze[i][j] = 0;
-						finishPosition[0] = i;
-						finishPosition[1] = j;
-					}
-					if (drawMode > 4) {
-						int orientation = (angle / 45 + 1) / 2;
-
-						maze[i][j] = (byte) (4 * (drawMode - 4) + orientation);
+					switch(drawMode)
+					{
+					case 1 : maze[i][j] = new Box(SQUARE_SIZE, SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
+					case 2 : maze[i][j]  = new Box(SQUARE_SIZE, SQUARE_SIZE/2, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
+					case 3 : maze[i][j] = new StartArrow(SQUARE_SIZE, startPosition[2], i * SQUARE_SIZE, j * SQUARE_SIZE);
+					break;
+					case 4 : maze[i][j] = new Floor(SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE);
+					finishPosition[0] = i;
+					finishPosition[1] = j;
+					break;
+					case 5:
+						maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE, angle, i * SQUARE_SIZE, j * SQUARE_SIZE);
+						break;
+					case 6:
+						maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE / 2, angle, i * SQUARE_SIZE, j * SQUARE_SIZE);
+						break;
+					default : maze[i][j] = maze[i][j] = new Floor(SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE);
 					}
 				}
 	}
-	
+
 	/**
 	 * Rotates the selected element(s) by ninety degrees, is the selected element(s) can  be rotated.
 	 */
@@ -279,11 +285,10 @@ public class Maze implements VisibleObject {
 			for (int j = 0; j < MAZE_SIZE; j++)
 				if (selected[i][j])
 				{
-					if(maze[i][j] > 3)
-						maze[i][j] = (byte)(maze[i][j] - maze[i][j] % 4 + (maze[i][j] + 1) % 4); 
+					maze[i][j].rotateVerticesY(90, (i+ 0.5) * SQUARE_SIZE, (j+0.5) * SQUARE_SIZE);
 				}
 	}
-	
+
 	/**
 	 * Writes the maze to a file. First the size is written, then the start and finish positions and finally
 	 * the maze data.
@@ -307,9 +312,9 @@ public class Maze implements VisibleObject {
 				for (int i = 0; i < maze[0].length; i++) {
 					for (int j = 0; j < maze.length; j++) {
 						if (j < maze.length - 1)
-							wr.print(maze[i][j] + " ");
+							wr.print(maze[i][j].getCode() + " ");
 						else
-							wr.print(maze[i][j] + "\n");
+							wr.print(maze[i][j].getCode() + "\n");
 					}
 				}
 				wr.close();
@@ -319,7 +324,7 @@ public class Maze implements VisibleObject {
 		}
 
 	}
-	
+
 	/**
 	 * Reads maze from file. The syntax should be as the save method writes it: first the size, followd by start
 	 * position (three elements) and finish position (two elements) and finilly the maze data, written in a matrix 
@@ -376,26 +381,26 @@ public class Maze implements VisibleObject {
 					floorColour[1] = 1.0f;
 					floorColour[2] = 1.0f;
 				} else {
-					wallColour[0] = 0.8f;
-					wallColour[1] = 0.8f;
-					wallColour[2] = 0.8f;
-					floorColour[0] = 0.8f;
-					floorColour[1] = 0.8f;
-					floorColour[2] = 0.8f;
+					wallColour[0] = 0.6f;
+					wallColour[1] = 0.6f;
+					wallColour[2] = 0.6f;
+					floorColour[0] = 0.6f;
+					floorColour[1] = 0.6f;
+					floorColour[2] = 0.6f;
 				}
-				gl.glPushMatrix();
-				gl.glTranslated(i * SQUARE_SIZE, 0, j * SQUARE_SIZE);
 				//Draw the start and finish squares
 				if (i == startPosition[0] && j == startPosition[1])
 				{
-					arrow.draw(gl, arrowColour);
-					paintSingleFloorTile(gl, SQUARE_SIZE, startColour);
+					maze[i][j].draw(gl,  startColour);
+					//paintSingleFloorTile(gl, SQUARE_SIZE, startColour);
 				}
 				else if (i == finishPosition[0] && j == finishPosition[1])
-					paintSingleFloorTile(gl, SQUARE_SIZE, finishColour);
+					maze[i][j].draw(gl,  finishColour);
+					//paintSingleFloorTile(gl, SQUARE_SIZE, finishColour);
 				else{
 					//draw the element
-					switch (maze[i][j]) {
+					maze[i][j].draw(gl,  wallColour);
+					/*switch (maze[i][j]) {
 					case 1:
 						boxTexture.enable(); 
 						boxTexture.bind();
@@ -431,13 +436,17 @@ public class Maze implements VisibleObject {
 						break;
 					default:
 						paintSingleFloorTile(gl, SQUARE_SIZE, floorColour);
-						break;
-					}
+						break;*/
 				}
-				gl.glPopMatrix();
 			}
 		}
 	}
+	
+	public MazeObject get(int x, int z)
+	{
+		return maze[x][z];
+	}
+
 
 	/**
 	 * paintSingleFloorTile(GL, double) paints a single floor tile, to represent
@@ -448,11 +457,11 @@ public class Maze implements VisibleObject {
 	 * @param size
 	 *            the size of the tile
 	 */
-	private void paintSingleFloorTile(GL gl, double size, float[] wallColour) {
-		
+	/*private void paintSingleFloorTile(GL gl, double size, float[] wallColour) {
+
 		floorTexture.enable(); // Enable the background texture
 		floorTexture.bind(); // Bind the background texture to the next object
-		
+
 		gl.glMaterialfv(GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0); // Set the materials used by the floor.
 
 		gl.glNormal3d(0, 1, 0);
@@ -467,6 +476,6 @@ public class Maze implements VisibleObject {
 		gl.glTexCoord2f(0, 1);
 		gl.glEnd();
 		floorTexture.disable(); // Setting the floor color and material.
-	}	
+	}	*/
 
 }

@@ -4,19 +4,20 @@ package MainGame;
 import javax.media.opengl.*;
 
 import java.util.ArrayList;
+import javax.vecmath.Vector3f;
 
 /**
  *	Class that contains the a number of points, represented by vectors, and faces, represented by arrays of numbers
  *	referencing those points, to create three dimensional objects that are in the maze.
  *
  */
-public abstract class GraphicsObject {
+public abstract class MazeObject {
 
 	ArrayList<Vector3f> vertices;
 	ArrayList<int[]> faces;
 	ArrayList<Vector3f> normals;
 
-	public GraphicsObject()
+	public MazeObject()
 	{
 		vertices = new ArrayList<Vector3f>();
 		normals = new ArrayList<Vector3f>();
@@ -41,6 +42,11 @@ public abstract class GraphicsObject {
 	public int getNumVertices()
 	{
 		return vertices.size();
+	}
+	
+	public int getNumFaces()
+	{
+		return faces.size();
 	}
 	
 	/**
@@ -82,11 +88,17 @@ public abstract class GraphicsObject {
 			int[] face = faces.get(j);
 			gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);
 			Vector3f normal = normals.get(j);
-			gl.glNormal3d(normal.getX(), normal.getY(), normal.getZ());
+			
+			float[] norm = new float[3];
+			
+			normal.get(norm);
+			
+			gl.glNormal3d(norm[0], norm[1], norm[2]);
 			gl.glBegin(GL.GL_POLYGON);
 			for(int i = 0; i < face.length; i++)
 			{
-				Vector3f pos = vertices.get(face[i]);
+				Vector3f position = vertices.get(face[i]);
+				float[] pos = new float[3];
 				if( this instanceof Box)
 				{
 					if(i == 0)
@@ -98,7 +110,8 @@ public abstract class GraphicsObject {
 					if(i == 3)
 						gl.glTexCoord2f(0, 1);
 				}
-				gl.glVertex3f(pos.getX(), pos.getY(), pos.getZ());
+				position.get(pos);
+				gl.glVertex3f(pos[0], pos[1], pos[2]);
 			}
 			gl.glEnd();
 		}
@@ -115,10 +128,13 @@ public abstract class GraphicsObject {
 		Vector3f p1 = vertices.get(face[0]);
 		Vector3f p2 =vertices.get(face[1]);
 		Vector3f p3 =vertices.get(face[2]);
-		Vector3f v1 = p2.sub(p1); 
-		Vector3f v2 = p3.sub(p1);
-		Vector3f v3 = v1.out(v2);
-		v3 = v3.normalize();
+		Vector3f v1 = new Vector3f(); 
+		Vector3f v2 = new Vector3f(); 
+		Vector3f v3 = new Vector3f(); 
+		v1.sub(p2, p1);
+		v2.sub(p3, p1);
+		v3.cross(v1, v2);
+		v3.normalize();
 		return v3;
 	}
 	
@@ -134,13 +150,68 @@ public abstract class GraphicsObject {
 		for(int i = 0; i < vertices.size(); i++)
 		{
 			Vector3f vertex = vertices.get(i);
-			float x = vertex.getX();
-			float z = vertex.getZ();
+			float[] vert = new float[3];
+			
+			vertex.get(vert);
+			float x = vert[0];
+			float z = vert[2];
 			double cos = Math.cos(Math.toRadians(angle));
 			double sin = Math.sin(Math.toRadians(angle));
-			vertex.setX((float)(x*cos - z * sin - xRotate * cos + zRotate * sin + xRotate));
-			vertex.setZ((float)(x*sin + z * cos - zRotate * cos - xRotate * sin + zRotate));
+			vert[0] =((float)(x*cos - z * sin - xRotate * cos + zRotate * sin + xRotate));
+			vert[2] = ((float)(x*sin + z * cos - zRotate * cos - xRotate * sin + zRotate));
+			
+			vertex.set(vert);
 		}
+	}
+	
+	public byte getCode()
+	{
+		if(this instanceof Box)
+		{
+			Box box = (Box) this;
+			if(box.height == 5)
+				return 1;
+			if(box.height == 2.5f)
+				return 2;
+		}
+		if(this instanceof Ramp)
+		{
+			Ramp ramp = (Ramp) this;
+			if(ramp.height == 5)
+			{
+				switch(ramp.orientation){
+				case 90 : return 5; 
+				case 180 : return 6; 
+				case 270 : return 7; 
+				default: return 4;
+				}
+			}
+			if(ramp.height == 2.5)
+			{
+				switch(ramp.orientation){
+				case 90 : return 9; 
+				case 180 : return 10; 
+				case 270 : return 11; 
+				default: return 8;
+				}
+			}
+		}
+		return 0;
+	}
+	
+	public Vector3f getVertex(int index)
+	{
+		return vertices.get(index);
+	}
+	
+	public int[] getFace(int index)
+	{
+		return faces.get(index);
+	}
+	
+	public Vector3f getPosition()
+	{
+		return vertices.get(0);
 	}
 
 }
