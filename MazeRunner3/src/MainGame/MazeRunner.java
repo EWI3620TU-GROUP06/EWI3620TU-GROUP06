@@ -4,10 +4,12 @@ import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
 
 import com.sun.opengl.util.Animator;
+import com.sun.opengl.util.j2d.TextRenderer;
 
 import GameStates.GameState;
 import Main.Game;
 
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -45,6 +47,11 @@ public class MazeRunner implements GLEventListener {
 	private GLCanvas canvas;
 	private Game game;
 	private Animator anim;
+	private boolean pause;
+	private TextRenderer renderer;
+	private TextRenderer Trenderer;
+	private int titleScale = 10;
+	private int textScale = 18;
 	
 /*
  * **********************************************
@@ -185,7 +192,7 @@ public class MazeRunner implements GLEventListener {
         // Now we set up our viewpoint.
         gl.glMatrixMode( GL.GL_PROJECTION );						// We'll use orthogonal projection.
         gl.glLoadIdentity();										// Reset the current matrix.
-        glu.gluPerspective( 60, screenWidth, screenHeight, 200);	// Set up the parameters for perspective viewing.
+        glu.gluPerspective( 60, (float)screenWidth/(float)screenHeight, 0.1, 200);	// Set up the parameters for perspective viewing.
         gl.glMatrixMode( GL.GL_MODELVIEW );
         
         // Enable back-face culling.
@@ -220,35 +227,67 @@ public class MazeRunner implements GLEventListener {
 		
 		GL gl = drawable.getGL();
 		GLU glu = new GLU();
-		if (anim.isAnimating()){	
-			// Calculating time since last frame.
-			Calendar now = Calendar.getInstance();		
-			long currentTime = now.getTimeInMillis();
-			int deltaTime = (int)(currentTime - previousTime);
-			previousTime = currentTime;
+		
+		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT );
+		gl.glLoadIdentity();
+		
+		//Only update the movement&camera when not in pause state
+		if (!pause){
+				// Calculating time since last frame.
+				Calendar now = Calendar.getInstance();		
+				long currentTime = now.getTimeInMillis();
+				int deltaTime = (int)(currentTime - previousTime);
+				previousTime = currentTime;
+				
+				// Update any movement since last frame.
+				updateMovement(deltaTime);
+				updateCamera();
+		}
+		
+		//Always change the camera and draw the game-world
+        glu.gluLookAt( camera.getLocationX(), camera.getLocationY(), camera.getLocationZ(), 
+ 			   camera.getVrpX(), camera.getVrpY(), camera.getVrpZ(),
+ 			   camera.getVuvX(), camera.getVuvY(), camera.getVuvZ() );
+
+        // Display all the visible objects of MazeRunner.
+        for( Iterator<VisibleObject> it = visibleObjects.iterator(); it.hasNext(); ) {
+        	it.next().display(gl);
+        }
+        
+        //Draw the menu if pause state
+        if(pause){
+    		gl.glMatrixMode(GL.GL_PROJECTION);
+    		gl.glLoadIdentity();
+    		gl.glOrtho(0,screenWidth,0,screenHeight,-1,1); //2D by making a -1 to 1 z around the z = 0 plane
+    		gl.glMatrixMode(GL.GL_MODELVIEW);
+    		gl.glLoadIdentity();
+    		gl.glDisable(GL.GL_DEPTH_TEST);
+    		
+			drawPauseMenu(gl, 0, 0, screenWidth, screenHeight, 0.2f, 0.2f, 0.2f, 0.4f);
 			
-			// Update any movement since last frame.
-			updateMovement(deltaTime);
-			updateCamera();
-			 
-			gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT );
+			drawTitle("Pause", 0.9f, 0.4f, 0.4f, 1f, (int)(screenWidth*0.380),(int)(screenHeight*0.8));
+			
+			drawText("Resume", 1f, 1f, 1f, 1f,(int)(screenWidth*0.395),
+					(int)(screenHeight*0.625));
+			
+			drawText("Main Menu", 1f, 1f, 1f, 1f,(int)(screenWidth*0.360),
+					(int)(screenHeight*0.48));
+		
+			drawText("Quit", 1f, 1f, 1f, 1f,(int)(screenWidth*0.442),
+					(int)(screenHeight*0.33));
+			
+			gl.glViewport( 0, 0, screenWidth, screenHeight );
+			gl.glMatrixMode( GL.GL_PROJECTION );
 			gl.glLoadIdentity();
-	        glu.gluLookAt( camera.getLocationX(), camera.getLocationY(), camera.getLocationZ(), 
-	 			   camera.getVrpX(), camera.getVrpY(), camera.getVrpZ(),
-	 			   camera.getVuvX(), camera.getVuvY(), camera.getVuvZ() );
-	
-	        // Display all the visible objects of MazeRunner.
-	        for( Iterator<VisibleObject> it = visibleObjects.iterator(); it.hasNext(); ) {
-	        	it.next().display(gl);
-	        }
-	
-	        gl.glLoadIdentity();
-	        // Flush the OpenGL buffer.
-	        gl.glFlush();
-		}
-		else{
-			//draw the overlay menu
-		}
+			glu.gluPerspective( 60, (float)screenWidth/(float)screenHeight, .1, 200 );
+			gl.glMatrixMode( GL.GL_MODELVIEW );
+			gl.glEnable(GL.GL_DEPTH_TEST);
+        }
+        
+        gl.glLoadIdentity();
+        
+        // Flush the OpenGL buffer.
+        gl.glFlush();
 	}
 
 	
@@ -283,8 +322,15 @@ public class MazeRunner implements GLEventListener {
 		// Set the new projection matrix.
 		gl.glMatrixMode( GL.GL_PROJECTION );
 		gl.glLoadIdentity();
-		glu.gluPerspective( 60, screenWidth/screenHeight, .1, 200 );
+		glu.gluPerspective( 60, (float)screenWidth/(float)screenHeight, .1, 200 );
 		gl.glMatrixMode( GL.GL_MODELVIEW );
+		
+		//To render title
+		Trenderer = new TextRenderer(new Font("Impact", Font.PLAIN, (screenWidth)/titleScale)); 
+		
+		//To render texts
+		//Set the font type shizzle here
+		renderer = new TextRenderer(new Font("Arial", Font.BOLD, (screenWidth)/textScale)); 
 	}
 
 /*
@@ -300,14 +346,16 @@ public class MazeRunner implements GLEventListener {
 	private void updateMovement(int deltaTime)
 	{
 		player.update(deltaTime);
-		
+	
 	/*	// TODO: implement collision
+
 		if (maze.isWall(player.getLocationX()-1,player.getLocationZ()) ||
                     maze.isWall(player.getLocationX()+1,player.getLocationZ()) ||
                     maze.isWall(player.getLocationX(),player.getLocationZ()+1) ||
                     maze.isWall(player.getLocationX(),player.getLocationZ()-1)){
                   player.update(-deltaTime);
                 }
+
 		*/
 		playerSprite.update(player.getLocationX(), player.getLocationY(), player.getLocationZ());
 	}
@@ -329,17 +377,66 @@ public class MazeRunner implements GLEventListener {
 		camera.setHorAngle( player.getHorAngle() );
 		camera.setVerAngle( player.getVerAngle() );
 		camera.calculateVRP();
+		
+	}
+	
+	//This method is taken from MainMenu: eventually make a nice class which both mainmenu and mazerunner and mazeEditor use
+	private void drawPauseMenu(GL gl, float x, float y, float width, float height
+			,float r, float g, float b, float a){
+		//De onderstaande functies
+		//zorgen voor de doorzichtigheid van de menu
+		//elementen, tesamen met kleur etc.
+		
+		gl.glColor4f(r,g,b,a);
+		gl.glEnable(GL.GL_BLEND);
+		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+		gl.glColorMaterial(GL.GL_FRONT, GL.GL_AMBIENT_AND_DIFFUSE);
+		gl.glEnable(GL.GL_COLOR_MATERIAL);
+		
+		//draw the actual surface
+		
+		gl.glBegin(GL.GL_QUADS);
+		gl.glVertex2f(x,y);
+		gl.glVertex2f(x + width, y);
+		gl.glVertex2f(x + width, y + height);
+		gl.glVertex2f(x, y + height);
+		gl.glEnd();
+		
+		// Disable alle crap voordat 
+		//de volgende flush plaats vindt en 
+		//de settings doorgegeven worden aan
+		//de achtergrond
+		gl.glDisable(GL.GL_COLOR_MATERIAL);
+		gl.glDisable(GL.GL_BLEND);
+	}
+	
+	//This unit is also taken from MainMenu
+	private void drawText(String text, float r, float g, float b, float a, int x, int y){
+		//Renderer alvast in init gemaakt, anders wordt ie na elke glFlush() opnieuw gemaakt!
+		
+		renderer.beginRendering(screenWidth, screenHeight);
+		renderer.setColor(r, g, b, a);
+		renderer.draw(text, x, y);
+		renderer.flush();
+		renderer.endRendering();
+	}
+	
+	private void drawTitle(String text, float r, float g, float b, float a, int x, int y){
+		//Renderer alvast in init gemaakt, anders wordt ie na elke glFlush() opnieuw gemaakt!
+		
+		Trenderer.beginRendering(screenWidth, screenHeight);
+		Trenderer.setColor(r, g, b, a);
+		Trenderer.draw(text, x, y);
+		Trenderer.flush();
+		Trenderer.endRendering();
 	}
 	
 	public void Pause() throws InterruptedException{
-		if (anim.isAnimating() == true){
-			anim.stop();;
-		}
+		pause = true;
 	}
 	
 	public void unPause(){
-		if (anim.isAnimating() == false){
-			anim.start();
-		}
+			previousTime = Calendar.getInstance().getTimeInMillis();
+			pause = false;
 	}
 }
