@@ -7,7 +7,9 @@ import GameStates.GameState;
 import Main.Game;
 
 import com.sun.opengl.util.*;
+import com.sun.opengl.util.j2d.TextRenderer;
 
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -48,6 +50,11 @@ public class MazeEditor implements GLEventListener {
 	private GameState state;
 	private Game game;
 	private Animator anim;
+	private boolean pause;
+	private TextRenderer renderer;
+	private TextRenderer Trenderer;
+	private int titleScale = 10;
+	private int textScale = 18;
 
 	/*
 	 * **********************************************
@@ -212,7 +219,11 @@ public class MazeEditor implements GLEventListener {
 	public void display(GLAutoDrawable drawable) {
 		GL gl = drawable.getGL();
 		GLU glu = new GLU();
-		if (anim.isAnimating()){
+		
+		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+		gl.glLoadIdentity();
+		
+		if (!pause){
 			// Update any movement since last frame.
 			editor.update(screenWidth, screenHeight);
 			if(editor.getMaze() != visibleObjects.get(0))
@@ -224,37 +235,48 @@ public class MazeEditor implements GLEventListener {
 				visibleObjects.add(0, maze);
 			}
 			updateCamera();
-	
-			gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
-			gl.glLoadIdentity();
-	
-			glu.gluLookAt(camera.getLocationX(), camera.getLocationY(),
-					camera.getLocationZ(), camera.getVrpX(), camera.getVrpY(),
-					camera.getVrpZ(), camera.getVuvX(), camera.getVuvY(),
-					camera.getVuvZ());
-	
-			// Display all the visible objects of MazeRunner.
-			for (Iterator<VisibleObject> it = visibleObjects.iterator(); it
-					.hasNext();) {
-				it.next().display(gl);
-			}
-	
-			// When editing: use an orthographic projection to draw the HUD on the screen, 
-			// then set the perspective projection back
-			gl.glLoadIdentity();
-			orthographicProjection(gl);
-			gl.glDisable(GL.GL_LIGHTING);
-			drawButtons(gl);
-			gl.glEnable(GL.GL_LIGHTING);
-			perspectiveProjection(gl, glu);
-	
-	
-			// Flush the OpenGL buffer.
-			gl.glFlush();
 		}
-		else{
-			//draw the overlay menu.
+		
+		glu.gluLookAt(camera.getLocationX(), camera.getLocationY(),
+				camera.getLocationZ(), camera.getVrpX(), camera.getVrpY(),
+				camera.getVrpZ(), camera.getVuvX(), camera.getVuvY(),
+				camera.getVuvZ());
+
+		// Display all the visible objects of MazeRunner.
+		for (Iterator<VisibleObject> it = visibleObjects.iterator(); it
+				.hasNext();) {
+			it.next().display(gl);
 		}
+	
+		// When editing: use an orthographic projection to draw the HUD on the screen, 
+		// then set the perspective projection back
+		gl.glLoadIdentity();
+		orthographicProjection(gl);
+		if(pause){
+			drawPauseMenu(gl, 0, 0, screenWidth, screenHeight, 0.2f, 0.2f, 0.2f, 0.4f);
+			
+			drawTitle("Pause", 0.9f, 0.4f, 0.4f, 1f, (int)(screenWidth*0.380),(int)(screenHeight*0.8));
+			
+			drawText("Resume", 1f, 1f, 1f, 1f,(int)(screenWidth*0.395),
+					(int)(screenHeight*0.625));
+			
+			drawText("Load", 1f, 1f, 1f, 1f,(int)(screenWidth*0.432),
+					(int)(screenHeight*0.48));
+			
+			drawText("Editor", 1f, 1f, 1f, 1f,(int)(screenWidth*0.42),
+					(int)(screenHeight*0.33));
+		
+			drawText("Quit", 1f, 1f, 1f, 1f,(int)(screenWidth*0.442),
+					(int)(screenHeight*0.18));
+		}
+		gl.glDisable(GL.GL_LIGHTING);
+		drawButtons(gl);
+		gl.glEnable(GL.GL_LIGHTING);
+		perspectiveProjection(gl, glu);
+
+
+		// Flush the OpenGL buffer.
+		gl.glFlush();
 	}
 
 	/**
@@ -294,6 +316,13 @@ public class MazeEditor implements GLEventListener {
 
 		// Set the new projection matrix.
 		perspectiveProjection(gl, glu);
+		
+		//To render title
+		Trenderer = new TextRenderer(new Font("Impact", Font.PLAIN, (screenWidth)/titleScale)); 
+		
+		//To render texts
+		//Set the font type shizzle here
+		renderer = new TextRenderer(new Font("Arial", Font.BOLD, (screenWidth)/textScale)); 
 	}
 
 	/*
@@ -435,6 +464,56 @@ public class MazeEditor implements GLEventListener {
 		gl.glVertex2f(x, y + ySize);
 		gl.glEnd();
 	}
+	
+	private void drawPauseMenu(GL gl, float x, float y, float width, float height
+			,float r, float g, float b, float a){
+		//De onderstaande functies
+		//zorgen voor de doorzichtigheid van de menu
+		//elementen, tesamen met kleur etc.
+		
+		gl.glColor4f(r,g,b,a);
+		gl.glEnable(GL.GL_BLEND);
+		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
+		gl.glColorMaterial(GL.GL_FRONT, GL.GL_AMBIENT_AND_DIFFUSE);
+		gl.glEnable(GL.GL_COLOR_MATERIAL);
+		
+		//draw the actual surface
+		
+		gl.glBegin(GL.GL_QUADS);
+		gl.glVertex2f(x,y);
+		gl.glVertex2f(x + width, y);
+		gl.glVertex2f(x + width, y + height);
+		gl.glVertex2f(x, y + height);
+		gl.glEnd();
+		
+		// Disable alle crap voordat 
+		//de volgende flush plaats vindt en 
+		//de settings doorgegeven worden aan
+		//de achtergrond
+		gl.glDisable(GL.GL_COLOR_MATERIAL);
+		gl.glDisable(GL.GL_BLEND);
+	}
+	
+	//This unit is also taken from MainMenu
+	private void drawText(String text, float r, float g, float b, float a, int x, int y){
+		//Renderer alvast in init gemaakt, anders wordt ie na elke glFlush() opnieuw gemaakt!
+		
+		renderer.beginRendering(screenWidth, screenHeight);
+		renderer.setColor(r, g, b, a);
+		renderer.draw(text, x, y);
+		renderer.flush();
+		renderer.endRendering();
+	}
+	
+	private void drawTitle(String text, float r, float g, float b, float a, int x, int y){
+		//Renderer alvast in init gemaakt, anders wordt ie na elke glFlush() opnieuw gemaakt!
+		
+		Trenderer.beginRendering(screenWidth, screenHeight);
+		Trenderer.setColor(r, g, b, a);
+		Trenderer.draw(text, x, y);
+		Trenderer.flush();
+		Trenderer.endRendering();
+	}
 
 	/**
 	 * Convenience method to perform an orthographic projection
@@ -468,13 +547,10 @@ public class MazeEditor implements GLEventListener {
 	}
 	
 	public void Pause() throws InterruptedException{
-		if (anim.isAnimating() == true)
-			anim.stop();
+		pause = true;
 	}
 	
 	public void unPause(){
-		if (anim.isAnimating() == false){
-			anim.start();
-		}
+		pause = false;
 	}
 }

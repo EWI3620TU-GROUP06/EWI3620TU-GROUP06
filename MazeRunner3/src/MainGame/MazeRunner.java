@@ -4,10 +4,12 @@ import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
 
 import com.sun.opengl.util.Animator;
+import com.sun.opengl.util.j2d.TextRenderer;
 
 import GameStates.GameState;
 import Main.Game;
 
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -46,6 +48,10 @@ public class MazeRunner implements GLEventListener {
 	private Game game;
 	private Animator anim;
 	private boolean pause;
+	private TextRenderer renderer;
+	private TextRenderer Trenderer;
+	private int titleScale = 10;
+	private int textScale = 18;
 	
 /*
  * **********************************************
@@ -250,11 +256,35 @@ public class MazeRunner implements GLEventListener {
         
         //Draw the menu if pause state
         if(pause){
-			drawTrans(gl,(float)camera.getVrpX(),
-					(float)camera.getVrpY(),
-					(float)camera.getVrpZ()-1,
-					screenWidth,screenHeight, 
-					0.2f, 0.2f, 0.2f, 0.4f);
+    		gl.glMatrixMode(GL.GL_PROJECTION);
+    		gl.glLoadIdentity();
+    		gl.glOrtho(0,screenWidth,0,screenHeight,-1,1); //2D by making a -1 to 1 z around the z = 0 plane
+    		gl.glMatrixMode(GL.GL_MODELVIEW);
+    		gl.glLoadIdentity();
+    		gl.glDisable(GL.GL_DEPTH_TEST);
+    		
+			drawPauseMenu(gl, 0, 0, screenWidth, screenHeight, 0.2f, 0.2f, 0.2f, 0.4f);
+			
+			drawTitle("Pause", 0.9f, 0.4f, 0.4f, 1f, (int)(screenWidth*0.380),(int)(screenHeight*0.8));
+			
+			drawText("Resume", 1f, 1f, 1f, 1f,(int)(screenWidth*0.395),
+					(int)(screenHeight*0.625));
+			
+			drawText("Load", 1f, 1f, 1f, 1f,(int)(screenWidth*0.432),
+					(int)(screenHeight*0.48));
+			
+			drawText("Editor", 1f, 1f, 1f, 1f,(int)(screenWidth*0.42),
+					(int)(screenHeight*0.33));
+		
+			drawText("Quit", 1f, 1f, 1f, 1f,(int)(screenWidth*0.442),
+					(int)(screenHeight*0.18));
+			
+			gl.glViewport( 0, 0, screenWidth, screenHeight );
+			gl.glMatrixMode( GL.GL_PROJECTION );
+			gl.glLoadIdentity();
+			glu.gluPerspective( 60, screenWidth/screenHeight, .1, 200 );
+			gl.glMatrixMode( GL.GL_MODELVIEW );
+			gl.glEnable(GL.GL_DEPTH_TEST);
         }
         
         gl.glLoadIdentity();
@@ -297,6 +327,13 @@ public class MazeRunner implements GLEventListener {
 		gl.glLoadIdentity();
 		glu.gluPerspective( 60, screenWidth/screenHeight, .1, 200 );
 		gl.glMatrixMode( GL.GL_MODELVIEW );
+		
+		//To render title
+		Trenderer = new TextRenderer(new Font("Impact", Font.PLAIN, (screenWidth)/titleScale)); 
+		
+		//To render texts
+		//Set the font type shizzle here
+		renderer = new TextRenderer(new Font("Arial", Font.BOLD, (screenWidth)/textScale)); 
 	}
 
 /*
@@ -343,11 +380,8 @@ public class MazeRunner implements GLEventListener {
 		
 	}
 	
-	public void Pause() throws InterruptedException{
-			pause = true;
-	}
-	
-	private void drawTrans(GL gl, float x, float y, float z, float width, float height
+	//This method is taken from MainMenu: eventually make a nice class which both mainmenu and mazerunner and mazeEditor use
+	private void drawPauseMenu(GL gl, float x, float y, float width, float height
 			,float r, float g, float b, float a){
 		//De onderstaande functies
 		//zorgen voor de doorzichtigheid van de menu
@@ -360,11 +394,12 @@ public class MazeRunner implements GLEventListener {
 		gl.glEnable(GL.GL_COLOR_MATERIAL);
 		
 		//draw the actual surface
+		
 		gl.glBegin(GL.GL_QUADS);
-		gl.glVertex3f(x-width/2,y-height/2,z);
-		gl.glVertex3f(x + width/2, y-height/2,z);
-		gl.glVertex3f(x + width/2, y + height/2,z);
-		gl.glVertex3f(x-width/2, y + height/2,z);
+		gl.glVertex2f(x,y);
+		gl.glVertex2f(x + width, y);
+		gl.glVertex2f(x + width, y + height);
+		gl.glVertex2f(x, y + height);
 		gl.glEnd();
 		
 		// Disable alle crap voordat 
@@ -373,6 +408,31 @@ public class MazeRunner implements GLEventListener {
 		//de achtergrond
 		gl.glDisable(GL.GL_COLOR_MATERIAL);
 		gl.glDisable(GL.GL_BLEND);
+	}
+	
+	//This unit is also taken from MainMenu
+	private void drawText(String text, float r, float g, float b, float a, int x, int y){
+		//Renderer alvast in init gemaakt, anders wordt ie na elke glFlush() opnieuw gemaakt!
+		
+		renderer.beginRendering(screenWidth, screenHeight);
+		renderer.setColor(r, g, b, a);
+		renderer.draw(text, x, y);
+		renderer.flush();
+		renderer.endRendering();
+	}
+	
+	private void drawTitle(String text, float r, float g, float b, float a, int x, int y){
+		//Renderer alvast in init gemaakt, anders wordt ie na elke glFlush() opnieuw gemaakt!
+		
+		Trenderer.beginRendering(screenWidth, screenHeight);
+		Trenderer.setColor(r, g, b, a);
+		Trenderer.draw(text, x, y);
+		Trenderer.flush();
+		Trenderer.endRendering();
+	}
+	
+	public void Pause() throws InterruptedException{
+		pause = true;
 	}
 	
 	public void unPause(){
