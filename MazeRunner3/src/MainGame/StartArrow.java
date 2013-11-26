@@ -25,8 +25,10 @@ public class StartArrow extends MazeObject {
 		int face1[] = {4,5,6,7};
 		addFace(face1);
 
-		rotateVerticesY(angle, 2.5, 2.5);
+		rotateVerticesY(angle, x + 2.5, z + 2.5);
 		orientation = angle;
+		
+		restitution = 0.1f;
 	}
 
 	public void setAngle(float angle)

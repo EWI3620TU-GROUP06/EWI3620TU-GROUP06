@@ -36,6 +36,8 @@ public class Ramp extends MazeObject{
 		
 		this.orientation = orientation;
 		this.height =  height;
+		
+		restitution = 0.0f;
 	}
 
 }

@@ -302,7 +302,7 @@ public class Editor extends GameObject{
 	{
 		String[] myFileLocations = new String[]{ //TODO: Hard-coded file locations. Remove eventually.
 				"C:\\Users\\Victor\\Documents\\MATLAB\\Computational Intelligence\\Assignment3",
-		"C:\\Users\\Tom2\\Documents\\Java\\workspace\\MazeRunner3\\levels"};
+		"C:\\Users\\Tom2\\Documents\\Java\\workspace\\MazeRunner2\\levels"};
 
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fc.setMultiSelectionEnabled(false);

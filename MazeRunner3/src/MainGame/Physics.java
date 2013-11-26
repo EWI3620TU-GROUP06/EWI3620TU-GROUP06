@@ -79,7 +79,7 @@ public class Physics {
         					new Vector3f(0, 0, 0), 1.0f)));
         			RigidBodyConstructionInfo faceConstructionInfo = new RigidBodyConstructionInfo(0, faceMotionState, thisShape, new Vector3f(0, 0, 0));
         			
-        			faceConstructionInfo.restitution = 0.5f;
+        			faceConstructionInfo.restitution = mazeObject.getRestitution();
         			RigidBody faceRigidBody = new RigidBody(faceConstructionInfo);
         	        dynamicsWorld.addRigidBody(faceRigidBody);
         		}
@@ -91,13 +91,13 @@ public class Physics {
         MotionState ballMotion = new DefaultMotionState(DEFAULT_BALL_TRANSFORM);
         // Calculate the ball's inertia (resistance to movement) using its mass (2.5 kilograms).
         Vector3f ballInertia = new Vector3f(0, 0, 0);
-        ballShape.calculateLocalInertia(10f, ballInertia);
+        ballShape.calculateLocalInertia(2f, ballInertia);
         // Composes the ball's construction info of its mass, its motion state, its shape, and its inertia.
-        RigidBodyConstructionInfo ballConstructionInfo = new RigidBodyConstructionInfo(2.5f, ballMotion, ballShape, ballInertia);
+        RigidBodyConstructionInfo ballConstructionInfo = new RigidBodyConstructionInfo(1f, ballMotion, ballShape, ballInertia);
         // Set the restitution, also known as the bounciness or spring, to 0.5. The restitution may range from 0.0
         // not bouncy) to 1.0 (extremely bouncy).
         ballConstructionInfo.restitution = 1.0f;
-        ballConstructionInfo.angularDamping = 1f;
+        ballConstructionInfo.angularDamping = 10f;
         // Initialise 'controlBall', the final variable representing the controlled ball, to a rigid body with the
         // previously assigned construction information.
         playerBall = new RigidBody(ballConstructionInfo);

@@ -16,6 +16,8 @@ public abstract class MazeObject {
 	ArrayList<Vector3f> vertices;
 	ArrayList<int[]> faces;
 	ArrayList<Vector3f> normals;
+	
+	float restitution;
 
 	public MazeObject()
 	{
@@ -126,8 +128,8 @@ public abstract class MazeObject {
 	private Vector3f calculateNormal(int[] face)
 	{
 		Vector3f p1 = vertices.get(face[0]);
-		Vector3f p2 =vertices.get(face[1]);
-		Vector3f p3 =vertices.get(face[2]);
+		Vector3f p2 = vertices.get(face[1]);
+		Vector3f p3 = vertices.get(face[2]);
 		Vector3f v1 = new Vector3f(); 
 		Vector3f v2 = new Vector3f(); 
 		Vector3f v3 = new Vector3f(); 
@@ -171,30 +173,16 @@ public abstract class MazeObject {
 			Box box = (Box) this;
 			if(box.height == 5)
 				return 1;
-			if(box.height == 2.5f)
+			else
 				return 2;
 		}
 		if(this instanceof Ramp)
 		{
 			Ramp ramp = (Ramp) this;
 			if(ramp.height == 5)
-			{
-				switch(ramp.orientation){
-				case 90 : return 5; 
-				case 180 : return 6; 
-				case 270 : return 7; 
-				default: return 4;
-				}
-			}
-			if(ramp.height == 2.5)
-			{
-				switch(ramp.orientation){
-				case 90 : return 9; 
-				case 180 : return 10; 
-				case 270 : return 11; 
-				default: return 8;
-				}
-			}
+				return (byte) (ramp.orientation / 90 + 4);
+			else
+				return (byte) (ramp.orientation / 90 + 8);
 		}
 		return 0;
 	}
@@ -209,9 +197,9 @@ public abstract class MazeObject {
 		return faces.get(index);
 	}
 	
-	public Vector3f getPosition()
+	public float getRestitution()
 	{
-		return vertices.get(0);
+		return restitution;
 	}
 
 }

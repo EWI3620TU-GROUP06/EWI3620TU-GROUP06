@@ -153,7 +153,7 @@ public class Player extends GameObject {
 			double cos = Math.cos(Math.toRadians(this.getHorAngle()));
 			double sin = Math.sin(Math.toRadians(this.getHorAngle()));
 			
-			int power = 2; 
+			int power = 1; 
 			
 			if (control.getRight())
 			{

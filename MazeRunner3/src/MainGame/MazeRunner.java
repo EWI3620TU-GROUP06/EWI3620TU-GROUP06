@@ -68,30 +68,12 @@ public class MazeRunner implements GLEventListener {
 	 * to function as the view controller.
 	 */
 	public MazeRunner(Game game, GameState state) {
-		// Make a new window.
-//		super("MazeRunner");
-//		
-//		// Let's change the window to our liking.
-//		setSize( screenWidth, screenHeight);
-//		setBackground( Color.white );
-//
-//		// The window also has to close when we want to.
-//		this.addWindowListener( new WindowAdapter()
-//		{
-//			public void windowClosing( WindowEvent e )
-//			{
-//				System.exit(0);
-//			}
-//		});
 		this.game = game;
 		this.state = state;
 		this.screenWidth = game.getScreenWidth();
 		this.screenHeight = game.getScreenHeight();
 		initJOGL();							// Initialize JOGL.
 		initObjects();						// Initialize all the objects!
-		
-		// Set the frame to visible. This automatically calls upon OpenGL to prevent a blank screen.
-//		setVisible(true);
 	}
 	
 	private void initJOGL()	{
@@ -347,16 +329,6 @@ public class MazeRunner implements GLEventListener {
 	{
 		player.update(deltaTime);
 	
-	/*	// TODO: implement collision
-
-		if (maze.isWall(player.getLocationX()-1,player.getLocationZ()) ||
-                    maze.isWall(player.getLocationX()+1,player.getLocationZ()) ||
-                    maze.isWall(player.getLocationX(),player.getLocationZ()+1) ||
-                    maze.isWall(player.getLocationX(),player.getLocationZ()-1)){
-                  player.update(-deltaTime);
-                }
-
-		*/
 		playerSprite.update(player.getLocationX(), player.getLocationY(), player.getLocationZ());
 	}
 

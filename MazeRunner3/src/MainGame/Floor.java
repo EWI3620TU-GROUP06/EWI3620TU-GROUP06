@@ -13,6 +13,8 @@ public class Floor extends MazeObject {
 
 		int face0[] = {0,1,2,3};
 		addFace(face0);
+		
+		restitution = 0.1f;
 	}
 	
 

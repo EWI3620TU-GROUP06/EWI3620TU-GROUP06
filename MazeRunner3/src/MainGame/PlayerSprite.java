@@ -5,7 +5,6 @@ import java.io.InputStream;
 import javax.media.opengl.GL;
 import javax.media.opengl.glu.GLU;
 import com.sun.opengl.impl.GLUquadricImpl;
-//import com.sun.opengl.util.GLUT;
 import com.sun.opengl.util.texture.Texture;
 import com.sun.opengl.util.texture.TextureData;
 import com.sun.opengl.util.texture.TextureIO;
@@ -64,7 +63,6 @@ public class PlayerSprite implements VisibleObject {
 	@Override
 	public void display(GL gl) {
 		GLU glu = new GLU();
-		//GLUT glut = new GLUT();
 		float ballColour[] = {1.0f, 1.0f, 1.0f, 1.0f};
 		sphereTexture.enable(); // Enable the ball texture
 		sphereTexture.bind(); 
@@ -77,7 +75,6 @@ public class PlayerSprite implements VisibleObject {
 		totalRotation += Math.sqrt(dX*dX + dZ*dZ);
 		gl.glRotated(Math.toDegrees(totalRotation), 0, 0, 1);
 		glu.gluSphere(sphere, 1.0, 20, 20);
-		//glut.glutWireSphere(1.0, 20, 20);
 		sphereTexture.disable();
 
 		gl.glPopMatrix();
