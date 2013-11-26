@@ -208,7 +208,7 @@ public class Editor extends GameObject{
 				case(7): drawMode = DRAW_LOW_RAMP; break;
 				case(8): drawMode = DRAW_FLAT_BOX; break;
 				case(9): save(); break;
-				case(10): maze = readMaze(); break;
+				case(10): Maze maze_temp = readMaze(); if(maze_temp != null){maze = maze_temp;}; break;
 				case(-1): maze.addBlock(drawMode, angle);break;
 				case(-2): maze.rotateSelected(); break;
 				default: break;
