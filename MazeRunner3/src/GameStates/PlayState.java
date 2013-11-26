@@ -47,7 +47,7 @@ public class PlayState extends GameState {
 		return paused;
 	}
 	
-	public void setPaused() throws InterruptedException{
+	public void setPaused(){
 		this.paused = true;
 		mz.Pause();
 	}

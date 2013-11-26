@@ -32,7 +32,7 @@ public class gStateMan {
 		game.validate();
 	}
 	
-	public void setPauseState() throws InterruptedException{
+	public void setPauseState(){
 		gameStates.get(currentState).setPaused();
 	}
 	

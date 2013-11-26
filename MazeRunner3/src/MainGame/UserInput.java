@@ -168,11 +168,7 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 		            		this.gsm.getState(1).unPause();
 		            	}
 		            	else{
-	            			try {
-								this.gsm.setPauseState();
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							} // Set the state to Edit-Pause - overlay!
+							this.gsm.setPauseState();
 		            	}
 		            }
 			}
@@ -182,11 +178,7 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	            		this.gsm.getState(2).unPause();
 	            	}
 	            	else{
-            			try {
-							this.gsm.setPauseState();
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						} // Set the state to Edit-Pause - overlay!
+						this.gsm.setPauseState();
 	            	}
 	            }
 			}
