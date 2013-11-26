@@ -270,14 +270,11 @@ public class MazeRunner implements GLEventListener {
 			drawText("Resume", 1f, 1f, 1f, 1f,(int)(screenWidth*0.395),
 					(int)(screenHeight*0.625));
 			
-			drawText("Load", 1f, 1f, 1f, 1f,(int)(screenWidth*0.432),
+			drawText("Main Menu", 1f, 1f, 1f, 1f,(int)(screenWidth*0.360),
 					(int)(screenHeight*0.48));
-			
-			drawText("Editor", 1f, 1f, 1f, 1f,(int)(screenWidth*0.42),
-					(int)(screenHeight*0.33));
 		
 			drawText("Quit", 1f, 1f, 1f, 1f,(int)(screenWidth*0.442),
-					(int)(screenHeight*0.18));
+					(int)(screenHeight*0.33));
 			
 			gl.glViewport( 0, 0, screenWidth, screenHeight );
 			gl.glMatrixMode( GL.GL_PROJECTION );

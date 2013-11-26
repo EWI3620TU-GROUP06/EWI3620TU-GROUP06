@@ -260,14 +260,11 @@ public class MazeEditor implements GLEventListener {
 			drawText("Resume", 1f, 1f, 1f, 1f,(int)(screenWidth*0.395),
 					(int)(screenHeight*0.625));
 			
-			drawText("Load", 1f, 1f, 1f, 1f,(int)(screenWidth*0.432),
+			drawText("Main Menu", 1f, 1f, 1f, 1f,(int)(screenWidth*0.360),
 					(int)(screenHeight*0.48));
-			
-			drawText("Editor", 1f, 1f, 1f, 1f,(int)(screenWidth*0.42),
-					(int)(screenHeight*0.33));
 		
 			drawText("Quit", 1f, 1f, 1f, 1f,(int)(screenWidth*0.442),
-					(int)(screenHeight*0.18));
+					(int)(screenHeight*0.33));
 		}
 		gl.glDisable(GL.GL_LIGHTING);
 		drawButtons(gl);
