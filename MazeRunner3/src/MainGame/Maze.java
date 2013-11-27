@@ -171,6 +171,11 @@ public class Maze implements VisibleObject {
 			selected = newSelected;
 		}
 	}
+	
+	public void add(int x, int z, MazeObject obj)
+	{
+		maze[x][z] = obj;
+	}
 
 	/**
 	 * Sets the 'selected' flag of all elements in the maze to false.

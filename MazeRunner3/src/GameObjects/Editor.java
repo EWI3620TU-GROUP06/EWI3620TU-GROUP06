@@ -7,6 +7,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import MainGame.Control;
 import MainGame.Maze;
+import MazeObjects.CustomMazeObject;
+import MazeObjects.MazeObject;
 
 
 public class Editor extends GameObject{
@@ -24,7 +26,7 @@ public class Editor extends GameObject{
 
 	private Maze maze;
 
-	private float buttonSize;
+	private static float buttonSize;
 	private final int numButtons = 11;
 
 	private byte drawMode;
@@ -60,9 +62,9 @@ public class Editor extends GameObject{
 	 * @param buttonSize	Size of the buttons
 	 */
 
-	public void setButtonSize(float buttonSize)
+	public static void setButtonSize(float size)
 	{
-		this.buttonSize = buttonSize;
+		buttonSize = size;
 	}
 
 	/**
@@ -203,7 +205,10 @@ public class Editor extends GameObject{
 				switch(button){
 				case(0): maze.addToSize(1); break;
 				case(1): maze.addToSize(-1); break;
-				case(2): drawMode = DRAW_EMPTY; break;
+				case(2):
+					MazeObject customObject = CustomMazeObject.readFromOBJ("Eerste test.obj");
+					maze.add(1, 1, customObject);
+					break;//drawMode = DRAW_EMPTY; break;
 				case(3): drawMode = DRAW_BOX; break;
 				case(4): drawMode = DRAW_START; break;
 				case(5): drawMode = DRAW_FINISH; break;
