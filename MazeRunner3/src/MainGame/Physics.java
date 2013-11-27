@@ -1,5 +1,7 @@
 package MainGame;
 
+import MazeObjects.MazeObject;
+
 import com.bulletphysics.collision.broadphase.BroadphaseInterface;
 import com.bulletphysics.collision.broadphase.DbvtBroadphase;
 import com.bulletphysics.collision.dispatch.CollisionConfiguration;

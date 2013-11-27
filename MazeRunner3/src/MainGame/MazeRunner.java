@@ -6,6 +6,9 @@ import javax.media.opengl.glu.*;
 import com.sun.opengl.util.Animator;
 
 import Drawing.MenuDrawing;
+import GameObjects.Camera;
+import GameObjects.Player;
+import GameObjects.PlayerSprite;
 import GameStates.GameState;
 import Main.Game;
 

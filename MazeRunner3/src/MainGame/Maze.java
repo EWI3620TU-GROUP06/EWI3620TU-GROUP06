@@ -1,6 +1,12 @@
 package MainGame;
 import javax.media.opengl.GL;
 
+import MazeObjects.Box;
+import MazeObjects.Floor;
+import MazeObjects.MazeObject;
+import MazeObjects.Ramp;
+import MazeObjects.StartArrow;
+
 import com.sun.opengl.util.texture.Texture;
 import com.sun.opengl.util.texture.TextureData;
 import com.sun.opengl.util.texture.TextureIO;

@@ -1,9 +1,12 @@
-package MainGame;
+package GameObjects;
 
 import java.io.InputStream;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.glu.GLU;
+
+import MainGame.VisibleObject;
+
 import com.sun.opengl.impl.GLUquadricImpl;
 import com.sun.opengl.util.texture.Texture;
 import com.sun.opengl.util.texture.TextureData;

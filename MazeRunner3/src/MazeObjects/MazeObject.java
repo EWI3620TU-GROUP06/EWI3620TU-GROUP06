@@ -1,9 +1,10 @@
-package MainGame;
+package MazeObjects;
 
 
 import javax.media.opengl.*;
 
 import java.util.ArrayList;
+
 import javax.vecmath.Vector3f;
 
 /**
@@ -147,7 +148,7 @@ public abstract class MazeObject {
 	 * @param zRotate	Z coordinate of the point around which is to be rotated
 	 */
 
-	protected void rotateVerticesY(float angle, double xRotate, double zRotate)
+	public void rotateVerticesY(float angle, double xRotate, double zRotate)
 	{
 		for(int i = 0; i < vertices.size(); i++)
 		{

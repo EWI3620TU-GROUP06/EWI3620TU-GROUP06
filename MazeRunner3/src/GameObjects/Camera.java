@@ -1,4 +1,4 @@
-package MainGame;
+package GameObjects;
 /**
  * Camera represents the camera player in MazeRunner.
  * <p>

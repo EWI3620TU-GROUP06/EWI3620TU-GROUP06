@@ -4,6 +4,7 @@ import java.awt.event.*;
 
 import javax.media.opengl.GLCanvas;
 
+import GameObjects.Editor;
 import GameStates.gStateMan;
 
 
@@ -31,7 +32,6 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	private int yPos;
 	private int xdragPos;
 	private int ydragPos;
-	private boolean inscreen;
 	private gStateMan gsm;
 	private Robot robot;
 
@@ -129,36 +129,24 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	public void keyPressed(KeyEvent event)
 	{
 		if (this.gsm.getCurState() != 0){
-			if (this.gsm.getCurState() == 1){
-				if (event.getKeyChar() == 'w'){
-					this.forward = true;
-				}
-				else if (event.getKeyChar() == 'a'){
-					this.left = true;
-				}
-				else if (event.getKeyChar() == 's'){
-					this.back = true;
-				}
-				else if (event.getKeyChar() == 'd'){
-					this.right = true;
-				}
-				if (event.getKeyCode() == 27){
-					if (this.gsm.getState(1).getPaused() == true){
-						this.gsm.getState(1).unPause();
-					}
-					else{
-						this.gsm.setPauseState();
-					}
-				}
+			if (event.getKeyChar() == 'w'){
+				this.forward = true;
 			}
-			else if (this.gsm.getCurState() == 2){
-				if (event.getKeyCode() == 27){
-					if (this.gsm.getState(2).getPaused() == true){
-						this.gsm.getState(2).unPause();
-					}
-					else{
-						this.gsm.setPauseState();
-					}
+			else if (event.getKeyChar() == 'a'){
+				this.left = true;
+			}
+			else if (event.getKeyChar() == 's'){
+				this.back = true;
+			}
+			else if (event.getKeyChar() == 'd'){
+				this.right = true;
+			}
+			if (event.getKeyCode() == 27){
+				if (this.gsm.getState(this.gsm.getCurState()).getPaused() == true){
+					this.gsm.getState(this.gsm.getCurState()).unPause();
+				}
+				else{
+					this.gsm.setPauseState();
 				}
 			}
 		}
@@ -167,8 +155,7 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	@Override
 	public void keyReleased(KeyEvent event)
 	{
-
-		// TODO: Set forward, back, left and right to corresponding key presses
+		
 		if (this.gsm.getCurState() == 1){
 			if (event.getKeyChar() == 'w'){
 				this.forward = false;
@@ -182,7 +169,8 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 			else if (event.getKeyChar() == 'd'){
 				this.right = false;
 			}
-		}       
+		}
+		
 	}
 
 	/*
@@ -194,21 +182,11 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	@Override
 	public void mouseMoved(MouseEvent event)
 	{
-		//We wanna control without clicking!
-		if (this.gsm.getCurState() == 1){
-			this.xdragPos = event.getX();
-			this.ydragPos = event.getY();
-			
-			//System.out.println(event.getX() + ", " + event.getY());
-		}
-		if(this.gsm.getCurState() == 2){
+		this.xdragPos = event.getX();
+		this.ydragPos = event.getY();
 
-			this.xdragPos = event.getX();
-			this.ydragPos = event.getY();
-
-			this.mouseX = event.getX();
-			this.mouseY = event.getY();
-		}
+		this.mouseX = event.getX();
+		this.mouseY = event.getY();
 	}
 
 	@Override
@@ -277,7 +255,6 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	@Override
 	public void mouseEntered(MouseEvent event)
 	{
-		this.inscreen = true;
 	}
 
 	//Comment
@@ -285,12 +262,6 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	@Override
 	public void mouseExited(MouseEvent event)
 	{
-		this.inscreen = false;
-
-		if (this.gsm.getCurState() == 1){
-			this.xdragPos = event.getX();
-			this.ydragPos = event.getY();
-		}
 	}
 
 	@Override
@@ -310,6 +281,5 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	{
 		notches += event.getWheelRotation();
 	}
-
-
+	
 }

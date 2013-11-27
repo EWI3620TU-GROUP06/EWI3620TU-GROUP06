@@ -1,6 +1,10 @@
-package MainGame;
+package GameObjects;
 
 import javax.vecmath.Vector3f;
+
+import MainGame.Control;
+import MainGame.Maze;
+import MainGame.Physics;
 
 /**
  * Player represents the actual player in MazeRunner.

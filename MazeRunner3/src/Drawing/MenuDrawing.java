@@ -4,7 +4,7 @@ import java.awt.Font;
 
 import javax.media.opengl.GL;
 
-import MainGame.Editor;
+import GameObjects.Editor;
 
 import com.sun.opengl.util.j2d.TextRenderer;
 

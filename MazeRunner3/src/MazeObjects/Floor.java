@@ -1,4 +1,4 @@
-package MainGame;
+package MazeObjects;
 
 import javax.vecmath.Vector3f;
 

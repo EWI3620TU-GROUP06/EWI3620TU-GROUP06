@@ -4,6 +4,8 @@ import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
 
 import Drawing.MenuDrawing;
+import GameObjects.Camera;
+import GameObjects.Editor;
 import GameStates.GameState;
 import Main.Game;
 
