@@ -1,7 +1,11 @@
 package GameStates;
 
+import java.io.File;
+
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCanvas;
+
+import Audio.Audio;
 
 public abstract class GameState {
 	protected gStateMan gsm;
@@ -14,4 +18,8 @@ public abstract class GameState {
 	public abstract boolean getPaused();
 	public abstract void setPaused();
 	public abstract void unPause();
+	
+	public void playAudio(){
+		Audio.playClip(new File("test.wav"));
+	}
 }
