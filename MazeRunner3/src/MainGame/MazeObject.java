@@ -201,5 +201,10 @@ public abstract class MazeObject {
 	{
 		return restitution;
 	}
+	
+/*	public void removeDoubleFaces(MazeObject that)
+	{
+		ArrayList<Vector3f> commons 
+	}*/
 
 }

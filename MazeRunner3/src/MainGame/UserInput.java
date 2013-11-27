@@ -1,4 +1,5 @@
 package MainGame;
+import java.awt.Robot;
 import java.awt.event.*;
 
 import javax.media.opengl.GLCanvas;
@@ -32,6 +33,7 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	private int ydragPos;
 	private boolean inscreen;
 	private gStateMan gsm;
+	private Robot robot;
 
 	/**
 	 * UserInput constructor.
@@ -47,6 +49,13 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 		canvas.addMouseMotionListener(this);
 		canvas.addKeyListener(this);
 		canvas.addMouseWheelListener(this);
+		try{
+			robot = new Robot();
+			
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
 		this.gsm = gsm;
 	}
 
@@ -62,32 +71,15 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 
 		// TODO: Set dX and dY to values corresponding to mouse movement
 		if (this.gsm.getCurState() == 1){
-			if(this.inscreen){
-				//only reset for next mouse-drag if mouse in-screen!
-				this.dX = (xdragPos - xPos);
-				this.dY = (ydragPos - yPos);
-				this.xPos = xdragPos;
-				this.yPos = ydragPos;	
-			}
-			else{
-				//Now we still rotate when the mouse has left the screen!
-				if((xdragPos - xPos) != 0 && (ydragPos - yPos) == 0){
-					this.dX = 1*(xdragPos - xPos)/(Math.abs(xdragPos - xPos));
-					this.dY = 0;
-				}
-				else if((xdragPos - xPos) == 0 && (ydragPos - yPos) != 0){
-					this.dX = 0;
-					this.dY = 1*(ydragPos - yPos)/(Math.abs(ydragPos - yPos));
-				}
-				else if((xdragPos - xPos) != 0 && (ydragPos - yPos) != 0){
-					this.dX = 1*(xdragPos - xPos)/(Math.abs(xdragPos - xPos));
-					this.dY = 1*(ydragPos - yPos)/(Math.abs(ydragPos - yPos));
-				}
-				else{
-					this.dX = 0;
-					this.dY = 0;
-				}
-			}
+			int gamePosX = (int) gsm.getGame().getLocationOnScreen().getX();
+			int gamePosY = (int) gsm.getGame().getLocationOnScreen().getY();
+			int midScreenWidth = gsm.getGame().getWidth()/2;
+			int midScreenHeight = gsm.getGame().getHeight()/2;
+			this.dX = (xdragPos - midScreenWidth);
+			this.dY = (ydragPos - midScreenHeight);
+
+			robot.mouseMove(midScreenWidth + gamePosX, midScreenHeight + gamePosY);
+			
 		}
 		if (this.gsm.getCurState() == 2){
 			this.dX = (xdragPos - xPos);
@@ -106,13 +98,6 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	@Override
 	public void mousePressed(MouseEvent event)
 	{
-		// Detect the location where the mouse has been pressed
-		if (this.gsm.getCurState() == 1){
-			this.xPos = event.getX();
-			this.yPos = event.getY();
-			xdragPos = xPos;
-			ydragPos = yPos;	
-		}
 		if(this.gsm.getCurState() == 2){
 			if(event.getButton() == 1){
 				leftButtonDragged = true;
@@ -131,16 +116,10 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	@Override
 	public void mouseDragged(MouseEvent event)
 	{
-
-		// TODO: Detect mouse movement while the mouse button is down
-		if (this.gsm.getCurState() == 1){
-			this.xdragPos = event.getX();
-			this.ydragPos = event.getY();
-		}
 		if(this.gsm.getCurState() == 2){
 			this.xdragPos = event.getX();
 			this.ydragPos = event.getY();
-			
+
 			this.mouseX = event.getX();
 			this.mouseY = event.getY();
 		}
@@ -151,36 +130,36 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	{
 		if (this.gsm.getCurState() != 0){
 			if (this.gsm.getCurState() == 1){
-					if (event.getKeyChar() == 'w'){
-		              this.forward = true;
-		            }
-		            else if (event.getKeyChar() == 'a'){
-		              this.left = true;
-		            }
-		            else if (event.getKeyChar() == 's'){
-		              this.back = true;
-		            }
-		            else if (event.getKeyChar() == 'd'){
-		              this.right = true;
-		            }
-		            if (event.getKeyCode() == 27){
-		            	if (this.gsm.getState(1).getPaused() == true){
-		            		this.gsm.getState(1).unPause();
-		            	}
-		            	else{
-							this.gsm.setPauseState();
-		            	}
-		            }
+				if (event.getKeyChar() == 'w'){
+					this.forward = true;
+				}
+				else if (event.getKeyChar() == 'a'){
+					this.left = true;
+				}
+				else if (event.getKeyChar() == 's'){
+					this.back = true;
+				}
+				else if (event.getKeyChar() == 'd'){
+					this.right = true;
+				}
+				if (event.getKeyCode() == 27){
+					if (this.gsm.getState(1).getPaused() == true){
+						this.gsm.getState(1).unPause();
+					}
+					else{
+						this.gsm.setPauseState();
+					}
+				}
 			}
 			else if (this.gsm.getCurState() == 2){
-	            if (event.getKeyCode() == 27){
-	            	if (this.gsm.getState(2).getPaused() == true){
-	            		this.gsm.getState(2).unPause();
-	            	}
-	            	else{
+				if (event.getKeyCode() == 27){
+					if (this.gsm.getState(2).getPaused() == true){
+						this.gsm.getState(2).unPause();
+					}
+					else{
 						this.gsm.setPauseState();
-	            	}
-	            }
+					}
+				}
 			}
 		}
 	}
@@ -219,6 +198,8 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 		if (this.gsm.getCurState() == 1){
 			this.xdragPos = event.getX();
 			this.ydragPos = event.getY();
+			
+			//System.out.println(event.getX() + ", " + event.getY());
 		}
 		if(this.gsm.getCurState() == 2){
 
@@ -239,22 +220,19 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	public void mouseClicked(MouseEvent event)
 	{
 		if(this.gsm.getCurState() == 0 || this.gsm.getState(this.gsm.getCurState()).getPaused() == true ){
-		
+
 			double x = ((double)event.getX())/((double)this.gsm.getGame().getScreenWidth());
 			double y = ((double)this.gsm.getGame().getScreenHeight() - (double)event.getY())/((double)this.gsm.getGame().getScreenHeight());
-			
-			System.out.println(event.getX() + " " + event.getY());
-			System.out.println(x + " " + y);
-			
+
 			if (x > 0.445 && x < 0.555 && y > 0.625 && y < 0.705 && this.gsm.getState(this.gsm.getCurState()).getPaused() == false){
 				//GOTO playstate
 				this.gsm.setState(1);
 			}
-			
+
 			else if(x > 0.395 && x < 0.605 && y > 0.625 && y < 0.705 && this.gsm.getState(this.gsm.getCurState()).getPaused() == true){
 				this.gsm.getState(this.gsm.getCurState()).unPause();
 			}
-			
+
 			else if (x > 0.432 && x < 0.568 && y > 0.48 && y < 0.56 && this.gsm.getState(this.gsm.getCurState()).getPaused() == false){
 				//Load level to static maze-variable, and GOTO playstate
 				Maze maze = Editor.readMaze();
@@ -263,28 +241,28 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 					this.gsm.setState(1);
 				}
 			}
-			
+
 			else if (x > 0.360 && x < 0.640 && y > 0.48 && y < 0.56 && this.gsm.getState(this.gsm.getCurState()).getPaused() == true){
 				// Back to Main Menu
 				this.gsm.setState(0);
 			}
-			
+
 			else if (x > 0.42 && x < 0.58 && y > 0.33 && y < 0.41 && this.gsm.getState(this.gsm.getCurState()).getPaused() == false){
 				//GOTO EditState
 				this.gsm.setState(2); 
-				}
-			
+			}
+
 			else if(x > 0.442 && x < 0.558 && y > 0.33 && y < 0.41 && this.gsm.getState(this.gsm.getCurState()).getPaused() == true){
 				//exit the game
 				System.exit(0);
 			}	
-			
+
 			else if (x > 0.442 && x < 0.558 && y > 0.18 && y < 0.26 && this.gsm.getState(this.gsm.getCurState()).getPaused() == false){
 				//exit the game
 				System.exit(0);
 			}
 		}
-		
+
 		if(this.gsm.getCurState() == 2){
 			this.mouseX = event.getX();
 			this.mouseY = event.getY();

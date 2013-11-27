@@ -264,6 +264,7 @@ public class MazeRunner implements GLEventListener {
 			glu.gluPerspective( 60, (float)screenWidth/(float)screenHeight, .1, 200 );
 			gl.glMatrixMode( GL.GL_MODELVIEW );
 			gl.glEnable(GL.GL_DEPTH_TEST);
+			gl.glEnable(GL.GL_CULL_FACE);
         }
         
         gl.glLoadIdentity();
@@ -340,7 +341,7 @@ public class MazeRunner implements GLEventListener {
 	
 	private void updateCamera() {
 		double cameraX = player.getLocationX() + 3 *Math.sin( Math.toRadians(player.getHorAngle())) * Math.cos( Math.toRadians(player.getVerAngle()) );
-		double cameraY = player.getLocationY() + Math.sin(Math.toRadians(player.getVerAngle())) + 2;
+		double cameraY = player.getLocationY() + Math.sin(Math.toRadians(player.getVerAngle())) + 1;
 		double cameraZ = player.getLocationZ() + 3 *Math.cos( Math.toRadians(player.getHorAngle())) * Math.cos(Math.toRadians(player.getVerAngle()));
 		
 		camera.setLocationX( cameraX);

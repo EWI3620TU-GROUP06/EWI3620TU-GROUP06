@@ -27,8 +27,8 @@ import javax.vecmath.Vector3f;
 
 public class Physics {
 	
-	private float angularDamping = 100;
-	private float mass = 50;
+	private float angularDamping = 0.1f;
+	private float mass = 10;
 	
 	
 	 /**
@@ -61,7 +61,7 @@ public class Physics {
         dynamicsWorld = new DiscreteDynamicsWorld(dispatcher, broadphase, solver, collisionConfiguration);
         // Set the gravity to 10 metres per second squared (m/s^2). Gravity affects all bodies with a mass larger than
         // zero.
-        dynamicsWorld.setGravity(new Vector3f(0, -1, 0));
+        dynamicsWorld.setGravity(new Vector3f(0, -10, 0));
         // Initialise 'groundShape' to a static plane shape on the origin facing upwards ([0, 1, 0] is the normal).
         // 0.25 metres is an added buffer between the ground and potential colliding bodies, used to prevent the bodies
         // from partially going through the floor. It is also possible to think of this as the plane being lifted 0.25m.
