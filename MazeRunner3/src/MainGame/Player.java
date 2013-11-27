@@ -153,7 +153,7 @@ public class Player extends GameObject {
 			double cos = Math.cos(Math.toRadians(this.getHorAngle()));
 			double sin = Math.sin(Math.toRadians(this.getHorAngle()));
 			
-			int power = 1; 
+			int power = 20; 
 			
 			if (control.getRight())
 			{
@@ -171,40 +171,6 @@ public class Player extends GameObject {
 			{
 				physics.applyForce(-power*(float)sin , 0, -power*(float)cos);
 			}
-
-//			//Update speed according to friction
-//
-//			//speed = speed.mul( 1 - (float) friction);
-//
-//			// Move the player according to speed
-
-			/*this.setLocationX(this.getLocationX() + deltaTime * speed.getX());
-			this.setLocationZ(this.getLocationZ() + deltaTime * speed.getZ());
-
-			// Update speed according to control
-			double cos = Math.cos(Math.toRadians(this.getHorAngle()));
-			double sin = Math.sin(Math.toRadians(this.getHorAngle()));
-
-			if (control.getRight())
-			{
-				speed.setX(speed.getX() + (float)(acceleration*cos));
-				speed.setZ(speed.getZ() - (float)(acceleration*sin));
-			}
-			if (control.getLeft())
-			{
-				speed.setX(speed.getX() - (float)(acceleration*cos));
-				speed.setZ(speed.getZ() + (float)(acceleration*sin));
-			}
-			if (control.getBack())
-			{
-				speed.setX(speed.getX() + (float)(acceleration*sin));
-				speed.setZ(speed.getZ() + (float)(acceleration*cos));
-			}
-			if (control.getForward())
-			{
-				speed.setX(speed.getX() - (float)(acceleration*sin));
-				speed.setZ(speed.getZ() - (float)(acceleration*cos));
-			}*/
 		}
 	}
 }

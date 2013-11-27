@@ -27,6 +27,10 @@ import javax.vecmath.Vector3f;
 
 public class Physics {
 	
+	private float angularDamping = 100;
+	private float mass = 50;
+	
+	
 	 /**
      * The container for the JBullet physics world. This represents the collision data and motion data, as well as the
      * algorithms for collision detection and reaction.
@@ -93,11 +97,11 @@ public class Physics {
         Vector3f ballInertia = new Vector3f(0, 0, 0);
         ballShape.calculateLocalInertia(2f, ballInertia);
         // Composes the ball's construction info of its mass, its motion state, its shape, and its inertia.
-        RigidBodyConstructionInfo ballConstructionInfo = new RigidBodyConstructionInfo(1f, ballMotion, ballShape, ballInertia);
+        RigidBodyConstructionInfo ballConstructionInfo = new RigidBodyConstructionInfo(mass, ballMotion, ballShape, ballInertia);
         // Set the restitution, also known as the bounciness or spring, to 0.5. The restitution may range from 0.0
         // not bouncy) to 1.0 (extremely bouncy).
         ballConstructionInfo.restitution = 1.0f;
-        ballConstructionInfo.angularDamping = 10f;
+        ballConstructionInfo.angularDamping = angularDamping;
         // Initialise 'controlBall', the final variable representing the controlled ball, to a rigid body with the
         // previously assigned construction information.
         playerBall = new RigidBody(ballConstructionInfo);
