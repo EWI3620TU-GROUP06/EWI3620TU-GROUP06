@@ -21,7 +21,7 @@ public class Editor extends GameObject{
 
 	private Maze maze;
 
-	private float buttonSize;
+	private static float buttonSize;
 	private final int numButtons = 11;
 
 	private byte drawMode;
@@ -57,9 +57,9 @@ public class Editor extends GameObject{
 	 * @param buttonSize	Size of the buttons
 	 */
 
-	public void setButtonSize(float buttonSize)
+	public static void setButtonSize(float bS)
 	{
-		this.buttonSize = buttonSize;
+		buttonSize = bS;
 	}
 
 	/**
