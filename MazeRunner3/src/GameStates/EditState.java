@@ -53,7 +53,7 @@ public class EditState extends GameState {
 		return this.paused;
 	}
 
-	public void setPaused() throws InterruptedException{
+	public void setPaused(){
 		this.paused = true;
 		me.Pause();
 	}

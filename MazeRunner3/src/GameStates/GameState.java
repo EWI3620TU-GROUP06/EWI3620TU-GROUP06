@@ -12,6 +12,6 @@ public abstract class GameState {
 	public abstract GLCanvas getCanvas();
 	public abstract gStateMan getGSM();
 	public abstract boolean getPaused();
-	public abstract void setPaused() throws InterruptedException;
+	public abstract void setPaused();
 	public abstract void unPause();
 }

@@ -543,7 +543,7 @@ public class MazeEditor implements GLEventListener {
 		return canvas;
 	}
 	
-	public void Pause() throws InterruptedException{
+	public void Pause(){
 		pause = true;
 	}
 	

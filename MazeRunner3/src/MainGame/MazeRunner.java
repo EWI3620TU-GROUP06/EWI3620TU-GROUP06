@@ -403,7 +403,7 @@ public class MazeRunner implements GLEventListener {
 		Trenderer.endRendering();
 	}
 	
-	public void Pause() throws InterruptedException{
+	public void Pause(){
 		pause = true;
 	}
 	
