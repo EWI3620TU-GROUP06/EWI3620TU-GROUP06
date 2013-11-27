@@ -51,7 +51,7 @@ public class PlayerSprite implements VisibleObject {
 		sphere.setDrawStyle(GLU.GLU_FILL);
 		sphere.setOrientation(0);
 		try{
-			InputStream stream = getClass().getResourceAsStream("ball.jpg");
+			InputStream stream = getClass().getResourceAsStream("../Textures/ball.jpg");
 			TextureData data = TextureIO.newTextureData(stream, false, "jpg");
 			this.sphereTexture = TextureIO.newTexture(data);
 			stream.close();

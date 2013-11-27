@@ -68,7 +68,7 @@ public class MainMenu implements GLEventListener {
 			
 		// Preload the texture we want to use!
 		try{
-		InputStream stream = getClass().getResourceAsStream("mainmenu.jpg");
+		InputStream stream = getClass().getResourceAsStream("../Textures/mainmenu.jpg");
         TextureData data = TextureIO.newTextureData(stream, false, "jpg");
         this.backgroundTexture = TextureIO.newTexture(data);
         stream.close();

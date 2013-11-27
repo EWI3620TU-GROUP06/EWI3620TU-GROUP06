@@ -92,10 +92,10 @@ public class Maze implements VisibleObject {
 	public void initTextures(GL gl)
 	{
 		try{
-			InputStream stream = getClass().getResourceAsStream("wall.jpg");
+			InputStream stream = getClass().getResourceAsStream("../Textures/wall.jpg");
 			TextureData data = TextureIO.newTextureData(stream, false, "jpg");
 			this.boxTexture = TextureIO.newTexture(data);
-			stream = getClass().getResourceAsStream("floor.jpg");
+			stream = getClass().getResourceAsStream("../Textures/floor.jpg");
 			data = TextureIO.newTextureData(stream, false, "jpg");
 			this.floorTexture = TextureIO.newTexture(data);
 			stream.close();
