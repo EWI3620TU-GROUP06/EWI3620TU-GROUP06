@@ -1,6 +1,7 @@
 package MainGame;
 import javax.media.opengl.GL;
 
+import Drawing.VisibleObject;
 import MazeObjects.Box;
 import MazeObjects.Floor;
 import MazeObjects.MazeObject;

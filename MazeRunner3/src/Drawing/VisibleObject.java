@@ -1,4 +1,4 @@
-package MainGame;
+package Drawing;
 import javax.media.opengl.GL;
 
 /**
