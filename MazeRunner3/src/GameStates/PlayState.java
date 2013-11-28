@@ -3,6 +3,7 @@ package GameStates;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCanvas;
 
+import Audio.Audio;
 import Main.Game;
 import MainGame.MazeRunner;
 
@@ -55,5 +56,10 @@ public class PlayState extends GameState {
 	public void unPause(){
 		this.paused = false;
 		mz.unPause();
+	}
+	
+	public void playMusic()
+	{
+		Audio.playMusic("test2");
 	}
 }

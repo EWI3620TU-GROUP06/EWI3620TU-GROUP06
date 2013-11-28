@@ -10,32 +10,33 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Audio {
-
-	public static void playClip(File clipFile) {
-		AudioListener listener = null;
-		AudioInputStream audioInputStream = null;
-		try {
-			listener = new AudioListener();
-			audioInputStream = AudioSystem.getAudioInputStream(clipFile);
-
-			Clip clip = AudioSystem.getClip();
-			clip.addLineListener(listener);
-			clip.open(audioInputStream);
-			try {
-				clip.start();
-				listener.waitUntilDone();
-			} finally {
-				clip.close();
-			}
-		} catch(Exception e){
+	
+	private static Sound sound = null;
+	private static BackgroundMusic music = null;
+	
+	public static void playMusic(String musicName) {
+		try{
+			stopMusic();
+			musicName = musicName + ".wav";
+			music = new BackgroundMusic(new File(musicName));	
+		}
+		catch(Exception e){
 			e.printStackTrace();
-		}finally {
-			try{
-				audioInputStream.close();
-			}
-			catch(Exception e){
-				e.printStackTrace();
-			}
+		}
+	}
+	
+	public static void stopMusic(){
+		if(music != null)
+			music.stop();
+	}
+
+	public static void playSound(String soundName) {
+		try{
+			soundName = soundName + ".wav";
+			sound = new Sound(new File(soundName));	
+		}
+		catch(Exception e){
+			e.printStackTrace();
 		}
 	}
 }

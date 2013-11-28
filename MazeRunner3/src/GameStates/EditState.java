@@ -66,4 +66,9 @@ public class EditState extends GameState {
 		this.paused = false;
 		me.unPause();
 	}
+	
+	public void playMusic()
+	{
+		Audio.playMusic("test2");
+	}
 }

@@ -25,9 +25,9 @@ public class CustomMazeObject extends MazeObject{
 				if(line.startsWith("v"))
 				{
 					String coordinates[] = line.split("[ ]");
-					float x = Float.parseFloat(coordinates[1]) * 2000;
-					float y = Float.parseFloat(coordinates[2]) * 2000;
-					float z = Float.parseFloat(coordinates[3]) * 2000;
+					float x = Float.parseFloat(coordinates[1]);
+					float y = Float.parseFloat(coordinates[2]);
+					float z = Float.parseFloat(coordinates[3]);
 					res.vertices.add(new Vector3f(x, y, z));
 					
 				}
@@ -38,13 +38,15 @@ public class CustomMazeObject extends MazeObject{
 					for(int i  = 1; i < points.length; i++)
 					{
 						String[] point = points[i].split("[//]"); 
-						face[i - 1] = Integer.parseInt(point[0]);
+						face[i - 1] = Integer.parseInt(point[0]) - 1;
 					}
 					res.addFace(face);
 				}
 			}
+			res.removeRedundantVertices();
 			System.out.println("Read in " + res.vertices.size() + " vertices.");
 			System.out.println("Read in " + res.faces.size() + " faces.");
+			
 			sc.close();
 		}
 		catch (Exception e){

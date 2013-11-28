@@ -3,6 +3,7 @@ package GameStates;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCanvas;
 
+import Audio.Audio;
 import Main.Game;
 import MainGame.MainMenu;
 
@@ -51,5 +52,10 @@ public class MenuState extends GameState {
 	
 	public void unPause(){
 		//do nothing
+	}
+	
+	public void playMusic()
+	{
+		Audio.playMusic("test");
 	}
 }

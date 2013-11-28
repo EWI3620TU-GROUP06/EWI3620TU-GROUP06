@@ -207,5 +207,34 @@ public abstract class MazeObject {
 	{
 		ArrayList<Vector3f> commons 
 	}*/
+	
+	public void removeRedundantVertices()
+	{
+		ArrayList<Vector3f> toBeRemoved = new ArrayList<Vector3f>();
+		for(int v = 0; v < vertices.size(); v++)
+		{
+			boolean nextVertex = false;
+			for(int f = 0; f < faces.size(); f++)
+			{
+				int[] face = faces.get(f);
+				for (int i = 0; i < face.length; i++)
+				{
+					if(v == face[i])
+					{
+						nextVertex = true;
+						break;
+					}
+				}
+				if(nextVertex)
+					break;
+
+				else if(f == faces.size() - 1)
+					toBeRemoved.add(vertices.get(v));
+			}
+		}
+		
+		for(Vector3f vertex : toBeRemoved)
+			vertices.remove(vertex);
+	}
 
 }
