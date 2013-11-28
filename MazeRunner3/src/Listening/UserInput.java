@@ -99,31 +99,29 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	@Override
 	public void mousePressed(MouseEvent event)
 	{
-		if(this.gsm.getCurState() == 2){
-			if(event.getButton() == 1){
-				leftButtonDragged = true;
-				leftButtonPressed = true;
-			}
-			if(event.getButton() == 3)
-				rightButtonDragged = true;
-
-			this.xPos = event.getX();
-			this.yPos = event.getY();
-			xdragPos = xPos;
-			ydragPos = yPos;
+		if(event.getButton() == 1){
+			leftButtonDragged = true;
+			leftButtonPressed = true;
 		}
+		if(event.getButton() == 3){
+			rightButtonDragged = true;
+		}
+
+		this.xdragPos = event.getX();
+		this.ydragPos = event.getY();
+
+		this.mouseX = event.getX();
+		this.mouseY = event.getY();
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent event)
 	{
-		if(this.gsm.getCurState() == 2){
-			this.xdragPos = event.getX();
-			this.ydragPos = event.getY();
+		this.xdragPos = event.getX();
+		this.ydragPos = event.getY();
 
-			this.mouseX = event.getX();
-			this.mouseY = event.getY();
-		}
+		this.mouseX = event.getX();
+		this.mouseY = event.getY();
 	}
 
 	@Override
@@ -156,22 +154,18 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	@Override
 	public void keyReleased(KeyEvent event)
 	{
-		
-		if (this.gsm.getCurState() == 1){
-			if (event.getKeyChar() == 'w'){
-				this.forward = false;
-			}
-			else if (event.getKeyChar() == 'a'){
-				this.left = false;
-			}
-			else if (event.getKeyChar() == 's'){
-				this.back = false;
-			}
-			else if (event.getKeyChar() == 'd'){
-				this.right = false;
-			}
+		if (event.getKeyChar() == 'w'){
+			this.forward = false;
 		}
-		
+		else if (event.getKeyChar() == 'a'){
+			this.left = false;
+		}
+		else if (event.getKeyChar() == 's'){
+			this.back = false;
+		}
+		else if (event.getKeyChar() == 'd'){
+			this.right = false;
+		}
 	}
 
 	/*
@@ -221,14 +215,12 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	@Override
 	public void mouseReleased(MouseEvent event)
 	{
-		if(this.gsm.getCurState() == 2){
 			if(event.getButton() == 1){
 				leftButtonDragged = false;
 				leftReleased = true;
 			}
 			if(event.getButton() == 3)
 				rightButtonDragged = false;
-		}
 	}
 
 	public void mouseWheelMoved(MouseWheelEvent event)
