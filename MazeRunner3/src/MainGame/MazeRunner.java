@@ -160,8 +160,6 @@ public class MazeRunner implements GLEventListener {
 				
 				//Pause title
 				clkbxman.AddBox(new ClickBox((int)(screenWidth*0.380),(int)(screenHeight*0.8), //Location of lower-left corner
-						(int)(screenWidth*0.380),(int)(screenWidth*0.620), // Left and right bound
-						(int)(screenHeight*0.9),(int)(screenHeight*0.8), // upper and lower bound
 						screenWidth, screenHeight, //screen size
 						titleScale, "Impact", 1, "Pause", //TextScale, Font, type (bold/italic etc) and text to draw
 						0.9f, 0.4f, 0.4f, 1f, //color in r,g,b,alpha
@@ -169,8 +167,6 @@ public class MazeRunner implements GLEventListener {
 				
 				//Resume button
 				clkbxman.AddBox(new ClickBox((int)(screenWidth*0.395),(int)(screenHeight*0.625), //Location of lower-left corner
-						(int)(screenWidth*0.395),(int)(screenWidth*0.605), // Left and right bound
-						(int)(screenHeight*0.705),(int)(screenHeight*0.625), // upper and lower bound
 						screenWidth, screenHeight, //screen size
 						textScale, "Arial", 0, "Resume", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
 						1f, 1f, 1f, 1f, //color in r,g,b, alpha
@@ -181,8 +177,6 @@ public class MazeRunner implements GLEventListener {
 				
 				//MainMenu button
 				clkbxman.AddBox(new ClickBox((int)(screenWidth*0.360),(int)(screenHeight*0.480), //Location of lower-left corner
-						(int)(screenWidth*0.360),(int)(screenWidth*0.640), // Left and right bound
-						(int)(screenHeight*0.560),(int)(screenHeight*0.480), // upper and lower bound
 						screenWidth, screenHeight, //screen size
 						textScale, "Arial", 0, "Main Menu", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
 						1f, 1f, 1f, 1f, //color in r,g,b,alpha
@@ -193,8 +187,6 @@ public class MazeRunner implements GLEventListener {
 				
 				//Quit button
 				clkbxman.AddBox(new ClickBox((int)(screenWidth*0.442),(int)(screenHeight*0.330), //Location of lower-left corner
-						(int)(screenWidth*0.442),(int)(screenWidth*0.558), // Left and right bound
-						(int)(screenHeight*0.410),(int)(screenHeight*0.330), // upper and lower bound
 						screenWidth, screenHeight, //screen size
 						textScale, "Arial", 0, "Quit", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
 						1f, 1f, 1f, 1f, // color in r,g,b,alpha

@@ -1,6 +1,7 @@
 package Drawing;
 
 import java.awt.Font;
+import java.awt.geom.Rectangle2D;
 
 import javax.vecmath.Vector2f;
 
@@ -23,8 +24,8 @@ public class ClickBox {
 	private float[] color;
 	private Command command;
 
-	public ClickBox(float x, float y, float l, float r, float up, float low,
-			int screenWidth, int screenHeight, int textScale, String Font, int fontStyle, String Text, 
+	public ClickBox(float x, float y, int screenWidth, int screenHeight, 
+			int textScale, String Font, int fontStyle, String Text, 
 			float red, float green, float blue, float alpha,
 			boolean clickable){
 		this.color = new float[]{red, green, blue, alpha};
@@ -32,10 +33,14 @@ public class ClickBox {
 		this.screenWidth = screenWidth;
 		this.screenHeight = screenHeight;
 		this.location = new Vector2f(x,y);
-		this.Bounds = new float[]{l,r,up,low};
 		this.Font = Font;
 		renderer = new TextRenderer(new Font(Font, fontStyle, this.screenWidth/textScale));
 		this.Text = Text;
+		Rectangle2D temp = renderer.getBounds(Text);
+		this.Bounds = new float[]{location.x+(float)temp.getX(), 
+				location.x+(float)temp.getX()+(float)temp.getWidth(), 
+				location.y+(float)temp.getHeight(), 
+				location.y};
 		this.clickable = clickable;
 	}
 	
@@ -60,13 +65,14 @@ public class ClickBox {
 		int oldHeight = this.screenHeight;
 		this.screenWidth = screenWidth;
 		this.screenHeight = screenHeight;
-		setBounds(Bounds[0]*(float)(this.screenWidth)/(float)(oldWidth),
-				Bounds[1]*(float)(this.screenWidth)/(float)(oldWidth),
-				Bounds[2]*(float)(this.screenHeight)/(float)(oldHeight),
-				Bounds[3]*(float)(this.screenHeight)/(float)(oldHeight));
 		setLocation(this.getLocation().x*(float)(this.screenWidth)/(float)(oldWidth),
 				this.getLocation().y*(float)(this.screenHeight)/(float)(oldHeight));
 		renderer = new TextRenderer(new Font(Font, fontStyle, this.screenWidth/textScale));
+		Rectangle2D temp = renderer.getBounds(Text);
+		setBounds(location.x+(float)temp.getX(), 
+				location.x+(float)temp.getX()+(float)temp.getWidth(), 
+				location.y+(float)temp.getHeight(), 
+				location.y);
 	}
 	
 	public void drawText(){
