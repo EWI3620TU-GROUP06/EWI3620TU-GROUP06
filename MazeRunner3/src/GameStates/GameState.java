@@ -3,8 +3,6 @@ package GameStates;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCanvas;
 
-import Audio.Audio;
-
 public abstract class GameState {
 	protected gStateMan gsm;
 	public abstract void init(GLAutoDrawable drawable);

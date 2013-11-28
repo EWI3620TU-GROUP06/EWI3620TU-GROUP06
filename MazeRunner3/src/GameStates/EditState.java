@@ -1,7 +1,5 @@
 package GameStates;
 
-import java.io.File;
-
 import Audio.Audio;
 
 import javax.media.opengl.GLAutoDrawable;

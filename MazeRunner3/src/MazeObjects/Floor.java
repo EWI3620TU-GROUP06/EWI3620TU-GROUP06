@@ -2,8 +2,6 @@ package MazeObjects;
 
 import javax.vecmath.Vector3f;
 
-import com.sun.opengl.util.texture.Texture;
-
 public class Floor extends MazeObject {
 	
 	
