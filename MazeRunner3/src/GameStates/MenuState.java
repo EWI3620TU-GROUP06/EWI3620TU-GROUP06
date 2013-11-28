@@ -8,11 +8,8 @@ import Main.Game;
 import MainGame.MainMenu;
 
 public class MenuState extends GameState {
-	
 	private MainMenu mm;
 	private Game game;
-	private gStateMan gsm;
-	
 	public MenuState(gStateMan gsm,Game game){
 		this.gsm = gsm;
 		this.game = game;

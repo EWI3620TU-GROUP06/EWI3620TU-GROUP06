@@ -69,15 +69,15 @@ public class Maze implements VisibleObject {
 				switch(newMaze[i][j])
 				{
 				case 1 : maze[i][j] = new Box(SQUARE_SIZE, SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
-				case 2 : maze[i][j] = new Box(SQUARE_SIZE, SQUARE_SIZE/2, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
+				case 2 : maze[i][j] = new Box(SQUARE_SIZE, (float)SQUARE_SIZE/2, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
 				case 4 : maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE, 0, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
 				case 5 : maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE, 90, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
 				case 6 : maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE, 180, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
 				case 7 : maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE, 270, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
-				case 8 : maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE/2, 0, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
-				case 9 : maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE/2, 90, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
-				case 10 : maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE/2, 180, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
-				case 11 : maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE/2, 270, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
+				case 8 : maze[i][j] = new Ramp(SQUARE_SIZE, (float)SQUARE_SIZE/2, 0, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
+				case 9 : maze[i][j] = new Ramp(SQUARE_SIZE, (float)SQUARE_SIZE/2, 90, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
+				case 10 : maze[i][j] = new Ramp(SQUARE_SIZE, (float)SQUARE_SIZE/2, 180, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
+				case 11 : maze[i][j] = new Ramp(SQUARE_SIZE, (float)SQUARE_SIZE/2, 270, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
 				default : maze[i][j] = new Floor(SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE);
 				}
 			}
@@ -99,6 +99,17 @@ public class Maze implements VisibleObject {
 			data = TextureIO.newTextureData(stream, false, "jpg");
 			this.floorTexture = TextureIO.newTexture(data);
 			stream.close();
+			for(int i = 0; i < maze[0].length; i++){
+				for(int j = 0; j < maze.length; j++)
+				{
+					if(maze[i][j] instanceof Floor){
+						maze[i][j].addTexture(floorTexture);
+					}
+					if(maze[i][j] instanceof Box || maze[i][j] instanceof Ramp){
+						maze[i][j].addTexture(boxTexture);
+					}
+				}
+			}
 		}
 		catch(Exception e){
 			e.printStackTrace();

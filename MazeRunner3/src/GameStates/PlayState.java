@@ -9,7 +9,6 @@ import MainGame.MazeRunner;
 
 public class PlayState extends GameState {
 	
-	private gStateMan gsm;
 	private MazeRunner mz;
 	private Game game;
 	private boolean paused;

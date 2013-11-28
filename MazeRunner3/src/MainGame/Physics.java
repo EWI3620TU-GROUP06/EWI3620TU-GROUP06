@@ -1,9 +1,12 @@
 package MainGame;
 
+import MazeObjects.Box;
+import MazeObjects.Floor;
 import MazeObjects.MazeObject;
 
 import com.bulletphysics.collision.broadphase.BroadphaseInterface;
 import com.bulletphysics.collision.broadphase.DbvtBroadphase;
+import com.bulletphysics.collision.broadphase.Dispatcher;
 import com.bulletphysics.collision.dispatch.CollisionConfiguration;
 import com.bulletphysics.collision.dispatch.CollisionDispatcher;
 import com.bulletphysics.collision.dispatch.CollisionObject;
@@ -29,10 +32,10 @@ import javax.vecmath.Vector3f;
 
 public class Physics {
 	
-	private float angularDamping = 0.1f;
+	private float angularDamping = 5f;
 	private float mass = 10;
 	
-	
+	ObjectArrayList<CollisionObject> notBox = new ObjectArrayList<CollisionObject>();
 	 /**
      * The container for the JBullet physics world. This represents the collision data and motion data, as well as the
      * algorithms for collision detection and reaction.
@@ -87,8 +90,11 @@ public class Physics {
         			
         			faceConstructionInfo.restitution = mazeObject.getRestitution();
         			RigidBody faceRigidBody = new RigidBody(faceConstructionInfo);
+        			if(!(mazeObject instanceof Box))
+        				notBox.add(faceRigidBody);
         	        dynamicsWorld.addRigidBody(faceRigidBody);
         		}
+        		
         	}
         		
         // Initialise 'ballShape' to a sphere with a radius of 3 metres.
@@ -117,6 +123,20 @@ public class Physics {
 	{
 		// Runs the JBullet physics simulation for the specified time in seconds.
         dynamicsWorld.stepSimulation(deltaTime);
+        
+        Dispatcher dispatcher = dynamicsWorld.getDispatcher();
+        int count  = 0;
+        
+        for(int i = 0; i < dispatcher.getNumManifolds(); i++)
+        {
+        	Object body1 = dispatcher.getManifoldByIndexInternal(i).getBody0();
+        	Object body2 = dispatcher.getManifoldByIndexInternal(i).getBody1();
+        	if(body2 == playerBall && !notBox.contains(body1) || body1 == playerBall && !notBox.contains(body2))
+        		count++;
+        }
+        
+        
+        System.out.println(count);
 	}
 	
 	public void applyForce(float x, float y, float z)

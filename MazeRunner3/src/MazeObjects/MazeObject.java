@@ -7,6 +7,8 @@ import java.util.ArrayList;
 
 import javax.vecmath.Vector3f;
 
+import com.sun.opengl.util.texture.Texture;
+
 /**
  *	Class that contains the a number of points, represented by vectors, and faces, represented by arrays of numbers
  *	referencing those points, to create three dimensional objects that are in the maze.
@@ -17,6 +19,9 @@ public abstract class MazeObject {
 	ArrayList<Vector3f> vertices;
 	ArrayList<int[]> faces;
 	ArrayList<Vector3f> normals;
+	
+	protected Texture texture;
+	protected int[][] texturePoints = { {1, 1}, {1, 0}, {0, 0} , {0, 1}}; 
 	
 	float restitution;
 
@@ -89,6 +94,11 @@ public abstract class MazeObject {
 		{
 
 			int[] face = faces.get(j);
+			if (texture != null)
+			{
+				texture.enable();
+				texture.bind();
+			}
 			gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);
 			Vector3f normal = normals.get(j);
 			
@@ -98,25 +108,19 @@ public abstract class MazeObject {
 			
 			gl.glNormal3d(norm[0], norm[1], norm[2]);
 			gl.glBegin(GL.GL_POLYGON);
+			
 			for(int i = 0; i < face.length; i++)
 			{
 				Vector3f position = vertices.get(face[i]);
 				float[] pos = new float[3];
-				if( this instanceof Box)
-				{
-					if(i == 0)
-						gl.glTexCoord2f(1, 1);
-					if(i == 1)
-						gl.glTexCoord2f(1, 0);
-					if(i == 2)
-						gl.glTexCoord2f(0, 0);
-					if(i == 3)
-						gl.glTexCoord2f(0, 1);
-				}
+				if(texture != null && i < 5)
+					gl.glTexCoord2f(texturePoints[i][0], texturePoints[i][1]);
 				position.get(pos);
 				gl.glVertex3f(pos[0], pos[1], pos[2]);
 			}
 			gl.glEnd();
+			if(texture != null)
+				texture.disable();
 		}
 	}
 	
@@ -235,6 +239,11 @@ public abstract class MazeObject {
 		
 		for(Vector3f vertex : toBeRemoved)
 			vertices.remove(vertex);
+	}
+	
+	public void addTexture(Texture t)
+	{
+		texture = t;
 	}
 
 }

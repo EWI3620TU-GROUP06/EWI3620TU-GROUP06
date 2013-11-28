@@ -11,7 +11,6 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class Audio {
 	
-	private static Sound sound = null;
 	private static BackgroundMusic music = null;
 	
 	public static void playMusic(String musicName) {
@@ -33,7 +32,7 @@ public class Audio {
 	public static void playSound(String soundName) {
 		try{
 			soundName = "src/Music/" + soundName + ".wav";
-			sound = new Sound(new File(soundName));	
+			new Sound(new File(soundName));	
 		}
 		catch(Exception e){
 			e.printStackTrace();

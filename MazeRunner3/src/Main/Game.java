@@ -13,7 +13,7 @@ public class Game extends Frame{
 	 * *			Local variables					*
 	 * **********************************************
 	 */
-		private int screenWidth = 1024, screenHeight = 576;		// Screen size.
+		private int screenWidth = 600, screenHeight = 600;		// Screen size.
 		
 	/*
 	 * **********************************************
@@ -43,7 +43,7 @@ public class Game extends Frame{
 		
 			// The two lines here set the screen to full screen
 			this.setUndecorated(true);
-			this.setExtendedState(MAXIMIZED_BOTH);
+			//this.setExtendedState(MAXIMIZED_BOTH);
 			
 			// Set the frame to visible. This automatically calls upon OpenGL to prevent a blank screen.
 			setVisible(true);

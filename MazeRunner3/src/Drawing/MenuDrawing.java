@@ -1,11 +1,19 @@
 package Drawing;
 
+import java.awt.Font;
 
 import javax.media.opengl.GL;
+
 import GameObjects.Editor;
+
+import com.sun.opengl.util.j2d.TextRenderer;
 
 public class MenuDrawing {
 	
+	private static TextRenderer renderer;
+	private static TextRenderer Trenderer;
+	private static int titleScale = 10;
+	private static int textScale = 18;
 	private static int screenWidth;
 	private static int screenHeight;
 	private static float buttonSize;
@@ -14,6 +22,8 @@ public class MenuDrawing {
 		screenWidth = sw;
 		screenHeight = sh;
 		buttonSize = screenWidth / 11.0f < screenHeight / 10.f ? screenWidth / 11.0f : screenHeight / 10.f;
+		Trenderer = new TextRenderer(new Font("Impact", Font.PLAIN, (screenWidth)/titleScale));
+		renderer = new TextRenderer(new Font("Arial", Font.BOLD, (screenWidth)/textScale));
 		Editor.setButtonSize(buttonSize);
 	}
 	
@@ -37,6 +47,21 @@ public class MenuDrawing {
 		//Draw a nice transparent surface over the background
 		drawTrans(gl,0,0,screenWidth,screenHeight,0.1f,0.1f,0.1f,0.4f);
 		
+		//Draw the epic title
+		drawTitle("MadBalls", 0.9f, 0.4f, 0.4f, 1f, (int)(screenWidth*0.315),(int)(screenHeight*0.8));
+			
+		// De vier menu texts "New game (of play ofzo" "Load level" "options" "quit"
+		drawText("Play", 1f, 1f, 1f, 1f,(int)(screenWidth*0.445),
+				(int)(screenHeight*0.625));
+		
+		drawText("Load", 1f, 1f, 1f, 1f,(int)(screenWidth*0.432),
+				(int)(screenHeight*0.48));
+		
+		drawText("Editor", 1f, 1f, 1f, 1f,(int)(screenWidth*0.42),
+				(int)(screenHeight*0.33));
+	
+		drawText("Quit", 1f, 1f, 1f, 1f,(int)(screenWidth*0.442),
+				(int)(screenHeight*0.18));
 	}
 	
 	public static void drawTrans(GL gl, float x, float y, float width, float height
@@ -66,6 +91,26 @@ public class MenuDrawing {
 		gl.glDisable(GL.GL_COLOR_MATERIAL);
 		gl.glDisable(GL.GL_BLEND);
 	}
+	
+	public static void drawText(String text, float r, float g, float b, float a, int x, int y){
+		//Renderer alvast in init gemaakt, anders wordt ie na elke glFlush() opnieuw gemaakt!
+		
+		renderer.beginRendering(screenWidth, screenHeight);
+		renderer.setColor(r, g, b, a);
+		renderer.draw(text, x, y);
+		renderer.flush();
+		renderer.endRendering();
+	}
+	
+	public static void drawTitle(String text, float r, float g, float b, float a, int x, int y){
+		//Renderer alvast in init gemaakt, anders wordt ie na elke glFlush() opnieuw gemaakt!
+		
+		Trenderer.beginRendering(screenWidth, screenHeight);
+		Trenderer.setColor(r, g, b, a);
+		Trenderer.draw(text, x, y);
+		Trenderer.flush();
+		Trenderer.endRendering();
+	}
 
 	public static void drawPauseMenu(GL gl, float x, float y, float width, float height
 			,float r, float g, float b, float a){
@@ -94,7 +139,18 @@ public class MenuDrawing {
 		//de achtergrond
 		gl.glDisable(GL.GL_COLOR_MATERIAL);
 		gl.glDisable(GL.GL_BLEND);
+		
+		//Draw all the appropriate text
+		drawTitle("Pause", 0.9f, 0.4f, 0.4f, 1f, (int)(screenWidth*0.380),(int)(screenHeight*0.8));
+		
+		drawText("Resume", 1f, 1f, 1f, 1f,(int)(screenWidth*0.395),
+				(int)(screenHeight*0.625));
+		
+		drawText("Main Menu", 1f, 1f, 1f, 1f,(int)(screenWidth*0.360),
+				(int)(screenHeight*0.48));
 	
+		drawText("Quit", 1f, 1f, 1f, 1f,(int)(screenWidth*0.442),
+				(int)(screenHeight*0.33));
 	}
 	
 	//Button Section for Maze-Editor

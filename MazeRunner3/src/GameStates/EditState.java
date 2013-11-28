@@ -15,7 +15,6 @@ public class EditState extends GameState {
 	private MazeEditor me;
 	private Game game;
 	private boolean paused;
-	private gStateMan gsm;
 	
 	public EditState(gStateMan gsm, Game game){
 		this.gsm = gsm;

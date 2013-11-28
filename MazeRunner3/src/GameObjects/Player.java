@@ -2,7 +2,7 @@ package GameObjects;
 
 import javax.vecmath.Vector3f;
 
-import Listening.Control;
+import MainGame.Control;
 import MainGame.Maze;
 import MainGame.Physics;
 
