@@ -77,8 +77,10 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 			int midScreenHeight = gsm.getGame().getHeight()/2;
 			this.dX = (xdragPos - midScreenWidth);
 			this.dY = (ydragPos - midScreenHeight);
-
+			
 			robot.mouseMove(midScreenWidth + gamePosX, midScreenHeight + gamePosY);
+			xdragPos = midScreenWidth;
+			ydragPos = midScreenHeight;
 			
 		}
 		if (this.gsm.getCurState() == 2){
