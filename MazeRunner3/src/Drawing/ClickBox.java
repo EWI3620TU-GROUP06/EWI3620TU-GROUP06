@@ -87,6 +87,10 @@ public class ClickBox {
 		this.clickable = true;
 	}
 	
+	public void setColor(float red, float green, float blue, float alpha){
+		this.color = new float[]{red,green,blue,alpha};
+	}
+	
 	public void setNotClickable(){
 		this.clickable = false;
 	}

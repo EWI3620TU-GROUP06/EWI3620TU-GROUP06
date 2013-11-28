@@ -28,8 +28,18 @@ public class ClickBoxManager {
 			if(control.getClicked() != 0){
 				for(ClickBox a: Boxes){
 					if(a.isClickable() && a.isInBounds(control.getMouseX(), control.getMouseY())){
-						System.out.println("Button Clicked");
 						a.execute();
+					}
+				}
+			}
+			if(control.getClicked() == 0){
+				for(int i = 1; i < Boxes.size(); i++){
+					ClickBox a = Boxes.get(i);
+					if(a.isInBounds(control.getMouseX(), control.getMouseY())){
+						a.setColor(0.2f, 0.2f, 1f, 1f);
+					}
+					if(!a.isInBounds(control.getMouseX(), control.getMouseY())){
+						a.setColor(1f, 1f, 1f, 1f);
 					}
 				}
 			}
