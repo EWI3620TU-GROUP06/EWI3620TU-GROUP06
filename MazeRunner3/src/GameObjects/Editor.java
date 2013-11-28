@@ -6,7 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import MainGame.Control;
+import Listening.Control;
 import MainGame.Maze;
 import MazeObjects.CustomMazeObject;
 import MazeObjects.MazeObject;

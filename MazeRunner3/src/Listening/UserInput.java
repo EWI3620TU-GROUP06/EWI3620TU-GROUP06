@@ -1,10 +1,9 @@
-package MainGame;
+package Listening;
 import java.awt.Robot;
 import java.awt.event.*;
 
 import javax.media.opengl.GLCanvas;
 
-import GameObjects.Editor;
 import GameStates.gStateMan;
 
 
@@ -70,7 +69,7 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	{
 
 		// TODO: Set dX and dY to values corresponding to mouse movement
-		if (this.gsm.getCurState() == 1){
+		if (this.gsm.getCurState() == 1 && !this.gsm.getState(this.gsm.getCurState()).getPaused()){
 			int gamePosX = (int) gsm.getGame().getLocationOnScreen().getX();
 			int gamePosY = (int) gsm.getGame().getLocationOnScreen().getY();
 			int midScreenWidth = gsm.getGame().getWidth()/2;
@@ -199,59 +198,12 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	@Override
 	public void mouseClicked(MouseEvent event)
 	{
-		if(this.gsm.getCurState() == 0 || this.gsm.getState(this.gsm.getCurState()).getPaused() == true ){
+		this.mouseX = event.getX();
+		this.mouseY = event.getY();
+		mouseClicked = (byte)event.getButton();
 
-			double x = ((double)event.getX())/((double)this.gsm.getGame().getScreenWidth());
-			double y = ((double)this.gsm.getGame().getScreenHeight() - (double)event.getY())/((double)this.gsm.getGame().getScreenHeight());
-
-			if (x > 0.445 && x < 0.555 && y > 0.625 && y < 0.705 && this.gsm.getState(this.gsm.getCurState()).getPaused() == false){
-				//GOTO playstate
-				this.gsm.setState(1);
-			}
-
-			else if(x > 0.395 && x < 0.605 && y > 0.625 && y < 0.705 && this.gsm.getState(this.gsm.getCurState()).getPaused() == true){
-				this.gsm.getState(this.gsm.getCurState()).unPause();
-			}
-
-			else if (x > 0.432 && x < 0.568 && y > 0.48 && y < 0.56 && this.gsm.getState(this.gsm.getCurState()).getPaused() == false){
-				//Load level to static maze-variable, and GOTO playstate
-				Maze maze = Editor.readMaze();
-				MazeRunner.setMaze(maze);
-				if(maze != null) { // If level loaded, play, else choose some other menu option
-					this.gsm.setState(1);
-				}
-			}
-
-			else if (x > 0.360 && x < 0.640 && y > 0.48 && y < 0.56 && this.gsm.getState(this.gsm.getCurState()).getPaused() == true){
-				// Back to Main Menu
-				this.gsm.setState(0);
-			}
-
-			else if (x > 0.42 && x < 0.58 && y > 0.33 && y < 0.41 && this.gsm.getState(this.gsm.getCurState()).getPaused() == false){
-				//GOTO EditState
-				this.gsm.setState(2); 
-			}
-
-			else if(x > 0.442 && x < 0.558 && y > 0.33 && y < 0.41 && this.gsm.getState(this.gsm.getCurState()).getPaused() == true){
-				//exit the game
-				System.exit(0);
-			}	
-
-			else if (x > 0.442 && x < 0.558 && y > 0.18 && y < 0.26 && this.gsm.getState(this.gsm.getCurState()).getPaused() == false){
-				//exit the game
-				System.exit(0);
-			}
-		}
-
-		if(this.gsm.getCurState() == 2){
-			this.mouseX = event.getX();
-			this.mouseY = event.getY();
-			mouseClicked = (byte)event.getButton();
-
-			if(event.getButton() == 1)
-				leftReleased = false;
-
-		}
+		if(event.getButton() == 1)
+			leftReleased = false;
 	}
 
 	@Override

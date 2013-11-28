@@ -13,7 +13,7 @@ public class Game extends Frame{
 	 * *			Local variables					*
 	 * **********************************************
 	 */
-		private int screenWidth = 600, screenHeight = 600;		// Screen size.
+		private int screenWidth = 1024, screenHeight = 576;		// Screen size.
 		
 	/*
 	 * **********************************************

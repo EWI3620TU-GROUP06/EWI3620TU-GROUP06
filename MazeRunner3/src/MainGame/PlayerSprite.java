@@ -4,6 +4,9 @@ import java.io.InputStream;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.glu.GLU;
+
+import Drawing.VisibleObject;
+
 import com.sun.opengl.impl.GLUquadricImpl;
 import com.sun.opengl.util.texture.Texture;
 import com.sun.opengl.util.texture.TextureData;

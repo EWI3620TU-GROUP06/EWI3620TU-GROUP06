@@ -1,10 +1,8 @@
 package MainGame;
 
 import java.io.InputStream;
-import java.awt.Font;
 
 import com.sun.opengl.util.Animator;
-import com.sun.opengl.util.j2d.TextRenderer;
 
 import javax.media.opengl.*;
 
@@ -12,7 +10,16 @@ import com.sun.opengl.util.texture.Texture;
 import com.sun.opengl.util.texture.TextureData;
 import com.sun.opengl.util.texture.TextureIO;
 
+import Drawing.ClickBox;
+import Drawing.ClickBoxManager;
+import Drawing.MenuDrawing;
 import GameStates.GameState;
+import Listening.Command;
+import Listening.EditorCommand;
+import Listening.LoadCommand;
+import Listening.PlayCommand;
+import Listening.QuitCommand;
+import Listening.UserInput;
 import Main.Game;
 
 public class MainMenu implements GLEventListener {
@@ -21,11 +28,11 @@ public class MainMenu implements GLEventListener {
 	private Game game;
 	private GLCanvas canvas;
 	private Texture backgroundTexture;
-	private TextRenderer renderer;
-	private TextRenderer Trenderer;
 	private int titleScale = 10;
 	private int textScale = 18;
 	private GameState state;
+	private ClickBoxManager clkbxman;
+	private UserInput input;
 	
 	public MainMenu(Game game, GameState state) {
 		this.game = game;
@@ -33,6 +40,7 @@ public class MainMenu implements GLEventListener {
 		this.screenWidth = game.getScreenWidth();
 		this.screenHeight = game.getScreenHeight();
 		initJOGL();
+		initMenuText();
 	}
 	
 	private void initJOGL()	{
@@ -52,13 +60,76 @@ public class MainMenu implements GLEventListener {
 		 */
 		canvas.addGLEventListener( this );
 		canvas.requestFocus();
-		new UserInput(canvas, state.getGSM());
+		input = new UserInput(canvas, state.getGSM());
 		
 		/* We need to create an internal thread that instructs OpenGL to continuously repaint itself.
 		 * The Animator class handles that for JOGL.
 		 */
 		Animator anim = new Animator( canvas );
 		anim.start();
+	}
+	
+	private void initMenuText(){
+		//Add the clickboxes for the pauze menu
+		this.clkbxman = new ClickBoxManager(); //We want 5 click (text) boxes, but the first (title) should not be clickable
+		this.clkbxman.setControl(input);
+		
+		//Pause title
+		clkbxman.AddBox(new ClickBox((int)(screenWidth*0.315),(int)(screenHeight*0.8), //Location of lower-left corner
+				(int)(screenWidth*0.315),(int)(screenWidth*0.685), // Left and right bound
+				(int)(screenHeight*0.9),(int)(screenHeight*0.8), // upper and lower bound
+				screenWidth, screenHeight, //screen size
+				titleScale, "Impact", 1, "MadBalls", //TextScale, Font, type (bold/italic etc) and text to draw
+				0.9f, 0.4f, 0.4f, 1f, //color in r,g,b,alpha
+				false)); // isClickable
+		
+		//Play button
+		clkbxman.AddBox(new ClickBox((int)(screenWidth*0.445),(int)(screenHeight*0.625), //Location of lower-left corner
+				(int)(screenWidth*0.445),(int)(screenWidth*0.555), // Left and right bound
+				(int)(screenHeight*0.705),(int)(screenHeight*0.625), // upper and lower bound
+				screenWidth, screenHeight, //screen size
+				textScale, "Arial", 0, "Play", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
+				1f, 1f, 1f, 1f, //color in r,g,b, alpha
+				true)); // isClickable
+		
+		Command play = new PlayCommand(this.state.getGSM());
+		clkbxman.setCommand(1,play);
+		
+		//Load button
+		clkbxman.AddBox(new ClickBox((int)(screenWidth*0.432),(int)(screenHeight*0.480), //Location of lower-left corner
+				(int)(screenWidth*0.432),(int)(screenWidth*0.568), // Left and right bound
+				(int)(screenHeight*0.560),(int)(screenHeight*0.480), // upper and lower bound
+				screenWidth, screenHeight, //screen size
+				textScale, "Arial", 0, "Load", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
+				1f, 1f, 1f, 1f, //color in r,g,b,alpha
+				true)); // isClickable
+		
+		Command load = new LoadCommand(this.state.getGSM());
+		clkbxman.setCommand(2, load);
+		
+		//Editor button
+		clkbxman.AddBox(new ClickBox((int)(screenWidth*0.420),(int)(screenHeight*0.330), //Location of lower-left corner
+				(int)(screenWidth*0.420),(int)(screenWidth*0.580), // Left and right bound
+				(int)(screenHeight*0.410),(int)(screenHeight*0.330), // upper and lower bound
+				screenWidth, screenHeight, //screen size
+				textScale, "Arial", 0, "Editor", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
+				1f, 1f, 1f, 1f, // color in r,g,b,alpha
+				true)); // isClickable
+		
+		Command edit = new EditorCommand(this.state.getGSM());
+		clkbxman.setCommand(3, edit);
+		
+		//Quit button
+		clkbxman.AddBox(new ClickBox((int)(screenWidth*0.442),(int)(screenHeight*0.180), //Location of lower-left corner
+				(int)(screenWidth*0.442),(int)(screenWidth*0.558), // Left and right bound
+				(int)(screenHeight*0.260),(int)(screenHeight*0.180), // upper and lower bound
+				screenWidth, screenHeight, //screen size
+				textScale, "Arial", 0, "Quit", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
+				1f, 1f, 1f, 1f, // color in r,g,b,alpha
+				true)); // isClickable
+		
+		Command quit = new QuitCommand();
+		clkbxman.setCommand(4,quit);
 	}
 	
 	@Override
@@ -107,97 +178,14 @@ public class MainMenu implements GLEventListener {
         gl.glMaterialfv(GL.GL_FRONT, GL.GL_AMBIENT, rgba, 0);
 		backgroundTexture.enable(); // Enable the background texture
 		backgroundTexture.bind(); // Bind the background texture to the next object
-		drawPlane(gl); // draw the background plane
+		MenuDrawing.drawPlane(gl); // draw the background plane
 		backgroundTexture.disable(); // Disable the background texture again, such that the next object is textureless
 		
-		drawMenu(gl); // draw the menu buttons with text and stuff.
+		MenuDrawing.drawMenu(gl); // draw the menu background
+		this.clkbxman.drawAllText(); // draw the text in the menu
+		this.clkbxman.update();
 		
 		gl.glFlush();
-	}
-	
-	private void drawPlane(GL gl){
-		//Draws a background-plane with a texture
-		gl.glBegin(GL.GL_QUADS);
-		gl.glVertex2f(0, 0);
-		gl.glTexCoord2f(1, 1);
-		gl.glVertex2f(screenWidth,0);
-		gl.glTexCoord2f(1, 0);
-		gl.glVertex2f(screenWidth,screenHeight);
-		gl.glTexCoord2f(0, 0);
-		gl.glVertex2f(0,screenHeight);
-		gl.glTexCoord2f(0, 1);
-		gl.glEnd();
-	}
-
-	private void drawMenu(GL gl){
-		//Teken nu het menu over de achtergrond heen
-		
-		//Draw a nice transparent surface over the background
-		drawTrans(gl,0,0,screenWidth,screenHeight,0.1f,0.1f,0.1f,0.4f);
-		
-		//Draw the epic title
-		drawTitle("MadBalls", 0.9f, 0.4f, 0.4f, 1f, (int)(screenWidth*0.315),(int)(screenHeight*0.8));
-			
-		// De vier menu texts "New game (of play ofzo" "Load level" "options" "quit"
-		drawText("Play", 1f, 1f, 1f, 1f,(int)(screenWidth*0.445),
-				(int)(screenHeight*0.625));
-		
-		drawText("Load", 1f, 1f, 1f, 1f,(int)(screenWidth*0.432),
-				(int)(screenHeight*0.48));
-		
-		drawText("Editor", 1f, 1f, 1f, 1f,(int)(screenWidth*0.42),
-				(int)(screenHeight*0.33));
-	
-		drawText("Quit", 1f, 1f, 1f, 1f,(int)(screenWidth*0.442),
-				(int)(screenHeight*0.18));
-	}
-	
-	private void drawTrans(GL gl, float x, float y, float width, float height
-			,float r, float g, float b, float a){
-		//De onderstaande functies
-		//zorgen voor de doorzichtigheid van de menu
-		//elementen, tesamen met kleur etc.
-		
-		gl.glColor4f(r,g,b,a);
-		gl.glEnable(GL.GL_BLEND);
-		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
-		gl.glColorMaterial(GL.GL_FRONT, GL.GL_AMBIENT_AND_DIFFUSE);
-		gl.glEnable(GL.GL_COLOR_MATERIAL);
-		
-		//draw the actual surface
-		gl.glBegin(GL.GL_QUADS);
-		gl.glVertex2f(x,y);
-		gl.glVertex2f(x + width, y);
-		gl.glVertex2f(x + width, y + height);
-		gl.glVertex2f(x, y + height);
-		gl.glEnd();
-		
-		// Disable alle crap voordat 
-		//de volgende flush plaats vindt en 
-		//de settings doorgegeven worden aan
-		//de achtergrond
-		gl.glDisable(GL.GL_COLOR_MATERIAL);
-		gl.glDisable(GL.GL_BLEND);
-	}
-	
-	private void drawText(String text, float r, float g, float b, float a, int x, int y){
-		//Renderer alvast in init gemaakt, anders wordt ie na elke glFlush() opnieuw gemaakt!
-		
-		renderer.beginRendering(screenWidth, screenHeight);
-		renderer.setColor(r, g, b, a);
-		renderer.draw(text, x, y);
-		renderer.flush();
-		renderer.endRendering();
-	}
-	
-	private void drawTitle(String text, float r, float g, float b, float a, int x, int y){
-		//Renderer alvast in init gemaakt, anders wordt ie na elke glFlush() opnieuw gemaakt!
-		
-		Trenderer.beginRendering(screenWidth, screenHeight);
-		Trenderer.setColor(r, g, b, a);
-		Trenderer.draw(text, x, y);
-		Trenderer.flush();
-		Trenderer.endRendering();
 	}
 	
 	@Override
@@ -226,12 +214,9 @@ public class MainMenu implements GLEventListener {
 		gl.glLoadIdentity();
 		gl.glDisable(GL.GL_DEPTH_TEST);
 		
-		//To render title
-		Trenderer = new TextRenderer(new Font("Impact", Font.PLAIN, (screenWidth)/titleScale)); 
-		
-		//To render texts
-		//Set the font type shizzle here
-		renderer = new TextRenderer(new Font("Arial", Font.BOLD, (screenWidth)/textScale)); 
+		//To init the drawing elements of overlay menu's/text etc.
+		MenuDrawing.init(screenWidth, screenHeight);
+		this.clkbxman.reshape(screenWidth, screenHeight);
 	}
 	
 	public GLCanvas getCanvas(){

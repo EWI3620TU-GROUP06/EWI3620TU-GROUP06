@@ -4,19 +4,20 @@ import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
 
 import com.sun.opengl.util.Animator;
-import com.sun.opengl.util.j2d.TextRenderer;
 
-
-import Drawing.MenuDrawing;
-import Drawing.VisibleObject;
+import Drawing.*;
 import GameObjects.Camera;
 import GameObjects.Player;
 import GameObjects.PlayerSprite;
 
 import GameStates.GameState;
+import Listening.Command;
+import Listening.MainMenuCommand;
+import Listening.QuitCommand;
+import Listening.ResumeCommand;
+import Listening.UserInput;
 import Main.Game;
 
-import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -55,10 +56,9 @@ public class MazeRunner implements GLEventListener {
 	private Game game;
 	private Animator anim;
 	private boolean pause;
-	private TextRenderer renderer;
-	private TextRenderer Trenderer;
 	private int titleScale = 10;
 	private int textScale = 18;
+	private ClickBoxManager clkbxman;
 	
 /*
  * **********************************************
@@ -81,6 +81,7 @@ public class MazeRunner implements GLEventListener {
 		this.screenHeight = game.getScreenHeight();
 		initJOGL();							// Initialize JOGL.
 		initObjects();						// Initialize all the objects!
+		initMenuText();
 	}
 	
 	private void initJOGL()	{
@@ -149,6 +150,58 @@ public class MazeRunner implements GLEventListener {
 		
 		input = new UserInput(canvas, state.getGSM());
 		player.setControl(input);
+		
+	}
+	
+	private void initMenuText(){
+		//Add the clickboxes for the pauze menu
+				this.clkbxman = new ClickBoxManager(); //We want 4 click (text) boxes, but the first (title) should not be clickable
+				this.clkbxman.setControl(input);
+				
+				//Pause title
+				clkbxman.AddBox(new ClickBox((int)(screenWidth*0.380),(int)(screenHeight*0.8), //Location of lower-left corner
+						(int)(screenWidth*0.380),(int)(screenWidth*0.620), // Left and right bound
+						(int)(screenHeight*0.9),(int)(screenHeight*0.8), // upper and lower bound
+						screenWidth, screenHeight, //screen size
+						titleScale, "Impact", 1, "Pause", //TextScale, Font, type (bold/italic etc) and text to draw
+						0.9f, 0.4f, 0.4f, 1f, //color in r,g,b,alpha
+						false)); // isClickable
+				
+				//Resume button
+				clkbxman.AddBox(new ClickBox((int)(screenWidth*0.395),(int)(screenHeight*0.625), //Location of lower-left corner
+						(int)(screenWidth*0.395),(int)(screenWidth*0.605), // Left and right bound
+						(int)(screenHeight*0.705),(int)(screenHeight*0.625), // upper and lower bound
+						screenWidth, screenHeight, //screen size
+						textScale, "Arial", 0, "Resume", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
+						1f, 1f, 1f, 1f, //color in r,g,b, alpha
+						true)); // isClickable
+				
+				Command resume = new ResumeCommand(this.state.getGSM());
+				clkbxman.setCommand(1, resume);
+				
+				//MainMenu button
+				clkbxman.AddBox(new ClickBox((int)(screenWidth*0.360),(int)(screenHeight*0.480), //Location of lower-left corner
+						(int)(screenWidth*0.360),(int)(screenWidth*0.640), // Left and right bound
+						(int)(screenHeight*0.560),(int)(screenHeight*0.480), // upper and lower bound
+						screenWidth, screenHeight, //screen size
+						textScale, "Arial", 0, "Main Menu", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
+						1f, 1f, 1f, 1f, //color in r,g,b,alpha
+						true)); // isClickable
+				
+				Command main = new MainMenuCommand(this.state.getGSM());
+				clkbxman.setCommand(2, main);
+				
+				//Quit button
+				clkbxman.AddBox(new ClickBox((int)(screenWidth*0.442),(int)(screenHeight*0.330), //Location of lower-left corner
+						(int)(screenWidth*0.442),(int)(screenWidth*0.558), // Left and right bound
+						(int)(screenHeight*0.410),(int)(screenHeight*0.330), // upper and lower bound
+						screenWidth, screenHeight, //screen size
+						textScale, "Arial", 0, "Quit", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
+						1f, 1f, 1f, 1f, // color in r,g,b,alpha
+						true)); // isClickable
+				
+				Command quit = new QuitCommand();
+				clkbxman.setCommand(3,quit);
 	}
 	
 	public GLCanvas getCanvas(){
@@ -251,19 +304,9 @@ public class MazeRunner implements GLEventListener {
     		gl.glMatrixMode(GL.GL_MODELVIEW);
     		gl.glLoadIdentity();
     		gl.glDisable(GL.GL_DEPTH_TEST);
-    		
-			drawPauseMenu(gl, 0, 0, screenWidth, screenHeight, 0.2f, 0.2f, 0.2f, 0.4f);
-			
-			drawTitle("Pause", 0.9f, 0.4f, 0.4f, 1f, (int)(screenWidth*0.380),(int)(screenHeight*0.8));
-			
-			drawText("Resume", 1f, 1f, 1f, 1f,(int)(screenWidth*0.395),
-					(int)(screenHeight*0.625));
-			
-			drawText("Main Menu", 1f, 1f, 1f, 1f,(int)(screenWidth*0.360),
-					(int)(screenHeight*0.48));
-		
-			drawText("Quit", 1f, 1f, 1f, 1f,(int)(screenWidth*0.442),
-					(int)(screenHeight*0.33));
+
+			MenuDrawing.drawPauseMenu(gl, 0, 0, screenWidth, screenHeight, 0.2f, 0.2f, 0.2f, 0.4f);
+			this.clkbxman.drawAllText();
 			
 			gl.glViewport( 0, 0, screenWidth, screenHeight );
 			gl.glMatrixMode( GL.GL_PROJECTION );
@@ -272,6 +315,7 @@ public class MazeRunner implements GLEventListener {
 			gl.glMatrixMode( GL.GL_MODELVIEW );
 			gl.glEnable(GL.GL_DEPTH_TEST);
 			gl.glEnable(GL.GL_CULL_FACE);
+			this.clkbxman.update();
         }
         
         gl.glLoadIdentity();
@@ -315,12 +359,9 @@ public class MazeRunner implements GLEventListener {
 		glu.gluPerspective( 60, (float)screenWidth/(float)screenHeight, .1, 200 );
 		gl.glMatrixMode( GL.GL_MODELVIEW );
 		
-		//To render title
-		Trenderer = new TextRenderer(new Font("Impact", Font.PLAIN, (screenWidth)/titleScale)); 
-		
-		//To render texts
-		//Set the font type shizzle here
-		renderer = new TextRenderer(new Font("Arial", Font.BOLD, (screenWidth)/textScale)); 
+		//Init the manudrawing elements to render title etc.
+		MenuDrawing.init(screenWidth, screenHeight);
+		this.clkbxman.reshape(screenWidth, screenHeight);
 	}
 
 /*
@@ -358,57 +399,6 @@ public class MazeRunner implements GLEventListener {
 		camera.setVerAngle( player.getVerAngle() );
 		camera.calculateVRP();
 		
-	}
-	
-	//This method is taken from MainMenu: eventually make a nice class which both mainmenu and mazerunner and mazeEditor use
-	private void drawPauseMenu(GL gl, float x, float y, float width, float height
-			,float r, float g, float b, float a){
-		//De onderstaande functies
-		//zorgen voor de doorzichtigheid van de menu
-		//elementen, tesamen met kleur etc.
-		
-		gl.glColor4f(r,g,b,a);
-		gl.glEnable(GL.GL_BLEND);
-		gl.glBlendFunc(GL.GL_SRC_ALPHA, GL.GL_ONE_MINUS_SRC_ALPHA);
-		gl.glColorMaterial(GL.GL_FRONT, GL.GL_AMBIENT_AND_DIFFUSE);
-		gl.glEnable(GL.GL_COLOR_MATERIAL);
-		
-		//draw the actual surface
-		
-		gl.glBegin(GL.GL_QUADS);
-		gl.glVertex2f(x,y);
-		gl.glVertex2f(x + width, y);
-		gl.glVertex2f(x + width, y + height);
-		gl.glVertex2f(x, y + height);
-		gl.glEnd();
-		
-		// Disable alle crap voordat 
-		//de volgende flush plaats vindt en 
-		//de settings doorgegeven worden aan
-		//de achtergrond
-		gl.glDisable(GL.GL_COLOR_MATERIAL);
-		gl.glDisable(GL.GL_BLEND);
-	}
-	
-	//This unit is also taken from MainMenu
-	private void drawText(String text, float r, float g, float b, float a, int x, int y){
-		//Renderer alvast in init gemaakt, anders wordt ie na elke glFlush() opnieuw gemaakt!
-		
-		renderer.beginRendering(screenWidth, screenHeight);
-		renderer.setColor(r, g, b, a);
-		renderer.draw(text, x, y);
-		renderer.flush();
-		renderer.endRendering();
-	}
-	
-	private void drawTitle(String text, float r, float g, float b, float a, int x, int y){
-		//Renderer alvast in init gemaakt, anders wordt ie na elke glFlush() opnieuw gemaakt!
-		
-		Trenderer.beginRendering(screenWidth, screenHeight);
-		Trenderer.setColor(r, g, b, a);
-		Trenderer.draw(text, x, y);
-		Trenderer.flush();
-		Trenderer.endRendering();
 	}
 	
 	public void Pause(){
