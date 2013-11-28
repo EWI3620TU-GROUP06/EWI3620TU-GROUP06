@@ -75,14 +75,14 @@ public class MainMenu implements GLEventListener {
 		this.clkbxman.setControl(input);
 		
 		//Pause title
-		clkbxman.AddBox(new ClickBox((float)(screenWidth*0.315),(float)(screenHeight*0.8), //Location of lower-left corner
+		clkbxman.AddBox(new ClickBox((int)(screenWidth*0.315),(int)(screenHeight*0.8), //Location of lower-left corner
 				screenWidth, screenHeight, //screen size
 				titleScale, "Impact", 1, "MadBalls", //TextScale, Font, type (bold/italic etc) and text to draw
 				0.9f, 0.4f, 0.4f, 1f, //color in r,g,b,alpha
 				false)); // isClickable
 		
 		//Play button
-		clkbxman.AddBox(new ClickBox((float)(screenWidth*0.445),(float)(screenHeight*0.625), //Location of lower-left corner
+		clkbxman.AddBox(new ClickBox((int)(screenWidth*0.445),(int)(screenHeight*0.630), //Location of lower-left corner
 				screenWidth, screenHeight, //screen size
 				textScale, "Arial", 0, "Play", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
 				1f, 1f, 1f, 1f, //color in r,g,b, alpha
@@ -92,7 +92,7 @@ public class MainMenu implements GLEventListener {
 		clkbxman.setCommand(1,play);
 		
 		//Load button
-		clkbxman.AddBox(new ClickBox((float)(screenWidth*0.432),(float)(screenHeight*0.480), //Location of lower-left corner
+		clkbxman.AddBox(new ClickBox((int)(screenWidth*0.432),(int)(screenHeight*0.480), //Location of lower-left corner
 				screenWidth, screenHeight, //screen size
 				textScale, "Arial", 0, "Load", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
 				1f, 1f, 1f, 1f, //color in r,g,b,alpha
@@ -102,7 +102,7 @@ public class MainMenu implements GLEventListener {
 		clkbxman.setCommand(2, load);
 		
 		//Editor button
-		clkbxman.AddBox(new ClickBox((float)(screenWidth*0.420),(float)(screenHeight*0.330), //Location of lower-left corner
+		clkbxman.AddBox(new ClickBox((int)(screenWidth*0.420),(int)(screenHeight*0.330), //Location of lower-left corner
 				screenWidth, screenHeight, //screen size
 				textScale, "Arial", 0, "Editor", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
 				1f, 1f, 1f, 1f, // color in r,g,b,alpha
@@ -112,7 +112,7 @@ public class MainMenu implements GLEventListener {
 		clkbxman.setCommand(3, edit);
 		
 		//Quit button
-		clkbxman.AddBox(new ClickBox((float)(screenWidth*0.442),(float)(screenHeight*0.180), //Location of lower-left corner
+		clkbxman.AddBox(new ClickBox((int)(screenWidth*0.442),(int)(screenHeight*0.180), //Location of lower-left corner
 				screenWidth, screenHeight, //screen size
 				textScale, "Arial", 0, "Quit", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
 				1f, 1f, 1f, 1f, // color in r,g,b,alpha

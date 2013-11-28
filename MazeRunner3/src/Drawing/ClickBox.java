@@ -3,16 +3,14 @@ package Drawing;
 import java.awt.Font;
 import java.awt.geom.Rectangle2D;
 
-import javax.vecmath.Vector2f;
-
 import Listening.Command;
 
 import com.sun.opengl.util.j2d.TextRenderer;
 
 public class ClickBox {
 	
-	private Vector2f location;
-	private float[] Bounds;
+	private int[] location;
+	private int[] Bounds;
 	private int screenWidth;
 	private int screenHeight;
 	private TextRenderer renderer;
@@ -24,7 +22,7 @@ public class ClickBox {
 	private float[] color;
 	private Command command;
 
-	public ClickBox(float x, float y, int screenWidth, int screenHeight, 
+	public ClickBox(int x, int y, int screenWidth, int screenHeight, 
 			int textScale, String Font, int fontStyle, String Text, 
 			float red, float green, float blue, float alpha,
 			boolean clickable){
@@ -32,33 +30,33 @@ public class ClickBox {
 		this.textScale = textScale;
 		this.screenWidth = screenWidth;
 		this.screenHeight = screenHeight;
-		this.location = new Vector2f(x,y);
+		this.location = new int[]{x,y};
 		this.Font = Font;
 		renderer = new TextRenderer(new Font(Font, fontStyle, this.screenWidth/textScale));
 		this.Text = Text;
 		Rectangle2D temp = renderer.getBounds(Text);
 		temp = temp.getBounds2D();
-		this.Bounds = new float[]{location.x+(float)temp.getX(), 
-				location.x+(float)temp.getX()+(float)temp.getWidth(), 
-				location.y+(float)temp.getHeight(), 
-				location.y};
+		this.Bounds = new int[]{location[0]+(int)temp.getX(), 
+				location[0]+(int)temp.getX()+(int)temp.getWidth(), 
+				location[1]+(int)temp.getHeight(), 
+				location[1]};
 		this.clickable = clickable;
 	}
 	
-	public Vector2f getLocation(){
+	public int[] getLocation(){
 		return location;
 	}
 	
-	public float[] getBounds(){
+	public int[] getBounds(){
 		return Bounds;
 	}
 	
-	public void setLocation(float x, float y){
-		location = new Vector2f(x,y);
+	public void setLocation(int x, int y){
+		location = new int[]{x,y};
 	}
 	
-	public void setBounds(float l, float r, float up, float low){
-		this.Bounds = new float[]{l,r,up,low};
+	public void setBounds(int l, int r, int up, int low){
+		this.Bounds = new int[]{l,r,up,low};
 	}
 	
 	public void reshape(int screenWidth, int screenHeight){
@@ -66,23 +64,21 @@ public class ClickBox {
 		int oldHeight = this.screenHeight;
 		this.screenWidth = screenWidth;
 		this.screenHeight = screenHeight;
-		setLocation(this.getLocation().x*(float)(this.screenWidth)/(float)(oldWidth),
-				this.getLocation().y*(float)(this.screenHeight)/(float)(oldHeight));
+		setLocation((int)(this.getLocation()[0]*(float)(this.screenWidth)/(float)(oldWidth)),
+				(int)(this.getLocation()[1]*(float)(this.screenHeight)/(float)(oldHeight)));
 		renderer = new TextRenderer(new Font(Font, fontStyle, this.screenWidth/textScale));
 		Rectangle2D temp = renderer.getBounds(Text);
 		temp = temp.getBounds2D();
-		setBounds(location.x+(float)temp.getX(), 
-				location.x+(float)temp.getX()+(float)temp.getWidth(), 
-				location.y+(float)temp.getHeight(), 
-				location.y);
+		setBounds(this.getLocation()[0]+(int)temp.getX(), 
+				this.getLocation()[0]+(int)temp.getX()+(int)temp.getWidth(), 
+				this.getLocation()[1]+(int)temp.getHeight(), 
+				this.getLocation()[1]);
 	}
 	
 	public void drawText(){
 		renderer.beginRendering(this.screenWidth, this.screenHeight);
 		renderer.setColor(color[0], color[1], color[2], color[3]);
-		float[] coords = new float[2];
-		location.get(coords);
-		renderer.draw(Text,(int) coords[0],(int) coords[1]);
+		renderer.draw(Text,location[0],location[1]);
 		renderer.flush();
 		renderer.endRendering();
 	}
@@ -109,8 +105,8 @@ public class ClickBox {
 	
 	public boolean isInBounds(int x, int y){
 		
-		if((float)( x ) > Bounds[0] && (float)( x ) < Bounds[1]
-				&& (float)(screenHeight - y) < Bounds[2] && (float)(screenHeight - y) > Bounds[3] ){
+		if(x > Bounds[0] && x < Bounds[1]
+				&& (screenHeight - y) < Bounds[2] && (screenHeight - y) > Bounds[3] ){
 			return true;
 		}
 		else{

@@ -43,7 +43,7 @@ public class Game extends Frame{
 		
 			// The two lines here set the screen to full screen
 			this.setUndecorated(true);
-			this.setExtendedState(MAXIMIZED_BOTH);
+			//this.setExtendedState(MAXIMIZED_BOTH);
 			
 			// Set the frame to visible. This automatically calls upon OpenGL to prevent a blank screen.
 			setVisible(true);
