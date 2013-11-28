@@ -129,7 +129,7 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	@Override
 	public void keyPressed(KeyEvent event)
 	{
-		if (this.gsm.getCurState() == 1){
+		if (this.gsm.getCurState() != 0){
 			if (event.getKeyChar() == 'w'){
 				this.forward = true;
 			}
