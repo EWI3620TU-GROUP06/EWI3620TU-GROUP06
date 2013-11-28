@@ -29,6 +29,7 @@ public class gStateMan {
 		game.remove(gameStates.get(currentState).getCanvas());
 		this.currentState = s;
 		update();
+		gameStates.get(currentState).unPause();
 		gameStates.get(currentState).playMusic();
 		game.validate();
 	}
