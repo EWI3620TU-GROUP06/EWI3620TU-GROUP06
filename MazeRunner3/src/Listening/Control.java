@@ -23,6 +23,8 @@ public abstract class Control
 	protected boolean back = false;
 	protected boolean left = false;
 	protected boolean right = false;
+	protected boolean jump = false;
+	protected boolean tempjump = false;
 
 	protected int dX = 0;
 	protected int dY = 0;
@@ -66,6 +68,15 @@ public abstract class Control
 	public boolean getRight()
 	{
 		return right;
+	}
+	
+	/** 
+	 * Returns true if jumping is true
+	 */
+	public boolean getJump(){
+		tempjump = jump;
+		jump = false;
+		return tempjump;
 	}
 
 	/**

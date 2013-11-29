@@ -175,6 +175,14 @@ public class Player extends GameObject {
 			{
 				physics.applyForce(-power*(float)sin , 0, -power*(float)cos);
 			}
+			if (control.getJump())
+			{	
+				System.out.println(locationY);
+				if(locationY < 1.05){
+				System.out.println("jump");
+				physics.applyForce(0, power*30, 0);
+				}
+			}
 		}
 	}
 }

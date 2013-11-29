@@ -34,6 +34,8 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	private gStateMan gsm;
 	private Robot robot;
 	
+
+	
 	private GLCanvas canvas;
 	private int boundX;
 	private int boundY;
@@ -87,6 +89,7 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 			robot.mouseMove(midScreenWidth + gamePosX + boundX, midScreenHeight + gamePosY + boundY);
 			xdragPos = midScreenWidth;
 			ydragPos = midScreenHeight;
+			
 			
 		}
 		if (this.gsm.getCurState() == 2){
@@ -147,6 +150,9 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 			else if (event.getKeyChar() == 'd'){
 				this.right = true;
 			}
+			else if (event.getKeyCode() == 32){
+				this.jump = true;
+			}
 			if (event.getKeyCode() == 27){
 				if (this.gsm.getState(this.gsm.getCurState()).getPaused() == true){
 					this.gsm.getState(this.gsm.getCurState()).unPause();
@@ -172,6 +178,9 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 		}
 		else if (event.getKeyChar() == 'd'){
 			this.right = false;
+		}
+		else if (event.getKeyCode() == 32){
+			this.jump = false;
 		}
 	}
 
