@@ -1,7 +1,6 @@
 package MainGame;
 
-import MazeObjects.Box;
-import MazeObjects.Floor;
+import Audio.Audio;
 import MazeObjects.MazeObject;
 
 import com.bulletphysics.collision.broadphase.BroadphaseInterface;
@@ -14,9 +13,7 @@ import com.bulletphysics.collision.dispatch.DefaultCollisionConfiguration;
 import com.bulletphysics.collision.shapes.CollisionShape;
 import com.bulletphysics.collision.shapes.ConvexHullShape;
 import com.bulletphysics.collision.shapes.SphereShape;
-import com.bulletphysics.collision.shapes.StaticPlaneShape;
 import com.bulletphysics.dynamics.DiscreteDynamicsWorld;
-import com.bulletphysics.dynamics.DynamicsWorld;
 import com.bulletphysics.dynamics.RigidBody;
 import com.bulletphysics.dynamics.RigidBodyConstructionInfo;
 import com.bulletphysics.dynamics.constraintsolver.ConstraintSolver;
@@ -35,7 +32,11 @@ public class Physics {
 	private float angularDamping = 10f;
 	private float mass = 25;
 	
+
+	boolean wallConnect;
+	
 	ObjectArrayList<CollisionObject> walls = new ObjectArrayList<CollisionObject>();
+	ObjectArrayList<CollisionObject> floors = new ObjectArrayList<CollisionObject>();
 	 /**
      * The container for the JBullet physics world. This represents the collision data and motion data, as well as the
      * algorithms for collision detection and reaction.
@@ -92,6 +93,8 @@ public class Physics {
         			RigidBody faceRigidBody = new RigidBody(faceConstructionInfo);
         			if(mazeObject.isNormalHorizontal(k))
         				walls.add(faceRigidBody);
+        			else
+        				floors.add(faceRigidBody);
         	        dynamicsWorld.addRigidBody(faceRigidBody);
         		}
         		
@@ -134,8 +137,12 @@ public class Physics {
         	if(body2 == playerBall && walls.contains(body1) || body1 == playerBall && walls.contains(body2))
         		count++;
         }
-        
-        //System.out.println(count);
+        if(!wallConnect && count > 0)
+        	Audio.playSound("tick");
+        if(count > 0)
+        	wallConnect = true;
+        else
+        	wallConnect = false;
 	}
 	
 	public void applyForce(float x, float y, float z)

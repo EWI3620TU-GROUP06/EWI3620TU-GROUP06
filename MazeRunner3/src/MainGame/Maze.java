@@ -84,6 +84,22 @@ public class Maze implements VisibleObject {
 		}
 		selected = new boolean[MAZE_SIZE][MAZE_SIZE];
 	}
+	
+	public void setTextures()
+	{
+		for(int i = 0; i < maze[0].length; i++){
+			for(int j = 0; j < maze.length; j++)
+			{
+				if(maze[i][j] instanceof Floor){
+					maze[i][j].addTexture(floorTexture);
+				}
+				if(maze[i][j] instanceof Box || maze[i][j] instanceof Ramp){
+					maze[i][j].addTexture(boxTexture);
+				}
+			}
+		}
+	}
+	
 	/**
 	 * Initialize the textures used by the maze.
 	 * @param gl	instance of opengl.
@@ -99,17 +115,7 @@ public class Maze implements VisibleObject {
 			data = TextureIO.newTextureData(stream, false, "jpg");
 			this.floorTexture = TextureIO.newTexture(data);
 			stream.close();
-			for(int i = 0; i < maze[0].length; i++){
-				for(int j = 0; j < maze.length; j++)
-				{
-					if(maze[i][j] instanceof Floor){
-						maze[i][j].addTexture(floorTexture);
-					}
-					if(maze[i][j] instanceof Box || maze[i][j] instanceof Ramp){
-						maze[i][j].addTexture(boxTexture);
-					}
-				}
-			}
+			setTextures();
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -180,6 +186,7 @@ public class Maze implements VisibleObject {
 				
 			maze = newMaze;
 			selected = newSelected;
+			setTextures();
 		}
 	}
 	
@@ -235,6 +242,7 @@ public class Maze implements VisibleObject {
 					default : maze[i][j] = maze[i][j] = new Floor(SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE);
 					}
 				}
+		setTextures();
 	}
 
 	/**

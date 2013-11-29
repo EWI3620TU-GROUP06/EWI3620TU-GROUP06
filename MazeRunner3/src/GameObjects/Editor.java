@@ -220,7 +220,7 @@ public class Editor extends GameObject{
 				if(maze_temp != null)
 					maze = maze_temp; break;
 
-				case(-1): maze.addBlock(drawMode, angle);break;
+				case(-1): maze.addBlock(drawMode, angle); break;
 				case(-2): maze.rotateSelected(); break;
 				default: break;
 				}
