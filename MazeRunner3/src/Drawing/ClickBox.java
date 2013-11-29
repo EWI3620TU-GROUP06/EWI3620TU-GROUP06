@@ -30,12 +30,11 @@ public class ClickBox {
 		this.textScale = textScale;
 		this.screenWidth = screenWidth;
 		this.screenHeight = screenHeight;
-		this.location = new int[]{x,y};
 		this.Font = Font;
 		renderer = new TextRenderer(new Font(Font, fontStyle, this.screenWidth/textScale));
 		this.Text = Text;
 		Rectangle2D temp = renderer.getBounds(Text);
-		temp = temp.getBounds2D();
+		this.location = new int[]{x - (int)(temp.getWidth()/2),y};
 		this.Bounds = new int[]{location[0]+(int)temp.getX(), 
 				location[0]+(int)temp.getX()+(int)temp.getWidth(), 
 				location[1]+(int)temp.getHeight(), 
