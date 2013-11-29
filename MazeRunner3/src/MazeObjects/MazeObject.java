@@ -5,6 +5,7 @@ import javax.media.opengl.*;
 
 import java.util.ArrayList;
 
+import javax.vecmath.Tuple3f;
 import javax.vecmath.Vector3f;
 
 import com.sun.opengl.util.texture.Texture;
@@ -205,6 +206,14 @@ public abstract class MazeObject {
 	public float getRestitution()
 	{
 		return restitution;
+	}
+	
+	public boolean isNormalHorizontal(int index)
+	{
+		Vector3f normal = normals.get(index);
+		float[] norm = new float[3];
+		normal.get(norm);
+		return norm[1] == 0;
 	}
 	
 /*	public void removeDoubleFaces(MazeObject that)

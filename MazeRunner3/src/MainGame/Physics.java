@@ -32,10 +32,10 @@ import javax.vecmath.Vector3f;
 
 public class Physics {
 	
-	private float angularDamping = 5f;
-	private float mass = 10;
+	private float angularDamping = 10f;
+	private float mass = 25;
 	
-	ObjectArrayList<CollisionObject> notBox = new ObjectArrayList<CollisionObject>();
+	ObjectArrayList<CollisionObject> walls = new ObjectArrayList<CollisionObject>();
 	 /**
      * The container for the JBullet physics world. This represents the collision data and motion data, as well as the
      * algorithms for collision detection and reaction.
@@ -90,8 +90,8 @@ public class Physics {
         			
         			faceConstructionInfo.restitution = mazeObject.getRestitution();
         			RigidBody faceRigidBody = new RigidBody(faceConstructionInfo);
-        			if(!(mazeObject instanceof Box))
-        				notBox.add(faceRigidBody);
+        			if(mazeObject.isNormalHorizontal(k))
+        				walls.add(faceRigidBody);
         	        dynamicsWorld.addRigidBody(faceRigidBody);
         		}
         		
@@ -131,12 +131,11 @@ public class Physics {
         {
         	Object body1 = dispatcher.getManifoldByIndexInternal(i).getBody0();
         	Object body2 = dispatcher.getManifoldByIndexInternal(i).getBody1();
-        	if(body2 == playerBall && !notBox.contains(body1) || body1 == playerBall && !notBox.contains(body2))
+        	if(body2 == playerBall && walls.contains(body1) || body1 == playerBall && walls.contains(body2))
         		count++;
         }
         
-        
-        System.out.println(count);
+        //System.out.println(count);
 	}
 	
 	public void applyForce(float x, float y, float z)

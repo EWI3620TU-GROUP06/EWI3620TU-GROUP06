@@ -33,6 +33,10 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	private int ydragPos;
 	private gStateMan gsm;
 	private Robot robot;
+	
+	private GLCanvas canvas;
+	private int boundX;
+	private int boundY;
 
 	/**
 	 * UserInput constructor.
@@ -48,6 +52,7 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 		canvas.addMouseMotionListener(this);
 		canvas.addKeyListener(this);
 		canvas.addMouseWheelListener(this);
+		this.canvas = canvas;
 		try{
 			robot = new Robot();
 			
@@ -67,7 +72,9 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	@Override
 	public void update()
 	{
-
+		boundX = canvas.getBounds().x;
+		boundY = canvas.getBounds().y;
+		
 		// TODO: Set dX and dY to values corresponding to mouse movement
 		if (this.gsm.getCurState() == 1 && !this.gsm.getState(this.gsm.getCurState()).getPaused()){
 			int gamePosX = (int) gsm.getGame().getLocationOnScreen().getX();
@@ -77,7 +84,7 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 			this.dX = (xdragPos - midScreenWidth);
 			this.dY = (ydragPos - midScreenHeight);
 			
-			robot.mouseMove(midScreenWidth + gamePosX, midScreenHeight + gamePosY);
+			robot.mouseMove(midScreenWidth + gamePosX + boundX, midScreenHeight + gamePosY + boundY);
 			xdragPos = midScreenWidth;
 			ydragPos = midScreenHeight;
 			

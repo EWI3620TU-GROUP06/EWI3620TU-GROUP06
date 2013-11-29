@@ -146,7 +146,7 @@ public class MazeRunner implements GLEventListener {
 		visibleObjects.add( maze );
 
 		// Initialize the player.
-		player = new Player(maze.getStart()[0], maze.SQUARE_SIZE/2.0f, maze.getStart()[1], maze.getStart()[2],0, maze);
+		player = new Player(maze.getStart()[0], maze.SQUARE_SIZE/2.0f, maze.getStart()[1], maze.getStart()[2], -45, maze);
 		
 		playerSprite = new PlayerSprite((float)maze.SQUARE_SIZE, player.getLocationX(),player.getLocationY(), player.getLocationZ(), (float) player.getHorAngle());
 		visibleObjects.add(playerSprite);
