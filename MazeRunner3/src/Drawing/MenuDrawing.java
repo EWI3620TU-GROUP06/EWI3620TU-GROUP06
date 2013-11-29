@@ -30,14 +30,6 @@ public class MenuDrawing {
 		gl.glTexCoord2f(0, 1);
 		gl.glEnd();
 	}
-
-	public static void drawMenu(GL gl){
-		//Teken nu het menu over de achtergrond heen
-		
-		//Draw a nice transparent surface over the background
-		drawTrans(gl,0,0,screenWidth,screenHeight,0.1f,0.1f,0.1f,0.4f);
-		
-	}
 	
 	public static void drawTrans(GL gl, float x, float y, float width, float height
 			,float r, float g, float b, float a){

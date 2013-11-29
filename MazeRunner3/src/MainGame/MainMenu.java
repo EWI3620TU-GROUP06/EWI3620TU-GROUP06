@@ -170,8 +170,8 @@ public class MainMenu implements GLEventListener {
 		backgroundTexture.bind(); // Bind the background texture to the next object
 		MenuDrawing.drawPlane(gl); // draw the background plane
 		backgroundTexture.disable(); // Disable the background texture again, such that the next object is textureless
+		MenuDrawing.drawTrans(gl,0,0,screenWidth,screenHeight,0.1f,0.1f,0.1f,0.4f); // draw an extra greyish thing to increase contrast
 		
-		MenuDrawing.drawMenu(gl); // draw the menu background
 		this.clkbxman.drawAllText(); // draw the text in the menu
 		this.clkbxman.update();
 		
