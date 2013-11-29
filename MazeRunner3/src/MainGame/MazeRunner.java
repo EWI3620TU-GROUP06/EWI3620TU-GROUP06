@@ -9,7 +9,6 @@ import Drawing.*;
 import GameObjects.Camera;
 import GameObjects.Player;
 import GameObjects.PlayerSprite;
-
 import GameStates.GameState;
 import Listening.Command;
 import Listening.MainMenuCommand;
@@ -18,6 +17,10 @@ import Listening.ResumeCommand;
 import Listening.UserInput;
 import Main.Game;
 
+import java.awt.Cursor;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -101,6 +104,9 @@ public class MazeRunner implements GLEventListener {
 		 */
 		canvas.addGLEventListener( this );
 		canvas.requestFocus();
+		
+		hideCursor();
+		
 		/* We need to create an internal thread that instructs OpenGL to continuously repaint itself.
 		 * The Animator class handles that for JOGL.
 		 */
@@ -395,10 +401,20 @@ public class MazeRunner implements GLEventListener {
 	
 	public void Pause(){
 		pause = true;
+		showCursor();
 	}
 	
 	public void unPause(){
 			previousTime = Calendar.getInstance().getTimeInMillis();
 			pause = false;
+			hideCursor();
+	}
+	
+	private void hideCursor(){
+		game.setCursor(Toolkit.getDefaultToolkit().createCustomCursor(new BufferedImage(1,1,BufferedImage.TYPE_INT_ARGB),new Point(0,0),""));
+	}
+	
+	private void showCursor(){
+		game.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 }
