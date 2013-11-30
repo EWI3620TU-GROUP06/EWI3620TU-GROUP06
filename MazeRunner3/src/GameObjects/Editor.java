@@ -5,7 +5,7 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import Drawing.EditorMenu;
+import Drawing.EditBoxManager;
 import Listening.Control;
 import MainGame.Maze;
 import MazeObjects.CustomMazeObject;
@@ -17,7 +17,7 @@ public class Editor extends GameObject{
 	private float FOV;
 
 	private Control control; 
-	private EditorMenu editorMenu;
+	private EditBoxManager editorMenu;
 
 	private double horAngle, verAngle;
 
@@ -50,7 +50,7 @@ public class Editor extends GameObject{
 		this.FOV = FOV;
 	}
 
-	public void setEditorMenu(EditorMenu menu)
+	public void setEditorMenu(EditBoxManager menu)
 	{
 		editorMenu = menu;
 	}

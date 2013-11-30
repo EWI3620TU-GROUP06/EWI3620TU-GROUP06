@@ -14,13 +14,13 @@ import MainGame.Maze;
 
 import com.sun.opengl.util.texture.Texture;
 
-public class EditorMenu extends ClickBoxManager {
+public class EditBoxManager extends ClickBoxManager {
 
 	private boolean hoovering = false;
 	private static final int numButtons = 11;
 	private int buttonSize;
 
-	public EditorMenu(Maze maze, Editor editor, int screenWidth, int screenHeight)
+	public EditBoxManager(Maze maze, Editor editor, int screenWidth, int screenHeight)
 	{
 		super();
 		setButtonSize(numButtons, screenWidth, screenHeight);
@@ -35,7 +35,7 @@ public class EditorMenu extends ClickBoxManager {
 
 		for (int i = 0; i < numButtons; i++)
 		{
-			EditorBox newBox = new EditorBox(i*buttonSize, screenHeight - buttonSize, screenWidth, screenHeight, buttonSize, true);
+			EditBox newBox = new EditBox(i*buttonSize, screenHeight - buttonSize, screenWidth, screenHeight, buttonSize, true);
 			newBox.setCommand(commands.get(i));
 			this.AddBox(newBox);
 		}
@@ -48,7 +48,7 @@ public class EditorMenu extends ClickBoxManager {
 
 			Texture pressedTexture = MenuDrawing.initTexture(gl, "button " + i + " pressed");
 			Texture notPressedTexture = MenuDrawing.initTexture(gl, "button " + i + " not pressed");
-			((EditorBox)Boxes.get(i)).setTextures(pressedTexture, notPressedTexture);
+			((EditBox)Boxes.get(i)).setTextures(pressedTexture, notPressedTexture);
 		}
 	}
 
@@ -59,7 +59,7 @@ public class EditorMenu extends ClickBoxManager {
 
 	public void AddBox(ClickBox box)
 	{
-		if(box instanceof EditorBox){
+		if(box instanceof EditBox){
 			Boxes.add(box);
 		}
 	}
@@ -68,7 +68,7 @@ public class EditorMenu extends ClickBoxManager {
 		control.update();
 		if(control.getClicked() != 0){
 			for(int i = 0; i < Boxes.size(); i++){
-				EditorBox e = (EditorBox) Boxes.get(i);
+				EditBox e = (EditBox) Boxes.get(i);
 				if(e.isClickable() && e.isInBounds(control.getMouseX(), control.getMouseY())){
 					if(e.hasDrawModeCommand())
 					{
@@ -76,7 +76,7 @@ public class EditorMenu extends ClickBoxManager {
 						for(int j = 0; j < Boxes.size(); j++)
 						{
 							if(j != i){
-								((EditorBox)Boxes.get(j)).setPressed(false);
+								((EditBox)Boxes.get(j)).setPressed(false);
 							}
 						}
 					}
@@ -100,7 +100,7 @@ public class EditorMenu extends ClickBoxManager {
 		setButtonSize(Boxes.size(), screenWidth, screenHeight);
 		for(int i = 0; i < numButtons; i++)
 		{
-			EditorBox t = (EditorBox) Boxes.get(i);
+			EditBox t = (EditBox) Boxes.get(i);
 
 			t.setButtonSize(buttonSize);
 
@@ -122,7 +122,7 @@ public class EditorMenu extends ClickBoxManager {
 	{
 		for(ClickBox a :  Boxes)
 		{
-			EditorBox t = (EditorBox) a;
+			EditBox t = (EditBox) a;
 
 			t.drawTexture(gl);
 		}

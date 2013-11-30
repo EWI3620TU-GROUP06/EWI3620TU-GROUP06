@@ -60,7 +60,7 @@ public class MazeEditor implements GLEventListener {
 	private int titleScale = 10;
 	private int textScale = 18;
 	private TextBoxManager clkbxman;
-	private EditorMenu editorMenu;
+	private EditBoxManager editorMenu;
 
 	/*
 	 * **********************************************
@@ -156,7 +156,7 @@ public class MazeEditor implements GLEventListener {
 				editor.getLocationZ(), editor.getHorAngle(),
 				editor.getVerAngle());		
 		
-		editorMenu = new EditorMenu(maze, editor, screenWidth, screenHeight);
+		editorMenu = new EditBoxManager(maze, editor, screenWidth, screenHeight);
 		
 		input = state.getGSM().getInput();
 		AddListening(input);

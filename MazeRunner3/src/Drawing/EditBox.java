@@ -6,13 +6,13 @@ import Listening.DrawModeCommand;
 
 import com.sun.opengl.util.texture.Texture;
 
-public class EditorBox extends ClickBox {
+public class EditBox extends ClickBox {
 	
 	Texture pressed, notPressed;
 	
 	boolean isPressed;
 	
-	public EditorBox(int x, int y, int screenWidth, int screenHeight, int buttonSize, boolean clickable)
+	public EditBox(int x, int y, int screenWidth, int screenHeight, int buttonSize, boolean clickable)
 	{
 		super(x, y, screenWidth, screenHeight, buttonSize, buttonSize, clickable);
 		isPressed = false;
