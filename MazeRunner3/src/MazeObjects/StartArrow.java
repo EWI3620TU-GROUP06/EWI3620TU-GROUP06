@@ -2,9 +2,12 @@ package MazeObjects;
 
 import javax.vecmath.Vector3f;
 
+import com.sun.opengl.util.texture.Texture;
+
 public class StartArrow extends MazeObject {
 
 	private float orientation;
+	private static Texture texture;
 
 	public StartArrow(float width, float angle, float x, float z)
 	{
@@ -35,6 +38,16 @@ public class StartArrow extends MazeObject {
 	{
 		rotateVerticesY(angle - orientation, 2.5, 2.5);
 		orientation = angle;
+	}
+	
+	public static void addTexture(Texture t)
+	{
+		texture = t;
+	}
+	
+	public Texture getTexture()
+	{
+		return texture;
 	}
 
 }

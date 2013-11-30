@@ -2,9 +2,12 @@ package MazeObjects;
 
 import javax.vecmath.Vector3f;
 
+import com.sun.opengl.util.texture.Texture;
+
 public class Box extends MazeObject{
 	
 	protected float height;
+	private static Texture texture;
 	
 	public Box(float width, float height, float x, float z)
 	{
@@ -39,6 +42,16 @@ public class Box extends MazeObject{
 		addFace(face5);
 		
 		restitution = 0.0f;
+	}
+	
+	public static void addTexture(Texture t)
+	{
+		texture = t;
+	}
+	
+	public Texture getTexture()
+	{
+		return texture;
 	}
 
 }

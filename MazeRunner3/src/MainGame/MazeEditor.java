@@ -59,7 +59,8 @@ public class MazeEditor implements GLEventListener {
 	private boolean pause;
 	private int titleScale = 10;
 	private int textScale = 18;
-	private ClickBoxManager clkbxman;
+	private TextBoxManager clkbxman;
+	private EditorMenu editorMenu;
 
 	/*
 	 * **********************************************
@@ -156,53 +157,59 @@ public class MazeEditor implements GLEventListener {
 				editor.getVerAngle());
 
 		input = new UserInput(canvas, state.getGSM());
+		
+		
+		editorMenu = new EditorMenu(maze, editor, screenWidth, screenHeight);
+		editorMenu.setControl(input);
+		
 		editor.setControl(input);
 		editor.setFOV(FOV);
 		editor.setMaze(maze);
-	
+		
+		editor.setEditorMenu(editorMenu);
 	}
-	
+
 	private void initMenuText(){
 		//Add the clickboxes for the pauze menu
-				this.clkbxman = new ClickBoxManager(); //We want 4 click (text) boxes, but the first (title) should not be clickable
-				this.clkbxman.setControl(input);
-				
-				//Pause title
-				clkbxman.AddBox(new ClickBox((int)(screenWidth/2),(int)(screenHeight*0.8), //Location of lower-left corner
-						screenWidth, screenHeight, //screen size
-						titleScale, "Impact", 0, "Pause", //TextScale, Font, type (bold/italic etc) and text to draw
-						0.9f, 0.4f, 0.4f, 1f, //color in r,g,b,alpha
-						false)); // isClickable
-				
-				//Resume button
-				clkbxman.AddBox(new ClickBox((int)(screenWidth/2),(int)(screenHeight*0.630), //Location of lower-left corner
-						screenWidth, screenHeight, //screen size
-						textScale, "Arial", 0, "Resume", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
-						1f, 1f, 1f, 1f, //color in r,g,b, alpha
-						true)); // isClickable
-				
-				Command resume = new ResumeCommand(this.state.getGSM());
-				clkbxman.setCommand(1, resume);
-				
-				//MainMenu button
-				clkbxman.AddBox(new ClickBox((int)(screenWidth/2),(int)(screenHeight*0.480), //Location of lower-left corner
-						screenWidth, screenHeight, //screen size
-						textScale, "Arial", 0, "Main Menu", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
-						1f, 1f, 1f, 1f, //color in r,g,b,alpha
-						true)); // isClickable
-				
-				Command main = new MainMenuCommand(this.state.getGSM());
-				clkbxman.setCommand(2, main);
-				
-				//Quit button
-				clkbxman.AddBox(new ClickBox((int)(screenWidth/2),(int)(screenHeight*0.330), //Location of lower-left corner
-						screenWidth, screenHeight, //screen size
-						textScale, "Arial", 0, "Quit", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
-						1f, 1f, 1f, 1f, // color in r,g,b,alpha
-						true)); // isClickable
-				
-				Command quit = new QuitCommand();
-				clkbxman.setCommand(3,quit);
+		this.clkbxman = new TextBoxManager(); //We want 4 click (text) boxes, but the first (title) should not be clickable
+		this.clkbxman.setControl(input);
+
+		//Pause title
+		clkbxman.AddBox(new TextBox((int)(screenWidth/2),(int)(screenHeight*0.8), //Location of lower-left corner
+				screenWidth, screenHeight, //screen size
+				titleScale, "Impact", 0, "Pause", //TextScale, Font, type (bold/italic etc) and text to draw
+				0.9f, 0.4f, 0.4f, 1f, //color in r,g,b,alpha
+				false)); // isClickable
+
+		//Resume button
+		clkbxman.AddBox(new TextBox((int)(screenWidth/2),(int)(screenHeight*0.630), //Location of lower-left corner
+				screenWidth, screenHeight, //screen size
+				textScale, "Arial", 0, "Resume", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
+				1f, 1f, 1f, 1f, //color in r,g,b, alpha
+				true)); // isClickable
+
+		Command resume = new ResumeCommand(this.state.getGSM());
+		clkbxman.setCommand(1, resume);
+
+		//MainMenu button
+		clkbxman.AddBox(new TextBox((int)(screenWidth/2),(int)(screenHeight*0.480), //Location of lower-left corner
+				screenWidth, screenHeight, //screen size
+				textScale, "Arial", 0, "Main Menu", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
+				1f, 1f, 1f, 1f, //color in r,g,b,alpha
+				true)); // isClickable
+
+		Command main = new MainMenuCommand(this.state.getGSM());
+		clkbxman.setCommand(2, main);
+
+		//Quit button
+		clkbxman.AddBox(new TextBox((int)(screenWidth/2),(int)(screenHeight*0.330), //Location of lower-left corner
+				screenWidth, screenHeight, //screen size
+				textScale, "Arial", 0, "Quit", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
+				1f, 1f, 1f, 1f, // color in r,g,b,alpha
+				true)); // isClickable
+
+		Command quit = new QuitCommand();
+		clkbxman.setCommand(3,quit);
 	}
 
 	/*
@@ -226,15 +233,12 @@ public class MazeEditor implements GLEventListener {
 		// mode.
 		GL gl = drawable.getGL();
 		GLU glu = new GLU();
-		maze.initTextures(gl);
-
+		Maze.initTextures(gl);
+		editorMenu.initTextures(gl);
+		
 		gl.glClearColor(0, 0, 0, 0); // Set the background color.
 
-		// Now we set up our viewpoint.
-		gl.glMatrixMode(GL.GL_PROJECTION); // We'll use orthogonal projection.
-		gl.glLoadIdentity(); // Reset the current matrix.
-		glu.gluPerspective(60, screenWidth, screenHeight, 200); // Set up the parameters for perspective viewing.
-		gl.glMatrixMode(GL.GL_MODELVIEW);
+		perspectiveProjection(gl, glu);
 
 		// Enable back-face culling.
 		gl.glCullFace(GL.GL_BACK);
@@ -244,8 +248,7 @@ public class MazeEditor implements GLEventListener {
 		gl.glEnable(GL.GL_DEPTH_TEST);
 
 		// Set and enable the lighting.
-		float lightPosition[] = { 0.0f, 50.0f, 0.0f, 1.0f }; // High up in the
-		// sky!
+		float lightPosition[] = { 0.0f, 50.0f, 0.0f, 1.0f }; // High up in the sky!
 		float lightColour[] = { 1.0f, 1.0f, 1.0f, 0.0f }; // White light!
 		gl.glLightfv(GL.GL_LIGHT0, GL.GL_POSITION, lightPosition, 0); // Note that we're setting Light0.
 		gl.glLightfv(GL.GL_LIGHT0, GL.GL_AMBIENT, lightColour, 0);
@@ -269,24 +272,24 @@ public class MazeEditor implements GLEventListener {
 	public void display(GLAutoDrawable drawable) {
 		GL gl = drawable.getGL();
 		GLU glu = new GLU();
-		
+
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		gl.glLoadIdentity();
-		
+
 		if (!pause){
-			// Update any movement since last frame.
+			editorMenu.update();
 			editor.update(screenWidth, screenHeight);
+			
 			if(editor.getMaze() != visibleObjects.get(0))
 			{
 				maze = editor.getMaze();
-				maze.initTextures(gl);
-				
+
 				visibleObjects.remove(0);
 				visibleObjects.add(0, maze);
 			}
 			updateCamera();
 		}
-		
+
 		glu.gluLookAt(camera.getLocationX(), camera.getLocationY(),
 				camera.getLocationZ(), camera.getVrpX(), camera.getVrpY(),
 				camera.getVrpZ(), camera.getVuvX(), camera.getVuvY(),
@@ -298,16 +301,17 @@ public class MazeEditor implements GLEventListener {
 			it.next().display(gl);
 		}
 
-	
+
 		// When editing: use an orthographic projection to draw the HUD on the screen, 
 		// then set the perspective projection back
 		gl.glLoadIdentity();
 		orthographicProjection(gl);
 		gl.glDisable(GL.GL_LIGHTING);
-		MenuDrawing.drawButtons(gl);
+		editorMenu.drawTextures(gl);
+		//MenuDrawing.drawButtons(gl);
 		gl.glEnable(GL.GL_LIGHTING);
 		perspectiveProjection(gl, glu);
-		
+
 		if(pause){
 			orthographicProjection(gl);
 			MenuDrawing.drawPauseMenu(gl, 0, 0, screenWidth, screenHeight, 0.2f, 0.2f, 0.2f, 0.4f);
@@ -352,7 +356,7 @@ public class MazeEditor implements GLEventListener {
 		this.game.setScreenHeight(screenHeight);
 		this.game.setScreenWidth(screenWidth);
 
-		MenuDrawing.init(screenWidth, screenHeight);
+		editorMenu.reshape(screenWidth, screenHeight);
 		this.clkbxman.reshape(screenWidth, screenHeight); // to reshape the text accordingly
 
 		// Set the new projection matrix.
@@ -406,17 +410,17 @@ public class MazeEditor implements GLEventListener {
 		glu.gluPerspective(FOV, (float)screenWidth / (float)screenHeight, 0.001f, Float.MAX_VALUE); 
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 	}
-	
+
 	// Getter functions
-	
+
 	public GLCanvas getCanvas(){
 		return canvas;
 	}
-	
+
 	public void Pause(){
 		pause = true;
 	}
-	
+
 	public void unPause(){
 		pause = false;
 	}

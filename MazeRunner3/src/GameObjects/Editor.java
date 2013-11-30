@@ -5,6 +5,7 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import Drawing.EditorMenu;
 import Listening.Control;
 import MainGame.Maze;
 import MazeObjects.CustomMazeObject;
@@ -16,6 +17,7 @@ public class Editor extends GameObject{
 	private float FOV;
 
 	private Control control; 
+	private EditorMenu editorMenu;
 
 	private double horAngle, verAngle;
 
@@ -25,20 +27,11 @@ public class Editor extends GameObject{
 	int angle;
 
 	private Maze maze;
-
+	/*
 	private static float buttonSize;
-	private final int numButtons = 11;
+	private final int numButtons = 11;*/
 
 	private byte drawMode;
-
-	private final byte DRAW_EMPTY = 0;
-	private final byte DRAW_BOX = 1;
-	private final byte DRAW_FLAT_BOX = 2;
-	private final byte DRAW_START = 3;
-	private final byte DRAW_FINISH = 4;
-	private final byte DRAW_HIGH_RAMP = 5;
-	private final byte DRAW_LOW_RAMP = 6;
-
 
 	public Editor(double x, double y, double z, double h, double v)
 	{
@@ -57,14 +50,9 @@ public class Editor extends GameObject{
 		this.FOV = FOV;
 	}
 
-	/**
-	 * Sets the size of the buttons in the heads up display
-	 * @param buttonSize	Size of the buttons
-	 */
-
-	public static void setButtonSize(float size)
+	public void setEditorMenu(EditorMenu menu)
 	{
-		buttonSize = size;
+		editorMenu = menu;
 	}
 
 	/**
@@ -127,6 +115,11 @@ public class Editor extends GameObject{
 		return maze;
 	}
 
+	public void setDrawMode(byte drawMode)
+	{
+		this.drawMode = drawMode;
+	}
+
 	/**
 	 * Updates the editor according to the inputs and current state of the editor
 	 * @param screenWidth	Width of the current window
@@ -135,131 +128,55 @@ public class Editor extends GameObject{
 
 	public void update(int screenWidth, int screenHeight)
 	{
-		if(control != null)
+		int notches = control.getNotches();
+		// The Y position can never be lower then the highest wall
+		if(locationY + notches > maze.SQUARE_SIZE)
+			locationY += notches;
+		// Store the position where the left button was originally pressed
+		// This information is used while rotating slope that are to be placed. 
+		if(control.isLeftButtonPressed())
 		{
-			control.update();
+			pressedX = control.getMouseX();
+			pressedY = control.getMouseY();
+		}
+		// When dragging the right mouse button, the camera is moved.
+		if(control.isRightButtonDragged()){
 
-			int notches = control.getNotches();
-			// The Y position can never be lower then the highest wall
-			if(locationY + notches > maze.SQUARE_SIZE)
-				locationY += notches;
-			// Store the position where the left button was originally pressed
-			// This information is used while rotating slope that are to be placed. 
-			if(control.isLeftButtonPressed())
+			updateLocation(screenHeight);
+		}
+		// When a selection of squares made by dragging is released, the selected squares are toggled
+		else if(control.getMouseReleased() == 1 && !editorMenu.isHoovering()){
+			maze.addBlock(drawMode, angle);
+		}
+		else
+		{
+			updateCursor(screenHeight, screenWidth);
+			// When dragging, the selected squares are remembered:
+			if(!control.isLeftButtonDragged()){
+				maze.clearSelected();
+				// highlight the selection:
+				maze.select(selectedX, selectedZ);
+			}
+			else if(!editorMenu.isHoovering() && drawMode < 4)
 			{
-				pressedX = control.getMouseX();
-				pressedY = control.getMouseY();
+				maze.select(selectedX, selectedZ);
 			}
-			// When dragging the right mouse button, the camera is moved.
-			if(control.isRightButtonDragged()){
-
-				updateLocation(screenHeight);
-			}
-			// When a selection of squares made by dragging is released, the selected squares are toggled
-			else if(control.isLeftReleased() && ! hooverButtons()){
+			else 
+			{
+				// If the element to be added is rotatable: find the correct orientation.
+				int dX = control.getMouseX() - pressedX;
+				int dY = control.getMouseY() - pressedY;
+				if(Math.abs(dX) > Math.abs(dY) )
+				{
+					angle = dX > 0 ? 90 : 270;
+				}
+				else
+				{
+					angle = dY > 0 ? 180 : 0;
+				}
 				maze.addBlock(drawMode, angle);
 			}
-			else
-			{
-				updateCursor(screenHeight, screenWidth);
-				// When dragging, the selected squares are remembered:
-				if(!control.isLeftButtonDragged()){
-					maze.clearSelected();
-					// highlight the selection:
-					maze.select(selectedX, selectedZ);
-				}
-				else{
-					if(!hooverButtons())
-					{
-						// If the left button is dragged and the elements to be drawn non-rotatable and the mouse 
-						// isn't located over the buttons: keep selecting more elements
-						if(drawMode == DRAW_BOX || drawMode == DRAW_EMPTY || drawMode == DRAW_FLAT_BOX)
-						{
-							maze.select(selectedX, selectedZ);
-						}
-						else 
-						{
-							// If the element to be added is rotatable: find the correct orientation.
-							int dX = control.getMouseX() - pressedX;
-							int dY = control.getMouseY() - pressedY;
-							if(Math.abs(dX) > Math.abs(dY) )
-							{
-								if(dX > 0)
-									angle = 90;
-								else
-									angle = 270;
-							}
-							else
-							{
-								if(dY > 0)
-									angle = 180;
-								else
-									angle = 0;
-							}
-							maze.addBlock(drawMode, angle);
-						}
-					}
-				}
-				// Take actions according to the pressed button.
-				int button = getButtons();
-				switch(button){
-				case(0): maze.addToSize(1); break;
-				case(1): maze.addToSize(-1); break;
-				case(2):
-					MazeObject customObject = CustomMazeObject.readFromOBJ("Eerste test.obj");
-					maze.add(1, 1, customObject);
-					break;//drawMode = DRAW_EMPTY; break;
-				case(3): drawMode = DRAW_BOX; break;
-				case(4): drawMode = DRAW_START; break;
-				case(5): drawMode = DRAW_FINISH; break;
-				case(6): drawMode = DRAW_HIGH_RAMP; break;
-				case(7): drawMode = DRAW_LOW_RAMP; break;
-				case(8): drawMode = DRAW_FLAT_BOX; break;
-				case(9): save(); break;
-				case(10): Maze maze_temp = readMaze(); 
-				if(maze_temp != null)
-					maze = maze_temp; break;
-
-				case(-1): maze.addBlock(drawMode, angle); break;
-				case(-2): maze.rotateSelected(); break;
-				default: break;
-				}
-
-			}
 		}
-	}
-
-	/**
-	 * Checks whether the mouse is currently over one of the Heads Up Display buttons.
-	 * @return	boolean that tells if the mouse is located over a button
-	 */
-
-	private boolean hooverButtons()
-	{
-		return control.getMouseX() < (numButtons * buttonSize) && control.getMouseY() < buttonSize;
-	}
-
-	/**
-	 * Calculates whether a button in the screen or a mouse button was pressed.
-	 * @return	A value between 0 and numOfButtons - 1 is returned when a button is pressed,
-	 *  -1, -2 or -3 is returned when mouse button left, middle or right respectively is clicked anywhere else.
-	 *  numOfButtons is returned when the mouse is not clicked.
-	 */
-
-	private int getButtons()
-	{
-		byte mouseButton = control.getClicked();
-		if(mouseButton > 0)
-		{
-			for(int i = 0; i < numButtons; i++)
-			{
-				// check for every button if it is clicked on.
-				if( control.getMouseX() > (i * buttonSize) && control.getMouseX() < ((i + 1) * buttonSize) && control.getMouseY() < buttonSize)
-					return i;
-			}
-			return -mouseButton;	// clicked somewhere else on the screen 
-		}
-		return numButtons; 
 	}
 
 	/**

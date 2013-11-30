@@ -1,17 +1,13 @@
 package MainGame;
 
-import java.io.InputStream;
-
 import com.sun.opengl.util.Animator;
 
 import javax.media.opengl.*;
 
 import com.sun.opengl.util.texture.Texture;
-import com.sun.opengl.util.texture.TextureData;
-import com.sun.opengl.util.texture.TextureIO;
 
-import Drawing.ClickBox;
-import Drawing.ClickBoxManager;
+import Drawing.TextBox;
+import Drawing.TextBoxManager;
 import Drawing.MenuDrawing;
 import GameStates.GameState;
 import Listening.Command;
@@ -31,7 +27,7 @@ public class MainMenu implements GLEventListener {
 	private int titleScale = 10;
 	private int textScale = 18;
 	private GameState state;
-	private ClickBoxManager clkbxman;
+	private TextBoxManager clkbxman;
 	private UserInput input;
 	
 	public MainMenu(Game game, GameState state) {
@@ -71,18 +67,18 @@ public class MainMenu implements GLEventListener {
 	
 	private void initMenuText(){
 		//Add the clickboxes for the pauze menu
-		this.clkbxman = new ClickBoxManager(); //We want 5 click (text) boxes, but the first (title) should not be clickable
+		this.clkbxman = new TextBoxManager(); //We want 5 click (text) boxes, but the first (title) should not be clickable
 		this.clkbxman.setControl(input);
 		
 		//Title
-		clkbxman.AddBox(new ClickBox((int)(screenWidth/2),(int)(screenHeight*0.8), //Location of lower-left corner
+		clkbxman.AddBox(new TextBox((int)(screenWidth/2),(int)(screenHeight*0.8), //Location of lower-left corner
 				screenWidth, screenHeight, //screen size
 				titleScale, "Impact", 0, "MadBalls", //TextScale, Font, type (bold/italic etc) and text to draw
 				0.9f, 0.4f, 0.4f, 1f, //color in r,g,b,alpha
 				false)); // isClickable
 		
 		//Play button
-		clkbxman.AddBox(new ClickBox((int)(screenWidth/2),(int)(screenHeight*0.630), //Location of lower-left corner
+		clkbxman.AddBox(new TextBox((int)(screenWidth/2),(int)(screenHeight*0.630), //Location of lower-left corner
 				screenWidth, screenHeight, //screen size
 				textScale, "Arial", 0, "Play", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
 				1f, 1f, 1f, 1f, //color in r,g,b, alpha
@@ -92,7 +88,7 @@ public class MainMenu implements GLEventListener {
 		clkbxman.setCommand(1,play);
 		
 		//Load button
-		clkbxman.AddBox(new ClickBox((int)(screenWidth/2),(int)(screenHeight*0.480), //Location of lower-left corner
+		clkbxman.AddBox(new TextBox((int)(screenWidth/2),(int)(screenHeight*0.480), //Location of lower-left corner
 				screenWidth, screenHeight, //screen size
 				textScale, "Arial", 0, "Load", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
 				1f, 1f, 1f, 1f, //color in r,g,b,alpha
@@ -102,7 +98,7 @@ public class MainMenu implements GLEventListener {
 		clkbxman.setCommand(2, load);
 		
 		//Editor button
-		clkbxman.AddBox(new ClickBox((int)(screenWidth/2),(int)(screenHeight*0.330), //Location of lower-left corner
+		clkbxman.AddBox(new TextBox((int)(screenWidth/2),(int)(screenHeight*0.330), //Location of lower-left corner
 				screenWidth, screenHeight, //screen size
 				textScale, "Arial", 0, "Editor", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
 				1f, 1f, 1f, 1f, // color in r,g,b,alpha
@@ -112,7 +108,7 @@ public class MainMenu implements GLEventListener {
 		clkbxman.setCommand(3, edit);
 		
 		//Quit button
-		clkbxman.AddBox(new ClickBox((int)(screenWidth/2),(int)(screenHeight*0.180), //Location of lower-left corner
+		clkbxman.AddBox(new TextBox((int)(screenWidth/2),(int)(screenHeight*0.180), //Location of lower-left corner
 				screenWidth, screenHeight, //screen size
 				textScale, "Arial", 0, "Quit", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
 				1f, 1f, 1f, 1f, // color in r,g,b,alpha
@@ -133,16 +129,7 @@ public class MainMenu implements GLEventListener {
 		gl.glDisable(GL.GL_DEPTH_TEST);
 			
 		// Preload the texture we want to use!
-		try{
-		InputStream stream = getClass().getResourceAsStream("../Textures/mainmenu.jpg");
-        TextureData data = TextureIO.newTextureData(stream, false, "jpg");
-        this.backgroundTexture = TextureIO.newTexture(data);
-        stream.close();
-		}
-		catch(Exception e){
-			e.printStackTrace();
-			System.exit(0);
-		}
+		backgroundTexture = MenuDrawing.initTexture(gl, "mainmenu");
 	}
 		
 	@Override
@@ -168,7 +155,7 @@ public class MainMenu implements GLEventListener {
         gl.glMaterialfv(GL.GL_FRONT, GL.GL_AMBIENT, rgba, 0);
 		backgroundTexture.enable(); // Enable the background texture
 		backgroundTexture.bind(); // Bind the background texture to the next object
-		MenuDrawing.drawPlane(gl); // draw the background plane
+		MenuDrawing.boxOnScreen(gl, 0, 0, screenWidth, screenHeight); // draw the background plane
 		backgroundTexture.disable(); // Disable the background texture again, such that the next object is textureless
 		MenuDrawing.drawTrans(gl,0,0,screenWidth,screenHeight,0f,0f,0f,0.4f); // draw an extra greyish thing to increase contrast
 		
@@ -205,7 +192,6 @@ public class MainMenu implements GLEventListener {
 		gl.glDisable(GL.GL_DEPTH_TEST);
 		
 		//To init the drawing elements of overlay menu's/text etc.
-		MenuDrawing.init(screenWidth, screenHeight);
 		this.clkbxman.reshape(screenWidth, screenHeight);
 	}
 	

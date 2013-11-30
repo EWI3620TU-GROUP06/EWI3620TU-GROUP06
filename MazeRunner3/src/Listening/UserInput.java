@@ -211,9 +211,6 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 		this.mouseX = event.getX();
 		this.mouseY = event.getY();
 		mouseClicked = (byte)event.getButton();
-
-		if(event.getButton() == 1)
-			leftReleased = false;
 	}
 
 	@Override
@@ -231,9 +228,9 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	@Override
 	public void mouseReleased(MouseEvent event)
 	{
+			mouseReleased = (byte) event.getButton();
 			if(event.getButton() == 1){
 				leftButtonDragged = false;
-				leftReleased = true;
 			}
 			if(event.getButton() == 3)
 				rightButtonDragged = false;

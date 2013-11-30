@@ -61,7 +61,7 @@ public class MazeRunner implements GLEventListener {
 	private boolean pause;
 	private int titleScale = 10;
 	private int textScale = 18;
-	private ClickBoxManager clkbxman;
+	private TextBoxManager clkbxman;
 	
 /*
  * **********************************************
@@ -161,18 +161,18 @@ public class MazeRunner implements GLEventListener {
 	
 	private void initMenuText(){
 		//Add the clickboxes for the pauze menu
-				this.clkbxman = new ClickBoxManager(); //We want 4 click (text) boxes, but the first (title) should not be clickable
+				this.clkbxman = new TextBoxManager(); //We want 4 click (text) boxes, but the first (title) should not be clickable
 				this.clkbxman.setControl(input);
 				
 				//Pause title
-				clkbxman.AddBox(new ClickBox((int)(screenWidth/2),(int)(screenHeight*0.8), //Location of lower-left corner
+				clkbxman.AddBox(new TextBox((int)(screenWidth/2),(int)(screenHeight*0.8), //Location of lower-left corner
 						screenWidth, screenHeight, //screen size
 						titleScale, "Impact", 0, "Pause", //TextScale, Font, type (bold/italic etc) and text to draw
 						0.9f, 0.4f, 0.4f, 1f, //color in r,g,b,alpha
 						false)); // isClickable
 				
 				//Resume button
-				clkbxman.AddBox(new ClickBox((int)(screenWidth/2),(int)(screenHeight*0.630), //Location of lower-left corner
+				clkbxman.AddBox(new TextBox((int)(screenWidth/2),(int)(screenHeight*0.630), //Location of lower-left corner
 						screenWidth, screenHeight, //screen size
 						textScale, "Arial", 0, "Resume", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
 						1f, 1f, 1f, 1f, //color in r,g,b, alpha
@@ -182,7 +182,7 @@ public class MazeRunner implements GLEventListener {
 				clkbxman.setCommand(1, resume);
 				
 				//MainMenu button
-				clkbxman.AddBox(new ClickBox((int)(screenWidth/2),(int)(screenHeight*0.480), //Location of lower-left corner
+				clkbxman.AddBox(new TextBox((int)(screenWidth/2),(int)(screenHeight*0.480), //Location of lower-left corner
 						screenWidth, screenHeight, //screen size
 						textScale, "Arial", 0, "Main Menu", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
 						1f, 1f, 1f, 1f, //color in r,g,b,alpha
@@ -192,7 +192,7 @@ public class MazeRunner implements GLEventListener {
 				clkbxman.setCommand(2, main);
 				
 				//Quit button
-				clkbxman.AddBox(new ClickBox((int)(screenWidth/2),(int)(screenHeight*0.330), //Location of lower-left corner
+				clkbxman.AddBox(new TextBox((int)(screenWidth/2),(int)(screenHeight*0.330), //Location of lower-left corner
 						screenWidth, screenHeight, //screen size
 						textScale, "Arial", 0, "Quit", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
 						1f, 1f, 1f, 1f, // color in r,g,b,alpha
@@ -224,7 +224,7 @@ public class MazeRunner implements GLEventListener {
         GL gl = drawable.getGL();
         GLU glu = new GLU();
         
-        maze.initTextures(gl);
+        Maze.initTextures(gl);
         playerSprite.init(gl);
         
         gl.glClearColor(0, 0, 0, 0);								// Set the background color.
@@ -296,6 +296,8 @@ public class MazeRunner implements GLEventListener {
         
         //Draw the menu if pause state
         if(pause){
+        	playerSprite.pause();
+        	
     		gl.glMatrixMode(GL.GL_PROJECTION);
     		gl.glLoadIdentity();
     		gl.glOrtho(0,screenWidth,0,screenHeight,-1,1); //2D by making a -1 to 1 z around the z = 0 plane
@@ -358,7 +360,6 @@ public class MazeRunner implements GLEventListener {
 		gl.glMatrixMode( GL.GL_MODELVIEW );
 		
 		//Init the manudrawing elements to render title etc.
-		MenuDrawing.init(screenWidth, screenHeight);
 		this.clkbxman.reshape(screenWidth, screenHeight);
 	}
 

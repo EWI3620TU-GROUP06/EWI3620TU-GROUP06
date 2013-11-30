@@ -100,6 +100,8 @@ public class PlayerSprite implements VisibleObject {
 		posY = y;
 		posZ = z;
 	}
+	
+
 
 }
 

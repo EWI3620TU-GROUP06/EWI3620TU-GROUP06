@@ -34,7 +34,7 @@ public abstract class Control
 	protected byte mouseClicked;
 	protected boolean rightButtonDragged = false;
 	protected boolean leftButtonDragged = false;
-	protected boolean leftReleased = false;
+	protected byte mouseReleased;
 	protected boolean leftButtonPressed = false;
 
 	/**
@@ -138,9 +138,9 @@ public abstract class Control
 		return leftButtonDragged;
 	}
 	
-	public boolean isLeftReleased(){
-		boolean res = leftReleased;
-		leftReleased = false;
+	public byte getMouseReleased(){
+		byte res = mouseReleased;
+		mouseReleased = 0;
 		return res;
 	}
 	

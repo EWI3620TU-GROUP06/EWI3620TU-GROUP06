@@ -2,10 +2,13 @@ package MazeObjects;
 
 import javax.vecmath.Vector3f;
 
+import com.sun.opengl.util.texture.Texture;
+
 public class Ramp extends MazeObject{
 	
 	protected int orientation;
 	protected float height;
+	private static Texture texture;
 	
 	public Ramp(float width, float height, int orientation, float x, float z)
 	{
@@ -40,4 +43,14 @@ public class Ramp extends MazeObject{
 		restitution = 0.0f;
 	}
 
+	public static void addTexture(Texture t)
+	{
+		texture = t;
+	}
+	
+	public Texture getTexture()
+	{
+		return texture;
+	}
+	
 }

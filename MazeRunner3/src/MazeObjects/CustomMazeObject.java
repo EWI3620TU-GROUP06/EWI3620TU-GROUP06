@@ -5,11 +5,17 @@ import java.util.Scanner;
 
 import javax.vecmath.Vector3f;
 
+import com.sun.opengl.util.texture.Texture;
+
 public class CustomMazeObject extends MazeObject{
+	
+	
 	
 	public CustomMazeObject()
 	{
 		super();
+		
+		
 	}
 	
 	public static MazeObject readFromOBJ(String fileName)
@@ -25,9 +31,9 @@ public class CustomMazeObject extends MazeObject{
 				if(line.startsWith("v"))
 				{
 					String coordinates[] = line.split("[ ]");
-					float x = Float.parseFloat(coordinates[1]);
-					float y = Float.parseFloat(coordinates[2]);
-					float z = Float.parseFloat(coordinates[3]);
+					float x = Float.parseFloat(coordinates[1]) * 100;
+					float y = Float.parseFloat(coordinates[2]) * 100;
+					float z = Float.parseFloat(coordinates[3]) * 100;
 					res.vertices.add(new Vector3f(x, y, z));
 					
 				}
@@ -54,6 +60,16 @@ public class CustomMazeObject extends MazeObject{
 		}
 		
 		return res;
+	}
+	
+	public static void addTexture(Texture t)
+	{
+		//Custom object cannot yet contain textures.
+	}
+	
+	public Texture getTexture()
+	{
+		return null;
 	}
 
 }

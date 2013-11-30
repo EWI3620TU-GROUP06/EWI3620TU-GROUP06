@@ -61,6 +61,6 @@ public class PlayState extends GameState {
 	
 	public void playMusic()
 	{
-		Audio.playMusic("test2");
+		//Audio.playMusic("test2");
 	}
 }

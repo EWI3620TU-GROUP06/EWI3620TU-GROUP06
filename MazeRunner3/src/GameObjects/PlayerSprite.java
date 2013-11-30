@@ -1,16 +1,14 @@
 package GameObjects;
 
-import java.io.InputStream;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.glu.GLU;
 
+import Drawing.MenuDrawing;
 import Drawing.VisibleObject;
 
 import com.sun.opengl.impl.GLUquadricImpl;
 import com.sun.opengl.util.texture.Texture;
-import com.sun.opengl.util.texture.TextureData;
-import com.sun.opengl.util.texture.TextureIO;
 
 /**
  * Class containing the texture, shape and position of the sprite that represents the player. 
@@ -50,16 +48,7 @@ public class PlayerSprite implements VisibleObject {
 		sphere.setTextureFlag(true);
 		sphere.setDrawStyle(GLU.GLU_FILL);
 		sphere.setOrientation(0);
-		try{
-			InputStream stream = getClass().getResourceAsStream("../Textures/ball.jpg");
-			TextureData data = TextureIO.newTextureData(stream, false, "jpg");
-			this.sphereTexture = TextureIO.newTexture(data);
-			stream.close();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
+		sphereTexture = MenuDrawing.initTexture(gl, "ball");
 	}
 
 
@@ -99,6 +88,12 @@ public class PlayerSprite implements VisibleObject {
 		posX = x;
 		posY = y;
 		posZ = z;
+	}
+	
+	public void pause()
+	{
+		dX = 0;
+		dZ = 0;
 	}
 
 }

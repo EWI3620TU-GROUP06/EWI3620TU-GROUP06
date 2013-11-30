@@ -21,7 +21,6 @@ public abstract class MazeObject {
 	ArrayList<int[]> faces;
 	ArrayList<Vector3f> normals;
 	
-	protected Texture texture;
 	protected int[][] texturePoints = { {1, 1}, {1, 0}, {0, 0} , {0, 1}}; 
 	
 	float restitution;
@@ -95,6 +94,7 @@ public abstract class MazeObject {
 		{
 
 			int[] face = faces.get(j);
+			Texture texture = getTexture();
 			if (texture != null)
 			{
 				texture.enable();
@@ -250,9 +250,6 @@ public abstract class MazeObject {
 			vertices.remove(vertex);
 	}
 	
-	public void addTexture(Texture t)
-	{
-		texture = t;
-	}
+	public abstract Texture getTexture();
 
 }

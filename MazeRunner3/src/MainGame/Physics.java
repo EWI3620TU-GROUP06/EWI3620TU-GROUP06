@@ -31,7 +31,7 @@ public class Physics {
 	
 	private float angularDamping = 10f;
 	private float mass = 25;
-	
+	private int wait4NextTick = 5;
 
 	boolean wallConnect;
 	
@@ -137,8 +137,12 @@ public class Physics {
         	if(body2 == playerBall && walls.contains(body1) || body1 == playerBall && walls.contains(body2))
         		count++;
         }
-        if(!wallConnect && count > 0)
+        if(!wallConnect && count > 0 && wait4NextTick  == 0){
         	Audio.playSound("tick");
+        	wait4NextTick = 5;
+        }
+        else if(wait4NextTick > 0)
+        	wait4NextTick--;
         if(count > 0)
         	wallConnect = true;
         else

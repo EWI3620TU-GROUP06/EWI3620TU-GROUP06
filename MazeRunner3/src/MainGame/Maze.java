@@ -1,6 +1,7 @@
 package MainGame;
 import javax.media.opengl.GL;
 
+import Drawing.MenuDrawing;
 import Drawing.VisibleObject;
 import MazeObjects.Box;
 import MazeObjects.Floor;
@@ -9,8 +10,6 @@ import MazeObjects.Ramp;
 import MazeObjects.StartArrow;
 
 import com.sun.opengl.util.texture.Texture;
-import com.sun.opengl.util.texture.TextureData;
-import com.sun.opengl.util.texture.TextureIO;
 
 import java.io.*;
 import java.util.Scanner;
@@ -45,8 +44,8 @@ public class Maze implements VisibleObject {
 	private int[] startPosition = {6, 5, 90};
 	private int[] finishPosition = {8,8};
 
-	private Texture boxTexture;
-	private Texture floorTexture;
+	private static Texture boxTexture;
+	private static Texture floorTexture;
 
 	private MazeObject[][] maze = null;
 
@@ -82,22 +81,8 @@ public class Maze implements VisibleObject {
 				}
 			}
 		}
+		
 		selected = new boolean[MAZE_SIZE][MAZE_SIZE];
-	}
-	
-	public void setTextures()
-	{
-		for(int i = 0; i < maze[0].length; i++){
-			for(int j = 0; j < maze.length; j++)
-			{
-				if(maze[i][j] instanceof Floor){
-					maze[i][j].addTexture(floorTexture);
-				}
-				if(maze[i][j] instanceof Box || maze[i][j] instanceof Ramp){
-					maze[i][j].addTexture(boxTexture);
-				}
-			}
-		}
 	}
 	
 	/**
@@ -105,22 +90,15 @@ public class Maze implements VisibleObject {
 	 * @param gl	instance of opengl.
 	 */
 
-	public void initTextures(GL gl)
+	public static void initTextures(GL gl)
 	{
-		try{
-			InputStream stream = getClass().getResourceAsStream("../Textures/wall.jpg");
-			TextureData data = TextureIO.newTextureData(stream, false, "jpg");
-			this.boxTexture = TextureIO.newTexture(data);
-			stream = getClass().getResourceAsStream("../Textures/floor.jpg");
-			data = TextureIO.newTextureData(stream, false, "jpg");
-			this.floorTexture = TextureIO.newTexture(data);
-			stream.close();
-			setTextures();
-		}
-		catch(Exception e){
-			e.printStackTrace();
-			System.exit(0);
-		}
+		boxTexture = MenuDrawing.initTexture(gl, "wall");
+		floorTexture = MenuDrawing.initTexture(gl, "floor");
+		
+		Box.addTexture(boxTexture);
+		Floor.addTexture(floorTexture);
+		Ramp.addTexture(boxTexture);
+		StartArrow.addTexture(floorTexture);
 	}
 
 	/**
@@ -186,7 +164,6 @@ public class Maze implements VisibleObject {
 				
 			maze = newMaze;
 			selected = newSelected;
-			setTextures();
 		}
 	}
 	
@@ -242,7 +219,6 @@ public class Maze implements VisibleObject {
 					default : maze[i][j] = maze[i][j] = new Floor(SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE);
 					}
 				}
-		setTextures();
 	}
 
 	/**
