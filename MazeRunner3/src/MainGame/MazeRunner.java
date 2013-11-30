@@ -401,12 +401,14 @@ public class MazeRunner implements GLEventListener {
 	
 	public void Pause(){
 		pause = true;
+		input.reset();
 		showCursor();
 	}
 	
 	public void unPause(){
 			previousTime = Calendar.getInstance().getTimeInMillis();
 			pause = false;
+			input.reset();
 			hideCursor();
 	}
 	

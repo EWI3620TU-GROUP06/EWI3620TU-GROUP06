@@ -34,7 +34,7 @@ public class ClickBox {
 		renderer = new TextRenderer(new Font(Font, fontStyle, this.screenWidth/textScale));
 		this.Text = Text;
 		Rectangle2D temp = renderer.getBounds(Text);
-		this.location = new int[]{x - (int)(temp.getWidth()/2),y};
+		this.location = new int[]{x - (int)(temp.getWidth()/2f),y};
 		this.Bounds = new int[]{location[0]+(int)temp.getX(), 
 				location[0]+(int)temp.getX()+(int)temp.getWidth(), 
 				location[1]+(int)temp.getHeight(), 

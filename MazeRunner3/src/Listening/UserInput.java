@@ -155,7 +155,7 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 			}
 			if (event.getKeyCode() == 27){
 				if (this.gsm.getState(this.gsm.getCurState()).getPaused() == true){
-					this.gsm.getState(this.gsm.getCurState()).unPause();
+					this.gsm.setUnPauseState();
 				}
 				else{
 					this.gsm.setPauseState();
@@ -235,8 +235,9 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 				leftButtonDragged = false;
 				leftReleased = true;
 			}
-			if(event.getButton() == 3)
+			if(event.getButton() == 3){
 				rightButtonDragged = false;
+			}
 	}
 
 	public void mouseWheelMoved(MouseWheelEvent event)

@@ -38,6 +38,10 @@ public class gStateMan {
 		gameStates.get(currentState).setPaused();
 	}
 	
+	public void setUnPauseState(){
+		gameStates.get(currentState).unPause();
+	}
+	
 	public int getCurState(){
 		return currentState;
 	}
