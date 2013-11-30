@@ -27,7 +27,6 @@ import com.bulletphysics.util.ObjectArrayList;
 
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Quat4f;
-import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
 public class Physics {
