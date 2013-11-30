@@ -176,10 +176,8 @@ public class Player extends GameObject {
 			}
 			if (control.getJump())
 			{	
-				System.out.println(position[1]);
-				if(position[1] < 1.05){
-				System.out.println("jump");
-				physics.applyForce(0, power*30, 0);
+				if(physics.getContact()){
+					physics.applyForce(0, power*30, 0);
 				}
 			}
 		}

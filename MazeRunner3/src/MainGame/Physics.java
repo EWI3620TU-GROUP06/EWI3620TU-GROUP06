@@ -9,6 +9,8 @@ import com.bulletphysics.collision.broadphase.Dispatcher;
 import com.bulletphysics.collision.dispatch.CollisionConfiguration;
 import com.bulletphysics.collision.dispatch.CollisionDispatcher;
 import com.bulletphysics.collision.dispatch.CollisionObject;
+import com.bulletphysics.collision.dispatch.CollisionWorld;
+import com.bulletphysics.collision.dispatch.CollisionWorld.RayResultCallback;
 import com.bulletphysics.collision.dispatch.DefaultCollisionConfiguration;
 import com.bulletphysics.collision.shapes.CollisionShape;
 import com.bulletphysics.collision.shapes.ConvexHullShape;
@@ -168,4 +170,11 @@ public class Physics {
 		return res;
 	}
 
+	public boolean getContact(){
+		Vector3f toVect = getPlayerPosition();
+		toVect.sub(new Vector3f(0,1f,0));
+		RayResultCallback a = new CollisionWorld.ClosestRayResultCallback(getPlayerPosition(), toVect);
+		dynamicsWorld.rayTest(getPlayerPosition(), toVect, a);
+		return a.hasHit();
+	}
 }
