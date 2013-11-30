@@ -319,6 +319,7 @@ public class MazeEditor implements GLEventListener {
 			this.clkbxman.drawAllText();
 			perspectiveProjection(gl, glu);
 			this.clkbxman.update();
+			gl.glColor4f(1f,1f,1f,1f); //reset the glColor to white for textures
 		}
 
 		// Flush the OpenGL buffer.
