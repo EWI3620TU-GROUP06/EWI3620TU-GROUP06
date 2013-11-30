@@ -56,7 +56,8 @@ public class MainMenu implements GLEventListener {
 		 */
 		canvas.addGLEventListener( this );
 		canvas.requestFocus();
-		input = new UserInput(canvas, state.getGSM());
+		input = state.getGSM().getInput();
+		AddListening(input);
 		
 		/* We need to create an internal thread that instructs OpenGL to continuously repaint itself.
 		 * The Animator class handles that for JOGL.
@@ -198,5 +199,9 @@ public class MainMenu implements GLEventListener {
 	public GLCanvas getCanvas(){
 		return this.canvas;
 	}
-
+	
+	private void AddListening(UserInput input){
+		canvas.addMouseListener(input);
+		canvas.addMouseMotionListener(input);
+	}
 }

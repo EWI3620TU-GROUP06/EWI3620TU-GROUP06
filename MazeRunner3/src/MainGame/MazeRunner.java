@@ -3,7 +3,7 @@ package MainGame;
 import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
 
-import com.sun.opengl.util.Animator;
+import com.sun.opengl.util.*;
 
 import Drawing.*;
 import GameObjects.Camera;
@@ -21,6 +21,7 @@ import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -57,7 +58,7 @@ public class MazeRunner implements GLEventListener {
 	private GameState state;
 	private GLCanvas canvas;
 	private Game game;
-	private Animator anim;
+	private FPSAnimator anim;
 	private boolean pause;
 	private int titleScale = 10;
 	private int textScale = 18;
@@ -110,7 +111,7 @@ public class MazeRunner implements GLEventListener {
 		/* We need to create an internal thread that instructs OpenGL to continuously repaint itself.
 		 * The Animator class handles that for JOGL.
 		 */
-		anim = new Animator( canvas );
+		anim = new FPSAnimator( canvas, 60 );
 		anim.start();
 	}
 	
@@ -140,7 +141,7 @@ public class MazeRunner implements GLEventListener {
 		// Add the maze that we will be using.
 
 		if (maze == null){
-			maze = new Maze();
+			maze = Maze.read(new File("src/Levels/Standard.mz"));
 		}
 
 		visibleObjects.add( maze );
@@ -154,7 +155,8 @@ public class MazeRunner implements GLEventListener {
 		camera = new Camera(player.getLocationX(), player.getLocationY(), player.getLocationZ(), 
 				             player.getHorAngle(), player.getVerAngle() );
 		
-		input = new UserInput(canvas, state.getGSM());
+		input = state.getGSM().getInput();
+		AddListening(input);
 		player.setControl(input);
 		
 	}
@@ -402,12 +404,14 @@ public class MazeRunner implements GLEventListener {
 	
 	public void Pause(){
 		pause = true;
+		input.reset();
 		showCursor();
 	}
 	
 	public void unPause(){
 			previousTime = Calendar.getInstance().getTimeInMillis();
 			pause = false;
+			input.reset();
 			hideCursor();
 	}
 	
@@ -417,5 +421,11 @@ public class MazeRunner implements GLEventListener {
 	
 	private void showCursor(){
 		game.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+	}
+	
+	private void AddListening(UserInput input){
+		canvas.addMouseListener(input);
+		canvas.addMouseMotionListener(input);
+		canvas.addKeyListener(input);
 	}
 }

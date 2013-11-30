@@ -55,7 +55,7 @@ public class MazeEditor implements GLEventListener {
 	private Maze maze; // The maze.
 	private GameState state;
 	private Game game;
-	private Animator anim;
+	private FPSAnimator anim;
 	private boolean pause;
 	private int titleScale = 10;
 	private int textScale = 18;
@@ -120,7 +120,7 @@ public class MazeEditor implements GLEventListener {
 		 * continuously repaint itself. The Animator class handles that for
 		 * JOGL.
 		 */
-		anim = new Animator(canvas);
+		anim = new FPSAnimator(canvas, 60);
 		anim.start();
 	}
 
@@ -154,14 +154,14 @@ public class MazeEditor implements GLEventListener {
 
 		camera = new Camera(editor.getLocationX(), editor.getLocationY(),
 				editor.getLocationZ(), editor.getHorAngle(),
-				editor.getVerAngle());
-
-		input = new UserInput(canvas, state.getGSM());
-		
+				editor.getVerAngle());		
 		
 		editorMenu = new EditorMenu(maze, editor, screenWidth, screenHeight);
 		editorMenu.setControl(input);
 		
+		input = state.getGSM().getInput();
+		AddListening(input);
+
 		editor.setControl(input);
 		editor.setFOV(FOV);
 		editor.setMaze(maze);
@@ -419,9 +419,18 @@ public class MazeEditor implements GLEventListener {
 
 	public void Pause(){
 		pause = true;
+		input.reset();
 	}
 
 	public void unPause(){
 		pause = false;
+		input.reset();
+	}
+	
+	private void AddListening(UserInput input){
+		canvas.addMouseListener(input);
+		canvas.addMouseMotionListener(input);
+		canvas.addKeyListener(input);
+		canvas.addMouseWheelListener(input);
 	}
 }

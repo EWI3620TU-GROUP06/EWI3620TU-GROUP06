@@ -30,6 +30,7 @@ public abstract class ClickBox {
 
 	public int[] getLocation(){
 		return location;
+
 	}
 
 	public void setLocation(int x, int y){

@@ -30,7 +30,8 @@ import javax.vecmath.Vector3f;
 public class Physics {
 	
 	private float angularDamping = 10f;
-	private float mass = 25;
+
+	private float mass = 25f;
 	private int wait4NextTick = 5;
 
 	boolean wallConnect;
@@ -106,7 +107,7 @@ public class Physics {
         MotionState ballMotion = new DefaultMotionState(DEFAULT_BALL_TRANSFORM);
         // Calculate the ball's inertia (resistance to movement) using its mass (2.5 kilograms).
         Vector3f ballInertia = new Vector3f(0, 0, 0);
-        ballShape.calculateLocalInertia(2f, ballInertia);
+        ballShape.calculateLocalInertia(mass, ballInertia);
         // Composes the ball's construction info of its mass, its motion state, its shape, and its inertia.
         RigidBodyConstructionInfo ballConstructionInfo = new RigidBodyConstructionInfo(mass, ballMotion, ballShape, ballInertia);
         // Set the restitution, also known as the bounciness or spring, to 0.5. The restitution may range from 0.0
@@ -125,7 +126,7 @@ public class Physics {
 	public void update(int deltaTime)
 	{
 		// Runs the JBullet physics simulation for the specified time in seconds.
-        dynamicsWorld.stepSimulation(deltaTime);
+        dynamicsWorld.stepSimulation(deltaTime/1000f); //Parameter for stepsim should be in seconds! deltaTime was in millisecs!
         
         Dispatcher dispatcher = dynamicsWorld.getDispatcher();
         int count  = 0;
@@ -147,6 +148,7 @@ public class Physics {
         	wallConnect = true;
         else
         	wallConnect = false;
+        dynamicsWorld.clearForces();
 	}
 	
 	public void applyForce(float x, float y, float z)

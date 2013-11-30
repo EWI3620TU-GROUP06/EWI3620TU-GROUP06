@@ -150,6 +150,26 @@ public abstract class Control
 		return res;
 	}
 
+	public void reset(){
+		forward = false;
+		back = false;
+		left = false;
+		right = false;
+		jump = false;
+
+		dX = 0;
+		dY = 0;
+
+		notches = 0;
+
+		mouseX = 0;
+		mouseY = 0;
+		mouseClicked = 0;
+		rightButtonDragged = false;
+		leftButtonDragged = false;
+		leftReleased = false;
+		leftButtonPressed = false;
+	}
 	/**
 	 * Updates the fields of the Control class to represent the
 	 * most up-to-date values. 

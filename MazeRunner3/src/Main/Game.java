@@ -28,7 +28,7 @@ public class Game extends Frame{
 			super("MadBalls");
 			// Let's change the window to our liking.
 			setSize( screenWidth, screenHeight);
-			setBackground( Color.white );
+			setBackground( Color.black );
 
 			// The window also has to close when we want to.
 			this.addWindowListener( new WindowAdapter()

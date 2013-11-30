@@ -2,7 +2,6 @@ package Listening;
 import java.awt.Robot;
 import java.awt.event.*;
 
-import javax.media.opengl.GLCanvas;
 
 import GameStates.gStateMan;
 
@@ -33,10 +32,7 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	private int ydragPos;
 	private gStateMan gsm;
 	private Robot robot;
-	
-
-	
-	private GLCanvas canvas;
+		
 	private int boundX;
 	private int boundY;
 
@@ -48,16 +44,10 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	 * 
 	 * @param canvas The GLCanvas to which to add the listeners.
 	 */
-	public UserInput(GLCanvas canvas, gStateMan gsm)
+	public UserInput(gStateMan gsm)
 	{
-		canvas.addMouseListener(this);
-		canvas.addMouseMotionListener(this);
-		canvas.addKeyListener(this);
-		canvas.addMouseWheelListener(this);
-		this.canvas = canvas;
 		try{
 			robot = new Robot();
-			
 		}
 		catch (Exception e){
 			e.printStackTrace();
@@ -74,8 +64,8 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	@Override
 	public void update()
 	{
-		boundX = canvas.getBounds().x;
-		boundY = canvas.getBounds().y;
+		boundX = this.gsm.getState(this.gsm.getCurState()).getCanvas().getBounds().x;
+		boundY = this.gsm.getState(this.gsm.getCurState()).getCanvas().getBounds().y;
 		
 		// TODO: Set dX and dY to values corresponding to mouse movement
 		if (this.gsm.getCurState() == 1 && !this.gsm.getState(this.gsm.getCurState()).getPaused()){
@@ -155,7 +145,7 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 			}
 			if (event.getKeyCode() == 27){
 				if (this.gsm.getState(this.gsm.getCurState()).getPaused() == true){
-					this.gsm.getState(this.gsm.getCurState()).unPause();
+					this.gsm.setUnPauseState();
 				}
 				else{
 					this.gsm.setPauseState();
@@ -232,8 +222,9 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 			if(event.getButton() == 1){
 				leftButtonDragged = false;
 			}
-			if(event.getButton() == 3)
+			if(event.getButton() == 3){
 				rightButtonDragged = false;
+			}
 	}
 
 	public void mouseWheelMoved(MouseWheelEvent event)
