@@ -125,7 +125,7 @@ public class Physics {
 	public void update(int deltaTime)
 	{
 		// Runs the JBullet physics simulation for the specified time in seconds.
-        dynamicsWorld.stepSimulation(deltaTime);
+        dynamicsWorld.stepSimulation(deltaTime/1000f); //Parameter for stepsim should be in seconds! deltaTime was in millisecs!
         
         Dispatcher dispatcher = dynamicsWorld.getDispatcher();
         int count  = 0;
