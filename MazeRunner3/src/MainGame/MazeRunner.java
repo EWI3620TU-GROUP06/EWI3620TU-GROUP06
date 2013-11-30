@@ -21,6 +21,7 @@ import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -140,7 +141,7 @@ public class MazeRunner implements GLEventListener {
 		// Add the maze that we will be using.
 
 		if (maze == null){
-			maze = new Maze();
+			maze = Maze.read(new File("src/Levels/Standard.mz"));
 		}
 
 		visibleObjects.add( maze );
