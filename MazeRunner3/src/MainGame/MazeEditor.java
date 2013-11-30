@@ -157,10 +157,11 @@ public class MazeEditor implements GLEventListener {
 				editor.getVerAngle());		
 		
 		editorMenu = new EditorMenu(maze, editor, screenWidth, screenHeight);
-		editorMenu.setControl(input);
 		
 		input = state.getGSM().getInput();
 		AddListening(input);
+		
+		editorMenu.setControl(input);
 
 		editor.setControl(input);
 		editor.setFOV(FOV);

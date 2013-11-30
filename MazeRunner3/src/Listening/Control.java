@@ -167,7 +167,7 @@ public abstract class Control
 		mouseClicked = 0;
 		rightButtonDragged = false;
 		leftButtonDragged = false;
-		leftReleased = false;
+		mouseReleased = 0;
 		leftButtonPressed = false;
 	}
 	/**
