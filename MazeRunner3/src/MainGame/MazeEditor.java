@@ -60,7 +60,7 @@ public class MazeEditor implements GLEventListener {
 	private int titleScale = 10;
 	private int textScale = 18;
 	private TextBoxManager clkbxman;
-	private EditorMenu editorMenu;
+	private EditBoxManager editBoxManager;
 
 	/*
 	 * **********************************************
@@ -154,18 +154,18 @@ public class MazeEditor implements GLEventListener {
 
 		camera = new Camera(editor.getLocation(), editor.getHorAngle(), editor.getVerAngle());		
 		
-		editorMenu = new EditorMenu(maze, editor, screenWidth, screenHeight);
+		editBoxManager = new EditBoxManager(maze, editor, screenWidth, screenHeight);
 		
 		input = state.getGSM().getInput();
 		AddListening(input);
 		
-		editorMenu.setControl(input);
+		editBoxManager.setControl(input);
 
 		editor.setControl(input);
 		editor.setFOV(FOV);
 		editor.setMaze(maze);
 		
-		editor.setEditorMenu(editorMenu);
+		editor.setEditBoxManager(editBoxManager);
 	}
 
 	private void initMenuText(){
@@ -233,7 +233,7 @@ public class MazeEditor implements GLEventListener {
 		GL gl = drawable.getGL();
 		GLU glu = new GLU();
 		Maze.initTextures(gl);
-		editorMenu.initTextures(gl);
+		editBoxManager.initTextures(gl);
 		
 		gl.glClearColor(0, 0, 0, 0); // Set the background color.
 
@@ -276,7 +276,7 @@ public class MazeEditor implements GLEventListener {
 		gl.glLoadIdentity();
 
 		if (!pause){
-			editorMenu.update();
+			editBoxManager.update();
 			editor.update(screenWidth, screenHeight);
 			
 			if(editor.getMaze() != visibleObjects.get(0))
@@ -310,16 +310,17 @@ public class MazeEditor implements GLEventListener {
 		gl.glLoadIdentity();
 		DrawingUtil.orthographicProjection(gl, screenWidth, screenHeight);
 		gl.glDisable(GL.GL_LIGHTING);
-		editorMenu.drawTextures(gl);
+		gl.glColor4f(1f,1f,1f,1f);
+		editBoxManager.drawTextures(gl);
+
 		gl.glEnable(GL.GL_LIGHTING);
 		if(pause){
 			DrawingUtil.drawPauseMenu(gl, 0, 0, screenWidth, screenHeight, 0.2f, 0.2f, 0.2f, 0.4f);
 			this.clkbxman.drawAllText();
 			this.clkbxman.update();
+			gl.glColor4f(1f,1f,1f,1f); //reset the glColor to white for textures
 		}
 		DrawingUtil.perspectiveProjection(gl, glu, FOV, screenWidth, screenHeight);
-
-		
 
 		// Flush the OpenGL buffer.
 		gl.glFlush();
@@ -357,7 +358,7 @@ public class MazeEditor implements GLEventListener {
 		this.game.setScreenHeight(screenHeight);
 		this.game.setScreenWidth(screenWidth);
 
-		editorMenu.reshape(screenWidth, screenHeight);
+		editBoxManager.reshape(screenWidth, screenHeight);
 		this.clkbxman.reshape(screenWidth, screenHeight); // to reshape the text accordingly
 
 		// Set the new projection matrix.
@@ -384,8 +385,6 @@ public class MazeEditor implements GLEventListener {
 
 		camera.calculateVRP();
 	}
-
-	
 
 	// Getter functions
 

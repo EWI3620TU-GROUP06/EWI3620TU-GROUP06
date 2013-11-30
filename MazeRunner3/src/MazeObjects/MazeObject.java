@@ -5,7 +5,6 @@ import javax.media.opengl.*;
 
 import java.util.ArrayList;
 
-import javax.vecmath.Tuple3f;
 import javax.vecmath.Vector3f;
 
 import com.sun.opengl.util.texture.Texture;

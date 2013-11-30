@@ -6,11 +6,9 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.vecmath.Vector3d;
 
-import Drawing.EditorMenu;
+import Drawing.EditBoxManager;
 import Listening.Control;
 import MainGame.Maze;
-import MazeObjects.CustomMazeObject;
-import MazeObjects.MazeObject;
 
 
 public class Editor extends GameObject{
@@ -18,7 +16,7 @@ public class Editor extends GameObject{
 	private float FOV;
 
 	private Control control; 
-	private EditorMenu editorMenu;
+	private EditBoxManager editBoxManager;
 
 	private double horAngle, verAngle;
 
@@ -51,9 +49,9 @@ public class Editor extends GameObject{
 		this.FOV = FOV;
 	}
 
-	public void setEditorMenu(EditorMenu menu)
+	public void setEditBoxManager(EditBoxManager ebm)
 	{
-		editorMenu = menu;
+		editBoxManager = ebm;
 	}
 
 	/**
@@ -148,7 +146,7 @@ public class Editor extends GameObject{
 			updateLocation(screenHeight, pos);
 		}
 		// When a selection of squares made by dragging is released, the selected squares are toggled
-		else if(control.getMouseReleased() == 1 && !editorMenu.isHoovering()){
+		else if(control.getMouseReleased() == 1 && !editBoxManager.isHoovering()){
 			maze.addBlock(drawMode, angle);
 		}
 		else
@@ -160,11 +158,11 @@ public class Editor extends GameObject{
 				// highlight the selection:
 				maze.select(selectedX, selectedZ);
 			}
-			else if(!editorMenu.isHoovering() && drawMode < 4)
+			else if(!editBoxManager.isHoovering() && drawMode < 4)
 			{
 				maze.select(selectedX, selectedZ);
 			}
-			else 
+			else if(!editBoxManager.isHoovering())
 			{
 				// If the element to be added is rotatable: find the correct orientation.
 				int dX = control.getMouseX() - pressedX;
