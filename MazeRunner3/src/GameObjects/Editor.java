@@ -8,8 +8,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import Drawing.EditBoxManager;
 import Listening.Control;
 import MainGame.Maze;
-import MazeObjects.CustomMazeObject;
-import MazeObjects.MazeObject;
 
 
 public class Editor extends GameObject{
