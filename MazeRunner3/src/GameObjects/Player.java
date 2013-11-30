@@ -177,6 +177,7 @@ public class Player extends GameObject {
 			if (control.getJump())
 			{	
 				if(physics.getContact()){
+					physics.clearForces();
 					physics.applyForce(0, power*30, 0);
 				}
 			}

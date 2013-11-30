@@ -151,7 +151,6 @@ public class Physics {
         	wallConnect = true;
         else
         	wallConnect = false;
-        dynamicsWorld.clearForces();
 	}
 	
 	public void applyForce(float x, float y, float z)
@@ -176,5 +175,9 @@ public class Physics {
 		RayResultCallback a = new CollisionWorld.ClosestRayResultCallback(getPlayerPosition(), toVect);
 		dynamicsWorld.rayTest(getPlayerPosition(), toVect, a);
 		return a.hasHit();
+	}
+	
+	public void clearForces(){
+		dynamicsWorld.clearForces();
 	}
 }
