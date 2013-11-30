@@ -113,7 +113,7 @@ public class MazeRunner implements GLEventListener {
 		/* We need to create an internal thread that instructs OpenGL to continuously repaint itself.
 		 * The Animator class handles that for JOGL.
 		 */
-		anim = new FPSAnimator( canvas, 60 );
+		anim = new FPSAnimator( canvas, 50 );
 		anim.start();
 	}
 
@@ -308,7 +308,7 @@ public class MazeRunner implements GLEventListener {
 			DrawingUtil.orthographicProjection(gl, screenWidth, screenHeight);
 			gl.glDisable(GL.GL_DEPTH_TEST);
 
-			DrawingUtil.drawPauseMenu(gl, 0, 0, screenWidth, screenHeight, 0.2f, 0.2f, 0.2f, 0.4f);
+			DrawingUtil.drawTrans(gl, 0, 0, screenWidth, screenHeight, 0.2f, 0.2f, 0.2f, 0.4f);
 			this.clkbxman.drawAllText();
 
 			DrawingUtil.perspectiveProjection(gl, glu, FOV, screenWidth, screenHeight);

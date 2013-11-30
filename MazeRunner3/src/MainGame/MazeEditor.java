@@ -120,7 +120,7 @@ public class MazeEditor implements GLEventListener {
 		 * continuously repaint itself. The Animator class handles that for
 		 * JOGL.
 		 */
-		anim = new FPSAnimator(canvas, 60);
+		anim = new FPSAnimator(canvas, 50);
 		anim.start();
 	}
 
@@ -312,15 +312,19 @@ public class MazeEditor implements GLEventListener {
 		gl.glDisable(GL.GL_LIGHTING);
 		gl.glColor4f(1f,1f,1f,1f);
 		editBoxManager.drawTextures(gl);
-
+		DrawingUtil.perspectiveProjection(gl, glu, FOV, screenWidth, screenHeight);
+		
 		gl.glEnable(GL.GL_LIGHTING);
 		if(pause){
-			DrawingUtil.drawPauseMenu(gl, 0, 0, screenWidth, screenHeight, 0.2f, 0.2f, 0.2f, 0.4f);
+			DrawingUtil.orthographicProjection(gl, screenWidth, screenHeight);
+			
+			DrawingUtil.drawTrans(gl, 0, 0, screenWidth, screenHeight, 0.2f, 0.2f, 0.2f, 0.4f);
 			this.clkbxman.drawAllText();
+			
+			DrawingUtil.perspectiveProjection(gl, glu, FOV, screenWidth, screenHeight);
 			this.clkbxman.update();
 			gl.glColor4f(1f,1f,1f,1f); //reset the glColor to white for textures
 		}
-		DrawingUtil.perspectiveProjection(gl, glu, FOV, screenWidth, screenHeight);
 
 		// Flush the OpenGL buffer.
 		gl.glFlush();
