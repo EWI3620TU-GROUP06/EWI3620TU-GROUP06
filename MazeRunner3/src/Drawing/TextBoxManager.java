@@ -1,10 +1,5 @@
 package Drawing;
 
-import java.util.ArrayList;
-
-import Listening.Command;
-import Listening.Control;
-
 public class TextBoxManager extends ClickBoxManager{
 
 	public void AddBox(ClickBox box)

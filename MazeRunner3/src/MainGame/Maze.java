@@ -1,7 +1,7 @@
 package MainGame;
 import javax.media.opengl.GL;
 
-import Drawing.MenuDrawing;
+import Drawing.DrawingUtil;
 import Drawing.VisibleObject;
 import MazeObjects.Box;
 import MazeObjects.Floor;
@@ -41,7 +41,7 @@ public class Maze implements VisibleObject {
 
 	private boolean[][] selected = new boolean[MAZE_SIZE][MAZE_SIZE];
 
-	private int[] startPosition = {6, 5, 90};
+	private int[] startPosition = {6, 0, 5, 90};
 	private int[] finishPosition = {8,8};
 
 	private static Texture boxTexture;
@@ -92,8 +92,8 @@ public class Maze implements VisibleObject {
 
 	public static void initTextures(GL gl)
 	{
-		boxTexture = MenuDrawing.initTexture(gl, "wall");
-		floorTexture = MenuDrawing.initTexture(gl, "floor");
+		boxTexture = DrawingUtil.initTexture(gl, "wall");
+		floorTexture = DrawingUtil.initTexture(gl, "floor");
 		
 		Box.addTexture(boxTexture);
 		Floor.addTexture(floorTexture);
@@ -130,10 +130,11 @@ public class Maze implements VisibleObject {
 
 	public double[] getStart()
 	{
-		double[] res= new double[3];
+		double[] res= new double[4];
 		res[0] = (startPosition[0] + 0.5)* SQUARE_SIZE;
-		res[1] = (startPosition[1] + 0.5)* SQUARE_SIZE;
-		res[2] = startPosition[2];
+		res[1] = (startPosition[1] + 0.5)*SQUARE_SIZE;
+		res[2] = (startPosition[2] + 0.5)* SQUARE_SIZE;
+		res[3] = startPosition[3];
 		return res;
 	}
 
@@ -193,7 +194,7 @@ public class Maze implements VisibleObject {
 	{
 		for(int i = 0; i < MAZE_SIZE; i++)
 			for (int j = 0; j < MAZE_SIZE; j++)
-				if (selected[i][j] && !(drawMode != 3 && i == startPosition[0] && j == startPosition[1])
+				if (selected[i][j] && !(drawMode != 3 && i == startPosition[0] && j == startPosition[2])
 						&& !(i == finishPosition[0] && j == finishPosition[1])) {
 					switch(drawMode)
 					{
@@ -201,8 +202,8 @@ public class Maze implements VisibleObject {
 					case 2 : maze[i][j]  = new Box(SQUARE_SIZE, SQUARE_SIZE/2, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
 					case 3 : 
 						startPosition[0] = i;
-						startPosition[1] = j;
-						startPosition[2] = angle;
+						startPosition[2] = j;
+						startPosition[3] = angle;
 						maze[i][j] = new StartArrow(SQUARE_SIZE, angle, i * SQUARE_SIZE, j * SQUARE_SIZE);
 						break;
 					case 4 : 
@@ -242,7 +243,7 @@ public class Maze implements VisibleObject {
 
 	public void save(File file) {
 		if (startPosition[0] < 0 || startPosition[0] >= MAZE_SIZE
-				|| startPosition[1] < 0 || startPosition[1] >= MAZE_SIZE) {
+				|| startPosition[2] < 0 || startPosition[2] >= MAZE_SIZE) {
 			System.err.println("Invalid start position.");
 		} else if (finishPosition[0] < 0 || finishPosition[0] >= MAZE_SIZE
 				|| finishPosition[1] < 0 || finishPosition[1] >= MAZE_SIZE) {
@@ -252,7 +253,7 @@ public class Maze implements VisibleObject {
 				PrintWriter wr = new PrintWriter(file);
 				wr.write(MAZE_SIZE + "\n");
 				wr.write(startPosition[0] + " " + startPosition[1] + " "
-						+ startPosition[2] + "\n");
+						+ startPosition[2] +  " " + startPosition[3] + "\n");
 				wr.write(finishPosition[0] + " " + finishPosition[1] + "\n");
 				for (int i = 0; i < maze[0].length; i++) {
 					for (int j = 0; j < maze.length; j++) {
@@ -282,10 +283,11 @@ public class Maze implements VisibleObject {
 		try {
 			Scanner sc = new Scanner(file);
 			int mazeSize = sc.nextInt();
-			int[] newStart = new int[3];
+			int[] newStart = new int[4];
 			newStart[0] = sc.nextInt();
 			newStart[1] = sc.nextInt();
 			newStart[2] = sc.nextInt();
+			newStart[3] = sc.nextInt();
 			int[] newFinish = new int[2];
 			newFinish[0] = sc.nextInt();
 			newFinish[1] = sc.nextInt();
@@ -334,7 +336,7 @@ public class Maze implements VisibleObject {
 					floorColour[2] = 0.6f;
 				}
 				//Draw the start and finish squares
-				if (i == startPosition[0] && j == startPosition[1])
+				if (i == startPosition[0] && j == startPosition[2])
 					maze[i][j].draw(gl,  startColour);
 				else if (i == finishPosition[0] && j == finishPosition[1])
 					maze[i][j].draw(gl,  finishColour);

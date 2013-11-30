@@ -8,7 +8,7 @@ import com.sun.opengl.util.texture.Texture;
 
 import Drawing.TextBox;
 import Drawing.TextBoxManager;
-import Drawing.MenuDrawing;
+import Drawing.DrawingUtil;
 import GameStates.GameState;
 import Listening.Command;
 import Listening.EditorCommand;
@@ -122,15 +122,11 @@ public class MainMenu implements GLEventListener {
 	@Override
 	public void init(GLAutoDrawable drawable) {
 		GL gl = drawable.getGL();
-		gl.glMatrixMode(GL.GL_PROJECTION);
-		gl.glLoadIdentity();
-		gl.glOrtho(0,screenWidth,0,screenHeight,-1,1); //2D by making a -1 to 1 z around the z = 0 plane
-		gl.glMatrixMode(GL.GL_MODELVIEW);
-		gl.glLoadIdentity();
+		DrawingUtil.orthographicProjection(gl, screenWidth, screenHeight);
 		gl.glDisable(GL.GL_DEPTH_TEST);
 			
 		// Preload the texture we want to use!
-		backgroundTexture = MenuDrawing.initTexture(gl, "mainmenu");
+		backgroundTexture = DrawingUtil.initTexture(gl, "mainmenu");
 	}
 		
 	@Override
@@ -156,9 +152,9 @@ public class MainMenu implements GLEventListener {
         gl.glMaterialfv(GL.GL_FRONT, GL.GL_AMBIENT, rgba, 0);
 		backgroundTexture.enable(); // Enable the background texture
 		backgroundTexture.bind(); // Bind the background texture to the next object
-		MenuDrawing.boxOnScreen(gl, 0, 0, screenWidth, screenHeight); // draw the background plane
+		DrawingUtil.boxOnScreen(gl, 0, 0, screenWidth, screenHeight); // draw the background plane
 		backgroundTexture.disable(); // Disable the background texture again, such that the next object is textureless
-		MenuDrawing.drawTrans(gl,0,0,screenWidth,screenHeight,0f,0f,0f,0.4f); // draw an extra greyish thing to increase contrast
+		DrawingUtil.drawTrans(gl,0,0,screenWidth,screenHeight,0f,0f,0f,0.4f); // draw an extra greyish thing to increase contrast
 		
 		this.clkbxman.drawAllText(); // draw the text in the menu
 		this.clkbxman.update();
@@ -185,11 +181,7 @@ public class MainMenu implements GLEventListener {
 		gl.glViewport( 0, 0, screenWidth, screenHeight );
 		
 		// Set the new projection matrix.
-		gl.glMatrixMode(GL.GL_PROJECTION);
-		gl.glLoadIdentity();
-		gl.glOrtho(0,screenWidth,0,screenHeight,-1,1); //2D by making a -1 to 1 z around the z = 0 plane
-		gl.glMatrixMode(GL.GL_MODELVIEW);
-		gl.glLoadIdentity();
+		DrawingUtil.orthographicProjection(gl, screenWidth, screenHeight);
 		gl.glDisable(GL.GL_DEPTH_TEST);
 		
 		//To init the drawing elements of overlay menu's/text etc.

@@ -4,6 +4,7 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.vecmath.Vector3d;
 
 import Drawing.EditorMenu;
 import Listening.Control;
@@ -33,9 +34,9 @@ public class Editor extends GameObject{
 
 	private byte drawMode;
 
-	public Editor(double x, double y, double z, double h, double v)
+	public Editor(Vector3d pos, double h, double v)
 	{
-		super(x, y, z);
+		super(pos);
 		horAngle = h;
 		verAngle = v;
 	}
@@ -128,10 +129,12 @@ public class Editor extends GameObject{
 
 	public void update(int screenWidth, int screenHeight)
 	{
+		double pos[] = new double[3];
+		location.get(pos);
 		int notches = control.getNotches();
 		// The Y position can never be lower then the highest wall
-		if(locationY + notches > maze.SQUARE_SIZE)
-			locationY += notches;
+		if(pos[1] + notches > maze.SQUARE_SIZE)
+			pos[1] += notches;
 		// Store the position where the left button was originally pressed
 		// This information is used while rotating slope that are to be placed. 
 		if(control.isLeftButtonPressed())
@@ -142,7 +145,7 @@ public class Editor extends GameObject{
 		// When dragging the right mouse button, the camera is moved.
 		if(control.isRightButtonDragged()){
 
-			updateLocation(screenHeight);
+			updateLocation(screenHeight, pos);
 		}
 		// When a selection of squares made by dragging is released, the selected squares are toggled
 		else if(control.getMouseReleased() == 1 && !editorMenu.isHoovering()){
@@ -150,7 +153,7 @@ public class Editor extends GameObject{
 		}
 		else
 		{
-			updateCursor(screenHeight, screenWidth);
+			updateCursor(screenHeight, screenWidth, pos);
 			// When dragging, the selected squares are remembered:
 			if(!control.isLeftButtonDragged()){
 				maze.clearSelected();
@@ -177,6 +180,7 @@ public class Editor extends GameObject{
 				maze.addBlock(drawMode, angle);
 			}
 		}
+		location.set(pos);
 	}
 
 	/**
@@ -186,15 +190,15 @@ public class Editor extends GameObject{
 	 * @param screenWidth	Width of the current window
 	 */
 
-	private void updateCursor(int screenHeight, int screenWidth)
+	private void updateCursor(int screenHeight, int screenWidth, double[] pos)
 	{
 		// The field of view relates to the portion of the map that is visible:
 		double halfTan = Math.tan(Math.toRadians(FOV/2));
-		double pixelsPerUnit = (screenHeight/2) / (halfTan * locationY); 
+		double pixelsPerUnit = (screenHeight/2) / (halfTan * pos[1]); 
 
 		// cursor position in ogl coordinates:
-		double cursorPositionX = (control.getMouseX() - screenWidth / 2) / pixelsPerUnit + locationX;
-		double cursorPositionZ = (control.getMouseY() - screenHeight / 2) / pixelsPerUnit + locationZ;
+		double cursorPositionX = (control.getMouseX() - screenWidth / 2) / pixelsPerUnit + pos[0];
+		double cursorPositionZ = (control.getMouseY() - screenHeight / 2) / pixelsPerUnit + pos[2];
 
 		// cursor position in maze coordinates:
 		selectedX = (int)(cursorPositionX / maze.SQUARE_SIZE);
@@ -207,15 +211,15 @@ public class Editor extends GameObject{
 	 * @param screenHeight	Height of the current window.
 	 */
 
-	private void updateLocation(int screenHeight)
+	private void updateLocation(int screenHeight, double[] pos)
 	{
 		// The field of view relates to the portion of the map that is visible:
 		double halfTan = Math.tan(Math.toRadians(FOV/2));
-		double pixelsPerUnit = (screenHeight/2) / (halfTan * locationY); 
+		double pixelsPerUnit = (screenHeight/2) / (halfTan * pos[1]); 
 
 		// camera position in ogl coordinates:
-		locationX = locationX - control.getdX() / pixelsPerUnit;
-		locationZ = locationZ - control.getdY() / pixelsPerUnit;
+		pos[0]= pos[0] - control.getdX() / pixelsPerUnit;
+		pos[2] = pos[2] - control.getdY() / pixelsPerUnit;
 	}
 
 	/**

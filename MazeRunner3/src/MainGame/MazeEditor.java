@@ -2,11 +2,11 @@ package MainGame;
 
 import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
+import javax.vecmath.Vector3d;
 
 import Drawing.*;
 import GameObjects.Camera;
 import GameObjects.Editor;
-
 import GameStates.GameState;
 import Listening.Command;
 import Listening.MainMenuCommand;
@@ -150,11 +150,9 @@ public class MazeEditor implements GLEventListener {
 
 		visibleObjects.add(maze);
 
-		editor = new Editor(maze.getSize() / 2, 60, maze.getSize()/2, 0, -89.99999);
+		editor = new Editor(new Vector3d(maze.getSize() / 2, 60, maze.getSize()/2), 0, -89.99999);
 
-		camera = new Camera(editor.getLocationX(), editor.getLocationY(),
-				editor.getLocationZ(), editor.getHorAngle(),
-				editor.getVerAngle());		
+		camera = new Camera(editor.getLocation(), editor.getHorAngle(), editor.getVerAngle());		
 		
 		editorMenu = new EditorMenu(maze, editor, screenWidth, screenHeight);
 		
@@ -239,7 +237,7 @@ public class MazeEditor implements GLEventListener {
 		
 		gl.glClearColor(0, 0, 0, 0); // Set the background color.
 
-		perspectiveProjection(gl, glu);
+		DrawingUtil.perspectiveProjection(gl, glu, FOV, screenWidth, screenHeight);
 
 		// Enable back-face culling.
 		gl.glCullFace(GL.GL_BACK);
@@ -290,11 +288,16 @@ public class MazeEditor implements GLEventListener {
 			}
 			updateCamera();
 		}
+		
+		double[] pos = new double[3];
+		double[] vuv = new double[3];
+		double[] vrp = new double[3];
+		camera.getLocation().get(pos);
+		camera.getVuv().get(vuv);
+		camera.getVrp().get(vrp);
 
-		glu.gluLookAt(camera.getLocationX(), camera.getLocationY(),
-				camera.getLocationZ(), camera.getVrpX(), camera.getVrpY(),
-				camera.getVrpZ(), camera.getVuvX(), camera.getVuvY(),
-				camera.getVuvZ());
+		glu.gluLookAt(pos[0], pos[1], pos[2], 
+				vrp[0], vrp[1], vrp[2], vuv[0], vuv[1], vuv[2]);
 
 		// Display all the visible objects of MazeRunner.
 		for (Iterator<VisibleObject> it = visibleObjects.iterator(); it
@@ -302,24 +305,21 @@ public class MazeEditor implements GLEventListener {
 			it.next().display(gl);
 		}
 
-
 		// When editing: use an orthographic projection to draw the HUD on the screen, 
 		// then set the perspective projection back
 		gl.glLoadIdentity();
-		orthographicProjection(gl);
+		DrawingUtil.orthographicProjection(gl, screenWidth, screenHeight);
 		gl.glDisable(GL.GL_LIGHTING);
 		editorMenu.drawTextures(gl);
-		//MenuDrawing.drawButtons(gl);
 		gl.glEnable(GL.GL_LIGHTING);
-		perspectiveProjection(gl, glu);
-
 		if(pause){
-			orthographicProjection(gl);
-			MenuDrawing.drawPauseMenu(gl, 0, 0, screenWidth, screenHeight, 0.2f, 0.2f, 0.2f, 0.4f);
+			DrawingUtil.drawPauseMenu(gl, 0, 0, screenWidth, screenHeight, 0.2f, 0.2f, 0.2f, 0.4f);
 			this.clkbxman.drawAllText();
-			perspectiveProjection(gl, glu);
 			this.clkbxman.update();
 		}
+		DrawingUtil.perspectiveProjection(gl, glu, FOV, screenWidth, screenHeight);
+
+		
 
 		// Flush the OpenGL buffer.
 		gl.glFlush();
@@ -361,7 +361,7 @@ public class MazeEditor implements GLEventListener {
 		this.clkbxman.reshape(screenWidth, screenHeight); // to reshape the text accordingly
 
 		// Set the new projection matrix.
-		perspectiveProjection(gl, glu);
+		DrawingUtil.perspectiveProjection(gl, glu, FOV, screenWidth, screenHeight);
 	}
 
 	/*
@@ -378,39 +378,14 @@ public class MazeEditor implements GLEventListener {
 
 	private void updateCamera() {
 
-		camera.setLocationX(editor.getLocationX());
-		camera.setLocationY(editor.getLocationY());
-		camera.setLocationZ(editor.getLocationZ());
+		camera.setLocation(editor.getLocation());
 		camera.setHorAngle(editor.getHorAngle());
 		camera.setVerAngle(editor.getVerAngle());
 
 		camera.calculateVRP();
 	}
 
-	/**
-	 * Convenience method to perform an orthographic projection
-	 */
-
-	private void orthographicProjection(GL gl)
-	{
-		gl.glViewport(0, 0, screenWidth, screenHeight);
-		gl.glMatrixMode(GL.GL_PROJECTION);
-		gl.glLoadIdentity();
-		gl.glOrtho(0.0f, screenWidth, 0.0f, screenHeight, 0.0f, 1.0f);
-		gl.glMatrixMode(GL.GL_MODELVIEW);
-	}
-
-	/**
-	 * Convenience method to perform a perspective projection
-	 */
-	private void perspectiveProjection(GL gl, GLU glu)
-	{
-		gl.glViewport(0, 0, screenWidth, screenHeight);
-		gl.glMatrixMode(GL.GL_PROJECTION);
-		gl.glLoadIdentity();
-		glu.gluPerspective(FOV, (float)screenWidth / (float)screenHeight, 0.001f, Float.MAX_VALUE); 
-		gl.glMatrixMode(GL.GL_MODELVIEW);
-	}
+	
 
 	// Getter functions
 

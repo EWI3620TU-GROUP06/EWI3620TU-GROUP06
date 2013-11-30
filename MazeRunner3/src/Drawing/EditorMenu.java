@@ -46,8 +46,8 @@ public class EditorMenu extends ClickBoxManager {
 		for(int i = 0; i < numButtons; i++)
 		{
 
-			Texture pressedTexture = MenuDrawing.initTexture(gl, "button " + i + " pressed");
-			Texture notPressedTexture = MenuDrawing.initTexture(gl, "button " + i + " not pressed");
+			Texture pressedTexture = DrawingUtil.initTexture(gl, "button " + i + " pressed");
+			Texture notPressedTexture = DrawingUtil.initTexture(gl, "button " + i + " not pressed");
 			((EditorBox)Boxes.get(i)).setTextures(pressedTexture, notPressedTexture);
 		}
 	}

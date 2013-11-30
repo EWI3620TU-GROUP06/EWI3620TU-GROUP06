@@ -4,15 +4,15 @@ package Drawing;
 import java.io.InputStream;
 
 import javax.media.opengl.GL;
+import javax.media.opengl.glu.GLU;
 
 import com.sun.opengl.util.texture.Texture;
 import com.sun.opengl.util.texture.TextureData;
 import com.sun.opengl.util.texture.TextureIO;
 
-//import GameObjects.Editor;
 
-public class MenuDrawing {
-	
+public abstract class DrawingUtil {
+
 	public static void drawTrans(GL gl, float x, float y, float width, float height
 			,float r, float g, float b, float a){
 		//De onderstaande functies
@@ -76,7 +76,7 @@ public class MenuDrawing {
 		textureName = "/Textures/" + textureName + ".jpg";
 		Texture res = null;
 		try{
-			InputStream stream = MenuDrawing.class.getResourceAsStream(textureName);
+			InputStream stream = DrawingUtil.class.getResourceAsStream(textureName);
 			TextureData data = TextureIO.newTextureData(stream, false, "jpg");
 			res = TextureIO.newTexture(data);
 			stream.close();
@@ -102,6 +102,31 @@ public class MenuDrawing {
 		gl.glVertex2f(x, y + sizeY);
 		gl.glTexCoord2f(0, 1);
 		gl.glEnd();
+	}
+	
+	/**
+	 * Convenience method to perform an orthographic projection
+	 */
+
+	public static void orthographicProjection(GL gl, int screenWidth, int screenHeight)
+	{
+		gl.glViewport(0, 0, screenWidth, screenHeight);
+		gl.glMatrixMode(GL.GL_PROJECTION);
+		gl.glLoadIdentity();
+		gl.glOrtho(0.0f, screenWidth, 0.0f, screenHeight, 0.0f, 1.0f);
+		gl.glMatrixMode(GL.GL_MODELVIEW);
+	}
+
+	/**
+	 * Convenience method to perform a perspective projection
+	 */
+	public static void perspectiveProjection(GL gl, GLU glu, float FOV, int screenWidth, int screenHeight)
+	{
+		gl.glViewport(0, 0, screenWidth, screenHeight);
+		gl.glMatrixMode(GL.GL_PROJECTION);
+		gl.glLoadIdentity();
+		glu.gluPerspective(FOV, (float)screenWidth / (float)screenHeight, 0.001f, Float.MAX_VALUE); 
+		gl.glMatrixMode(GL.GL_MODELVIEW);
 	}
 	
 }

@@ -25,6 +25,7 @@ import com.bulletphysics.util.ObjectArrayList;
 
 import javax.vecmath.Matrix4f;
 import javax.vecmath.Quat4f;
+import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
 public class Physics {
@@ -50,7 +51,7 @@ public class Physics {
 	
 	public Physics(Maze maze)
 	{		
-		Transform DEFAULT_BALL_TRANSFORM = new Transform(new Matrix4f(new Quat4f(0, 0, 0, 1), new Vector3f((float)maze.getStart()[0], 10, (float)maze.getStart()[1]), 1.0f));
+		Transform DEFAULT_BALL_TRANSFORM = new Transform(new Matrix4f(new Quat4f(0, 0, 0, 1), new Vector3f((float)maze.getStart()[0], 10, (float)maze.getStart()[2]), 1.0f));
 		/**
          * The object that will roughly find out whether bodies are colliding.
          */

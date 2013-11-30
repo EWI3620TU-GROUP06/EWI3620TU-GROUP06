@@ -1,4 +1,7 @@
 package GameObjects;
+
+import javax.vecmath.Vector3d;
+
 /**
  * Camera represents the camera player in MazeRunner.
  * <p>
@@ -15,22 +18,20 @@ package GameObjects;
  */
 public class Camera extends GameObject {
 	private double horAngle, verAngle;
-	private double vrpX, vrpY, vrpZ;
-	private double vuvX, vuvY, vuvZ;
-	
-	public Camera( double x, double y, double z, double h, double v ) {
+	private Vector3d vrp;
+	private Vector3d vuv;
+
+	public Camera( Vector3d pos, double h, double v ) {
 		// Set the initial position and viewing direction of the player.
-		super( x, y, z );
+		super(pos);
 		horAngle = h;
 		verAngle = v;
-		
+
 		// Calculate a likely view reference point.
 		calculateVRP();
-		
+
 		// Set the view up vector to be parallel to the y-axis of the world.
-		vuvX = 0.0;
-		vuvY = 1.0;
-		vuvZ = 0.0;
+		vuv = new Vector3d(0, 1, 0);
 	}
 
 	/**
@@ -41,9 +42,10 @@ public class Camera extends GameObject {
 	 * always looks in front of the player.
 	 */
 	public void calculateVRP() {
-		vrpX = locationX + -Math.sin( Math.PI * horAngle / 180 ) * Math.cos( Math.PI * verAngle / 180 );
-		vrpY = locationY + Math.sin( Math.PI * verAngle / 180 );
-		vrpZ = locationZ + -Math.cos( Math.PI * horAngle / 180 ) * Math.cos( Math.PI * verAngle / 180 );
+		vrp = new Vector3d( -Math.sin( Math.PI * horAngle / 180 ) * Math.cos( Math.PI * verAngle / 180 ),
+				 Math.sin( Math.PI * verAngle / 180),
+				 -Math.cos( Math.PI * horAngle / 180 ) * Math.cos( Math.PI * verAngle / 180 ));
+		vrp.add(location);
 	}
 
 	/**
@@ -77,100 +79,20 @@ public class Camera extends GameObject {
 	public void setVerAngle(double verAngle) {
 		this.verAngle = verAngle;
 	}
-
-	/**
-	 * Returns the x-coordinate of the view reference point.
-	 * @return the vrpX
-	 */
-	public double getVrpX() {
-		return vrpX;
+	
+	public Vector3d getVrp(){
+		return vrp;
 	}
-
-	/**
-	 * Sets the x-coordinate of the view reference point.
-	 * @param vrpX the vrpX to set
-	 */
-	public void setVrpX(double vrpX) {
-		this.vrpX = vrpX;
+	
+	public void setVrp(Vector3d vrp){
+		this.vrp = vrp;
 	}
-
-	/**
-	 * Returns the y-coordinate of the view reference point.
-	 * @return the vrpY
-	 */
-	public double getVrpY() {
-		return vrpY;
+	
+	public Vector3d getVuv(){
+		return vuv;
 	}
-
-	/**
-	 * Sets the y-coordinate of the view reference point.
-	 * @param vrpY the vrpY to set
-	 */
-	public void setVrpY(double vrpY) {
-		this.vrpY = vrpY;
-	}
-
-	/**
-	 * Returns the z-coordinate of the view reference point.
-	 * @return the vrpZ
-	 */
-	public double getVrpZ() {
-		return vrpZ;
-	}
-
-	/**
-	 * Sets the z-coordinate of the view reference point.
-	 * @param vrpZ the vrpZ to set
-	 */
-	public void setVrpZ(double vrpZ) {
-		this.vrpZ = vrpZ;
-	}
-
-	/**
-	 * Returns the x-coordinate of the view up vector.
-	 * @return the vuvX
-	 */
-	public double getVuvX() {
-		return vuvX;
-	}
-
-	/**
-	 * Sets the x-coordinate of the view up vector.
-	 * @param vuvX the vuvX to set
-	 */
-	public void setVuvX(double vuvX) {
-		this.vuvX = vuvX;
-	}
-
-	/**
-	 * Returns the y-coordinate of the view up vector.
-	 * @return the vuvY
-	 */
-	public double getVuvY() {
-		return vuvY;
-	}
-
-	/**
-	 * Sets the y-coordinate of the view up vector.
-	 * @param vuvY the vuvY to set
-	 */
-	public void setVuvY(double vuvY) {
-		this.vuvY = vuvY;
-	}
-
-	/**
-	 * Returns the z-coordinate of the view up vector.
-	 * @return the vuvZ
-	 */
-	public double getVuvZ() {
-		return vuvZ;
-	}
-
-	/**
-	 * Sets the z-coordinate of the view up vector.
-	 * @param vuvZ the vuvZ to set
-	 */
-	public void setVuvZ(double vuvZ) {
-		this.vuvZ = vuvZ;
+	
+	public void setVuv(Vector3d vuv){
+		this.vuv = vuv;
 	}
 }

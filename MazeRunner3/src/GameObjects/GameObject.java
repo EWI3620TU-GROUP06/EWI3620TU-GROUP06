@@ -1,4 +1,7 @@
 package GameObjects;
+
+import javax.vecmath.Vector3d;
+
 /**
  * GameObject is the superclass for all the objects in the game that need a location.
  * <p>
@@ -10,7 +13,7 @@ package GameObjects;
  *
  */
 public class GameObject {
-	protected double locationX, locationY, locationZ;
+	protected Vector3d location;
 
 	/**
 	 * The default GameObject constructor. 
@@ -23,57 +26,17 @@ public class GameObject {
 	 * @param y		the y-coordinate of the location
 	 * @param z		the z-coordinate of the location
 	 */
-	public GameObject( double x, double y, double z ) {
-		locationX = x;
-		locationY = y;
-		locationZ = z;
+	public GameObject( Vector3d pos) {
+		location = pos;
 	}
 
-	/**
-	 * Sets the x-coordinate of the location.
-	 * @param locationX the locationX to set
-	 */
-	public void setLocationX(double locationX) {
-		this.locationX = locationX;
+	public void setLocation(Vector3d v)
+	{
+		location = v;
 	}
-
-	/**
-	 * Returns the y-coordinate of the location.
-	 * @return the locationX
-	 */
-	public double getLocationX() {
-		return locationX;
-	}
-
-	/**
-	 * Sets the y-coordinate of the location.
-	 * @param locationY the locationY to set
-	 */
-	public void setLocationY(double locationY) {
-		this.locationY = locationY;
-	}
-
-	/**
-	 * Returns the y-coordinate of the location.
-	 * @return the locationY
-	 */
-	public double getLocationY() {
-		return locationY;
-	}
-
-	/**
-	 * Sets the z-coordinate of the location.
-	 * @param locationZ the locationZ to set
-	 */
-	public void setLocationZ(double locationZ) {
-		this.locationZ = locationZ;
-	}
-
-	/**
-	 * Returns the z-coordinate of the location.
-	 * @return the locationZ
-	 */
-	public double getLocationZ() {
-		return locationZ;
+	
+	public Vector3d getLocation()
+	{
+		return location;
 	}
 }

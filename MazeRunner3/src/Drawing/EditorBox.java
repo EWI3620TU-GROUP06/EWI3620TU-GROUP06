@@ -48,7 +48,7 @@ public class EditorBox extends ClickBox {
 			activeTexture = notPressed;
 		activeTexture.enable();
 		activeTexture.bind();
-		MenuDrawing.boxOnScreen(gl, location[0], location[1], Bounds[1] - Bounds[0], Bounds[2] - Bounds[3]);
+		DrawingUtil.boxOnScreen(gl, location[0], location[1], Bounds[1] - Bounds[0], Bounds[2] - Bounds[3]);
 		activeTexture.disable();
 		
 	}

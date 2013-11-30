@@ -1,5 +1,6 @@
 package GameObjects;
 
+import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
 import Listening.Control;
@@ -47,9 +48,9 @@ public class Player extends GameObject {
 	 * @param h		the horizontal angle of the orientation in degrees
 	 * @param v		the vertical angle of the orientation in degrees
 	 */
-	public Player( double x, double y, double z, double h, double v, Maze maze) {
+	public Player( Vector3d pos, double h, double v, Maze maze) {
 		// Set the initial position and viewing direction of the player.
-		super( x, y, z );
+		super( pos );
 		horAngle = h;
 		verAngle = v;
 		//speed = new Vector3f(0.0f, 0.0f, 0.0f);
@@ -144,15 +145,13 @@ public class Player extends GameObject {
 			
 			physics.update(deltaTime);
 			
-			Vector3f position = physics.getPlayerPosition();
+			Vector3f pos = physics.getPlayerPosition();
 			
-			float[] pos = new float[3];
+			float[] position = new float[3];
 			
-			position.get(pos);
+			pos.get(position);
 			
-			locationX = pos[0];
-			locationY = pos[1];
-			locationZ = pos[2];
+			location = new Vector3d(position[0], position[1], position[2]);
 			
 			double cos = Math.cos(Math.toRadians(this.getHorAngle()));
 			double sin = Math.sin(Math.toRadians(this.getHorAngle()));
@@ -177,8 +176,8 @@ public class Player extends GameObject {
 			}
 			if (control.getJump())
 			{	
-				System.out.println(locationY);
-				if(locationY < 1.05){
+				System.out.println(position[1]);
+				if(position[1] < 1.05){
 				System.out.println("jump");
 				physics.applyForce(0, power*30, 0);
 				}

@@ -3,8 +3,9 @@ package GameObjects;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.glu.GLU;
+import javax.vecmath.Vector3d;
 
-import Drawing.MenuDrawing;
+import Drawing.DrawingUtil;
 import Drawing.VisibleObject;
 
 import com.sun.opengl.impl.GLUquadricImpl;
@@ -17,7 +18,7 @@ import com.sun.opengl.util.texture.Texture;
 
 public class PlayerSprite implements VisibleObject {
 
-	private double posX, posY, posZ;
+	private Vector3d location;
 
 	private double dX, dZ;
 	private double orientation;
@@ -26,11 +27,9 @@ public class PlayerSprite implements VisibleObject {
 	private Texture sphereTexture;
 	GLUquadricImpl sphere;
 
-	public PlayerSprite(float squareSize, double x, double y, double z, float angle)
+	public PlayerSprite(float squareSize, Vector3d pos, float angle)
 	{
-		posX = x;
-		posY = y;
-		posZ = z;
+		location = pos;
 
 		orientation = angle;
 		totalRotation = 0;
@@ -48,7 +47,7 @@ public class PlayerSprite implements VisibleObject {
 		sphere.setTextureFlag(true);
 		sphere.setDrawStyle(GLU.GLU_FILL);
 		sphere.setOrientation(0);
-		sphereTexture = MenuDrawing.initTexture(gl, "ball");
+		sphereTexture = DrawingUtil.initTexture(gl, "ball");
 	}
 
 
@@ -60,7 +59,9 @@ public class PlayerSprite implements VisibleObject {
 		sphereTexture.bind(); 
 		gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, ballColour, 0);
 		gl.glPushMatrix();
-		gl.glTranslated(posX, posY, posZ);
+		double pos[] = new double[3];
+		location.get(pos);
+		gl.glTranslated(pos[0], pos[1], pos[2]);
 
 
 		gl.glRotated(-Math.toDegrees(orientation), 0, 1, 0);
@@ -78,16 +79,18 @@ public class PlayerSprite implements VisibleObject {
 	 * @param x	new X coordinate of the sprite
 	 * @param z	new Z coordinate of the sprite
 	 */
-	public void update(double x, double y, double z)
+	public void update(Vector3d newPos)
 	{
-		dX = posX - x;
-		dZ = posZ - z;
+		Vector3d d = new Vector3d(location);
+		d.sub(newPos);
+		double pos[] = new double[3];
+		d.get(pos);
+		dX = pos[0];
+		dZ = pos[2];
 		if(dX !=0 || dZ != 0)
 			orientation = Math.atan2(dZ,dX);
 
-		posX = x;
-		posY = y;
-		posZ = z;
+		location = newPos;
 	}
 	
 	public void pause()
