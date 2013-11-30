@@ -309,7 +309,6 @@ public class MazeEditor implements GLEventListener {
 		orthographicProjection(gl);
 		gl.glDisable(GL.GL_LIGHTING);
 		editorMenu.drawTextures(gl);
-		//MenuDrawing.drawButtons(gl);
 		gl.glEnable(GL.GL_LIGHTING);
 		perspectiveProjection(gl, glu);
 
