@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javax.media.opengl.GLAutoDrawable;
 
+import Listening.UserInput;
 import Main.Game;
 
 public class gStateMan {
@@ -13,7 +14,8 @@ public class gStateMan {
 	public static final int MENUSTATE = 0;
 	public static final int PLAYSTATE = 1;
 	public static final int EDITSTATE = 2;
-	public Game game;
+	private Game game;
+	private UserInput input;
 	
 	public gStateMan(Game game){
 		this.game = game;
@@ -22,6 +24,7 @@ public class gStateMan {
 		gameStates.add(new MenuState(this, game));
 		gameStates.add(new PlayState(this, game));
 		gameStates.add(new EditState(this, game));
+		input = new UserInput(this);
 		update();
 	}
 	
@@ -29,6 +32,7 @@ public class gStateMan {
 		game.remove(gameStates.get(currentState).getCanvas());
 		this.currentState = s;
 		update();
+		input.reset();
 		gameStates.get(currentState).unPause();
 		gameStates.get(currentState).playMusic();
 		game.validate();
@@ -69,5 +73,9 @@ public class gStateMan {
 	
 	public GameState getState(int i){
 		return gameStates.get(i);		
+	}
+	
+	public UserInput getInput(){
+		return input;
 	}
 }

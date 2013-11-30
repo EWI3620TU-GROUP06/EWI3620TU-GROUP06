@@ -154,7 +154,8 @@ public class MazeRunner implements GLEventListener {
 		camera = new Camera(player.getLocationX(), player.getLocationY(), player.getLocationZ(), 
 				             player.getHorAngle(), player.getVerAngle() );
 		
-		input = new UserInput(canvas, state.getGSM());
+		input = state.getGSM().getInput();
+		AddListening(input);
 		player.setControl(input);
 		
 	}
@@ -418,5 +419,11 @@ public class MazeRunner implements GLEventListener {
 	
 	private void showCursor(){
 		game.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+	}
+	
+	private void AddListening(UserInput input){
+		canvas.addMouseListener(input);
+		canvas.addMouseMotionListener(input);
+		canvas.addKeyListener(input);
 	}
 }

@@ -155,7 +155,8 @@ public class MazeEditor implements GLEventListener {
 				editor.getLocationZ(), editor.getHorAngle(),
 				editor.getVerAngle());
 
-		input = new UserInput(canvas, state.getGSM());
+		input = state.getGSM().getInput();
+		AddListening(input);
 		editor.setControl(input);
 		editor.setFOV(FOV);
 		editor.setMaze(maze);
@@ -421,5 +422,12 @@ public class MazeEditor implements GLEventListener {
 	public void unPause(){
 		pause = false;
 		input.reset();
+	}
+	
+	private void AddListening(UserInput input){
+		canvas.addMouseListener(input);
+		canvas.addMouseMotionListener(input);
+		canvas.addKeyListener(input);
+		canvas.addMouseWheelListener(input);
 	}
 }
