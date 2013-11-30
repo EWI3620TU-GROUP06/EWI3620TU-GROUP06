@@ -3,7 +3,7 @@ package MainGame;
 import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
 
-import com.sun.opengl.util.Animator;
+import com.sun.opengl.util.*;
 
 import Drawing.*;
 import GameObjects.Camera;
@@ -57,7 +57,7 @@ public class MazeRunner implements GLEventListener {
 	private GameState state;
 	private GLCanvas canvas;
 	private Game game;
-	private Animator anim;
+	private FPSAnimator anim;
 	private boolean pause;
 	private int titleScale = 10;
 	private int textScale = 18;
@@ -110,7 +110,7 @@ public class MazeRunner implements GLEventListener {
 		/* We need to create an internal thread that instructs OpenGL to continuously repaint itself.
 		 * The Animator class handles that for JOGL.
 		 */
-		anim = new Animator( canvas );
+		anim = new FPSAnimator( canvas, 60 );
 		anim.start();
 	}
 	
