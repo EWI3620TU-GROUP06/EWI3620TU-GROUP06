@@ -60,7 +60,7 @@ public class MazeEditor implements GLEventListener {
 	private int titleScale = 10;
 	private int textScale = 18;
 	private TextBoxManager clkbxman;
-	private EditBoxManager editorMenu;
+	private EditBoxManager editBoxManager;
 
 	/*
 	 * **********************************************
@@ -156,18 +156,18 @@ public class MazeEditor implements GLEventListener {
 				editor.getLocationZ(), editor.getHorAngle(),
 				editor.getVerAngle());		
 		
-		editorMenu = new EditBoxManager(maze, editor, screenWidth, screenHeight);
+		editBoxManager = new EditBoxManager(maze, editor, screenWidth, screenHeight);
 		
 		input = state.getGSM().getInput();
 		AddListening(input);
 		
-		editorMenu.setControl(input);
+		editBoxManager.setControl(input);
 
 		editor.setControl(input);
 		editor.setFOV(FOV);
 		editor.setMaze(maze);
 		
-		editor.setEditorMenu(editorMenu);
+		editor.setEditBoxManager(editBoxManager);
 	}
 
 	private void initMenuText(){
@@ -235,7 +235,7 @@ public class MazeEditor implements GLEventListener {
 		GL gl = drawable.getGL();
 		GLU glu = new GLU();
 		Maze.initTextures(gl);
-		editorMenu.initTextures(gl);
+		editBoxManager.initTextures(gl);
 		
 		gl.glClearColor(0, 0, 0, 0); // Set the background color.
 
@@ -278,7 +278,7 @@ public class MazeEditor implements GLEventListener {
 		gl.glLoadIdentity();
 
 		if (!pause){
-			editorMenu.update();
+			editBoxManager.update();
 			editor.update(screenWidth, screenHeight);
 			
 			if(editor.getMaze() != visibleObjects.get(0))
@@ -308,7 +308,7 @@ public class MazeEditor implements GLEventListener {
 		gl.glLoadIdentity();
 		orthographicProjection(gl);
 		gl.glDisable(GL.GL_LIGHTING);
-		editorMenu.drawTextures(gl);
+		editBoxManager.drawTextures(gl);
 		gl.glEnable(GL.GL_LIGHTING);
 		perspectiveProjection(gl, glu);
 
@@ -357,7 +357,7 @@ public class MazeEditor implements GLEventListener {
 		this.game.setScreenHeight(screenHeight);
 		this.game.setScreenWidth(screenWidth);
 
-		editorMenu.reshape(screenWidth, screenHeight);
+		editBoxManager.reshape(screenWidth, screenHeight);
 		this.clkbxman.reshape(screenWidth, screenHeight); // to reshape the text accordingly
 
 		// Set the new projection matrix.

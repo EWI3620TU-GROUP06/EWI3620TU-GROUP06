@@ -84,8 +84,7 @@ public class EditBoxManager extends ClickBoxManager {
 				}
 			}
 		}
-		else
-		{
+		else{
 			hoovering = false;
 			for(ClickBox a: Boxes){
 				if(a.isInBounds(control.getMouseX(), control.getMouseY())){
