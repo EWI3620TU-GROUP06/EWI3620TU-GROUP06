@@ -350,13 +350,12 @@ public class MazeRunner implements GLEventListener {
 		screenHeight = height;
 		this.game.setScreenHeight(screenHeight);
 		this.game.setScreenWidth(screenWidth);
-		gl.glViewport( 0, 0, screenWidth, screenHeight );
+		
+		//Init the manudrawing elements to render title etc.
+		this.clkbxman.reshape(screenWidth, screenHeight);
 
 		// Set the new projection matrix.
 		DrawingUtil.perspectiveProjection(gl, glu, FOV, screenWidth, screenHeight);
-
-		//Init the manudrawing elements to render title etc.
-		this.clkbxman.reshape(screenWidth, screenHeight);
 	}
 
 	/*

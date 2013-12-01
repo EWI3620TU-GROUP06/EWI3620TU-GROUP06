@@ -178,7 +178,6 @@ public class MainMenu implements GLEventListener {
 		screenHeight = height;
 		this.game.setScreenHeight(screenHeight);
 		this.game.setScreenWidth(screenWidth);
-		gl.glViewport( 0, 0, screenWidth, screenHeight );
 		
 		// Set the new projection matrix.
 		DrawingUtil.orthographicProjection(gl, screenWidth, screenHeight);
