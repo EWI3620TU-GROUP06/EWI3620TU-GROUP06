@@ -48,6 +48,7 @@ public abstract class DrawingUtil {
 		try{
 			InputStream stream = DrawingUtil.class.getResourceAsStream(textureName);
 			TextureData data = TextureIO.newTextureData(stream, false, "jpg");
+			data.setMipmap(true);
 			res = TextureIO.newTexture(data);
 			stream.close();
 		}
