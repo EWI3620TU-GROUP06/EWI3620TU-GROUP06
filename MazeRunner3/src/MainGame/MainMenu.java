@@ -20,7 +20,9 @@ public class MainMenu implements GLEventListener {
 	private Texture backgroundTexture;
 	private GameState state;
 	private TextBoxManager clkbxman;
+	private TextBoxManager optclkbxman;
 	private UserInput input;
+	private boolean optmenu;
 	
 	public MainMenu(Game game, GameState state) {
 		this.game = game;
@@ -61,9 +63,12 @@ public class MainMenu implements GLEventListener {
 	private void initMenuText(){
 		
 		String[] commands = {"Play", "Load","Options", "Editor", "Quit"};
+		String[] optcommands = {"Toggle Fullscreen", "Back"};
 		//Add the clickboxes for the pauze menu
 		this.clkbxman = TextBoxManager.createMenu(screenWidth, screenHeight, "MadBalls", commands, this.state.getGSM()); 
+		this.optclkbxman = TextBoxManager.createMenu(screenWidth, screenHeight, "Options", optcommands, this.state.getGSM());
 		this.clkbxman.setControl(input);
+		this.optclkbxman.setControl(input);
 	}
 	
 	@Override
@@ -103,8 +108,14 @@ public class MainMenu implements GLEventListener {
 		backgroundTexture.disable(); // Disable the background texture again, such that the next object is textureless
 		DrawingUtil.drawTrans(gl,0,0,screenWidth,screenHeight,0f,0f,0f,0.4f); // draw an extra greyish thing to increase contrast
 		
-		this.clkbxman.drawAllText(); // draw the text in the menu
-		this.clkbxman.update();
+		if(!optmenu){
+			this.clkbxman.drawAllText(); // draw the text in the menu
+			this.clkbxman.update();
+		}
+		else{
+			this.optclkbxman.drawAllText();
+			this.optclkbxman.update();
+		}
 		
 		gl.glFlush();
 	}
@@ -132,6 +143,7 @@ public class MainMenu implements GLEventListener {
 		
 		//To init the drawing elements of overlay menu's/text etc.
 		this.clkbxman.reshape(screenWidth, screenHeight);
+		this.optclkbxman.reshape(screenWidth, screenHeight);
 	}
 	
 	public GLCanvas getCanvas(){
@@ -141,5 +153,13 @@ public class MainMenu implements GLEventListener {
 	private void AddListening(UserInput input){
 		canvas.addMouseListener(input);
 		canvas.addMouseMotionListener(input);
+	}
+	
+	public void setOptionsMenu(){
+		this.optmenu = true;
+	}
+	
+	public void setMainMenu(){
+		this.optmenu = false;
 	}
 }

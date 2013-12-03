@@ -12,9 +12,8 @@ public class gStateMan {
 	private ArrayList<GameState> gameStates;
 	private int currentState;
 	public static final int MENUSTATE = 0;
-	public static final int OPTSTATE = 1;
-	public static final int PLAYSTATE = 2;
-	public static final int EDITSTATE = 3;
+	public static final int PLAYSTATE = 1;
+	public static final int EDITSTATE = 2;
 	private Game game;
 	private UserInput input;
 	
@@ -23,7 +22,6 @@ public class gStateMan {
 		gameStates = new ArrayList<GameState>();
 		currentState = MENUSTATE;
 		gameStates.add(new MenuState(this, game));
-		gameStates.add(new OptionsState(this, game));
 		gameStates.add(new PlayState(this, game));
 		gameStates.add(new EditState(this, game));
 		input = new UserInput(this);
@@ -36,6 +34,7 @@ public class gStateMan {
 		update();
 		input.reset();
 		gameStates.get(currentState).unPause();
+		gameStates.get(currentState).unOptPause();
 		gameStates.get(currentState).playMusic();
 		game.validate();
 	}

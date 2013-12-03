@@ -63,10 +63,10 @@ public class MenuState extends GameState {
 	}
 	@Override
 	public void setOptPaused() {
-		//do nothing
+		mm.setOptionsMenu();
 	}
 	@Override
 	public void unOptPause() {
-		//do nothing
+		mm.setMainMenu();
 	}
 }

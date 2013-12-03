@@ -73,7 +73,7 @@ public class TextBoxManager extends ClickBoxManager{
 			if(commands[i].equals("Resume")){
 				res.setCommand(i + 1, new ResumeCommand(gsm));
 			}
-			if(commands[i].equals("Main Menu") || commands[i].equals("Back to Main Menu")){
+			if(commands[i].equals("Main Menu")){
 				res.setCommand(i + 1, new MainMenuCommand(gsm));
 			}
 			if(commands[i].equals("Editor")){
