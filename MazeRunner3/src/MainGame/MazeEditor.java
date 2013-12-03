@@ -8,10 +8,6 @@ import Drawing.*;
 import GameObjects.Camera;
 import GameObjects.Editor;
 import GameStates.GameState;
-import Listening.Command;
-import Listening.MainMenuCommand;
-import Listening.QuitCommand;
-import Listening.ResumeCommand;
 import Listening.UserInput;
 import Main.Game;
 
@@ -57,8 +53,6 @@ public class MazeEditor implements GLEventListener {
 	private Game game;
 	private FPSAnimator anim;
 	private boolean pause;
-	private int titleScale = 10;
-	private int textScale = 18;
 	private TextBoxManager clkbxman;
 	private EditBoxManager editBoxManager;
 
@@ -169,46 +163,9 @@ public class MazeEditor implements GLEventListener {
 	}
 
 	private void initMenuText(){
-		//Add the clickboxes for the pauze menu
-		this.clkbxman = new TextBoxManager(); //We want 4 click (text) boxes, but the first (title) should not be clickable
+		String[] commands = {"Resume", "Main Menu", "Quit"};
+		this.clkbxman = TextBoxManager.createMenu(screenWidth, screenHeight, "Pause", commands, this.state.getGSM()); //We want 4 click (text) boxes, but the first (title) should not be clickable
 		this.clkbxman.setControl(input);
-
-		//Pause title
-		clkbxman.AddBox(new TextBox((int)(screenWidth/2),(int)(screenHeight*0.8), //Location of lower-left corner
-				screenWidth, screenHeight, //screen size
-				titleScale, "Impact", 0, "Pause", //TextScale, Font, type (bold/italic etc) and text to draw
-				0.9f, 0.4f, 0.4f, 1f, //color in r,g,b,alpha
-				false)); // isClickable
-
-		//Resume button
-		clkbxman.AddBox(new TextBox((int)(screenWidth/2),(int)(screenHeight*0.630), //Location of lower-left corner
-				screenWidth, screenHeight, //screen size
-				textScale, "Arial", 0, "Resume", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
-				1f, 1f, 1f, 1f, //color in r,g,b, alpha
-				true)); // isClickable
-
-		Command resume = new ResumeCommand(this.state.getGSM());
-		clkbxman.setCommand(1, resume);
-
-		//MainMenu button
-		clkbxman.AddBox(new TextBox((int)(screenWidth/2),(int)(screenHeight*0.480), //Location of lower-left corner
-				screenWidth, screenHeight, //screen size
-				textScale, "Arial", 0, "Main Menu", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
-				1f, 1f, 1f, 1f, //color in r,g,b,alpha
-				true)); // isClickable
-
-		Command main = new MainMenuCommand(this.state.getGSM());
-		clkbxman.setCommand(2, main);
-
-		//Quit button
-		clkbxman.AddBox(new TextBox((int)(screenWidth/2),(int)(screenHeight*0.330), //Location of lower-left corner
-				screenWidth, screenHeight, //screen size
-				textScale, "Arial", 0, "Quit", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
-				1f, 1f, 1f, 1f, // color in r,g,b,alpha
-				true)); // isClickable
-
-		Command quit = new QuitCommand();
-		clkbxman.setCommand(3,quit);
 	}
 
 	/*

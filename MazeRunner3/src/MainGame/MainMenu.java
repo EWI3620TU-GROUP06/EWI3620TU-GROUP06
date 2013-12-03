@@ -6,15 +6,9 @@ import javax.media.opengl.*;
 
 import com.sun.opengl.util.texture.Texture;
 
-import Drawing.TextBox;
 import Drawing.TextBoxManager;
 import Drawing.DrawingUtil;
 import GameStates.GameState;
-import Listening.Command;
-import Listening.EditorCommand;
-import Listening.LoadCommand;
-import Listening.PlayCommand;
-import Listening.QuitCommand;
 import Listening.UserInput;
 import Main.Game;
 
@@ -24,8 +18,6 @@ public class MainMenu implements GLEventListener {
 	private Game game;
 	private GLCanvas canvas;
 	private Texture backgroundTexture;
-	private int titleScale = 10;
-	private int textScale = 18;
 	private GameState state;
 	private TextBoxManager clkbxman;
 	private UserInput input;
@@ -67,56 +59,11 @@ public class MainMenu implements GLEventListener {
 	}
 	
 	private void initMenuText(){
+		
+		String[] commands = {"Play", "Load", "Editor", "Quit"};
 		//Add the clickboxes for the pauze menu
-		this.clkbxman = new TextBoxManager(); //We want 5 click (text) boxes, but the first (title) should not be clickable
+		this.clkbxman = TextBoxManager.createMenu(screenWidth, screenHeight, "MadBalls", commands, this.state.getGSM()); 
 		this.clkbxman.setControl(input);
-		
-		//Title
-		clkbxman.AddBox(new TextBox((int)(screenWidth/2),(int)(screenHeight*0.8), //Location of lower-left corner
-				screenWidth, screenHeight, //screen size
-				titleScale, "Impact", 0, "MadBalls", //TextScale, Font, type (bold/italic etc) and text to draw
-				0.9f, 0.4f, 0.4f, 1f, //color in r,g,b,alpha
-				false)); // isClickable
-		
-		//Play button
-		clkbxman.AddBox(new TextBox((int)(screenWidth/2),(int)(screenHeight*0.630), //Location of lower-left corner
-				screenWidth, screenHeight, //screen size
-				textScale, "Arial", 0, "Play", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
-				1f, 1f, 1f, 1f, //color in r,g,b, alpha
-				true)); // isClickable
-		
-		Command play = new PlayCommand(this.state.getGSM());
-		clkbxman.setCommand(1,play);
-		
-		//Load button
-		clkbxman.AddBox(new TextBox((int)(screenWidth/2),(int)(screenHeight*0.480), //Location of lower-left corner
-				screenWidth, screenHeight, //screen size
-				textScale, "Arial", 0, "Load", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
-				1f, 1f, 1f, 1f, //color in r,g,b,alpha
-				true)); // isClickable
-		
-		Command load = new LoadCommand(this.state.getGSM());
-		clkbxman.setCommand(2, load);
-		
-		//Editor button
-		clkbxman.AddBox(new TextBox((int)(screenWidth/2),(int)(screenHeight*0.330), //Location of lower-left corner
-				screenWidth, screenHeight, //screen size
-				textScale, "Arial", 0, "Editor", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
-				1f, 1f, 1f, 1f, // color in r,g,b,alpha
-				true)); // isClickable
-		
-		Command edit = new EditorCommand(this.state.getGSM());
-		clkbxman.setCommand(3, edit);
-		
-		//Quit button
-		clkbxman.AddBox(new TextBox((int)(screenWidth/2),(int)(screenHeight*0.180), //Location of lower-left corner
-				screenWidth, screenHeight, //screen size
-				textScale, "Arial", 0, "Quit", //TextScale (which is a number to divide by!), Font, type (plain/bold/italic etc) and text to draw
-				1f, 1f, 1f, 1f, // color in r,g,b,alpha
-				true)); // isClickable
-		
-		Command quit = new QuitCommand();
-		clkbxman.setCommand(4,quit);
 	}
 	
 	@Override
