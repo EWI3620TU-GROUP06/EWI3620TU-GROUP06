@@ -127,12 +127,12 @@ public class Physics {
 	{
 		// Runs the JBullet physics simulation for the specified time in seconds.
 		dynamicsWorld.stepSimulation(deltaTime/1000f); //Parameter for stepsim should be in seconds! deltaTime was in millisecs!
-		
-		if(getSideContact() && !previous)
+		boolean contact = getContact();
+		if(contact && !previous)
 		{
 			Audio.playSound("tick");
 		}
-		previous = getSideContact();
+		previous = contact;
 	}
 
 	public void applyForce(float x, float y, float z)
@@ -159,8 +159,8 @@ public class Physics {
 		return a.hasHit();
 	}
 
-	public boolean getSideContact(){
-		for(double theta = 0; theta < 2*Math.PI; theta += 0.25*Math.PI)
+	public boolean getContact(){
+		for(double theta = 0; theta <= 2*Math.PI; theta += 0.25*Math.PI)
 		{
 			Vector3f toVect = getPlayerPosition();
 			toVect.add(new Vector3f((float)Math.cos(theta),0,(float)Math.sin(theta)));
