@@ -189,6 +189,8 @@ public abstract class MazeObject {
 			else
 				return (byte) (ramp.orientation / 90 + 8);
 		}
+		if(this instanceof CustomMazeObject)
+			return -1;
 		return 0;
 	}
 	

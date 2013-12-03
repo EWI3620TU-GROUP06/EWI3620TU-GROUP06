@@ -9,21 +9,19 @@ import com.sun.opengl.util.texture.Texture;
 
 public class CustomMazeObject extends MazeObject{
 	
-	
+	private String fileName;
 	
 	public CustomMazeObject()
 	{
-		super();
-		
-		
+		super();	
 	}
 	
-	public static MazeObject readFromOBJ(String fileName)
+	public static MazeObject readFromOBJ(File file)
 	{
-		MazeObject res = new CustomMazeObject();
+		CustomMazeObject res = new CustomMazeObject();
 		
 		try{
-			Scanner sc = new Scanner(new File(fileName));
+			Scanner sc = new Scanner(file);
 			
 			while(sc.hasNextLine())
 			{
@@ -53,6 +51,8 @@ public class CustomMazeObject extends MazeObject{
 			System.out.println("Read in " + res.vertices.size() + " vertices.");
 			System.out.println("Read in " + res.faces.size() + " faces.");
 			
+			res.fileName = file.getName();
+			
 			sc.close();
 		}
 		catch (Exception e){
@@ -70,6 +70,11 @@ public class CustomMazeObject extends MazeObject{
 	public Texture getTexture()
 	{
 		return null;
+	}
+	
+	public String getFileName()
+	{
+		return fileName;
 	}
 
 }

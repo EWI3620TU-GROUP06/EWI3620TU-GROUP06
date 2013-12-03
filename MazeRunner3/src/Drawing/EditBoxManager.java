@@ -5,11 +5,7 @@ import java.util.ArrayList;
 import javax.media.opengl.GL;
 
 import GameObjects.Editor;
-import Listening.Command;
-import Listening.DrawModeCommand;
-import Listening.OpenCommand;
-import Listening.ResizeCommand;
-import Listening.SaveCommand;
+import Listening.*;
 import MainGame.Maze;
 
 import com.sun.opengl.util.texture.Texture;
@@ -17,7 +13,7 @@ import com.sun.opengl.util.texture.Texture;
 public class EditBoxManager extends ClickBoxManager {
 
 	private boolean hoovering = false;
-	private static final int numButtons = 11;
+	private static final int numButtons = 12;
 	private int buttonSize;
 
 	public EditBoxManager(Maze maze, Editor editor, int screenWidth, int screenHeight)
@@ -32,6 +28,7 @@ public class EditBoxManager extends ClickBoxManager {
 		}
 		commands.add(new SaveCommand(editor));
 		commands.add(new OpenCommand(editor));
+		commands.add(new CustomCommand(editor));
 
 		for (int i = 0; i < numButtons; i++)
 		{
