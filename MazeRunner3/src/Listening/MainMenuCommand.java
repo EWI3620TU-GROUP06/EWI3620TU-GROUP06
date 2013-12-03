@@ -12,6 +12,6 @@ public class MainMenuCommand implements Command {
 	
 	@Override
 	public void execute() {
-		this.gsm.setState(0);
+		this.gsm.setState(gStateMan.MENUSTATE);
 	}
 }

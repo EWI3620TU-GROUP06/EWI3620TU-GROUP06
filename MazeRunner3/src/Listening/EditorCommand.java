@@ -12,7 +12,7 @@ public class EditorCommand implements Command {
 	
 	@Override
 	public void execute() {
-		this.gsm.setState(2);
+		this.gsm.setState(gStateMan.EDITSTATE);
 	}
 
 }

@@ -1,13 +1,7 @@
 package Drawing;
 
 import GameStates.gStateMan;
-import Listening.Command;
-import Listening.EditorCommand;
-import Listening.LoadCommand;
-import Listening.MainMenuCommand;
-import Listening.PlayCommand;
-import Listening.QuitCommand;
-import Listening.ResumeCommand;
+import Listening.*;
 
 public class TextBoxManager extends ClickBoxManager{
 
@@ -79,14 +73,20 @@ public class TextBoxManager extends ClickBoxManager{
 			if(commands[i].equals("Resume")){
 				res.setCommand(i + 1, new ResumeCommand(gsm));
 			}
-			if(commands[i].equals("Main Menu")){
+			if(commands[i].equals("Main Menu") || commands[i].equals("Back")){
 				res.setCommand(i + 1, new MainMenuCommand(gsm));
 			}
 			if(commands[i].equals("Editor")){
 				res.setCommand(i + 1, new EditorCommand(gsm));
 			}
+			if(commands[i].equals("Toggle Fullscreen")){
+				res.setCommand(i + 1, new FullScreenCommand(gsm));
+			}
 			if(commands[i].equals("Play")){
 				res.setCommand(i + 1, new PlayCommand(gsm));
+			}
+			if(commands[i].equals("Options")){
+				res.setCommand(i+1, new OptionsCommand(gsm));
 			}
 			if(commands[i].equals("Load")){
 				res.setCommand(i + 1, new LoadCommand(gsm));

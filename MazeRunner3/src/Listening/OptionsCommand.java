@@ -2,17 +2,15 @@ package Listening;
 
 import GameStates.gStateMan;
 
-public class PlayCommand implements Command{
+public class OptionsCommand implements Command {
 
 	private gStateMan gsm;
 	
-	public PlayCommand(gStateMan gsm){
+	public OptionsCommand(gStateMan gsm){
 		this.gsm = gsm;
 	}
-	
 	@Override
 	public void execute() {
-		this.gsm.setState(gStateMan.PLAYSTATE);
+		this.gsm.setState(gStateMan.OPTSTATE);
 	}
-
 }

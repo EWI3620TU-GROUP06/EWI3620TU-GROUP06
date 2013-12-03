@@ -1,18 +1,22 @@
 package MainGame;
 
+import javax.media.opengl.GL;
+import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLCanvas;
+import javax.media.opengl.GLCapabilities;
+import javax.media.opengl.GLEventListener;
+
 import com.sun.opengl.util.Animator;
-
-import javax.media.opengl.*;
-
 import com.sun.opengl.util.texture.Texture;
 
-import Drawing.TextBoxManager;
 import Drawing.DrawingUtil;
+import Drawing.TextBoxManager;
 import GameStates.GameState;
 import Listening.UserInput;
 import Main.Game;
 
-public class MainMenu implements GLEventListener {
+
+public class OptionsMenu implements GLEventListener {
 	
 	private int screenWidth, screenHeight;				// Screen size to handle reshaping
 	private Game game;
@@ -22,7 +26,7 @@ public class MainMenu implements GLEventListener {
 	private TextBoxManager clkbxman;
 	private UserInput input;
 	
-	public MainMenu(Game game, GameState state) {
+	public OptionsMenu(Game game, GameState state) {
 		this.game = game;
 		this.state = state;
 		this.screenWidth = game.getScreenWidth();
@@ -37,7 +41,7 @@ public class MainMenu implements GLEventListener {
 		// Then we make sure that JOGL is hardware accelerated and uses double buffering.
 		caps.setDoubleBuffered( true );
 		caps.setHardwareAccelerated( true );
-
+	
 		// Now we add the canvas, where OpenGL will actually draw for us. We'll use settings we've just defined. 
 		canvas = new GLCanvas( caps );
 		game.add( canvas );
@@ -60,7 +64,7 @@ public class MainMenu implements GLEventListener {
 	
 	private void initMenuText(){
 		
-		String[] commands = {"Play", "Load","Options", "Editor", "Quit"};
+		String[] commands = {"Toggle Fullscreen", "Back"};
 		//Add the clickboxes for the pauze menu
 		this.clkbxman = TextBoxManager.createMenu(screenWidth, screenHeight, "MadBalls", commands, this.state.getGSM()); 
 		this.clkbxman.setControl(input);
@@ -84,19 +88,19 @@ public class MainMenu implements GLEventListener {
 		gl.glClearColor(1f,1f,1f,1);
 		
 		//The ambient color is white light
-        float[] lightColor = {1f, 1f, 1f, 1f};
-
-        // The Ambient light is created here.
-        gl.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, lightColor, 0);
-        gl.glLightfv(GL.GL_LIGHT1, GL.GL_DIFFUSE, lightColor, 0);
-        
-        // Enable lighting in GL.
-        gl.glEnable(GL.GL_LIGHT1);
-        gl.glEnable(GL.GL_LIGHTING);
-        
+	    float[] lightColor = {1f, 1f, 1f, 1f};
+	
+	    // The Ambient light is created here.
+	    gl.glLightfv(GL.GL_LIGHT1, GL.GL_AMBIENT, lightColor, 0);
+	    gl.glLightfv(GL.GL_LIGHT1, GL.GL_DIFFUSE, lightColor, 0);
+	    
+	    // Enable lighting in GL.
+	    gl.glEnable(GL.GL_LIGHT1);
+	    gl.glEnable(GL.GL_LIGHTING);
+	    
 		
 		float[] rgba = {1f, 1f, 1f}; //Sets the material color
-        gl.glMaterialfv(GL.GL_FRONT, GL.GL_AMBIENT, rgba, 0);
+	    gl.glMaterialfv(GL.GL_FRONT, GL.GL_AMBIENT, rgba, 0);
 		backgroundTexture.enable(); // Enable the background texture
 		backgroundTexture.bind(); // Bind the background texture to the next object
 		DrawingUtil.boxOnScreen(gl, 0, 0, screenWidth, screenHeight); // draw the background plane
@@ -114,7 +118,7 @@ public class MainMenu implements GLEventListener {
 		// Hopefully not needed
 		
 	}
-
+	
 	@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width,
 			int height) {
@@ -133,7 +137,7 @@ public class MainMenu implements GLEventListener {
 		//To init the drawing elements of overlay menu's/text etc.
 		this.clkbxman.reshape(screenWidth, screenHeight);
 	}
-	
+		
 	public GLCanvas getCanvas(){
 		return this.canvas;
 	}

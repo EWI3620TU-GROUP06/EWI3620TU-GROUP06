@@ -2,17 +2,16 @@ package Listening;
 
 import GameStates.gStateMan;
 
-public class PlayCommand implements Command{
+public class FullScreenCommand implements Command {
 
 	private gStateMan gsm;
 	
-	public PlayCommand(gStateMan gsm){
+	public FullScreenCommand(gStateMan gsm){
 		this.gsm = gsm;
 	}
 	
 	@Override
 	public void execute() {
-		this.gsm.setState(gStateMan.PLAYSTATE);
+		this.gsm.getGame().toggleFullScreen();
 	}
-
 }
