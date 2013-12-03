@@ -110,21 +110,6 @@ public class Player extends GameObject {
 		this.verAngle = verAngle;
 	}
 
-	/**
-	 * Returns the speed.
-	 * @return the speed
-	 */
-	/*public Vector3f getSpeed() {
-		return speed;
-	}*/
-	/**
-	 * Sets the speed.
-	 * @param speed the speed to set
-	 */
-	/*	public void setSpeed(Vector3f speed) {
-		this.speed = speed;
-	}*/
-
 
 	/**
 	 * Updates the physical location and orientation of the player
@@ -176,7 +161,7 @@ public class Player extends GameObject {
 			}
 			if (control.getJump())
 			{	
-				if(physics.getContact()){
+				if(physics.getLowerContact()){
 					physics.clearForces();
 					physics.applyForce(0, power*30, 0);
 				}

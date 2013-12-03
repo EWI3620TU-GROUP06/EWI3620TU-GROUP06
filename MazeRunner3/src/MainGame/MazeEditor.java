@@ -153,18 +153,18 @@ public class MazeEditor implements GLEventListener {
 		editor = new Editor(new Vector3d(maze.getSize() / 2, 60, maze.getSize()/2), 0, -89.99999);
 
 		camera = new Camera(editor.getLocation(), editor.getHorAngle(), editor.getVerAngle());		
-		
+
 		editBoxManager = new EditBoxManager(maze, editor, screenWidth, screenHeight);
-		
+
 		input = state.getGSM().getInput();
 		AddListening(input);
-		
+
 		editBoxManager.setControl(input);
 
 		editor.setControl(input);
 		editor.setFOV(FOV);
 		editor.setMaze(maze);
-		
+
 		editor.setEditBoxManager(editBoxManager);
 	}
 
@@ -235,6 +235,7 @@ public class MazeEditor implements GLEventListener {
 		Maze.initTextures(gl);
 		editBoxManager.initTextures(gl);
 		
+		
 		gl.glClearColor(0, 0, 0, 0); // Set the background color.
 
 		DrawingUtil.perspectiveProjection(gl, glu, FOV, screenWidth, screenHeight);
@@ -278,7 +279,7 @@ public class MazeEditor implements GLEventListener {
 		if (!pause){
 			editBoxManager.update();
 			editor.update(screenWidth, screenHeight);
-			
+
 			if(editor.getMaze() != visibleObjects.get(0))
 			{
 				maze = editor.getMaze();
@@ -288,7 +289,7 @@ public class MazeEditor implements GLEventListener {
 			}
 			updateCamera();
 		}
-		
+
 		double[] pos = new double[3];
 		double[] vuv = new double[3];
 		double[] vrp = new double[3];
@@ -313,14 +314,14 @@ public class MazeEditor implements GLEventListener {
 		gl.glColor4f(1f,1f,1f,1f);
 		editBoxManager.drawTextures(gl);
 		DrawingUtil.perspectiveProjection(gl, glu, FOV, screenWidth, screenHeight);
-		
+
 		gl.glEnable(GL.GL_LIGHTING);
 		if(pause){
 			DrawingUtil.orthographicProjection(gl, screenWidth, screenHeight);
-			
+
 			DrawingUtil.drawTrans(gl, 0, 0, screenWidth, screenHeight, 0.2f, 0.2f, 0.2f, 0.4f);
 			this.clkbxman.drawAllText();
-			
+
 			DrawingUtil.perspectiveProjection(gl, glu, FOV, screenWidth, screenHeight);
 			this.clkbxman.update();
 			gl.glColor4f(1f,1f,1f,1f); //reset the glColor to white for textures
@@ -405,7 +406,7 @@ public class MazeEditor implements GLEventListener {
 		pause = false;
 		input.reset();
 	}
-	
+
 	private void AddListening(UserInput input){
 		canvas.addMouseListener(input);
 		canvas.addMouseMotionListener(input);
