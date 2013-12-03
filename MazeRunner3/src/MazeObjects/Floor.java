@@ -18,7 +18,7 @@ public class Floor extends MazeObject {
 		int face0[] = {0,1,2,3};
 		addFace(face0);
 		
-		restitution = 0.1f;
+		restitution = 0.8f;
 	}
 	
 	public static void addTexture(Texture t)

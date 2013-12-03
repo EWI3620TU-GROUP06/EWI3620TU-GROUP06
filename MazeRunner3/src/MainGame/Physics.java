@@ -112,7 +112,7 @@ public class Physics {
 		RigidBodyConstructionInfo ballConstructionInfo = new RigidBodyConstructionInfo(mass, ballMotion, ballShape, ballInertia);
 		// Set the restitution, also known as the bounciness or spring, to 0.5. The restitution may range from 0.0
 		// not bouncy) to 1.0 (extremely bouncy).
-		ballConstructionInfo.restitution = 1.0f;
+		ballConstructionInfo.restitution = 0.4f;
 		ballConstructionInfo.angularDamping = angularDamping;
 		// Initialise 'controlBall', the final variable representing the controlled ball, to a rigid body with the
 		// previously assigned construction information.

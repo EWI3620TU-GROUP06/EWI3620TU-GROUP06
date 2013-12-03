@@ -41,7 +41,7 @@ public class Box extends MazeObject{
 		int[] face5 = {3, 7, 6, 2};
 		addFace(face5);
 		
-		restitution = 0.0f;
+		restitution = 0.4f;
 	}
 	
 	public static void addTexture(Texture t)
