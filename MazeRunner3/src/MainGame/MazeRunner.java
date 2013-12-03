@@ -57,8 +57,10 @@ public class MazeRunner implements GLEventListener {
 	private Game game;
 	private FPSAnimator anim;
 	private boolean pause;
+	private boolean optpause;
 	private float FOV = 60;
 	private TextBoxManager clkbxman;
+	private TextBoxManager optclkbxman;
 
 	/*
 	 * **********************************************
@@ -158,9 +160,12 @@ public class MazeRunner implements GLEventListener {
 	}
 
 	private void initMenuText(){
-		String[] commands = {"Resume", "Main Menu", "Quit"};
-		this.clkbxman = TextBoxManager.createMenu(screenWidth, screenHeight, "Pause", commands, this.state.getGSM()); //We want 4 click (text) boxes, but the first (title) should not be clickable
+		String[] commands = {"Resume", "Options", "Main Menu", "Quit"};
+		String[] optcommands = {"Toggle Fullscreen", "Back"};
+		this.clkbxman = TextBoxManager.createMenu(screenWidth, screenHeight, "Pause", commands, this.state.getGSM());
+		this.optclkbxman = TextBoxManager.createMenu(screenWidth, screenHeight, "Options", optcommands, this.state.getGSM());
 		this.clkbxman.setControl(input);
+		this.optclkbxman.setControl(input);
 	}
 
 	public GLCanvas getCanvas(){
@@ -266,12 +271,22 @@ public class MazeRunner implements GLEventListener {
 			gl.glDisable(GL.GL_DEPTH_TEST);
 
 			DrawingUtil.drawTrans(gl, 0, 0, screenWidth, screenHeight, 0.2f, 0.2f, 0.2f, 0.4f);
-			this.clkbxman.drawAllText();
+			if(optpause){
+				this.optclkbxman.drawAllText();
+			}
+			else{
+				this.clkbxman.drawAllText();
+			}
 
 			DrawingUtil.perspectiveProjection(gl, glu, FOV, screenWidth, screenHeight);
 			gl.glEnable(GL.GL_DEPTH_TEST);
 			gl.glEnable(GL.GL_CULL_FACE);
-			this.clkbxman.update();
+			if(optpause){
+				this.optclkbxman.update();
+			}
+			else{
+				this.clkbxman.update();
+			}
 		}
 
 		gl.glLoadIdentity();
@@ -310,6 +325,7 @@ public class MazeRunner implements GLEventListener {
 		
 		//Init the manudrawing elements to render title etc.
 		this.clkbxman.reshape(screenWidth, screenHeight);
+		this.optclkbxman.reshape(screenWidth, screenHeight);
 
 		// Set the new projection matrix.
 		DrawingUtil.perspectiveProjection(gl, glu, FOV, screenWidth, screenHeight);
@@ -356,12 +372,20 @@ public class MazeRunner implements GLEventListener {
 		input.reset();
 		showCursor();
 	}
+	
+	public void OptPause(){
+		this.optpause = true;
+	}
 
 	public void unPause(){
 		previousTime = Calendar.getInstance().getTimeInMillis();
 		pause = false;
 		input.reset();
 		hideCursor();
+	}
+	
+	public void unOptPause(){
+		this.optpause = false;
 	}
 
 	private void hideCursor(){

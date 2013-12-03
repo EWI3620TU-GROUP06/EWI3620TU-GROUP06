@@ -61,4 +61,14 @@ public class OptionsState extends GameState {
 	{
 		Audio.playMusic("test");
 	}
+
+	@Override
+	public void setOptPaused() {
+		//do nothing
+	}
+
+	@Override
+	public void unOptPause() {
+		//do nothing
+	}
 }

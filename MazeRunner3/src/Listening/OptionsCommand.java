@@ -11,6 +11,11 @@ public class OptionsCommand implements Command {
 	}
 	@Override
 	public void execute() {
-		this.gsm.setState(gStateMan.OPTSTATE);
+		if(this.gsm.getCurState() == gStateMan.MENUSTATE){
+			this.gsm.setState(gStateMan.OPTSTATE);
+		}
+		else{
+			this.gsm.getState(this.gsm.getCurState()).setOptPaused();
+		}
 	}
 }

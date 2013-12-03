@@ -73,7 +73,7 @@ public class TextBoxManager extends ClickBoxManager{
 			if(commands[i].equals("Resume")){
 				res.setCommand(i + 1, new ResumeCommand(gsm));
 			}
-			if(commands[i].equals("Main Menu") || commands[i].equals("Back")){
+			if(commands[i].equals("Main Menu") || commands[i].equals("Back to Main Menu")){
 				res.setCommand(i + 1, new MainMenuCommand(gsm));
 			}
 			if(commands[i].equals("Editor")){
@@ -90,6 +90,9 @@ public class TextBoxManager extends ClickBoxManager{
 			}
 			if(commands[i].equals("Load")){
 				res.setCommand(i + 1, new LoadCommand(gsm));
+			}
+			if(commands[i].equals("Back")){
+				res.setCommand(i + 1, new BackCommand(gsm));
 			}
 			if(commands[i].equals("Quit")){
 				res.setCommand(i + 1, new QuitCommand());

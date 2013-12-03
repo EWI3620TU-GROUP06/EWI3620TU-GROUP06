@@ -14,5 +14,7 @@ public abstract class GameState {
 	public abstract boolean getPaused();
 	public abstract void setPaused();
 	public abstract void unPause();
+	public abstract void setOptPaused();
+	public abstract void unOptPause();
 	public abstract void playMusic();
 }

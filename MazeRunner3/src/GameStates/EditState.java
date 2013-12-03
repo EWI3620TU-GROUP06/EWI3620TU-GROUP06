@@ -70,4 +70,14 @@ public class EditState extends GameState {
 	{
 		Audio.playMusic("test2");
 	}
+
+	@Override
+	public void setOptPaused() {
+		me.OptPause();
+	}
+
+	@Override
+	public void unOptPause() {
+		me.unOptPause();
+	}
 }
