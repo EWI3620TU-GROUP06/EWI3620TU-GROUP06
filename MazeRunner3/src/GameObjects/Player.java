@@ -48,14 +48,14 @@ public class Player extends GameObject {
 	 * @param h		the horizontal angle of the orientation in degrees
 	 * @param v		the vertical angle of the orientation in degrees
 	 */
-	public Player( Vector3d pos, double h, double v, Maze maze) {
+	public Player( Vector3d pos, double h, double v, Maze maze, Physics p) {
 		// Set the initial position and viewing direction of the player.
 		super( pos );
 		horAngle = h;
 		verAngle = v;
 		//speed = new Vector3f(0.0f, 0.0f, 0.0f);
 		//TODO: juiste startpositie bepalen
-		physics = new Physics(maze);
+		physics = p;
 	}
 
 	/**
@@ -126,8 +126,9 @@ public class Player extends GameObject {
 			int dY = control.getdY();
 			// Set the new angles according to path length = r*phi, phi = pathlength/r, r=1.
 			setHorAngle(horAngle - (double) dX/10);
-			if(verAngle - (double) dY/10 > -60 && verAngle - (double) dY/10 < 60)
+			if(verAngle - (double) dY/10 > -60 && verAngle - (double) dY/10 < 60){
 				setVerAngle(verAngle - (double) dY/10);
+			}
 			
 			physics.update(deltaTime);
 			

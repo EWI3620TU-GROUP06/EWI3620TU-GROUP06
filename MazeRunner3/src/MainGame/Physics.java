@@ -1,7 +1,11 @@
 package MainGame;
 
+import java.util.ArrayList;
+
 import Audio.Audio;
 import MazeObjects.MazeObject;
+import PSO.Particle;
+import PSO.Swarm;
 
 import com.bulletphysics.collision.broadphase.BroadphaseInterface;
 import com.bulletphysics.collision.broadphase.DbvtBroadphase;
@@ -35,6 +39,11 @@ public class Physics {
 	private float mass = 25f;
 
 	boolean previous = false;
+	
+	private CollisionShape ballShape;
+	private Vector3f ballInertia;
+	
+	ArrayList<RigidBody> particles;
 
 	ObjectArrayList<CollisionObject> walls = new ObjectArrayList<CollisionObject>();
 	ObjectArrayList<CollisionObject> floors = new ObjectArrayList<CollisionObject>();
@@ -50,7 +59,7 @@ public class Physics {
 
 	public Physics(Maze maze)
 	{		
-		Transform DEFAULT_BALL_TRANSFORM = new Transform(new Matrix4f(new Quat4f(0, 0, 0, 1), new Vector3f((float)maze.getStart()[0], 10, (float)maze.getStart()[2]), 1.0f));
+		Transform DEFAULT_BALL_TRANSFORM = new Transform(new Matrix4f(new Quat4f(0, 0, 0, 1), new Vector3f((float)maze.getStart()[0], 1.0f/*Dit is de starthoogte (gaaay)*/, (float)maze.getStart()[2]), 1.0f));
 		/**
 		 * The object that will roughly find out whether bodies are colliding.
 		 */
@@ -102,11 +111,11 @@ public class Physics {
 			}
 
 		// Initialise 'ballShape' to a sphere with a radius of 3 metres.
-		CollisionShape ballShape = new SphereShape(1);
+		ballShape = new SphereShape(1);
 		// Initialise 'ballMotion' to a motion state that assigns a specified location to the ball.
 		MotionState ballMotion = new DefaultMotionState(DEFAULT_BALL_TRANSFORM);
 		// Calculate the ball's inertia (resistance to movement) using its mass (2.5 kilograms).
-		Vector3f ballInertia = new Vector3f(0, 0, 0);
+		ballInertia = new Vector3f(0, 0, 0);
 		ballShape.calculateLocalInertia(mass, ballInertia);
 		// Composes the ball's construction info of its mass, its motion state, its shape, and its inertia.
 		RigidBodyConstructionInfo ballConstructionInfo = new RigidBodyConstructionInfo(mass, ballMotion, ballShape, ballInertia);
@@ -121,6 +130,24 @@ public class Physics {
 		playerBall.setActivationState(CollisionObject.DISABLE_DEACTIVATION);
 		// Add the control ball to the JBullet world.
 		dynamicsWorld.addRigidBody(playerBall);
+	}
+	
+	public void initParticles(Swarm swarm){
+		int n = Swarm.getNumOfParticles();
+		particles = new ArrayList<RigidBody>(n);
+		
+		for(Particle s: swarm.getSwarm()){
+			Transform transform = new Transform(new Matrix4f(new Quat4f(0, 0, 0, 1), s.getLoc(), 1.0f));
+			MotionState pietmotion = new DefaultMotionState(transform);
+			RigidBodyConstructionInfo partConstrInfo = new RigidBodyConstructionInfo(mass, pietmotion, ballShape, ballInertia);
+			partConstrInfo.angularDamping = 10f;
+			partConstrInfo.restitution = 0.4f;
+			RigidBody piet = new RigidBody(partConstrInfo);
+			dynamicsWorld.addRigidBody(piet);
+			piet.setActivationState(CollisionObject.DISABLE_DEACTIVATION);
+			piet.setLinearVelocity(s.getVelocity());
+			particles.add(piet);
+		}
 	}
 
 	public void update(int deltaTime)
@@ -142,6 +169,16 @@ public class Physics {
 		playerBall.activate(true);
 		// Apply the force to the controllable ball.
 		playerBall.applyCentralForce(force);
+	}
+	
+	public Vector3f getParticleLocation(int index){
+		Vector3f out = new Vector3f();
+		particles.get(index).getCenterOfMassPosition(out);
+		return out;
+	}
+	
+	public void applyParticleForce(int index, Vector3f v){
+		particles.get(index).applyCentralForce(new Vector3f(10*v.x, 0f, 10*v.z));
 	}
 
 	public Vector3f getPlayerPosition()

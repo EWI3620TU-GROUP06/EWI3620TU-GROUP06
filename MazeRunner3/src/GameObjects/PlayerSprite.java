@@ -27,7 +27,7 @@ public class PlayerSprite implements VisibleObject {
 	private Texture sphereTexture;
 	GLUquadricImpl sphere;
 
-	public PlayerSprite(float squareSize, Vector3d pos, float angle)
+	public PlayerSprite(Vector3d pos, float angle)
 	{
 		location = pos;
 

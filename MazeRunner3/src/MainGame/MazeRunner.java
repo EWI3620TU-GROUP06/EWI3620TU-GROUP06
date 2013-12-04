@@ -13,6 +13,7 @@ import GameObjects.PlayerSprite;
 import GameStates.GameState;
 import Listening.UserInput;
 import Main.Game;
+import PSO.Swarm;
 
 import java.awt.Cursor;
 import java.awt.Point;
@@ -61,6 +62,7 @@ public class MazeRunner implements GLEventListener {
 	private float FOV = 60;
 	private TextBoxManager clkbxman;
 	private TextBoxManager optclkbxman;
+	private Swarm particles;
 
 	/*
 	 * **********************************************
@@ -141,15 +143,25 @@ public class MazeRunner implements GLEventListener {
 		if (maze == null){
 			maze = Maze.read(new File("src/Levels/Standard.mz"));
 		}
-
+		
+		Physics p = new Physics(maze);
+		
 		visibleObjects.add( maze );
 
 		// Initialize the player.
 		Vector3d playerPos = new Vector3d(maze.getStart()[0], maze.getStart()[1], maze.getStart()[2]);
-		player = new Player(playerPos, maze.getStart()[3], -45, maze);
+		player = new Player(playerPos, maze.getStart()[3], -45, maze, p);
 
-		playerSprite = new PlayerSprite((float)maze.SQUARE_SIZE, player.getLocation(), (float) player.getHorAngle());
+		playerSprite = new PlayerSprite(player.getLocation(), (float) player.getHorAngle());
 		visibleObjects.add(playerSprite);
+		
+		particles = new Swarm(p, maze, 10);
+		particles.setCognitive(0.055f);
+		particles.setSocial(0.055f);
+		particles.setInertiaWeight(0.95f);
+		particles.generate(10);
+		particles.AddToVisible(visibleObjects);
+		p.initParticles(particles);
 
 		camera = new Camera(player.getLocation(), player.getHorAngle(), player.getVerAngle() );
 
@@ -190,6 +202,7 @@ public class MazeRunner implements GLEventListener {
 		GL gl = drawable.getGL();
 		GLU glu = new GLU();
 
+		particles.init(gl);
 		Maze.initTextures(gl);
 		playerSprite.init(gl);
 
@@ -243,6 +256,7 @@ public class MazeRunner implements GLEventListener {
 			previousTime = currentTime;
 
 			// Update any movement since last frame.
+			particles.update();
 			updateMovement(deltaTime);
 			updateCamera();
 		}
