@@ -6,30 +6,22 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-
-
-
-
-
-
-
 public class ReadWrite {
 	
 	public static ArrayList<Score> highscores = new ArrayList<Score>();
 	
-	public static ArrayList<Score> ReadHigscore(){
+	public static ArrayList<Score> readHighscore(){
 		
 		String filenaam = "highscores.txt";
 		try{
 		Scanner sc = new Scanner(new File(filenaam));
-			int place;
 			String name;
 			double scr;
 			while (sc.hasNext()){
-					place = sc.nextInt();
+					sc.next();
 					name = sc.next();
 					scr = sc.nextDouble();
-					Score score = new Score(place, name, scr);
+					Score score = new Score(name, scr);
 					highscores.add(score);
 				
 			}
@@ -41,13 +33,13 @@ public class ReadWrite {
 		return highscores;
 	}
 	
-	public static void WriteHigscore(ArrayList<Score> highScore){
+	public static void writeHighscore(ArrayList<Score> highScore){
 		String filenaam = "highscorestest.txt";
 		try{
 			FileWriter fileWriter = new FileWriter(filenaam);
 			BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 				for(int i = 0; i < highScore.size(); i++){
-					bufferedWriter.write(highScore.get(i).toString());
+					bufferedWriter.write((i+ 1) + highScore.get(i).toString());
 					System.out.println(highScore.get(i).toString());
 					bufferedWriter.newLine();
 				}
@@ -57,6 +49,19 @@ public class ReadWrite {
 		catch(Exception e){
 			System.out.println("FileNotFound");
 		}
+	}
+	
+	public static void addScore(String naam, double scr)
+	{
+		readHighscore();
+		for(int i = 0; i < highscores.size(); i++)
+		{
+			if(highscores.get(i).getScr() < scr){
+				highscores.add(i, new Score(naam, scr));
+				break;
+			}
+		}
+		writeHighscore(highscores);
 	}
 
 }
