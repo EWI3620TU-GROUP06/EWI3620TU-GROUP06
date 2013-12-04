@@ -17,6 +17,7 @@ public class Particle extends GameObject implements VisibleObject{
 	private Vector3f velocity;
 	private Vector3f localbest;
 	private Swarm swarm;
+	private float dX, dZ;
 	
 	private double orientation;
 	private double totalRotation;
@@ -36,6 +37,8 @@ public class Particle extends GameObject implements VisibleObject{
 	}
 	
 	public void setLoc(Vector3f l){
+		this.dX = location.x - l.x;
+		this.dZ = location.z - l.z;
 		this.location = l;
 	}
 	
@@ -52,6 +55,11 @@ public class Particle extends GameObject implements VisibleObject{
 	}
 	
 	public void update(){
+		
+		if(dX != 0 && dZ != 0){
+			orientation = Math.atan2(dZ,dX);
+		}
+		
 		Vector3f fitnessVect = swarm.getPhysics().getPlayerPosition();
 		fitnessVect.sub(location);
 		
@@ -82,6 +90,11 @@ public class Particle extends GameObject implements VisibleObject{
 		sphere.setOrientation(0);
 		sphereTexture = DrawingUtil.initTexture(gl, "ball");
 	}
+	
+	public void pause(){
+		dX = 0;
+		dZ = 0;
+	}
 
 	@Override
 	public void display(GL gl) {
@@ -95,9 +108,8 @@ public class Particle extends GameObject implements VisibleObject{
 		location.get(pos);
 		gl.glTranslated(pos[0], pos[1], pos[2]);
 
-
 		gl.glRotated(-Math.toDegrees(orientation), 0, 1, 0);
-		totalRotation += Math.sqrt((double) Math.pow(velocity.length(),2));
+		totalRotation += Math.sqrt((double)(dX*dX + dZ*dZ));
 		gl.glRotated(Math.toDegrees(totalRotation), 0, 0, 1);
 		glu.gluSphere(sphere, 1.0, 20, 20);
 		sphereTexture.disable();

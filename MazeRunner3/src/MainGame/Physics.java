@@ -177,6 +177,12 @@ public class Physics {
 		return out;
 	}
 	
+	public Vector3f getParticleVelocity(int index){
+		Vector3f out = new Vector3f();
+		particles.get(index).getLinearVelocity(out);
+		return out;
+	}
+	
 	public void applyParticleForce(int index, Vector3f v){
 		particles.get(index).applyCentralForce(new Vector3f(10*v.x, 0f, 10*v.z));
 	}

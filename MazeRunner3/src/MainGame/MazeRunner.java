@@ -280,6 +280,7 @@ public class MazeRunner implements GLEventListener {
 		//Draw the menu if pause state
 		if(pause){
 			playerSprite.pause();
+			particles.pause();
 
 			DrawingUtil.orthographicProjection(gl, screenWidth, screenHeight);
 			gl.glDisable(GL.GL_DEPTH_TEST);

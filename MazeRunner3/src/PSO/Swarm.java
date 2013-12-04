@@ -21,8 +21,6 @@ public class Swarm {
 	private float inertiaWeight;
 	private static int numberofParticles;
 	
-	
-	//TODO: Voor de bound moet(!) de maze_size mee gepasst worden
 	public Swarm(Physics physics, Maze maze, int n){
 		numberofParticles = n;
 		this.physics = physics;
@@ -102,6 +100,12 @@ public class Swarm {
 	
 	public Physics getPhysics(){
 		return physics;
+	}
+	
+	public void pause(){
+		for(Particle s: swarm){
+			s.pause();
+		}
 	}
 	
 	public void update(){
