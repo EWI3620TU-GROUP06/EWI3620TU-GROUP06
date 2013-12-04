@@ -85,6 +85,9 @@ public class TextBoxManager extends ClickBoxManager{
 			if(commands[i].equals("Play")){
 				res.setCommand(i + 1, new PlayCommand(gsm));
 			}
+			if(commands[i].equals("Highscores")){
+				res.setCommand(i + 1, new HighscoreCommand());
+			}
 			if(commands[i].equals("Options")){
 				res.setCommand(i+1, new OptionsCommand(gsm));
 			}

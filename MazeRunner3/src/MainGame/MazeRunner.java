@@ -160,7 +160,7 @@ public class MazeRunner implements GLEventListener {
 	}
 
 	private void initMenuText(){
-		String[] commands = {"Resume", "Options", "Main Menu", "Quit"};
+		String[] commands = {"Resume", "Highscores", "Options", "Main Menu", "Quit"};
 		String[] optcommands = {"Toggle Fullscreen", "Back"};
 		this.clkbxman = TextBoxManager.createMenu(screenWidth, screenHeight, "Pause", commands, this.state.getGSM());
 		this.optclkbxman = TextBoxManager.createMenu(screenWidth, screenHeight, "Options", optcommands, this.state.getGSM());
