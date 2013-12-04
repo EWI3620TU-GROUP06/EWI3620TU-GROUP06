@@ -19,9 +19,9 @@ public abstract class MazeObject {
 	ArrayList<Vector3f> vertices;
 	ArrayList<int[]> faces;
 	ArrayList<Vector3f> normals;
-	
+
 	protected int[][] texturePoints = { {1, 1}, {1, 0}, {0, 0} , {0, 1}}; 
-	
+
 	float restitution;
 
 	public MazeObject()
@@ -30,7 +30,7 @@ public abstract class MazeObject {
 		normals = new ArrayList<Vector3f>();
 		faces = new ArrayList<int[]>();
 	}
-	
+
 	/**
 	 * Add a vertex to the vertices list
 	 * @param point	vertex to be added
@@ -40,7 +40,7 @@ public abstract class MazeObject {
 	{
 		vertices.add(point);
 	}
-	
+
 	/**
 	 * Get the number of vertices contain in this object
 	 * @return	number of vertices
@@ -50,12 +50,12 @@ public abstract class MazeObject {
 	{
 		return vertices.size();
 	}
-	
+
 	public int getNumFaces()
 	{
 		return faces.size();
 	}
-	
+
 	/**
 	 * Add a face to the list of faces
 	 * @param face	face to be added
@@ -80,7 +80,7 @@ public abstract class MazeObject {
 		this.faces.add(face);
 
 	}
-	
+
 	/**
 	 * Draw the object
 	 * @param gl
@@ -101,14 +101,14 @@ public abstract class MazeObject {
 			}
 			gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);
 			Vector3f normal = normals.get(j);
-			
+
 			float[] norm = new float[3];
-			
+
 			normal.get(norm);
-			
+
 			gl.glNormal3d(norm[0], norm[1], norm[2]);
 			gl.glBegin(GL.GL_POLYGON);
-			
+
 			for(int i = 0; i < face.length; i++)
 			{
 				Vector3f position = vertices.get(face[i]);
@@ -123,7 +123,7 @@ public abstract class MazeObject {
 				texture.disable();
 		}
 	}
-	
+
 	/**
 	 * Calculate the normal of a given face
 	 * @param face	Face of which the normal is the be calculated
@@ -144,7 +144,7 @@ public abstract class MazeObject {
 		v3.normalize();
 		return v3;
 	}
-	
+
 	/**
 	 * Rotates all vertices around the vertical axis in a given point.
 	 * @param angle		Angle with which needs to be rotated
@@ -158,7 +158,7 @@ public abstract class MazeObject {
 		{
 			Vector3f vertex = vertices.get(i);
 			float[] vert = new float[3];
-			
+
 			vertex.get(vert);
 			float x = vert[0];
 			float z = vert[2];
@@ -166,11 +166,11 @@ public abstract class MazeObject {
 			double sin = Math.sin(Math.toRadians(angle));
 			vert[0] =((float)(x*cos - z * sin - xRotate * cos + zRotate * sin + xRotate));
 			vert[2] = ((float)(x*sin + z * cos - zRotate * cos - xRotate * sin + zRotate));
-			
+
 			vertex.set(vert);
 		}
 	}
-	
+
 	public byte getCode()
 	{
 		if(this instanceof Box)
@@ -193,22 +193,22 @@ public abstract class MazeObject {
 			return -1;
 		return 0;
 	}
-	
+
 	public Vector3f getVertex(int index)
 	{
 		return vertices.get(index);
 	}
-	
+
 	public int[] getFace(int index)
 	{
 		return faces.get(index);
 	}
-	
+
 	public float getRestitution()
 	{
 		return restitution;
 	}
-	
+
 	public boolean isNormalHorizontal(int index)
 	{
 		Vector3f normal = normals.get(index);
@@ -216,12 +216,7 @@ public abstract class MazeObject {
 		normal.get(norm);
 		return norm[1] == 0;
 	}
-	
-/*	public void removeDoubleFaces(MazeObject that)
-	{
-		ArrayList<Vector3f> commons 
-	}*/
-	
+
 	public void removeRedundantVertices()
 	{
 		ArrayList<Vector3f> toBeRemoved = new ArrayList<Vector3f>();
@@ -246,11 +241,11 @@ public abstract class MazeObject {
 					toBeRemoved.add(vertices.get(v));
 			}
 		}
-		
+
 		for(Vector3f vertex : toBeRemoved)
 			vertices.remove(vertex);
 	}
-	
+
 	public abstract Texture getTexture();
 
 }
