@@ -126,7 +126,8 @@ public class Player extends GameObject {
 			int dY = control.getdY();
 			// Set the new angles according to path length = r*phi, phi = pathlength/r, r=1.
 			setHorAngle(horAngle - (double) dX/10);
-			setVerAngle(verAngle - (double) dY/10);
+			if(verAngle - (double) dY/10 > -60 && verAngle - (double) dY/10 < 60)
+				setVerAngle(verAngle - (double) dY/10);
 			
 			physics.update(deltaTime);
 			

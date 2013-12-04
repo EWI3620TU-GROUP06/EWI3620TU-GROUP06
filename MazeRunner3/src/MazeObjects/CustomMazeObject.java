@@ -1,6 +1,7 @@
 package MazeObjects;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import javax.vecmath.Vector3f;
@@ -9,14 +10,19 @@ import com.sun.opengl.util.texture.Texture;
 
 public class CustomMazeObject extends MazeObject{
 	
-	private String fileName;
+	private File file;
 	
 	public CustomMazeObject()
 	{
 		super();	
 	}
 	
-	public static MazeObject readFromOBJ(File file)
+	public CustomMazeObject(ArrayList<Vector3f> vertices, ArrayList<Vector3f> normals, ArrayList<int[]> faces)
+	{
+		super(vertices, normals, faces);
+	}
+	
+	public static CustomMazeObject readFromOBJ(File file)
 	{
 		CustomMazeObject res = new CustomMazeObject();
 		
@@ -29,9 +35,9 @@ public class CustomMazeObject extends MazeObject{
 				if(line.startsWith("v"))
 				{
 					String coordinates[] = line.split("[ ]");
-					float x = Float.parseFloat(coordinates[1]) * 100;
-					float y = Float.parseFloat(coordinates[2]) * 100;
-					float z = Float.parseFloat(coordinates[3]) * 100;
+					float x = Float.parseFloat(coordinates[1]) * 0.001f;
+					float y = Float.parseFloat(coordinates[2]) * 0.001f;
+					float z = Float.parseFloat(coordinates[3]) * 0.001f;
 					res.vertices.add(new Vector3f(x, y, z));
 					
 				}
@@ -51,7 +57,7 @@ public class CustomMazeObject extends MazeObject{
 			System.out.println("Read in " + res.vertices.size() + " vertices.");
 			System.out.println("Read in " + res.faces.size() + " faces.");
 			
-			res.fileName = file.getName();
+			res.file = file;
 			
 			sc.close();
 		}
@@ -72,9 +78,39 @@ public class CustomMazeObject extends MazeObject{
 		return null;
 	}
 	
-	public String getFileName()
+	public File getFile()
 	{
-		return fileName;
+		return file;
 	}
+	
+	public CustomMazeObject translate(float x, float y, float z)
+	{
+		
+		CustomMazeObject res = this.clone();
+		for(Vector3f vertex : res.vertices)
+			vertex.add(new Vector3f(x, y, z));
+		return res;
+	}
+	
+	public CustomMazeObject clone()
+	{
+		ArrayList<Vector3f> vertices = new ArrayList<Vector3f>();
+		for(Vector3f vertex : this.vertices)
+		{
+			vertices.add((Vector3f)vertex.clone());
+		}
+		return new CustomMazeObject(vertices, this.normals, this.faces);
+	}
+	
+	public boolean equals(Object other)
+	{
+		if(other instanceof CustomMazeObject)
+		{
+			CustomMazeObject that = (CustomMazeObject) other;
+			return this.faces == that.faces;
+		}
+		return false;
+	}
+
 
 }

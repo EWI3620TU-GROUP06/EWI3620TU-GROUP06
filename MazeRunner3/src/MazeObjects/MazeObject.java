@@ -30,6 +30,13 @@ public abstract class MazeObject {
 		normals = new ArrayList<Vector3f>();
 		faces = new ArrayList<int[]>();
 	}
+	
+	public MazeObject(ArrayList<Vector3f> vertices, ArrayList<Vector3f> normals, ArrayList<int[]> faces)
+	{
+		this.vertices = vertices;
+		this.normals = normals;
+		this.faces = faces;
+	}
 
 	/**
 	 * Add a vertex to the vertices list

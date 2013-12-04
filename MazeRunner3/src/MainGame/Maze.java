@@ -4,6 +4,7 @@ import javax.media.opengl.GL;
 import Drawing.DrawingUtil;
 import Drawing.VisibleObject;
 import MazeObjects.Box;
+import MazeObjects.CustomMazeObject;
 import MazeObjects.Floor;
 import MazeObjects.MazeObject;
 import MazeObjects.Ramp;
@@ -12,6 +13,7 @@ import MazeObjects.StartArrow;
 import com.sun.opengl.util.texture.Texture;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -48,6 +50,7 @@ public class Maze implements VisibleObject {
 	private static Texture floorTexture;
 
 	private MazeObject[][] maze = null;
+	public ArrayList<CustomMazeObject> customs = null;
 
 	public Maze()
 	{
@@ -55,18 +58,21 @@ public class Maze implements VisibleObject {
 		for(int i = 0; i < MAZE_SIZE; i++)
 			for(int j = 0; j < MAZE_SIZE; j++)
 				maze[i][j] = new Floor(SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE);
+		customs = new ArrayList<CustomMazeObject>();
 	}
 
-	public Maze(int mazeSize, int[] start, int[] finish, byte[][] newMaze)
+	public Maze(int mazeSize, int[] start, int[] finish, ArrayList<CustomMazeObject> customs, byte[][] newMaze)
 	{
 		MAZE_SIZE = mazeSize;
 		startPosition = start;
 		finishPosition = finish;
 		maze = new MazeObject[MAZE_SIZE][MAZE_SIZE];
+		this.customs = customs;
 		for(int i = 0; i < MAZE_SIZE; i++){
 			for(int j = 0; j < MAZE_SIZE; j++){
 				switch(newMaze[i][j])
 				{
+				case 0 : maze[i][j] = new Floor(SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
 				case 1 : maze[i][j] = new Box(SQUARE_SIZE, SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
 				case 2 : maze[i][j] = new Box(SQUARE_SIZE, (float)SQUARE_SIZE/2, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
 				case 4 : maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE, 0, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
@@ -77,11 +83,11 @@ public class Maze implements VisibleObject {
 				case 9 : maze[i][j] = new Ramp(SQUARE_SIZE, (float)SQUARE_SIZE/2, 90, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
 				case 10 : maze[i][j] = new Ramp(SQUARE_SIZE, (float)SQUARE_SIZE/2, 180, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
 				case 11 : maze[i][j] = new Ramp(SQUARE_SIZE, (float)SQUARE_SIZE/2, 270, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
-				default : maze[i][j] = new Floor(SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE);
+				default : maze[i][j] = customs.get(-(newMaze[i][j] + 1)).translate(SQUARE_SIZE * i, 0, SQUARE_SIZE * j);
 				}
 			}
 		}
-		
+		customs = new ArrayList<CustomMazeObject>();
 		selected = new boolean[MAZE_SIZE][MAZE_SIZE];
 	}
 	
@@ -167,11 +173,6 @@ public class Maze implements VisibleObject {
 			selected = newSelected;
 		}
 	}
-	
-	public void add(int x, int z, MazeObject obj)
-	{
-		maze[x][z] = obj;
-	}
 
 	/**
 	 * Sets the 'selected' flag of all elements in the maze to false.
@@ -198,6 +199,7 @@ public class Maze implements VisibleObject {
 						&& !(i == finishPosition[0] && j == finishPosition[1])) {
 					switch(drawMode)
 					{
+					case 0 : maze[i][j] = maze[i][j] = new Floor(SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
 					case 1 : maze[i][j] = new Box(SQUARE_SIZE, SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
 					case 2 : maze[i][j]  = new Box(SQUARE_SIZE, SQUARE_SIZE/2, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
 					case 3 : 
@@ -217,7 +219,7 @@ public class Maze implements VisibleObject {
 					case 6:
 						maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE / 2, angle, i * SQUARE_SIZE, j * SQUARE_SIZE);
 						break;
-					default : maze[i][j] = maze[i][j] = new Floor(SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE);
+					default : maze[i][j] = customs.get(drawMode - 7).translate(i * SQUARE_SIZE, 0, j*SQUARE_SIZE);
 					}
 				}
 	}
@@ -255,12 +257,18 @@ public class Maze implements VisibleObject {
 				wr.write(startPosition[0] + " " + startPosition[1] + " "
 						+ startPosition[2] +  " " + startPosition[3] + "\n");
 				wr.write(finishPosition[0] + " " + finishPosition[1] + "\n");
+				for(CustomMazeObject custom: customs)
+					wr.write(custom.getFile().getCanonicalPath() + "\n");
 				for (int i = 0; i < maze[0].length; i++) {
 					for (int j = 0; j < maze.length; j++) {
-						if (j < maze.length - 1)
-							wr.print(maze[i][j].getCode() + " ");
+						if(customs.contains(maze[i][j]))
+							wr.print(-1 - customs.indexOf(maze[i][j]));
 						else
-							wr.print(maze[i][j].getCode() + "\n");
+							wr.print(maze[i][j].getCode());
+						if (j < maze.length - 1)
+							wr.print(" ");
+						else
+							wr.print("\n");
 					}
 				}
 				wr.close();
@@ -291,6 +299,23 @@ public class Maze implements VisibleObject {
 			int[] newFinish = new int[2];
 			newFinish[0] = sc.nextInt();
 			newFinish[1] = sc.nextInt();
+			ArrayList<CustomMazeObject> customs = new ArrayList<CustomMazeObject>();
+			sc.nextLine();
+			while(!sc.hasNextByte()){
+				String line = sc.nextLine();
+				String[] splitLine = line.split("[\\\\]");
+				int i = 0;
+				while(i < splitLine.length && !splitLine[i].equals("src"))
+					i++;
+				String fileName = "src";
+				i++;
+				while (i < splitLine.length)
+				{
+					fileName += "\\" + splitLine[i];
+					i++;
+				}
+				customs.add(CustomMazeObject.readFromOBJ(new File(fileName)));
+			}
 			byte[][] newMaze = new byte[mazeSize][mazeSize];
 			for (int i = 0; i < mazeSize; i++) {
 				for (int j = 0; j < mazeSize; j++) {
@@ -298,7 +323,7 @@ public class Maze implements VisibleObject {
 				}
 			}
 			sc.close();
-			return new Maze(mazeSize, newStart, newFinish, newMaze);
+			return new Maze(mazeSize, newStart, newFinish, customs, newMaze);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new Maze();

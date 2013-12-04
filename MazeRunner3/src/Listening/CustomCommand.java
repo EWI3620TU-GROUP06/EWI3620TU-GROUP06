@@ -1,7 +1,7 @@
 package Listening;
 
 import GameObjects.Editor;
-import MazeObjects.MazeObject;
+import MazeObjects.CustomMazeObject;
 
 public class CustomCommand implements Command {
 	
@@ -13,9 +13,10 @@ private Editor editor;
 	}
 	
 	public void execute() {
-		MazeObject custom = Editor.readMazeObject();
-		if(custom != null)
+		CustomMazeObject custom = Editor.readMazeObject();
+		if(custom != null){
 			editor.addObject(custom);
+		}
 		
 	}
 

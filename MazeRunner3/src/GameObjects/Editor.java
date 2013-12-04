@@ -10,8 +10,6 @@ import Drawing.EditBoxManager;
 import Listening.Control;
 import MainGame.Maze;
 import MazeObjects.CustomMazeObject;
-import MazeObjects.MazeObject;
-
 
 public class Editor extends GameObject{
 
@@ -222,9 +220,15 @@ public class Editor extends GameObject{
 		pos[2] = pos[2] - control.getdY() / pixelsPerUnit;
 	}
 	
-	public void addObject(MazeObject obj)
+	public void addObject(CustomMazeObject obj)
 	{
-		maze.add(selectedX, selectedZ, obj);
+		if(!maze.customs.contains(obj)){
+			maze.customs.add(obj);
+			drawMode = (byte)(6 + maze.customs.size());
+		}
+		else
+			drawMode = (byte)(6 + maze.customs.indexOf(obj));
+		
 	}
 
 	/**
@@ -232,16 +236,14 @@ public class Editor extends GameObject{
 	 * @param fc	JFileChooser to be initialized.
 	 */
 
-	private static void selectDirectory(JFileChooser fc, String fileType, String fileExtension)
+	private static void selectDirectory(JFileChooser fc, String fileType, String fileExtension, String fileName, String fileLocation)
 	{
-		String[] myFileLocations = new String[]{ //TODO: Hard-coded file locations. Remove eventually.
-				"C:\\Users\\Victor\\Documents\\MATLAB\\Computational Intelligence\\Assignment3",
-		"C:\\Users\\Tom2\\Documents\\Java\\workspace\\MazeRunner2\\levels"};
+		String[] myFileLocations = new String[]{ "src\\" + fileLocation};
 
 		fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		fc.setMultiSelectionEnabled(false);
-		fc.setDialogTitle("Select a maze file");
-		FileFilter filter = new FileNameExtensionFilter(fileType, fileExtension);
+		fc.setDialogTitle("Select a " + fileName + " file");
+		FileFilter filter = new FileNameExtensionFilter(fileType, fileExtension, fileName);
 		fc.setFileFilter(filter);
 		File myMainDir;
 		for(int i = 0; i < myFileLocations.length; i++){
@@ -260,7 +262,7 @@ public class Editor extends GameObject{
 
 	public boolean save(){
 		JFileChooser fc = new JFileChooser();
-		selectDirectory(fc, "Maze files", "mz");
+		selectDirectory(fc, "Maze files", "mz", "maze", "levels");
 
 		int returnVal = fc.showDialog(fc, "Save");
 		File file = fc.getSelectedFile();
@@ -279,7 +281,7 @@ public class Editor extends GameObject{
 
 	public static Maze readMaze(){
 		JFileChooser fc = new JFileChooser();
-		selectDirectory(fc, "Maze files", "mz");
+		selectDirectory(fc, "Maze files", "mz", "maze", "levels");
 
 		int returnVal = fc.showDialog(fc, "Open");
 		File file = fc.getSelectedFile();
@@ -291,13 +293,13 @@ public class Editor extends GameObject{
 		return maze;
 	}
 	
-	public static MazeObject readMazeObject(){
+	public static CustomMazeObject readMazeObject(){
 		JFileChooser fc = new JFileChooser();
-		selectDirectory(fc, "Maze Objects", "obj");
+		selectDirectory(fc, "Maze Objects", "obj", "object", "objects");
 
 		int returnVal = fc.showDialog(fc, "Open");
 		File file = fc.getSelectedFile();
-		MazeObject custom = null;
+		CustomMazeObject custom = null;
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			custom = CustomMazeObject.readFromOBJ(file);
 		}
