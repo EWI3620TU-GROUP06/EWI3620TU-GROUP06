@@ -1,10 +1,12 @@
 package HighScore;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileReader;
+import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Scanner;
+
+
 
 
 
@@ -13,21 +15,25 @@ import java.util.ArrayList;
 
 public class ReadWrite {
 	
-	private static String line;
-	public static ArrayList<String> highscores = new ArrayList<String>();
+	public static ArrayList<Score> highscores = new ArrayList<Score>();
 	
-	public static ArrayList<String> ReadHigscore(){
+	public static ArrayList<Score> ReadHigscore(){
 		
 		String filenaam = "highscores.txt";
 		try{
-		FileReader fileReader = new FileReader(filenaam);
-		BufferedReader bufferedReader = new BufferedReader(fileReader);
-			while ((line = bufferedReader.readLine()) != null){
-					System.out.println(line);
-					highscores.add(line);
+		Scanner sc = new Scanner(new File(filenaam));
+			int place;
+			String name;
+			double scr;
+			while (sc.hasNext()){
+					place = sc.nextInt();
+					name = sc.next();
+					scr = sc.nextDouble();
+					Score score = new Score(place, name, scr);
+					highscores.add(score);
 				
 			}
-			bufferedReader.close();
+			sc.close();
 		}
 		catch (Exception e){
 			System.out.println("HigscoresFile not found");
@@ -35,14 +41,14 @@ public class ReadWrite {
 		return highscores;
 	}
 	
-	public static void WriteHigscore(ArrayList<String> highScore){
+	public static void WriteHigscore(ArrayList<Score> highScore){
 		String filenaam = "highscorestest.txt";
 		try{
 			FileWriter fileWriter = new FileWriter(filenaam);
 			BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 				for(int i = 0; i < highScore.size(); i++){
-					bufferedWriter.write(highScore.get(i));
-					System.out.println(highScore.get(i));
+					bufferedWriter.write(highScore.get(i).toString());
+					System.out.println(highScore.get(i).toString());
 					bufferedWriter.newLine();
 				}
 			bufferedWriter.close();

@@ -1,5 +1,4 @@
-highscore 1
-highscore 2
-highscore 3
-highscore 4
-gelukt
+1 luuk 22222.0
+2 jelle 12131.0
+3 tom 873753.0
+4 jorne 28243.0
