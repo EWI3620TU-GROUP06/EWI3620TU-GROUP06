@@ -149,9 +149,9 @@ public class MazeRunner implements GLEventListener {
 		if (maze == null){
 			maze = Maze.read(new File("src/Levels/Standard.mz"));
 		}
-		
+
 		Physics p = new Physics(maze);
-		
+
 		visibleObjects.add( maze );
 
 		// Initialize the player.
@@ -160,7 +160,7 @@ public class MazeRunner implements GLEventListener {
 
 		playerSprite = new PlayerSprite(player.getLocation(), (float) player.getHorAngle());
 		visibleObjects.add(playerSprite);
-		
+
 		particles = new Swarm(p, maze, 10);
 		particles.setCognitive(0.055f);
 		particles.setSocial(0.055f);
@@ -184,11 +184,11 @@ public class MazeRunner implements GLEventListener {
 		this.optclkbxman = TextBoxManager.createMenu(screenWidth, screenHeight, "Options", optcommands, this.state.getGSM());
 		this.clkbxman.setControl(input);
 		this.optclkbxman.setControl(input);
-		
+
 		this.scoreBox = new TextBox(screenWidth / 50, screenHeight * 9 / 10, screenWidth, screenHeight, 
-			22, "Arial", 0, "Score: 0", 
-			1f, 1f, 1f, 1f,
-			false, TextBox.ALIGN_LEFT);
+				22, "Arial", 0, "Score: 0", 
+				1f, 1f, 1f, 1f,
+				false, TextBox.ALIGN_LEFT);
 	}
 
 	public GLCanvas getCanvas(){
@@ -221,7 +221,7 @@ public class MazeRunner implements GLEventListener {
 
 		// Now we set up our viewpoint.
 		DrawingUtil.perspectiveProjection(gl, glu, FOV, screenWidth, screenHeight);
-		
+
 		// Enable back-face culling.
 		gl.glCullFace( GL.GL_BACK );
 		gl.glEnable( GL.GL_CULL_FACE );
@@ -257,7 +257,7 @@ public class MazeRunner implements GLEventListener {
 
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT );
 		gl.glLoadIdentity();
-		
+
 
 		//Only update the movement&camera when not in pause state
 		if (!pause){
@@ -266,13 +266,13 @@ public class MazeRunner implements GLEventListener {
 			long currentTime = now.getTimeInMillis();
 			int deltaTime = (int)(currentTime - previousTime);
 			previousTime = currentTime;
-			
+
 			timeSinceStart += deltaTime;
 			currentScore = 500 - timeSinceStart / 1000;
 			if(currentScore == 0)
 				dead = true;
 			scoreBox.setText("Score: " + currentScore);
-			
+
 			// Update any movement since last frame.
 			particles.update();
 			updateMovement(deltaTime);
@@ -302,11 +302,11 @@ public class MazeRunner implements GLEventListener {
 		gl.glDisable(GL.GL_DEPTH_TEST);
 		scoreBox.drawText();
 		//Draw the menu if pause state
-		
+
 		if(pause){
 			playerSprite.pause();
 			particles.pause();
-			
+
 			DrawingUtil.drawTrans(gl, 0, 0, screenWidth, screenHeight, 0.2f, 0.2f, 0.2f, 0.4f);
 			if(optpause){
 				this.optclkbxman.drawAllText();
@@ -318,19 +318,19 @@ public class MazeRunner implements GLEventListener {
 		DrawingUtil.perspectiveProjection(gl, glu, FOV, screenWidth, screenHeight);
 		gl.glEnable(GL.GL_DEPTH_TEST);
 		gl.glEnable(GL.GL_CULL_FACE);
-		
-		if(optpause){
-			this.optclkbxman.update();
-		}
-		else{
-			this.clkbxman.update();
-		}
-		
+		if(pause)
+			if(optpause){
+				this.optclkbxman.update();
+			}
+			else{
+				this.clkbxman.update();
+			}
+
 		gl.glLoadIdentity();
 
 		// Flush the OpenGL buffer.
 		gl.glFlush();
-		
+
 		if(dead)
 		{
 			//ReadWrite.addScore("(Leeg)", currentScore);
@@ -366,7 +366,7 @@ public class MazeRunner implements GLEventListener {
 		screenHeight = height;
 		this.game.setScreenHeight(screenHeight);
 		this.game.setScreenWidth(screenWidth);
-		
+
 		//Init the manudrawing elements to render title etc.
 		this.clkbxman.reshape(screenWidth, screenHeight);
 		this.optclkbxman.reshape(screenWidth, screenHeight);
@@ -403,7 +403,7 @@ public class MazeRunner implements GLEventListener {
 				Math.sin(Math.toRadians(player.getVerAngle()) + 1),
 				3 *Math.cos( Math.toRadians(player.getHorAngle())) * Math.cos(Math.toRadians(player.getVerAngle()))); 
 		cameraPos.add(player.getLocation());
-		
+
 		camera.setLocation( cameraPos);
 		camera.setHorAngle( player.getHorAngle() );
 		camera.setVerAngle( player.getVerAngle() );
@@ -416,7 +416,7 @@ public class MazeRunner implements GLEventListener {
 		input.reset();
 		showCursor();
 	}
-	
+
 	public void OptPause(){
 		this.optpause = true;
 	}
@@ -427,7 +427,7 @@ public class MazeRunner implements GLEventListener {
 		input.reset();
 		hideCursor();
 	}
-	
+
 	public void unOptPause(){
 		this.optpause = false;
 	}
