@@ -4,7 +4,7 @@ import GameObjects.Editor;
 
 public class SaveCommand implements Command{
 	
-	Editor editor;
+	private Editor editor;
 	
 	public SaveCommand(Editor editor)
 	{

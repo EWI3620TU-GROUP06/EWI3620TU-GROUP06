@@ -5,7 +5,7 @@ import MazeObjects.CustomMazeObject;
 
 public class CustomCommand implements Command {
 	
-private Editor editor;
+	private Editor editor;
 	
 	public CustomCommand(Editor editor)
 	{
