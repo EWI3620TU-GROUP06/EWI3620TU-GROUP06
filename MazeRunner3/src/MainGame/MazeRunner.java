@@ -314,17 +314,17 @@ public class MazeRunner implements GLEventListener {
 			else{
 				this.clkbxman.drawAllText();
 			}
-			
-			if(optpause){
-				this.optclkbxman.update();
-			}
-			else{
-				this.clkbxman.update();
-			}
 		}
 		DrawingUtil.perspectiveProjection(gl, glu, FOV, screenWidth, screenHeight);
 		gl.glEnable(GL.GL_DEPTH_TEST);
 		gl.glEnable(GL.GL_CULL_FACE);
+		
+		if(optpause){
+			this.optclkbxman.update();
+		}
+		else{
+			this.clkbxman.update();
+		}
 		
 		gl.glLoadIdentity();
 
@@ -333,7 +333,7 @@ public class MazeRunner implements GLEventListener {
 		
 		if(dead)
 		{
-			ReadWrite.addScore("(Leeg)", currentScore);
+			//ReadWrite.addScore("(Leeg)", currentScore);
 			showCursor();
 			this.state.getGSM().setState(gStateMan.HIGHSCORESTATE);
 		}
