@@ -2,9 +2,9 @@ package HighScore;
 
 public class Score {
 	private String name;
-	private double score;
+	private int score;
 	
-	public Score( String nm, double sc){
+	public Score( String nm, int sc){
 		name = nm;
 		score = sc;
 	}
@@ -17,6 +17,21 @@ public class Score {
 	public double getScr()
 	{
 		return score;
+	}
+	
+	public String getName()
+	{
+		return name;
+	}
+	
+	public boolean equals(Object other)
+	{
+		if(other instanceof Score)
+		{
+			Score that = (Score) other;
+			return this.name.equals(that.name) && this.score == that.score;
+		}
+		return false;
 	}
 
 }

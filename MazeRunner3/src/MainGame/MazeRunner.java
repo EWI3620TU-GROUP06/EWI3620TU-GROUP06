@@ -11,6 +11,8 @@ import GameObjects.Camera;
 import GameObjects.Player;
 import GameObjects.PlayerSprite;
 import GameStates.GameState;
+import GameStates.gStateMan;
+import HighScore.ReadWrite;
 import Listening.UserInput;
 import Main.Game;
 import PSO.Swarm;
@@ -53,16 +55,20 @@ public class MazeRunner implements GLEventListener {
 	private static Maze maze; 										// The maze.
 	private PlayerSprite playerSprite;
 	private long previousTime = Calendar.getInstance().getTimeInMillis(); // Used to calculate elapsed time.
+	private int timeSinceStart = 0;
 	private GameState state;
 	private GLCanvas canvas;
 	private Game game;
 	private FPSAnimator anim;
 	private boolean pause;
 	private boolean optpause;
+	private boolean dead = false;
 	private float FOV = 60;
 	private TextBoxManager clkbxman;
 	private TextBoxManager optclkbxman;
+	private TextBox scoreBox;
 	private Swarm particles;
+	private int currentScore = 0;
 
 	/*
 	 * **********************************************
@@ -178,6 +184,11 @@ public class MazeRunner implements GLEventListener {
 		this.optclkbxman = TextBoxManager.createMenu(screenWidth, screenHeight, "Options", optcommands, this.state.getGSM());
 		this.clkbxman.setControl(input);
 		this.optclkbxman.setControl(input);
+		
+		this.scoreBox = new TextBox(screenWidth / 50, screenHeight * 9 / 10, screenWidth, screenHeight, 
+			22, "Arial", 0, "Score: 0", 
+			1f, 1f, 1f, 1f,
+			false, TextBox.ALIGN_LEFT);
 	}
 
 	public GLCanvas getCanvas(){
@@ -246,6 +257,7 @@ public class MazeRunner implements GLEventListener {
 
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT );
 		gl.glLoadIdentity();
+		
 
 		//Only update the movement&camera when not in pause state
 		if (!pause){
@@ -254,11 +266,21 @@ public class MazeRunner implements GLEventListener {
 			long currentTime = now.getTimeInMillis();
 			int deltaTime = (int)(currentTime - previousTime);
 			previousTime = currentTime;
-
+			
+			timeSinceStart += deltaTime;
+			currentScore = 500 - timeSinceStart / 1000;
+			if(currentScore == 0)
+				dead = true;
+			scoreBox.setText("Score: " + currentScore);
+			
 			// Update any movement since last frame.
 			particles.update();
 			updateMovement(deltaTime);
 			updateCamera();
+			double pos[] = new double[3];
+			player.getLocation().get(pos);
+			if(pos[1] < -10)
+				dead = true;
 		}
 
 		//Always change the camera and draw the game-world
@@ -276,15 +298,15 @@ public class MazeRunner implements GLEventListener {
 		for( Iterator<VisibleObject> it = visibleObjects.iterator(); it.hasNext(); ) {
 			it.next().display(gl);
 		}
-
+		DrawingUtil.orthographicProjection(gl, screenWidth, screenHeight);
+		gl.glDisable(GL.GL_DEPTH_TEST);
+		scoreBox.drawText();
 		//Draw the menu if pause state
+		
 		if(pause){
 			playerSprite.pause();
 			particles.pause();
-
-			DrawingUtil.orthographicProjection(gl, screenWidth, screenHeight);
-			gl.glDisable(GL.GL_DEPTH_TEST);
-
+			
 			DrawingUtil.drawTrans(gl, 0, 0, screenWidth, screenHeight, 0.2f, 0.2f, 0.2f, 0.4f);
 			if(optpause){
 				this.optclkbxman.drawAllText();
@@ -292,10 +314,7 @@ public class MazeRunner implements GLEventListener {
 			else{
 				this.clkbxman.drawAllText();
 			}
-
-			DrawingUtil.perspectiveProjection(gl, glu, FOV, screenWidth, screenHeight);
-			gl.glEnable(GL.GL_DEPTH_TEST);
-			gl.glEnable(GL.GL_CULL_FACE);
+			
 			if(optpause){
 				this.optclkbxman.update();
 			}
@@ -303,11 +322,21 @@ public class MazeRunner implements GLEventListener {
 				this.clkbxman.update();
 			}
 		}
-
+		DrawingUtil.perspectiveProjection(gl, glu, FOV, screenWidth, screenHeight);
+		gl.glEnable(GL.GL_DEPTH_TEST);
+		gl.glEnable(GL.GL_CULL_FACE);
+		
 		gl.glLoadIdentity();
 
 		// Flush the OpenGL buffer.
 		gl.glFlush();
+		
+		if(dead)
+		{
+			ReadWrite.addScore("(Leeg)", currentScore);
+			showCursor();
+			this.state.getGSM().setState(gStateMan.HIGHSCORESTATE);
+		}
 	}
 
 

@@ -14,6 +14,7 @@ public class gStateMan {
 	public static final int MENUSTATE = 0;
 	public static final int PLAYSTATE = 1;
 	public static final int EDITSTATE = 2;
+	public static final int HIGHSCORESTATE = 3;
 	private Game game;
 	private UserInput input;
 	
@@ -24,6 +25,7 @@ public class gStateMan {
 		gameStates.add(new MenuState(this, game));
 		gameStates.add(new PlayState(this, game));
 		gameStates.add(new EditState(this, game));
+		gameStates.add(new HighscoreState(this, game));
 		input = new UserInput(this);
 		update();
 	}

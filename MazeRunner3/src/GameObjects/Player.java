@@ -26,9 +26,6 @@ import MainGame.Physics;
  */
 public class Player extends GameObject {	
 	private double horAngle, verAngle;
-	//private Vector3f speed;
-	//private final double acceleration = 0.000075;
-	//private final double friction = 0.0075;
 	Physics physics = null;
 
 	private Control control = null;
