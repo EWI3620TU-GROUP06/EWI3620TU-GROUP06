@@ -9,10 +9,8 @@ import com.sun.opengl.util.*;
 import Drawing.*;
 import GameObjects.Camera;
 import GameObjects.Player;
-import GameObjects.PlayerSprite;
 import GameStates.GameState;
 import GameStates.gStateMan;
-import HighScore.ReadWrite;
 import Listening.UserInput;
 import Main.Game;
 import PSO.Swarm;
@@ -53,7 +51,6 @@ public class MazeRunner implements GLEventListener {
 	private Camera camera;									// The camera object.
 	private UserInput input;								// The user input object that controls the player.
 	private static Maze maze; 										// The maze.
-	private PlayerSprite playerSprite;
 	private long previousTime = Calendar.getInstance().getTimeInMillis(); // Used to calculate elapsed time.
 	private int timeSinceStart = 0;
 	private GameState state;
@@ -157,9 +154,8 @@ public class MazeRunner implements GLEventListener {
 		// Initialize the player.
 		Vector3d playerPos = new Vector3d(maze.getStart()[0], maze.getStart()[1], maze.getStart()[2]);
 		player = new Player(playerPos, maze.getStart()[3], -45, maze, p);
-
-		playerSprite = new PlayerSprite(player.getLocation(), (float) player.getHorAngle());
-		visibleObjects.add(playerSprite);
+		
+		visibleObjects.add(player);
 
 		particles = new Swarm(p, maze, 10);
 		particles.setCognitive(0.055f);
@@ -215,7 +211,7 @@ public class MazeRunner implements GLEventListener {
 
 		particles.init(gl);
 		Maze.initTextures(gl);
-		playerSprite.init(gl);
+		player.init(gl);
 
 		gl.glClearColor(0, 0, 0, 0);								// Set the background color.
 
@@ -275,7 +271,7 @@ public class MazeRunner implements GLEventListener {
 
 			// Update any movement since last frame.
 			particles.update();
-			updateMovement(deltaTime);
+			player.update(deltaTime);
 			updateCamera();
 			double pos[] = new double[3];
 			player.getLocation().get(pos);
@@ -304,7 +300,7 @@ public class MazeRunner implements GLEventListener {
 		//Draw the menu if pause state
 
 		if(pause){
-			playerSprite.pause();
+			player.pause();
 			particles.pause();
 
 			DrawingUtil.drawTrans(gl, 0, 0, screenWidth, screenHeight, 0.2f, 0.2f, 0.2f, 0.4f);
@@ -318,13 +314,14 @@ public class MazeRunner implements GLEventListener {
 		DrawingUtil.perspectiveProjection(gl, glu, FOV, screenWidth, screenHeight);
 		gl.glEnable(GL.GL_DEPTH_TEST);
 		gl.glEnable(GL.GL_CULL_FACE);
-		if(pause)
+		if(pause){
 			if(optpause){
 				this.optclkbxman.update();
 			}
 			else{
 				this.clkbxman.update();
 			}
+		}
 
 		gl.glLoadIdentity();
 
@@ -380,17 +377,6 @@ public class MazeRunner implements GLEventListener {
 	 * *				Methods						*
 	 * **********************************************
 	 */
-
-	/**
-	 * updateMovement(int) updates the position of all objects that need moving.
-	 * This includes rudimentary collision checking and collision reaction.
-	 */
-	private void updateMovement(int deltaTime)
-	{
-		player.update(deltaTime);
-
-		playerSprite.update(player.getLocation());
-	}
 
 	/**
 	 * updateCamera() updates the camera position and orientation.

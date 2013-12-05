@@ -1,8 +1,17 @@
 package GameObjects;
 
+import javax.media.opengl.GL;
+import javax.media.opengl.glu.GLU;
+import javax.vecmath.Matrix4f;
+import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
+import com.sun.opengl.impl.GLUquadricImpl;
+import com.sun.opengl.util.texture.Texture;
+
+import Drawing.DrawingUtil;
+import Drawing.VisibleObject;
 import Listening.Control;
 import MainGame.Maze;
 import MainGame.Physics;
@@ -24,9 +33,16 @@ import MainGame.Physics;
  * @author Bruno Scheele
  *
  */
-public class Player extends GameObject {	
+public class Player extends GameObject implements VisibleObject {	
 	private double horAngle, verAngle;
 	Physics physics = null;
+
+	private double dX = 0, dZ = 0;
+	private double orientation;
+	private double totalRotation;
+
+	private Texture sphereTexture;
+	GLUquadricImpl sphere;
 
 	private Control control = null;
 
@@ -53,6 +69,15 @@ public class Player extends GameObject {
 		//speed = new Vector3f(0.0f, 0.0f, 0.0f);
 		//TODO: juiste startpositie bepalen
 		physics = p;
+	}
+
+	public void init(GL gl)
+	{
+		sphere = new GLUquadricImpl();
+		sphere.setTextureFlag(true);
+		sphere.setDrawStyle(GLU.GLU_FILL);
+		sphere.setOrientation(0);
+		sphereTexture = DrawingUtil.initTexture(gl, "ball");
 	}
 
 	/**
@@ -114,57 +139,89 @@ public class Player extends GameObject {
 	 */
 	public void update(int deltaTime)
 	{
-		if (control != null)
-		{
-			control.update();
+		control.update();
 
-			// Rotate the player, according to control
-			int dX = control.getdX();
-			int dY = control.getdY();
-			// Set the new angles according to path length = r*phi, phi = pathlength/r, r=1.
-			setHorAngle(horAngle - (double) dX/10);
-			if(verAngle - (double) dY/10 > -60 && verAngle - (double) dY/10 < 60){
-				setVerAngle(verAngle - (double) dY/10);
-			}
-			
-			physics.update(deltaTime);
-			
-			Vector3f pos = physics.getPlayerPosition();
-			
-			float[] position = new float[3];
-			
-			pos.get(position);
-			
-			location = new Vector3d(position[0], position[1], position[2]);
-			
-			double cos = Math.cos(Math.toRadians(this.getHorAngle()));
-			double sin = Math.sin(Math.toRadians(this.getHorAngle()));
-			
-			int power = deltaTime*10; 
-			
-			if (control.getRight())
-			{
-				physics.applyForce(power*(float)cos , 0, -power* (float)sin);
-			}
-			if (control.getLeft())
-			{
-				physics.applyForce(-power*(float)cos , 0, power*(float)sin);
-			}
-			if (control.getBack())
-			{
-				physics.applyForce(power*(float)sin , 0, power*(float)cos);
-			}
-			if (control.getForward())
-			{
-				physics.applyForce(-power*(float)sin , 0, -power*(float)cos);
-			}
-			if (control.getJump())
-			{	
-				if(physics.getLowerContact()){
-					physics.clearForces();
-					physics.applyForce(0, power*30, 0);
-				}
+		// Rotate the player, according to control
+		int dX = control.getdX();
+		int dY = control.getdY();
+		// Set the new angles according to path length = r*phi, phi = pathlength/r, r=1.
+		setHorAngle(horAngle - (double) dX/10);
+		if(verAngle - (double) dY/10 > -60 && verAngle - (double) dY/10 < 60){
+			setVerAngle(verAngle - (double) dY/10);
+		}
+
+		physics.update(deltaTime);
+
+		Vector3f newPos = physics.getPlayerPosition();
+		Vector3f d = new Vector3f(location);
+		d.sub(newPos);
+		float[] pos = new float[3];
+		d.get(pos);
+		this.dX = pos[0];
+		this.dZ = pos[2];
+		if(this.dX !=0 || this.dZ != 0)
+			orientation = Math.atan2(this.dZ,this.dX);
+		newPos.get(pos);
+		location = new Vector3d(pos[0], pos[1], pos[2]);
+		
+		double cos = Math.cos(Math.toRadians(this.getHorAngle()));
+		double sin = Math.sin(Math.toRadians(this.getHorAngle()));
+
+		int power = deltaTime*10; 
+
+		if (control.getRight())
+		{
+			physics.applyForce(power*(float)cos , 0, -power* (float)sin);
+		}
+		if (control.getLeft())
+		{
+			physics.applyForce(-power*(float)cos , 0, power*(float)sin);
+		}
+		if (control.getBack())
+		{
+			physics.applyForce(power*(float)sin , 0, power*(float)cos);
+		}
+		if (control.getForward())
+		{
+			physics.applyForce(-power*(float)sin , 0, -power*(float)cos);
+		}
+		if (control.getJump())
+		{	
+			if(physics.getLowerContact()){
+				physics.clearForces();
+				physics.applyForce(0, power*30, 0);
 			}
 		}
 	}
+
+	public void display(GL gl) {
+		GLU glu = new GLU();
+		float ballColour[] = {1.0f, 1.0f, 1.0f, 1.0f};
+		sphereTexture.enable(); // Enable the ball texture
+		sphereTexture.bind(); 
+		gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, ballColour, 0);
+		gl.glPushMatrix();
+		double pos[] = new double[3];
+		location.get(pos);
+		gl.glTranslated(pos[0], pos[1], pos[2]);
+		
+		gl.glRotated(-Math.toDegrees(orientation), 0, 1, 0);
+		totalRotation += Math.sqrt(dX*dX + dZ*dZ);
+		gl.glRotated(Math.toDegrees(totalRotation), 0, 0, 1);
+	
+
+		glu.gluSphere(sphere, 1.0, 20, 20);
+		sphereTexture.disable();
+		
+		
+		gl.glPopMatrix();
+
+	}
+	
+	public void pause()
+	{
+		dX = 0;
+		dZ = 0;
+	}
+	
 }
