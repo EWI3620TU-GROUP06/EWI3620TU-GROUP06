@@ -1,7 +1,5 @@
 package MainGame;
 
-import java.awt.event.KeyEvent;
-
 import com.sun.opengl.util.Animator;
 
 import javax.media.opengl.*;

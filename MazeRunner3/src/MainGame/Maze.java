@@ -382,5 +382,17 @@ public class Maze implements VisibleObject {
 	{
 		return maze[x][z];
 	}
+	
+	public byte[] getNeighbourTileTypes(int x, int z){
+		byte[] res = new byte[4];
+		// The lines below work for the tile relative
+		// to the middle tile according to the comment behind it
+		// but this assumes that x is vertical in the maze-array and z is horizontal
+		res[0] = get((int)x-1, (int)z).getCode(); // up
+		res[1] = get((int)x, (int)z-1).getCode(); // left
+		res[2] = get((int)x+1, (int)z).getCode(); // down
+		res[3] = get((int)x, (int)z+1).getCode(); // right
+		return res;
+	}
 
 }

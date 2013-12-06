@@ -2,8 +2,6 @@ package GameObjects;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.glu.GLU;
-import javax.vecmath.Matrix4f;
-import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
@@ -189,7 +187,7 @@ public class Player extends GameObject implements VisibleObject {
 		{	
 			if(physics.getLowerContact()){
 				physics.clearForces();
-				physics.applyForce(0, power*30, 0);
+				physics.applyForce(0, power*300, 0);
 			}
 		}
 	}

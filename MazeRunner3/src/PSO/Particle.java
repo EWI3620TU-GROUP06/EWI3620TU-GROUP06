@@ -10,6 +10,7 @@ import com.sun.opengl.util.texture.Texture;
 import Drawing.DrawingUtil;
 import Drawing.VisibleObject;
 import GameObjects.GameObject;
+import MazeObjects.*;
 
 public class Particle extends GameObject implements VisibleObject{
 	
@@ -69,6 +70,8 @@ public class Particle extends GameObject implements VisibleObject{
 			localbest = location;
 		}
 		
+		Vector3f oldvelocity = new Vector3f(velocity.x, velocity.y, velocity.z);
+		
 		velocity = new Vector3f(swarm.getInertiaWeight()*velocity.x,
 				/*swarm.getInertiaWeight()*velocity.y*/0f,
 				swarm.getInertiaWeight()*velocity.z);
@@ -80,6 +83,47 @@ public class Particle extends GameObject implements VisibleObject{
 		velocity.add(new Vector3f(swarm.getSocial()*((float)Math.random())*(swarm.getGlobalBest().x - location.x),
 				/*swarm.getSocial()*((float)Math.random())*(swarm.getGlobalBest().y - location.y)*/0f,
 				swarm.getSocial()*((float)Math.random())*(swarm.getGlobalBest().z - location.z)));
+		
+		oldvelocity.normalize();
+		int squaresize = swarm.getMaze().SQUARE_SIZE;
+		double mazesize = swarm.getMaze().getSize();
+		
+		Vector3f nextTileVect = new Vector3f(location.x + 0.5f*squaresize*oldvelocity.x, 
+				0, 
+				location.z + 0.5f*squaresize*oldvelocity.z);
+		if((double)location.x < (mazesize - squaresize) &&
+				(double)location.x > squaresize &&
+				(double)location.z < (mazesize - squaresize) &&
+				(double)location.z > squaresize){
+			
+			MazeObject previousTile = swarm.getMaze().get((int)(location.x/squaresize), (int)(location.z/squaresize));
+			
+			MazeObject nextTile = swarm.getMaze().get((int)(nextTileVect.x/squaresize),
+					(int)(nextTileVect.z/squaresize));
+			
+			if(!(nextTile instanceof Floor) && 
+					!(nextTile instanceof Ramp)){
+				byte[] neighbourTileTypes = getNeighbourTileTypes(squaresize);
+				
+				if(neighbourTileTypes[0] == 0){ //"up" tile
+					velocity.add(new Vector3f(-10f, 0f, 0f)); 
+				}
+				else if(neighbourTileTypes[1] == 0){ //"left" tile
+					velocity.add(new Vector3f(0f, 0f, -10f));
+				}
+				else if(neighbourTileTypes[3] == 0){ //"right" tile
+					velocity.add(new Vector3f(0f, 0f, 10f));
+				}
+				else if(neighbourTileTypes[2] == 0){ //"down" tile
+					velocity.add(new Vector3f(10f, 0f, 0f));
+				}
+				
+			}
+		}
+	}
+	
+	public byte[] getNeighbourTileTypes(int squaresize){
+		return swarm.getMaze().getNeighbourTileTypes((int)(location.x/squaresize), (int)(location.z/squaresize));
 	}
 	
 	public void init(GL gl)

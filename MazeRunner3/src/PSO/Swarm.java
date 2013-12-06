@@ -98,6 +98,10 @@ public class Swarm {
 		return numberofParticles;
 	}
 	
+	public Maze getMaze(){
+		return maze;
+	}
+	
 	public Physics getPhysics(){
 		return physics;
 	}
