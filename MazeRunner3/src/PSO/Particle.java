@@ -70,7 +70,7 @@ public class Particle extends GameObject implements VisibleObject{
 		}
 		
 		velocity = new Vector3f(swarm.getInertiaWeight()*velocity.x,
-				/*swarm.getInertiaWeight()*velocity.y*/-10.0f,
+				/*swarm.getInertiaWeight()*velocity.y*/0f,
 				swarm.getInertiaWeight()*velocity.z);
 		
 		velocity.add(new Vector3f(swarm.getCognitive()*((float)Math.random())*(localbest.x - location.x),
