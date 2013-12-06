@@ -283,10 +283,10 @@ public class MazeEditor implements GLEventListener {
 
 			DrawingUtil.drawTrans(gl, 0, 0, screenWidth, screenHeight, 0.2f, 0.2f, 0.2f, 0.4f);
 			if(optpause){
-				this.optclkbxman.drawAllText();
+				this.optclkbxman.drawAllText(0);
 			}
 			else{
-				this.clkbxman.drawAllText();
+				this.clkbxman.drawAllText(0);
 			}
 
 			DrawingUtil.perspectiveProjection(gl, glu, FOV, screenWidth, screenHeight);

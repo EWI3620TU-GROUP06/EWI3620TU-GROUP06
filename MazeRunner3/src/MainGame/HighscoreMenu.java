@@ -104,7 +104,7 @@ public class HighscoreMenu implements GLEventListener{
 		backgroundTexture.disable(); // Disable the background texture again, such that the next object is textureless
 		DrawingUtil.drawTrans(gl,0,0,screenWidth,screenHeight,0f,0f,0f,0.4f); // draw an extra greyish thing to increase contrast
 		
-		this.clkbxman.drawAllText(); // draw the text in the menu
+		this.clkbxman.drawAllText(0); // draw the text in the menu
 		this.clkbxman.update();
 		
 		gl.glFlush();

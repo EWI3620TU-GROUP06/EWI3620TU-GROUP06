@@ -36,6 +36,9 @@ public abstract class Control
 	protected boolean leftButtonDragged = false;
 	protected byte mouseReleased;
 	protected boolean leftButtonPressed = false;
+	
+	protected int typedKey = 0;
+	protected boolean upperCase = false;
 
 	/**
 	 * @return Returns true if forward motion is desired.
@@ -148,6 +151,18 @@ public abstract class Control
 		boolean res = leftButtonPressed;
 		leftButtonPressed = false;
 		return res;
+	}
+	
+	public int getTypedKey()
+	{
+		int res = typedKey;
+		typedKey = 0;
+		return res;
+	}
+	
+	public boolean isUpperCase()
+	{
+		return upperCase;
 	}
 
 	public void reset(){

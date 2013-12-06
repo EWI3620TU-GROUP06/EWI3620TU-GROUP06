@@ -7,16 +7,16 @@ import com.sun.opengl.util.j2d.TextRenderer;
 
 public class TextBox extends ClickBox {
 
-	private TextRenderer renderer;
-	private int textScale;
-	private String Font;
-	private int fontStyle; // 0 = plain; 1 = Bold; 2 = italic
-	private String Text;
+	protected TextRenderer renderer;
+	protected int textScale;
+	protected String Font;
+	protected int fontStyle; // 0 = plain; 1 = Bold; 2 = italic
+	protected String Text;
 	public static final byte ALIGN_MIDDLE = 0;
 	public static final byte ALIGN_LEFT = 1;
 	public static final byte ALIGN_RIGHT = 2;
 
-	private float[] color;
+	protected float[] color;
 
 	public TextBox(int x, int y, int screenWidth, int screenHeight, 
 			int textScale, String Font, int fontStyle, String Text, 
@@ -74,7 +74,7 @@ public class TextBox extends ClickBox {
 				this.getLocation()[1]);
 	}
 
-	public void drawText(){
+	public void drawText(int deltaTime){
 		renderer.beginRendering(this.screenWidth, this.screenHeight);
 		renderer.setColor(color[0], color[1], color[2], color[3]);
 		renderer.draw(Text,location[0],location[1]);
@@ -90,6 +90,24 @@ public class TextBox extends ClickBox {
 	{
 		this.Text = text;
 	}
-
+	
+	public static TextBox createTitle(int x, int y, int screenWidth, int screenHeight, int titleScale, String title)
+	{
+		return new TextBox(x, y, screenWidth, screenHeight, titleScale, "Impact", 0, title, 
+				0.9f, 0.4f, 0.4f, 1f, false, ALIGN_MIDDLE); 
+	}
+	
+	public static TextBox createMenuBox(int x, int y, int screenWidth, int screenHeight, int textScale, String caption)
+	{
+		return new TextBox(x, y, screenWidth, screenHeight, textScale, "Arial", 0, caption, 
+				1f, 1f, 1f, 1f, true, TextBox.ALIGN_MIDDLE);
+	}
+	
+	public static TextBox createHighscoreBox(int x, int y, int screenWidth, int screenHeight, int textScale, 
+			String caption, float[] colour)
+	{
+		return new TextBox( x, y, screenWidth, screenHeight, textScale, "Arial", 0, caption, 
+				colour[0], colour[1], colour[2], colour[3], false,TextBox.ALIGN_LEFT);
+	}
 
 }

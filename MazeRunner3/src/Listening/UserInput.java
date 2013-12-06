@@ -127,6 +127,10 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	@Override
 	public void keyPressed(KeyEvent event)
 	{
+		typedKey = event.getKeyCode();
+		if(typedKey == KeyEvent.VK_CAPS_LOCK)
+			upperCase = !upperCase;
+		
 		if (this.gsm.getCurState() != 0){
 			if (event.getKeyChar() == 'w'){
 				this.forward = true;
@@ -140,16 +144,19 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 			else if (event.getKeyChar() == 'd'){
 				this.right = true;
 			}
-			else if (event.getKeyCode() == 32){
+			else if (event.getKeyCode() == KeyEvent.VK_SPACE){
 				this.jump = true;
 			}
-			if (event.getKeyCode() == 27){
+			if (event.getKeyCode() == KeyEvent.VK_ESCAPE){
 				if (this.gsm.getState(this.gsm.getCurState()).getPaused() == true){
 					this.gsm.setUnPauseState();
 				}
 				else{
 					this.gsm.setPauseState();
 				}
+			}
+			else if(event.getKeyCode() == KeyEvent.VK_SHIFT){
+				upperCase =  true;
 			}
 		}
 	}
@@ -169,8 +176,11 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 		else if (event.getKeyChar() == 'd'){
 			this.right = false;
 		}
-		else if (event.getKeyCode() == 32){
+		else if (event.getKeyCode() ==  KeyEvent.VK_SPACE){
 			this.jump = false;
+		}
+		else if(event.getKeyCode() == KeyEvent.VK_SHIFT){
+			upperCase =  false;
 		}
 	}
 
@@ -193,6 +203,7 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	@Override
 	public void keyTyped(KeyEvent event)
 	{
+		
 	}
 
 	@Override

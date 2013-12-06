@@ -44,10 +44,10 @@ public class TextBoxManager extends ClickBoxManager{
 		}
 	}
 
-	public void drawAllText(){
+	public void drawAllText(int deltaTime){
 		for (ClickBox a: Boxes){
 			TextBox t = (TextBox) a;
-			t.drawText();
+			t.drawText(deltaTime);
 
 		}
 	}
@@ -57,22 +57,16 @@ public class TextBoxManager extends ClickBoxManager{
 		int titleScale = 10;
 		int textScale = 18;
 		TextBoxManager res = new TextBoxManager();
-
-		res.AddBox(new TextBox((int)(screenWidth/2),(int)(screenHeight*0.8), 
-				screenWidth, screenHeight, 
-				titleScale, "Impact", 0, title, 
-				0.9f, 0.4f, 0.4f, 1f,
-				false, TextBox.ALIGN_MIDDLE)); 
+		
+		res.AddBox(TextBox.createTitle((int)(screenWidth/2),(int)(screenHeight*0.8), 
+				screenWidth, screenHeight, titleScale, title));
 
 		for(int i = 0; i < commands.length; i++)
 		{
 			int posY = (int)(screenHeight * (0.8 - 0.7 * (i  + 1) / commands.length));
 			
-			res.AddBox(new TextBox((int)(screenWidth/2), posY, 
-					screenWidth, screenHeight, 
-					textScale, "Arial", 0, commands[i], 
-					1f, 1f, 1f, 1f, 
-					true, TextBox.ALIGN_MIDDLE));
+			res.AddBox(TextBox.createMenuBox((int)(screenWidth*0.5), posY, 
+					screenWidth, screenHeight, textScale, commands[i]));
 
 			if(commands[i].equals("Resume")){
 				res.setCommand(i + 1, new ResumeCommand(gsm));
@@ -117,17 +111,11 @@ public class TextBoxManager extends ClickBoxManager{
 		ReadWrite.readHighscore();
 		ArrayList<Score> scores = ReadWrite.highscores;
 		TextBoxManager res = new TextBoxManager();
-		res.AddBox(new TextBox((int)(screenWidth/2),(int)(screenHeight*0.85), 
-				screenWidth, screenHeight, 
-				titleScale, "Impact", 0, "High Scores", 
-				0.9f, 0.4f, 0.4f, 1f,
-				false, TextBox.ALIGN_MIDDLE));
+		res.AddBox(TextBox.createTitle((int)(screenWidth/2),(int)(screenHeight*0.85), 
+				screenWidth, screenHeight, titleScale, "High Scores"));
 		if(ReadWrite.mostRecentScore != null){
-			res.AddBox(new TextBox((int)(screenWidth*0.075), (int)(screenHeight * 0.75), 
-				screenWidth, screenHeight, 
-				textScale, "Arial", 0, "Most Recent Score:", 
-				1.0f, 1.0f, 1.0f, 1f, 
-				false, TextBox.ALIGN_LEFT));
+			res.AddBox(TextBox.createHighscoreBox((int)(screenWidth*0.075), (int)(screenHeight * 0.75), 
+				screenWidth, screenHeight, textScale, "Most Recent Score:", mostRecentColour));
 			res.addHighScore(screenWidth, screenHeight, screenWidth / 2, (int) (screenHeight * 0.75), 
 					ReadWrite.indexOf(ReadWrite.mostRecentScore), mostRecentColour);
 		}
@@ -142,23 +130,14 @@ public class TextBoxManager extends ClickBoxManager{
 			int posY = (int)(screenHeight * (0.75 - 0.65 * (i  - 4) / 7));
 			res.addHighScore(screenWidth, screenHeight, screenWidth / 2, posY, i, highscoreColour);
 		}
-		TextBox mainMenu = new TextBox((int)(screenWidth*0.2), (int)(screenHeight * 0.15), 
-				screenWidth, screenHeight, 
-				textScale, "Arial", 0, "Main Menu", 
-				1f, 1f, 1f, 1f, 
-				true, TextBox.ALIGN_MIDDLE);
+		TextBox mainMenu = TextBox.createMenuBox((int)(screenWidth*0.2), (int)(screenHeight * 0.15), 
+				screenWidth, screenHeight, textScale, "Main Menu");
 		mainMenu.setCommand(new MainMenuCommand(gsm));
-		TextBox play = new TextBox((int)(screenWidth*0.5), (int)(screenHeight * 0.15), 
-				screenWidth, screenHeight, 
-				textScale, "Arial", 0, "New Game", 
-				1f, 1f, 1f, 1f, 
-				true, TextBox.ALIGN_MIDDLE);
+		TextBox play = TextBox.createMenuBox((int)(screenWidth*0.5), (int)(screenHeight * 0.15), 
+				screenWidth, screenHeight, textScale, "New Game");
 		play.setCommand(new PlayCommand(gsm));
-		TextBox quit = new TextBox((int)(screenWidth*0.8), (int)(screenHeight * 0.15), 
-				screenWidth, screenHeight, 
-				textScale, "Arial", 0, "Quit", 
-				1f, 1f, 1f, 1f, 
-				true, TextBox.ALIGN_MIDDLE);
+		TextBox quit = TextBox.createMenuBox((int)(screenWidth*0.8), (int)(screenHeight * 0.15), 
+				screenWidth, screenHeight, textScale, "Quit");
 		quit.setCommand(new QuitCommand());
 		res.AddBox(mainMenu);
 		res.AddBox(play);
@@ -171,22 +150,12 @@ public class TextBoxManager extends ClickBoxManager{
 	{
 		int textScale = 22;
 		ArrayList<Score> scores = ReadWrite.highscores;
-		this.AddBox(new TextBox( x + (int)(screenWidth*1/50), y, 
-				screenWidth, screenHeight, 
-				textScale, "Arial", 0, (ranking + 1) + ".", 
-				colour[0], colour[1], colour[2], colour[3],
-				false,TextBox.ALIGN_LEFT));
-		this.AddBox(new TextBox(x + (int)(screenWidth*1/10), y, 
-				screenWidth, screenHeight, 
-				textScale, "Arial", 0, scores.get(ranking).getName(), 
-				colour[0], colour[1], colour[2], colour[3],  
-				false, TextBox.ALIGN_LEFT));
-		this.AddBox(new TextBox(x + (int)(screenWidth*3/10), y, 
-				screenWidth, screenHeight, 
-				textScale, "Arial", 0, Integer.toString((int)scores.get(ranking).getScr()), 
-				colour[0], colour[1], colour[2], colour[3], 
-				false, TextBox.ALIGN_LEFT));
-		
+		this.AddBox(TextBox.createHighscoreBox(x + (int)(screenWidth*1/50), y, 
+				screenWidth, screenHeight, textScale, (ranking + 1) + ".", colour));
+		this.AddBox(TextBox.createHighscoreBox(x + (int)(screenWidth*1/10), y, 
+				screenWidth, screenHeight, textScale, scores.get(ranking).getName(), colour));
+		this.AddBox(TextBox.createHighscoreBox(x + (int)(screenWidth*3/10), y, 
+				screenWidth, screenHeight, textScale, Integer.toString((int)scores.get(ranking).getScr()), colour));		
 	}
 
 }

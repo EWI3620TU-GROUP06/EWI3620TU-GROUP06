@@ -1,5 +1,7 @@
 package MainGame;
 
+import java.awt.event.KeyEvent;
+
 import com.sun.opengl.util.Animator;
 
 import javax.media.opengl.*;
@@ -79,7 +81,7 @@ public class MainMenu implements GLEventListener {
 			
 		// Preload the texture we want to use!
 		backgroundTexture = DrawingUtil.initTexture(gl, "mainmenu");
-	}
+		}
 		
 	@Override
 	public void display(GLAutoDrawable drawable) {
@@ -109,11 +111,11 @@ public class MainMenu implements GLEventListener {
 		DrawingUtil.drawTrans(gl,0,0,screenWidth,screenHeight,0f,0f,0f,0.4f); // draw an extra greyish thing to increase contrast
 		
 		if(!optmenu){
-			this.clkbxman.drawAllText(); // draw the text in the menu
+			this.clkbxman.drawAllText(0); // draw the text in the menu
 			this.clkbxman.update();
 		}
 		else{
-			this.optclkbxman.drawAllText();
+			this.optclkbxman.drawAllText(0);
 			this.optclkbxman.update();
 		}
 		

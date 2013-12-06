@@ -151,7 +151,7 @@ public class Player extends GameObject implements VisibleObject {
 		}
 
 		physics.update(deltaTime);
-
+		
 		Vector3f newPos = physics.getPlayerPosition();
 		Vector3f d = new Vector3f(location);
 		d.sub(newPos);
