@@ -91,6 +91,13 @@ public class Maze implements VisibleObject {
 		selected = new boolean[MAZE_SIZE][MAZE_SIZE];
 	}
 	
+	public boolean isFinish(double x, double z)
+	{
+		
+		return x > finishPosition[0] * SQUARE_SIZE && x < (finishPosition[0] + 1) * SQUARE_SIZE &&
+				z > finishPosition[1] * SQUARE_SIZE && z < (finishPosition[1] + 1) * SQUARE_SIZE;
+	}
+	
 	/**
 	 * Initialize the textures used by the maze.
 	 * @param gl	instance of opengl.

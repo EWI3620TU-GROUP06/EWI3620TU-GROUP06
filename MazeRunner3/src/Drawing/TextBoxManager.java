@@ -157,5 +157,15 @@ public class TextBoxManager extends ClickBoxManager{
 		this.AddBox(TextBox.createHighscoreBox(x + (int)(screenWidth*3/10), y, 
 				screenWidth, screenHeight, textScale, Integer.toString((int)scores.get(ranking).getScr()), colour));		
 	}
+	
+	public String getText()
+	{
+		for(ClickBox t : Boxes)
+		{
+			if(t instanceof TextEditBox)
+				return ((TextEditBox)t).getText();
+		}
+		return null;
+	}
 
 }

@@ -16,10 +16,9 @@ public class TextEditBox extends TextBox {
 	public static final int MAX_CHARACTERS = 10; 
 	
 	public TextEditBox(int x, int y, int screenWidth, int screenHeight, 
-			int textScale, int fontStyle,
-			float red, float green, float blue, float alpha)
+			int textScale, float red, float green, float blue, float alpha)
 	{
-		super(x, y, screenWidth, screenHeight, textScale, "Consolas", fontStyle, "          ", 
+		super(x, y, screenWidth, screenHeight, textScale, "Consolas", 0, "          ", 
 			red, green, blue, alpha, false, ALIGN_LEFT);
 		counter = 0;
 		cursorPos = 0;
@@ -39,6 +38,8 @@ public class TextEditBox extends TextBox {
 		
 		char[] text = Text.toCharArray();
 		int key = control.getTypedKey();
+		if(key != 0)
+			confirm = false;
 		if(key == KeyEvent.VK_ENTER)
 			confirm = true;
 		else if(key >= KeyEvent.VK_A && key <= KeyEvent.VK_Z){
@@ -91,7 +92,15 @@ public class TextEditBox extends TextBox {
 	public String getText()
 	{
 		if(confirm)
-			return Text;
+		{
+			String[] text = Text.split("[ ]");
+			for(int i = 0; i < text.length; i++)
+			{
+				if(!text[i].isEmpty())
+					return text[i]; 
+			}
+			return null;
+		}
 		else
 			return null;
 	}
