@@ -188,19 +188,19 @@ public class MazeRunner implements GLEventListener {
 		this.clkbxman.setControl(input);
 		this.optclkbxman.setControl(input);
 		float[] white = {1, 1, 1, 1};
-		this.scoreBox = TextBox.createHighscoreBox(screenWidth / 50, screenHeight * 9 / 10, 
+		this.scoreBox = TextBox.createHighscoreBox(0.02f, 0.9f, 
 				screenWidth, screenHeight, 22, "Score: 0", white);
 		
-		this.finishbxman.AddBox(TextBox.createTitle(screenWidth / 2, screenHeight / 2,
+		this.finishbxman.AddBox(TextBox.createTitle(0.5f, 0.5f,
 				screenWidth, screenHeight, 6, "Level CLear!"));
-		TextEditBox editBox = new TextEditBox(screenWidth / 2, screenHeight / 4, 
+		TextEditBox editBox = new TextEditBox(0.5f, 0.25f, 
 				screenWidth, screenHeight, 14, 1f, 1f, 1f, 1f);
 		editBox.setControl(input);
 		this.finishbxman.AddBox(editBox);
 		
-		this.finishbxman.AddBox(TextBox.createHighscoreBox((int)(screenWidth * 0.05), 
-				screenHeight / 4, screenWidth, screenHeight, 14, "Enter Name:", white));
-		this.deadclkbx = TextBox.createTitle(screenWidth / 2, screenHeight / 2, 
+		this.finishbxman.AddBox(TextBox.createHighscoreBox(0.05f, 
+				0.25f, screenWidth, screenHeight, 14, "Enter Name:", white));
+		this.deadclkbx = TextBox.createTitle(0.5f, 0.5f, 
 				screenWidth, screenHeight, 6, "You Have Died!");
 	}
 
@@ -339,8 +339,7 @@ public class MazeRunner implements GLEventListener {
 			}
 
 		}
-		if(finished)
-		{
+		if(finished){
 			finishbxman.drawAllText(deltaTime);
 		}
 		DrawingUtil.perspectiveProjection(gl, glu, FOV, screenWidth, screenHeight);
@@ -355,30 +354,22 @@ public class MazeRunner implements GLEventListener {
 			}
 		}
 		
-
 		gl.glLoadIdentity();
-
-		// Flush the OpenGL buffer.
 		gl.glFlush();
 		
-		if(finished)
-		{
+		if(finished){
 			String name = "fout";
-			if((name = finishbxman.getText()) != null)
-			{
+			if((name = finishbxman.getText()) != null){
 				ReadWrite.addScore(name, currentScore);
 				showCursor();
 				state.getGSM().setState(gStateMan.HIGHSCORESTATE);
 			}
 		}
 		
-		if(dead)
-		{
+		if(dead){
 			timer += deltaTime;
-			if(timer > 2000)
-			{
+			if(timer > 2000){
 				showCursor();
-				
 				state.getGSM().setState(gStateMan.HIGHSCORESTATE);
 			}
 		}

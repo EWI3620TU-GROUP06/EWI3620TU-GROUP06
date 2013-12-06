@@ -15,10 +15,12 @@ public class TextBox extends ClickBox {
 	public static final byte ALIGN_MIDDLE = 0;
 	public static final byte ALIGN_LEFT = 1;
 	public static final byte ALIGN_RIGHT = 2;
+	protected byte alignment;
+	protected float relativePos[];
 
 	protected float[] color;
 
-	public TextBox(int x, int y, int screenWidth, int screenHeight, 
+	public TextBox(float x, float y, int screenWidth, int screenHeight, 
 			int textScale, String Font, int fontStyle, String Text, 
 			float red, float green, float blue, float alpha,
 			boolean clickable, byte alignment){
@@ -30,48 +32,22 @@ public class TextBox extends ClickBox {
 		this.Font = Font;
 		renderer = new TextRenderer(new Font(Font, fontStyle, this.screenWidth/textScale));
 		this.Text = Text;
-		Rectangle2D temp = renderer.getBounds(Text);
-		if(alignment == ALIGN_MIDDLE)
-		{
-			this.location = new int[]{x - (int)(temp.getWidth()/2),y};
-			this.Bounds = new int[]{location[0]+(int)temp.getX(), 
-					location[0]+(int)temp.getX()+(int)temp.getWidth(), 
-					location[1]+(int)temp.getHeight(), 
-					location[1]};
-		}
-		else if(alignment == ALIGN_RIGHT)
-		{
-			this.location = new int[]{x - (int)(temp.getWidth()),y};
-			this.Bounds = new int[]{location[0]+(int)temp.getX(), 
-					location[0]+(int)temp.getX()+(int)temp.getWidth(), 
-					location[1]+(int)temp.getHeight(), 
-					location[1]};
-		}
-		else
-		{
-			this.location = new int[]{x, y};
-			this.Bounds = new int[]{location[0]+(int)temp.getX(), 
-					location[0]+(int)temp.getX()+(int)temp.getWidth(), 
-					location[1]+(int)temp.getHeight(), 
-					location[1]};
-		}
+		this.alignment = alignment;
+		this.relativePos = new float[]{x, y};
+		
+		updateLocation();
+			
 		this.clickable = clickable;
 	}
 
 
 	public void reshape(int screenWidth, int screenHeight){
-		int oldWidth = this.screenWidth;
-		int oldHeight = this.screenHeight;
 		this.screenWidth = screenWidth;
 		this.screenHeight = screenHeight;
-		setLocation((int)(this.getLocation()[0]*(float)(this.screenWidth)/(float)(oldWidth)),
-				(int)(this.getLocation()[1]*(float)(this.screenHeight)/(float)(oldHeight)));
+
 		renderer = new TextRenderer(new Font(Font, fontStyle, this.screenWidth/textScale));
-		Rectangle2D temp = renderer.getBounds(Text);
-		setBounds(this.getLocation()[0]+(int)temp.getX(), 
-				this.getLocation()[0]+(int)temp.getX()+(int)temp.getWidth(), 
-				this.getLocation()[1]+(int)temp.getHeight(), 
-				this.getLocation()[1]);
+		
+		updateLocation();
 	}
 
 	public void drawText(int deltaTime){
@@ -86,24 +62,42 @@ public class TextBox extends ClickBox {
 		this.color = new float[]{red,green,blue,alpha};
 	}
 	
+	protected void updateLocation()
+	{
+		Rectangle2D temp = renderer.getBounds(Text);
+		if(alignment == ALIGN_MIDDLE){
+			this.location = new int[]{(int)(relativePos[0] * screenWidth) - (int)(temp.getWidth()/2), (int)(relativePos[1] * screenHeight)};
+		}
+		else if(alignment == ALIGN_RIGHT){
+			this.location = new int[]{(int)(relativePos[0] * screenWidth) - (int)(temp.getWidth()), (int)(relativePos[1] * screenHeight)};
+		}
+		else{
+			this.location = new int[]{(int)(relativePos[0] * screenWidth), (int)(relativePos[1] * screenHeight)};
+		}
+		this.Bounds = new int[]{location[0]+(int)temp.getX(), 
+				location[0]+(int)temp.getX()+(int)temp.getWidth(), 
+				location[1]+(int)temp.getHeight(), 
+				location[1]};
+	}
+	
 	public void setText(String text)
 	{
 		this.Text = text;
 	}
 	
-	public static TextBox createTitle(int x, int y, int screenWidth, int screenHeight, int titleScale, String title)
+	public static TextBox createTitle(float x, float y, int screenWidth, int screenHeight, int titleScale, String title)
 	{
 		return new TextBox(x, y, screenWidth, screenHeight, titleScale, "Impact", 0, title, 
 				0.9f, 0.4f, 0.4f, 1f, false, ALIGN_MIDDLE); 
 	}
 	
-	public static TextBox createMenuBox(int x, int y, int screenWidth, int screenHeight, int textScale, String caption)
+	public static TextBox createMenuBox(float x, float y, int screenWidth, int screenHeight, int textScale, String caption)
 	{
 		return new TextBox(x, y, screenWidth, screenHeight, textScale, "Arial", 0, caption, 
 				1f, 1f, 1f, 1f, true, TextBox.ALIGN_MIDDLE);
 	}
 	
-	public static TextBox createHighscoreBox(int x, int y, int screenWidth, int screenHeight, int textScale, 
+	public static TextBox createHighscoreBox(float x, float y, int screenWidth, int screenHeight, int textScale, 
 			String caption, float[] colour)
 	{
 		return new TextBox( x, y, screenWidth, screenHeight, textScale, "Arial", 0, caption, 

@@ -58,14 +58,14 @@ public class TextBoxManager extends ClickBoxManager{
 		int textScale = 18;
 		TextBoxManager res = new TextBoxManager();
 		
-		res.AddBox(TextBox.createTitle((int)(screenWidth/2),(int)(screenHeight*0.8), 
+		res.AddBox(TextBox.createTitle(0.5f, 0.8f, 
 				screenWidth, screenHeight, titleScale, title));
 
 		for(int i = 0; i < commands.length; i++)
 		{
-			int posY = (int)(screenHeight * (0.8 - 0.7 * (i  + 1) / commands.length));
+			float posY = (float) (0.8 - 0.7 * (i  + 1) / commands.length);
 			
-			res.AddBox(TextBox.createMenuBox((int)(screenWidth*0.5), posY, 
+			res.AddBox(TextBox.createMenuBox(0.5f, posY, 
 					screenWidth, screenHeight, textScale, commands[i]));
 
 			if(commands[i].equals("Resume")){
@@ -111,32 +111,30 @@ public class TextBoxManager extends ClickBoxManager{
 		ReadWrite.readHighscore();
 		ArrayList<Score> scores = ReadWrite.highscores;
 		TextBoxManager res = new TextBoxManager();
-		res.AddBox(TextBox.createTitle((int)(screenWidth/2),(int)(screenHeight*0.85), 
+		res.AddBox(TextBox.createTitle(0.5f, 0.85f, 
 				screenWidth, screenHeight, titleScale, "High Scores"));
 		if(ReadWrite.mostRecentScore != null){
-			res.AddBox(TextBox.createHighscoreBox((int)(screenWidth*0.075), (int)(screenHeight * 0.75), 
+			res.AddBox(TextBox.createHighscoreBox(0.075f, 0.75f, 
 				screenWidth, screenHeight, textScale, "Most Recent Score:", mostRecentColour));
-			res.addHighScore(screenWidth, screenHeight, screenWidth / 2, (int) (screenHeight * 0.75), 
+			res.addHighScore(screenWidth, screenHeight, 0.5f, 0.75f, 
 					ReadWrite.indexOf(ReadWrite.mostRecentScore), mostRecentColour);
 		}
-		for(int i = 0; i <  5 && i < scores.size(); i++)
-		{
-			int posY = (int)(screenHeight * (0.75 - 0.65 * (i  + 1) / 7));
+		for(int i = 0; i <  5 && i < scores.size(); i++){
+			float posY = (float)(0.75 - 0.65 * (i  + 1) / 7);
 			res.addHighScore(screenWidth, screenHeight, 0, posY, i, highscoreColour);
 		}
 		
-		for(int i = 5; i <  10 && i < scores.size(); i++)
-		{
-			int posY = (int)(screenHeight * (0.75 - 0.65 * (i  - 4) / 7));
-			res.addHighScore(screenWidth, screenHeight, screenWidth / 2, posY, i, highscoreColour);
+		for(int i = 5; i <  10 && i < scores.size(); i++){
+			float posY =  (float)(0.75 - 0.65 * (i  - 4) / 7);
+			res.addHighScore(screenWidth, screenHeight, 0.5f, posY, i, highscoreColour);
 		}
-		TextBox mainMenu = TextBox.createMenuBox((int)(screenWidth*0.2), (int)(screenHeight * 0.15), 
+		TextBox mainMenu = TextBox.createMenuBox(0.2f,  0.15f, 
 				screenWidth, screenHeight, textScale, "Main Menu");
 		mainMenu.setCommand(new MainMenuCommand(gsm));
-		TextBox play = TextBox.createMenuBox((int)(screenWidth*0.5), (int)(screenHeight * 0.15), 
+		TextBox play = TextBox.createMenuBox(0.5f, 0.15f, 
 				screenWidth, screenHeight, textScale, "New Game");
 		play.setCommand(new PlayCommand(gsm));
-		TextBox quit = TextBox.createMenuBox((int)(screenWidth*0.8), (int)(screenHeight * 0.15), 
+		TextBox quit = TextBox.createMenuBox(0.8f, 0.15f, 
 				screenWidth, screenHeight, textScale, "Quit");
 		quit.setCommand(new QuitCommand());
 		res.AddBox(mainMenu);
@@ -146,15 +144,15 @@ public class TextBoxManager extends ClickBoxManager{
 			
 	}
 	
-	private void addHighScore(int screenWidth, int screenHeight, int x, int y, int ranking, float[] colour)
+	private void addHighScore(int screenWidth, int screenHeight, float x, float y, int ranking, float[] colour)
 	{
 		int textScale = 22;
 		ArrayList<Score> scores = ReadWrite.highscores;
-		this.AddBox(TextBox.createHighscoreBox(x + (int)(screenWidth*1/50), y, 
+		this.AddBox(TextBox.createHighscoreBox(x + 0.02f, y, 
 				screenWidth, screenHeight, textScale, (ranking + 1) + ".", colour));
-		this.AddBox(TextBox.createHighscoreBox(x + (int)(screenWidth*1/10), y, 
+		this.AddBox(TextBox.createHighscoreBox(x + 0.1f, y, 
 				screenWidth, screenHeight, textScale, scores.get(ranking).getName(), colour));
-		this.AddBox(TextBox.createHighscoreBox(x + (int)(screenWidth*3/10), y, 
+		this.AddBox(TextBox.createHighscoreBox(x + 0.3f, y, 
 				screenWidth, screenHeight, textScale, Integer.toString((int)scores.get(ranking).getScr()), colour));		
 	}
 	

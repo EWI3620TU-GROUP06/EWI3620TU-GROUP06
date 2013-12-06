@@ -15,7 +15,7 @@ public class TextEditBox extends TextBox {
 	
 	public static final int MAX_CHARACTERS = 10; 
 	
-	public TextEditBox(int x, int y, int screenWidth, int screenHeight, 
+	public TextEditBox(float x, float y, int screenWidth, int screenHeight, 
 			int textScale, float red, float green, float blue, float alpha)
 	{
 		super(x, y, screenWidth, screenHeight, textScale, "Consolas", 0, "          ", 
