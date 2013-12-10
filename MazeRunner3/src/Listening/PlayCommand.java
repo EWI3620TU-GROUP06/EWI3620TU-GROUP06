@@ -2,6 +2,7 @@ package Listening;
 
 import GameStates.gStateMan;
 import HighScore.ReadWrite;
+import HighScore.SqlReadWrite;
 
 public class PlayCommand implements Command{
 
@@ -13,6 +14,7 @@ public class PlayCommand implements Command{
 	
 	@Override
 	public void execute() {
+		SqlReadWrite.Write();
 		this.gsm.setState(gStateMan.PLAYSTATE);
 	}
 
