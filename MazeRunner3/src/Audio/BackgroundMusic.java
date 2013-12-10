@@ -1,45 +1,41 @@
 package Audio;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
+import javazoom.jl.player.Player;
 
-public class BackgroundMusic implements Runnable {
+public class BackgroundMusic implements Runnable{
 	
-	private Thread musicThread;
-	private Clip clip = null;
+	Player player = null;
 	
 	public BackgroundMusic(File clipFile)
 	{
-		AudioInputStream audioInputStream = null;
 		try {
-			audioInputStream = AudioSystem.getAudioInputStream(clipFile);
-
-			clip = AudioSystem.getClip();
-			clip.open(audioInputStream);
-
-			audioInputStream.close();
-			if(musicThread == null)
-			musicThread = new Thread(this);
-
-			musicThread.start();
-			
-		} catch(Exception e){
+			FileInputStream fis     = new FileInputStream(clipFile);
+            BufferedInputStream bis = new BufferedInputStream(fis);
+            player = new Player(bis);			
+		} 
+		catch(Exception e){
 			e.printStackTrace();
 		}
 
 	}
-
+	
 	public void run()
 	{
-		clip.loop(Clip.LOOP_CONTINUOUSLY);
+		try{
+			player.play();
+		}
+		catch (Exception e) { 
+			System.out.println(e); 
+		}
 	}
 	
 	public void stop()
 	{
-		clip.stop();
+		player.close();
 	}
 
 }

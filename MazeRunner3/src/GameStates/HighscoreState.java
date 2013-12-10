@@ -6,7 +6,6 @@ import javax.media.opengl.GLCanvas;
 import Audio.Audio;
 import Main.Game;
 import MainGame.HighscoreMenu;
-import MainGame.MainMenu;
 
 public class HighscoreState extends GameState {
 

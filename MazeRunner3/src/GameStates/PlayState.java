@@ -61,7 +61,7 @@ public class PlayState extends GameState {
 	
 	public void playMusic()
 	{
-		Audio.playMusic("test2");
+		Audio.playMusic("menu");
 	}
 	@Override
 	public void setOptPaused() {

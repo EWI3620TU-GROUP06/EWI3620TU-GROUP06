@@ -27,6 +27,7 @@ public class gStateMan {
 		gameStates.add(new EditState(this, game));
 		gameStates.add(new HighscoreState(this, game));
 		input = new UserInput(this);
+		gameStates.get(currentState).playMusic();
 		update();
 	}
 	

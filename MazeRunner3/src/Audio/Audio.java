@@ -6,12 +6,15 @@ import java.io.File;
 public class Audio {
 	
 	private static BackgroundMusic music = null;
+	private static Thread musicThread = null;
 	
 	public static void playMusic(String musicName) {
 		try{
 			stopMusic();
-			musicName = "src/Music/" + musicName + ".wav";
-			music = new BackgroundMusic(new File(musicName));	
+			musicName = "src/Music/" + musicName + ".mp3";
+			music = new BackgroundMusic(new File(musicName));
+			musicThread = new Thread(music);
+			musicThread.start();
 		}
 		catch(Exception e){
 			e.printStackTrace();
