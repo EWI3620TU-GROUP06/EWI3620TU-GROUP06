@@ -201,6 +201,12 @@ public class Physics {
 		dynamicsWorld.rayTest(getPlayerPosition(), toVect, a);
 		return a.hasHit();
 	}
+	
+	public boolean getLineofSight(Vector3f fromVect, Vector3f toVect){
+		RayResultCallback a = new CollisionWorld.ClosestRayResultCallback(fromVect, toVect);
+		dynamicsWorld.rayTest(fromVect, toVect, a);
+		return a.hasHit();
+	}
 
 	public boolean getContact(){
 		for(double theta = 0; theta <= 2*Math.PI; theta += 0.25*Math.PI)

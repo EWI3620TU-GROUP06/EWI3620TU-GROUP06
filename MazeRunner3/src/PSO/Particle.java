@@ -19,7 +19,6 @@ public class Particle extends GameObject implements VisibleObject{
 	private Vector3f localbest;
 	private Swarm swarm;
 	private float dX, dZ;
-	private MazeObject previousTile = null;
 	
 	private double orientation;
 	private double totalRotation;
@@ -71,64 +70,25 @@ public class Particle extends GameObject implements VisibleObject{
 			localbest = location;
 		}
 		
-		Vector3f oldvelocity = new Vector3f(velocity.x, 0f, velocity.z);
-		Vector3f newvelocity = new Vector3f(velocity.x, 0f, velocity.z);
+		Vector3f globalbest = swarm.getGlobalBest();
+		Vector3f difference = new Vector3f(globalbest.x - location.x, globalbest.y - location.y, globalbest.z - location.z);
 		
-		newvelocity = new Vector3f(swarm.getInertiaWeight()*velocity.x,
-				0f,
-				swarm.getInertiaWeight()*velocity.z);
+		boolean LoSbroken = swarm.getPhysics().getLineofSight(location, globalbest);
 		
-		newvelocity.add(new Vector3f(swarm.getCognitive()*((float)Math.random())*(localbest.x - location.x),
-				0f,
-				swarm.getCognitive()*((float)Math.random())*(localbest.z - location.z)));
+		boolean LoSNotWorking = true;
 		
-		newvelocity.add(new Vector3f(swarm.getSocial()*((float)Math.random())*(swarm.getGlobalBest().x - location.x),
-				0f,
-				swarm.getSocial()*((float)Math.random())*(swarm.getGlobalBest().z - location.z)));
-		
-		
-		
-		oldvelocity.normalize();
-		int squaresize = swarm.getMaze().SQUARE_SIZE;
-		double mazesize = swarm.getMaze().getSize();
-		
-		Vector3f nextTileVect = new Vector3f(location.x + squaresize*oldvelocity.x, 
-				0, 
-				location.z + squaresize*oldvelocity.z); //TODO:think about this one
-		
-		if((double)location.x < (mazesize - squaresize) &&
-				(double)location.x > squaresize &&
-				(double)location.z < (mazesize - squaresize) &&
-				(double)location.z > squaresize){
+		if(!LoSbroken || LoSNotWorking){
+			velocity = new Vector3f(swarm.getInertiaWeight()*velocity.x,
+					0f,
+					swarm.getInertiaWeight()*velocity.z);
 			
-			MazeObject currentTile = swarm.getMaze().get((int)(location.x/squaresize), 
-					(int)(location.z/squaresize));
+			velocity.add(new Vector3f(swarm.getCognitive()*((float)Math.random())*(localbest.x - location.x),
+					0f,
+					swarm.getCognitive()*((float)Math.random())*(localbest.z - location.z)));
 			
-			MazeObject nextTile = swarm.getMaze().get((int)(nextTileVect.x/squaresize),
-					(int)(nextTileVect.z/squaresize));
-			
-			if(!(nextTile instanceof Floor) && 
-					!(nextTile instanceof Ramp)){
-				
-				MazeObject[] neighbourTiles = getNeighbourTiles(squaresize);
-				
-				if(neighbourTiles[0].getCode() == 0 && !(neighbourTiles[0].equals(previousTile))){ //"up" tile
-					velocity.add(new Vector3f(-10f, 0f, 0f)); 
-				}
-				else if(neighbourTiles[1].getCode() == 0 && !(neighbourTiles[1].equals(previousTile))){ //"left" tile
-					velocity.add(new Vector3f(0f, 0f, -10f));
-				}
-				else if(neighbourTiles[3].getCode() == 0 && !(neighbourTiles[2].equals(previousTile))){ //"right" tile
-					velocity.add(new Vector3f(0f, 0f, 10f));
-				}
-				else if(neighbourTiles[2].getCode() == 0 && !(neighbourTiles[3].equals(previousTile))){ //"down" tile
-					velocity.add(new Vector3f(10f, 0f, 0f));
-				}
-			}
-			if(!(nextTile.equals(previousTile))){
-				velocity = new Vector3f(newvelocity.x, 0f, newvelocity.y);
-			}
-			previousTile = currentTile; //TODO:think about this one
+			velocity.add(new Vector3f(swarm.getSocial()*((float)Math.random())*(difference.x),
+					0f,
+					swarm.getSocial()*((float)Math.random())*(difference.z)));
 		}
 	}
 	
