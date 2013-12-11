@@ -14,7 +14,7 @@ public class Score {
 		return res;
 	}
 	
-	public double getScr()
+	public int getScr()
 	{
 		return score;
 	}

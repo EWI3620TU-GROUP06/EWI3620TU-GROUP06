@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import GameStates.gStateMan;
 import HighScore.ReadWrite;
 import HighScore.Score;
+import HighScore.SqlReadWrite;
 import Listening.*;
 
 public class TextBoxManager extends ClickBoxManager{
@@ -108,16 +109,16 @@ public class TextBoxManager extends ClickBoxManager{
 		int textScale = 22;
 		float[] highscoreColour = {0.3f, 0.7f, 0.3f, 1f};
 		float[] mostRecentColour = {1f, 1f, 1f, 1f};
-		ReadWrite.readHighscore();
-		ArrayList<Score> scores = ReadWrite.highscores;
+		SqlReadWrite.Read();
+		ArrayList<Score> scores = SqlReadWrite.highscores;
 		TextBoxManager res = new TextBoxManager();
 		res.AddBox(TextBox.createTitle(0.5f, 0.85f, 
 				screenWidth, screenHeight, titleScale, "High Scores"));
-		if(ReadWrite.mostRecentScore != null){
+		if(SqlReadWrite.mostRecentScore != null){
 			res.AddBox(TextBox.createHighscoreBox(0.075f, 0.75f, 
 				screenWidth, screenHeight, textScale, "Most Recent Score:", mostRecentColour));
 			res.addHighScore(screenWidth, screenHeight, 0.5f, 0.75f, 
-					ReadWrite.indexOf(ReadWrite.mostRecentScore), mostRecentColour);
+					scores.indexOf(SqlReadWrite.mostRecentScore), mostRecentColour);
 		}
 		for(int i = 0; i <  5 && i < scores.size(); i++){
 			float posY = (float)(0.75 - 0.65 * (i  + 1) / 7);
@@ -147,7 +148,7 @@ public class TextBoxManager extends ClickBoxManager{
 	private void addHighScore(int screenWidth, int screenHeight, float x, float y, int ranking, float[] colour)
 	{
 		int textScale = 22;
-		ArrayList<Score> scores = ReadWrite.highscores;
+		ArrayList<Score> scores = SqlReadWrite.highscores;
 		this.AddBox(TextBox.createHighscoreBox(x + 0.02f, y, 
 				screenWidth, screenHeight, textScale, (ranking + 1) + ".", colour));
 		this.AddBox(TextBox.createHighscoreBox(x + 0.1f, y, 

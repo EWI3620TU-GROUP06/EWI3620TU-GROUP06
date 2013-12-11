@@ -7,32 +7,41 @@ import java.io.FileInputStream;
 import javazoom.jl.player.Player;
 
 public class BackgroundMusic implements Runnable{
-	
-	Player player = null;
-	
-	public BackgroundMusic(File clipFile)
+
+	private Player player = null;
+	private static Thread musicThread = null;
+	private boolean loop = true;
+	private File musicFile;
+
+	public BackgroundMusic(File file)
 	{
 		try {
-			FileInputStream fis     = new FileInputStream(clipFile);
-            BufferedInputStream bis = new BufferedInputStream(fis);
-            player = new Player(bis);			
+			musicFile = file;
+			musicThread = new Thread(this);
+			musicThread.start();
 		} 
 		catch(Exception e){
 			e.printStackTrace();
 		}
 
 	}
-	
+
 	public void run()
 	{
-		try{
-			player.play();
-		}
-		catch (Exception e) { 
-			System.out.println(e); 
+		while(loop)
+		{
+			try{
+				BufferedInputStream in= new BufferedInputStream( new FileInputStream(musicFile));
+				player = new Player(in);
+				player.play();
+			}
+			catch (Exception e) { 
+				System.out.println(e);
+				break;
+			}
 		}
 	}
-	
+
 	public void stop()
 	{
 		player.close();
