@@ -3,7 +3,6 @@ package Drawing;
 import java.util.ArrayList;
 
 import GameStates.gStateMan;
-import HighScore.ReadWrite;
 import HighScore.Score;
 import HighScore.SqlReadWrite;
 import Listening.*;
@@ -106,7 +105,7 @@ public class TextBoxManager extends ClickBoxManager{
 	public static TextBoxManager createHighscoreMenu(int screenWidth, int screenHeight, int ranking, gStateMan gsm)
 	{
 		int titleScale = 12;
-		int textScale = 22;
+		int textScale = 30;
 		float[] highscoreColour = {0.3f, 0.7f, 0.3f, 1f};
 		float[] mostRecentColour = {1f, 1f, 1f, 1f};
 		SqlReadWrite.Read();
@@ -129,17 +128,21 @@ public class TextBoxManager extends ClickBoxManager{
 			float posY =  (float)(0.75 - 0.65 * (i  - 4) / 7);
 			res.addHighScore(screenWidth, screenHeight, 0.5f, posY, i, highscoreColour);
 		}
-		TextBox mainMenu = TextBox.createMenuBox(0.2f,  0.15f, 
+		TextBox mainMenu = TextBox.createMenuBox(0.15f,  0.15f, 
 				screenWidth, screenHeight, textScale, "Main Menu");
 		mainMenu.setCommand(new MainMenuCommand(gsm));
-		TextBox play = TextBox.createMenuBox(0.5f, 0.15f, 
+		TextBox play = TextBox.createMenuBox(0.36f, 0.15f, 
 				screenWidth, screenHeight, textScale, "New Game");
 		play.setCommand(new PlayCommand(gsm));
-		TextBox quit = TextBox.createMenuBox(0.8f, 0.15f, 
+		TextBox DeleteHighscores = TextBox.createMenuBox(0.62f, 0.15f,
+				screenWidth, screenHeight, textScale, "Delete Higscores");
+		DeleteHighscores.setCommand(new DeleteHighscoresCommand(gsm));
+		TextBox quit = TextBox.createMenuBox(0.85f, 0.15f, 
 				screenWidth, screenHeight, textScale, "Quit");
 		quit.setCommand(new QuitCommand());
 		res.AddBox(mainMenu);
 		res.AddBox(play);
+		res.AddBox(DeleteHighscores);
 		res.AddBox(quit);
 		return res;	
 			
@@ -149,12 +152,14 @@ public class TextBoxManager extends ClickBoxManager{
 	{
 		int textScale = 22;
 		ArrayList<Score> scores = SqlReadWrite.highscores;
+		if(!scores.isEmpty()){
 		this.AddBox(TextBox.createHighscoreBox(x + 0.02f, y, 
 				screenWidth, screenHeight, textScale, (ranking + 1) + ".", colour));
 		this.AddBox(TextBox.createHighscoreBox(x + 0.1f, y, 
 				screenWidth, screenHeight, textScale, scores.get(ranking).getName(), colour));
 		this.AddBox(TextBox.createHighscoreBox(x + 0.3f, y, 
-				screenWidth, screenHeight, textScale, Integer.toString((int)scores.get(ranking).getScr()), colour));		
+				screenWidth, screenHeight, textScale, Integer.toString((int)scores.get(ranking).getScr()), colour));
+		}
 	}
 	
 	public String getText()

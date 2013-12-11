@@ -11,7 +11,8 @@ import GameObjects.Camera;
 import GameObjects.Player;
 import GameStates.GameState;
 import GameStates.gStateMan;
-import HighScore.ReadWrite;
+import HighScore.SqlReadWrite;
+import HighScore.Score;
 import Listening.UserInput;
 import Main.Game;
 import PSO.Swarm;
@@ -360,7 +361,7 @@ public class MazeRunner implements GLEventListener {
 		if(finished){
 			String name = "fout";
 			if((name = finishbxman.getText()) != null){
-				ReadWrite.addScore(name, currentScore);
+				SqlReadWrite.Write(new Score(name, currentScore));
 				showCursor();
 				state.getGSM().setState(gStateMan.HIGHSCORESTATE);
 			}

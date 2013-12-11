@@ -3,6 +3,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -18,10 +19,12 @@ public class SqlReadWrite {
 	public static void startConnection()
 	{
 		try{
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("org.sqlite.JDBC");
 			connect = DriverManager
-					.getConnection("jdbc:mysql://localhost/highscores?"
-							+ "user=sqluser&password=sqluserpw");
+					.getConnection("jdbc:sqlite:db/mydatabase.db");
+			Statement stat = connect.createStatement();
+			stat.executeUpdate("CREATE TABLE IF NOT EXISTS highscores (name STRING, score INT, level STRING, time TIMESTAMP);");
+			stat.close();
 		}
 		catch(Exception e)
 		{
@@ -33,7 +36,7 @@ public class SqlReadWrite {
 		try{
 			startConnection();
 			PreparedStatement preparedStatement = connect
-					.prepareStatement("insert into  HIGHSCORES.HIGHSCORE values (default, ?, ?, ?, ?)");
+					.prepareStatement("insert into  highscores values (?, ?, ?, ?)");
 			preparedStatement.setString(1,  score.getName());
 			preparedStatement.setInt(2, score.getScr());
 			preparedStatement.setString(3,  "Level 1");
@@ -56,7 +59,7 @@ public class SqlReadWrite {
 			startConnection();
 			Statement statement = connect.createStatement();
 			ResultSet resultSet = statement
-					.executeQuery("SELECT name, score, time FROM highscores.highscore ORDER BY score DESC;");
+					.executeQuery("SELECT name, score, time FROM highscores ORDER BY score DESC;");
 			while(resultSet.next())
 			{
 				String name = resultSet.getString("name");
@@ -70,6 +73,20 @@ public class SqlReadWrite {
 			connect.close();
 		}
 		catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public static void DeleteHigHscores(){
+		try {
+			startConnection();
+			Statement stat = connect.createStatement();
+			stat.executeUpdate("DROP TABLE IF EXISTS highscores;");
+			highscores = new ArrayList<Score>();
+			mostRecentScore = null;
+			connect.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
