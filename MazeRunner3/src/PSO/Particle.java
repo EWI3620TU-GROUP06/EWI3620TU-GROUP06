@@ -4,6 +4,8 @@ import javax.media.opengl.GL;
 import javax.media.opengl.glu.GLU;
 import javax.vecmath.Vector3f;
 
+import com.bulletphysics.collision.shapes.SphereShape;
+import com.bulletphysics.dynamics.RigidBody;
 import com.sun.opengl.impl.GLUquadricImpl;
 import com.sun.opengl.util.texture.Texture;
 
@@ -73,11 +75,17 @@ public class Particle extends GameObject implements VisibleObject{
 		Vector3f globalbest = swarm.getGlobalBest();
 		Vector3f difference = new Vector3f(globalbest.x - location.x, globalbest.y - location.y, globalbest.z - location.z);
 		
-		boolean LoSbroken = swarm.getPhysics().getLineofSight(location, globalbest);
+		//Normalize manually and multiply by 2, to make sure ray is outside the spheres.
+		difference = new Vector3f(difference.x/difference.length(), difference.y/difference.length(), difference.z/difference.length());
 		
-		boolean LoSNotWorking = true;
+		//Do this to not overwrite the actual globalbest and location with the .add() method
+		Vector3f partLocation = new Vector3f(location.x, location.y, location.z);
 		
-		if(!LoSbroken || LoSNotWorking){
+		partLocation.add(difference);
+		
+		RigidBody LoSbreaker = (RigidBody) swarm.getPhysics().getLineofSight(partLocation, globalbest);
+		
+		if((LoSbreaker != null) && (LoSbreaker.getCollisionShape() instanceof SphereShape)){
 			velocity = new Vector3f(swarm.getInertiaWeight()*velocity.x,
 					0f,
 					swarm.getInertiaWeight()*velocity.z);
@@ -86,9 +94,12 @@ public class Particle extends GameObject implements VisibleObject{
 					0f,
 					swarm.getCognitive()*((float)Math.random())*(localbest.z - location.z)));
 			
-			velocity.add(new Vector3f(swarm.getSocial()*((float)Math.random())*(difference.x),
+			velocity.add(new Vector3f(swarm.getSocial()*((float)Math.random())*(globalbest.x - location.x),
 					0f,
-					swarm.getSocial()*((float)Math.random())*(difference.z)));
+					swarm.getSocial()*((float)Math.random())*(globalbest.z - location.z)));
+		}
+		else if ((LoSbreaker != null) && !(LoSbreaker.getCollisionShape() instanceof SphereShape)){
+			//Stand still for now
 		}
 	}
 	

@@ -5,6 +5,7 @@ import javax.media.opengl.*;
 
 import java.util.ArrayList;
 
+import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 
 import com.sun.opengl.util.texture.Texture;
@@ -17,24 +18,29 @@ import com.sun.opengl.util.texture.Texture;
 public abstract class MazeObject {
 
 	ArrayList<Vector3f> vertices;
-	ArrayList<int[]> faces;
-	ArrayList<Vector3f> normals;
-
-	protected int[][] texturePoints = { {1, 1}, {1, 0}, {0, 0} , {0, 1}}; 
+	ArrayList<Face> faces;
+	ArrayList<Vector2f> texVertices;
 
 	float restitution;
 
-	public MazeObject()
+	public MazeObject(boolean foldedTexture)
 	{
 		vertices = new ArrayList<Vector3f>();
-		normals = new ArrayList<Vector3f>();
-		faces = new ArrayList<int[]>();
+		faces = new ArrayList<Face>();
+		texVertices = new ArrayList<Vector2f>();
+		if(!foldedTexture)
+		{
+			texVertices.add(new Vector2f(0.5f, 0.5f));
+			texVertices.add(new Vector2f(0.5f, 0.75f));
+			texVertices.add(new Vector2f(0.25f, 0.75f));
+			texVertices.add(new Vector2f(0.25f, 0.5f));
+		}
 	}
-	
-	public MazeObject(ArrayList<Vector3f> vertices, ArrayList<Vector3f> normals, ArrayList<int[]> faces)
+
+	public MazeObject(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces)
 	{
 		this.vertices = vertices;
-		this.normals = normals;
+		this.texVertices = texVertices;
 		this.faces = faces;
 	}
 
@@ -68,24 +74,57 @@ public abstract class MazeObject {
 	 * @param face	face to be added
 	 */
 
-	public void addFace(int[] face)
+	public void addFace(int[] faceArray)
 	{
-		if(face.length < 3)
+		if(faceArray.length < 3)
 		{
 			System.err.println("Faces should contain at leats three vertices");
 			return;
 		}
-		for(int i = 0; i < face.length; i++)
+		for(int i = 0; i < faceArray.length; i++)
 		{
-			if(face[i] > vertices.size())
+			if(faceArray[i] > vertices.size())
 			{
 				System.err.println("Couldn't add face: index out of bounds");
 				return;
 			}
 		}
-		normals.add(calculateNormal(face));
+		Face face = new Face(faceArray);
+		calculateNormal(face);
 		this.faces.add(face);
+	}
 
+	public void addFace(int[] faceArray, int[] texArray)
+	{
+		if(faceArray.length != texArray.length)
+		{
+			System.out.println("Faces should have equal numbers of texture and 3d coordinates.");
+			return;
+		}
+		if(faceArray.length < 3)
+		{
+			System.err.println("Faces should contain at leats three vertices");
+			return;
+		}
+		for(int i = 0; i < faceArray.length; i++)
+		{
+			if(faceArray[i] > vertices.size())
+			{
+				System.err.println("Couldn't add face: index out of bounds");
+				return;
+			}
+		}
+		for(int i = 0; i < texArray.length; i++)
+		{
+			if(texArray[i] > texVertices.size())
+			{
+				System.err.println("Couldn't add texture: index out of bounds");
+				return;
+			}
+		}
+		Face face = new Face(faceArray, texArray);
+		calculateNormal(face);
+		this.faces.add(face);
 	}
 
 	/**
@@ -98,8 +137,7 @@ public abstract class MazeObject {
 	{
 		for(int j = 0; j < faces.size(); j++)
 		{
-
-			int[] face = faces.get(j);
+			Face face = faces.get(j);
 			Texture texture = getTexture();
 			if (texture != null)
 			{
@@ -107,23 +145,20 @@ public abstract class MazeObject {
 				texture.bind();
 			}
 			gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);
-			Vector3f normal = normals.get(j);
+			Vector3f normal = face.getNormal();
 
-			float[] norm = new float[3];
-
-			normal.get(norm);
-
-			gl.glNormal3d(norm[0], norm[1], norm[2]);
+			gl.glNormal3d(normal.x, normal.y, normal.z);
 			gl.glBegin(GL.GL_POLYGON);
 
-			for(int i = 0; i < face.length; i++)
+			for(int i = 0; i < face.getLength(); i++)
 			{
-				Vector3f position = vertices.get(face[i]);
-				float[] pos = new float[3];
-				if(texture != null && i < 5)
-					gl.glTexCoord2f(texturePoints[i][0], texturePoints[i][1]);
-				position.get(pos);
-				gl.glVertex3f(pos[0], pos[1], pos[2]);
+				Vector3f position = vertices.get(face.getVertex(i));
+				if(texture != null)
+				{
+					Vector2f texVertex = texVertices.get(face.getTexVertex(i));
+					gl.glTexCoord2f(texVertex.x, texVertex.y);
+				}
+				gl.glVertex3f(position.x, position.y, position.z);
 			}
 			gl.glEnd();
 			if(texture != null)
@@ -137,11 +172,11 @@ public abstract class MazeObject {
 	 * @return	Vector representing the normal.
 	 */
 
-	private Vector3f calculateNormal(int[] face)
+	private void calculateNormal(Face face)
 	{
-		Vector3f p1 = vertices.get(face[0]);
-		Vector3f p2 = vertices.get(face[1]);
-		Vector3f p3 = vertices.get(face[2]);
+		Vector3f p1 = vertices.get(face.getVertex(0));
+		Vector3f p2 = vertices.get(face.getVertex(1));
+		Vector3f p3 = vertices.get(face.getVertex(2));
 		Vector3f v1 = new Vector3f(); 
 		Vector3f v2 = new Vector3f(); 
 		Vector3f v3 = new Vector3f(); 
@@ -149,7 +184,7 @@ public abstract class MazeObject {
 		v2.sub(p3, p1);
 		v3.cross(v1, v2);
 		v3.normalize();
-		return v3;
+		face.setNormal(v3);
 	}
 
 	/**
@@ -208,7 +243,7 @@ public abstract class MazeObject {
 
 	public int[] getFace(int index)
 	{
-		return faces.get(index);
+		return faces.get(index).getVertices();
 	}
 
 	public float getRestitution()
@@ -218,7 +253,7 @@ public abstract class MazeObject {
 
 	public boolean isNormalHorizontal(int index)
 	{
-		Vector3f normal = normals.get(index);
+		Vector3f normal = faces.get(index).getNormal();
 		float[] norm = new float[3];
 		normal.get(norm);
 		return norm[1] == 0;
@@ -232,10 +267,10 @@ public abstract class MazeObject {
 			boolean nextVertex = false;
 			for(int f = 0; f < faces.size(); f++)
 			{
-				int[] face = faces.get(f);
-				for (int i = 0; i < face.length; i++)
+				Face face = faces.get(f);
+				for (int i = 0; i < face.getLength(); i++)
 				{
-					if(v == face[i])
+					if(v == face.getVertex(i))
 					{
 						nextVertex = true;
 						break;

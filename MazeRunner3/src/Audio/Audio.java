@@ -9,7 +9,6 @@ public class Audio {
 	
 	public static void playMusic(String musicName) {
 		try{
-			stopMusic();
 			musicName = "src/Music/" + musicName + ".mp3";
 			music = new BackgroundMusic(new File(musicName));
 		}

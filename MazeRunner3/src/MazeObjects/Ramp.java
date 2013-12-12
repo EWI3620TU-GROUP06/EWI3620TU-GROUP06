@@ -12,7 +12,7 @@ public class Ramp extends MazeObject{
 	
 	public Ramp(float width, float height, int orientation, float x, float z)
 	{
-		super();
+		super(false);
 		addVertex(new Vector3f(x, 0, z));
 		addVertex(new Vector3f(x+width, 0, z));
 		addVertex(new Vector3f(x+width, height, z));
