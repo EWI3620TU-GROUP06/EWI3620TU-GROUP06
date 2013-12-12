@@ -11,7 +11,7 @@ public class StartArrow extends MazeObject {
 
 	public StartArrow(float width, float angle, float x, float z)
 	{
-		super();
+		super(false);
 		addVertex(new Vector3f(x, 0, z));
 		addVertex(new Vector3f(x, 0, z + width));
 		addVertex(new Vector3f(x + width, 0, z + width));

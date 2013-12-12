@@ -8,6 +8,7 @@ import com.sun.opengl.util.*;
 
 import Drawing.*;
 import GameObjects.Camera;
+import GameObjects.MoveableBox;
 import GameObjects.Player;
 import GameStates.GameState;
 import GameStates.gStateMan;
@@ -72,6 +73,7 @@ public class MazeRunner implements GLEventListener {
 	private Swarm particles;
 	private int currentScore = 0;
 	private int timer = 0;
+	private ArrayList<MoveableBox> boxes = new ArrayList<MoveableBox>();
 
 	/*
 	 * **********************************************
@@ -88,6 +90,7 @@ public class MazeRunner implements GLEventListener {
 	 * to function as the view controller.
 	 */
 	public MazeRunner(Game game, GameState state) {
+		MoveableBox.resetIDs();
 		this.game = game;
 		this.state = state;
 		this.screenWidth = game.getScreenWidth();
@@ -156,6 +159,9 @@ public class MazeRunner implements GLEventListener {
 		Physics p = new Physics(maze);
 
 		visibleObjects.add( maze );
+		MoveableBox newBox = new MoveableBox(new Vector3d(30, 0, 10), 5, 5, p);
+		boxes.add(newBox);
+		visibleObjects.add(newBox);
 
 		// Initialize the player.
 		Vector3d playerPos = new Vector3d(maze.getStart()[0], maze.getStart()[1], maze.getStart()[2]);
@@ -310,6 +316,10 @@ public class MazeRunner implements GLEventListener {
 		camera.getLocation().get(pos);
 		camera.getVuv().get(vuv);
 		camera.getVrp().get(vrp);
+		
+		Vector3d boxLocation = new Vector3d(player.getLocation());
+		boxLocation.add(new Vector3d(10, 0, 0));
+		boxes.get(0).update(boxLocation);
 
 		glu.gluLookAt(pos[0], pos[1], pos[2], 
 				vrp[0], vrp[1], vrp[2], vuv[0], vuv[1], vuv[2]);

@@ -11,7 +11,7 @@ public class Box extends MazeObject{
 	
 	public Box(float width, float height, float x, float z)
 	{
-		super();
+		super(false);
 		addVertex(new Vector3f(x, 0, z));
 		addVertex(new Vector3f(x+width, 0, z));
 		addVertex(new Vector3f(x+width, height, z));
@@ -52,6 +52,16 @@ public class Box extends MazeObject{
 	public Texture getTexture()
 	{
 		return texture;
+	}
+	
+	public void moveTo(Vector3f newLocation)
+	{
+		Vector3f change = new Vector3f();
+		change.sub(newLocation, vertices.get(0));
+		for(Vector3f vertex : vertices)
+		{
+			vertex.add(change);
+		}
 	}
 
 }

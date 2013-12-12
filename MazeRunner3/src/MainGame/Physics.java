@@ -15,6 +15,7 @@ import com.bulletphysics.collision.dispatch.CollisionObject;
 import com.bulletphysics.collision.dispatch.CollisionWorld;
 import com.bulletphysics.collision.dispatch.CollisionWorld.RayResultCallback;
 import com.bulletphysics.collision.dispatch.DefaultCollisionConfiguration;
+import com.bulletphysics.collision.shapes.BoxShape;
 import com.bulletphysics.collision.shapes.CollisionShape;
 import com.bulletphysics.collision.shapes.ConvexHullShape;
 import com.bulletphysics.collision.shapes.SphereShape;
@@ -44,6 +45,7 @@ public class Physics {
 	private Vector3f ballInertia;
 	
 	ArrayList<RigidBody> particles;
+	ArrayList<RigidBody> movingBoxes = new ArrayList<RigidBody>();
 
 	ObjectArrayList<CollisionObject> walls = new ObjectArrayList<CollisionObject>();
 	ObjectArrayList<CollisionObject> floors = new ObjectArrayList<CollisionObject>();
@@ -59,7 +61,7 @@ public class Physics {
 
 	public Physics(Maze maze)
 	{		
-		Transform DEFAULT_BALL_TRANSFORM = new Transform(new Matrix4f(new Quat4f(0, 0, 0, 1), new Vector3f((float)maze.getStart()[0], 1.0f/*Dit is de starthoogte (gaaay)*/, (float)maze.getStart()[2]), 1.0f));
+		Transform DEFAULT_BALL_TRANSFORM = new Transform(new Matrix4f(new Quat4f(0, 0, 0, 1), new Vector3f((float)maze.getStart()[0], (float) maze.getStart()[1], (float)maze.getStart()[2]), 1.0f));
 		/**
 		 * The object that will roughly find out whether bodies are colliding.
 		 */
@@ -224,5 +226,34 @@ public class Physics {
 
 	public void clearForces(){
 		dynamicsWorld.clearForces();
+	}
+	
+	public void addBox(Vector3f position, float size, float height)
+	{
+		size =  size / 2;
+		height = height / 2;
+		position.add(new Vector3f(size, height, size));
+		CollisionShape boxShape = new BoxShape(new Vector3f(size, height, size));
+
+		MotionState boxMotion = new DefaultMotionState(new Transform(new Matrix4f(new Quat4f(0, 0, 0, 1),
+				position, 1.0f)));
+	
+		RigidBodyConstructionInfo boxConstructionInfo = new RigidBodyConstructionInfo(0, boxMotion, boxShape, new Vector3f(0, 0, 0));
+
+		boxConstructionInfo.restitution = 0.3f;
+
+		RigidBody newBox = new RigidBody(boxConstructionInfo);
+		movingBoxes.add(newBox);
+		dynamicsWorld.addRigidBody(newBox);
+	}
+	
+	public void moveBox(int index, Vector3f newPosition)
+	{
+		RigidBody toBeMoved = movingBoxes.get(index);
+		Vector3f currentPosition = new Vector3f();
+		toBeMoved.getCenterOfMassPosition(currentPosition);
+		Vector3f change = new Vector3f();
+		change.sub(newPosition, currentPosition);
+		toBeMoved.translate(change);
 	}
 }

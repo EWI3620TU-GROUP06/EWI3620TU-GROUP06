@@ -51,6 +51,7 @@ public class Maze implements VisibleObject {
 
 	private MazeObject[][] maze = null;
 	public ArrayList<CustomMazeObject> customs = null;
+	private int customSize = 0;
 
 	public Maze()
 	{
@@ -105,7 +106,7 @@ public class Maze implements VisibleObject {
 
 	public static void initTextures(GL gl)
 	{
-		boxTexture = DrawingUtil.initTexture(gl, "wall");
+		boxTexture = DrawingUtil.initTexture(gl, "wall_01");
 		floorTexture = DrawingUtil.initTexture(gl, "floor");
 		
 		Box.addTexture(boxTexture);
@@ -342,6 +343,12 @@ public class Maze implements VisibleObject {
 	 * TODO: betere beschrijving.
 	 */
 	public void display(GL gl) {
+		if(customSize != customs.size())
+		{
+			for(CustomMazeObject obj : customs)
+				obj.setTexture(gl);
+		}
+		customSize = customs.size();
 		for (int i = 0; i < MAZE_SIZE; i++) {
 			for (int j = 0; j < MAZE_SIZE; j++) {
 				//Define all colours and change them if the element is selected

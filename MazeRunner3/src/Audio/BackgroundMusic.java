@@ -44,7 +44,10 @@ public class BackgroundMusic implements Runnable{
 
 	public void stop()
 	{
-		player.close();
+		if(player != null)
+		{
+			player.close();
+		}
 	}
 
 }
