@@ -74,6 +74,7 @@ public class MazeRunner implements GLEventListener {
 	private int currentScore = 0;
 	private int timer = 0;
 	private ArrayList<MoveableBox> boxes = new ArrayList<MoveableBox>();
+	private Vector3d boxLocation = new Vector3d(30, 0 ,10);
 
 	/*
 	 * **********************************************
@@ -317,8 +318,8 @@ public class MazeRunner implements GLEventListener {
 		camera.getVuv().get(vuv);
 		camera.getVrp().get(vrp);
 		
-		Vector3d boxLocation = new Vector3d(player.getLocation());
-		boxLocation.add(new Vector3d(10, 0, 0));
+		boxLocation.add(new Vector3d(0.1*Math.sin(currentScore), 0, 0.1*Math.cos(currentScore)));
+		//boxLocation = new Vector3d(30, 0, 10);
 		boxes.get(0).update(boxLocation);
 
 		glu.gluLookAt(pos[0], pos[1], pos[2], 

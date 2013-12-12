@@ -45,14 +45,14 @@ public class CustomMazeObject extends MazeObject{
 					String coordinates[] = line.split("[ ]");
 					float x = Float.parseFloat(coordinates[1]);
 					float y = Float.parseFloat(coordinates[2]);
-					float z = -Float.parseFloat(coordinates[3]);
+					float z = Float.parseFloat(coordinates[3]);
 					res.vertices.add(new Vector3f(x, y, z));	
 				}
 				if(line.startsWith("vt"))
 				{
 					String coordinates[] = line.split("[ ]");
 					float x = Float.parseFloat(coordinates[1]);
-					float y = Float.parseFloat(coordinates[2]);
+					float y = 1 - Float.parseFloat(coordinates[2]);
 					res.texVertices.add(new Vector2f(x, y));
 					res.hasTexture = true;
 				}

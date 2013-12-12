@@ -62,6 +62,7 @@ public class Box extends MazeObject{
 		{
 			vertex.add(change);
 		}
+		System.out.println(vertices.get(0).toString());
 	}
 
 }

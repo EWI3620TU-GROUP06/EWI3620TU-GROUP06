@@ -234,7 +234,7 @@ public class Physics {
 		height = height / 2;
 		position.add(new Vector3f(size, height, size));
 		CollisionShape boxShape = new BoxShape(new Vector3f(size, height, size));
-
+		boxShape.setMargin(-1f);
 		MotionState boxMotion = new DefaultMotionState(new Transform(new Matrix4f(new Quat4f(0, 0, 0, 1),
 				position, 1.0f)));
 	
@@ -252,6 +252,7 @@ public class Physics {
 		RigidBody toBeMoved = movingBoxes.get(index);
 		Vector3f currentPosition = new Vector3f();
 		toBeMoved.getCenterOfMassPosition(currentPosition);
+		System.out.println(currentPosition.toString());
 		Vector3f change = new Vector3f();
 		change.sub(newPosition, currentPosition);
 		toBeMoved.translate(change);

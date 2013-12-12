@@ -34,10 +34,10 @@ public class MoveableBox extends GameObject implements VisibleObject {
 	{
 		location = newPosition; 
 		Vector3f newLocation = new Vector3f((float)location.x, (float)location.y, (float)location.z);
-		physics.moveBox(id, newLocation);
 		
-		newLocation.sub(new Vector3f(2.5f, 2.5f, 2.5f));
 		box.moveTo(newLocation);
+		newLocation.add(new Vector3f(2.5f, 2.5f, 2.5f));
+		physics.moveBox(id, newLocation);
 		
 	}
 	
