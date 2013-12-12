@@ -187,7 +187,7 @@ public class Player extends GameObject implements VisibleObject {
 		{	
 			if(physics.getLowerContact()){
 				physics.clearForces();
-				physics.applyForce(0, power*300, 0);
+				physics.applyForce(0, power*50, 0);
 			}
 		}
 	}
