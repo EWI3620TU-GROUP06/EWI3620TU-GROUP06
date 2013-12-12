@@ -202,10 +202,10 @@ public class Physics {
 		return a.hasHit();
 	}
 	
-	public boolean getLineofSight(Vector3f fromVect, Vector3f toVect){
+	public CollisionObject getLineofSight(Vector3f fromVect, Vector3f toVect){
 		RayResultCallback a = new CollisionWorld.ClosestRayResultCallback(fromVect, toVect);
 		dynamicsWorld.rayTest(fromVect, toVect, a);
-		return a.hasHit();
+		return a.collisionObject;
 	}
 
 	public boolean getContact(){
