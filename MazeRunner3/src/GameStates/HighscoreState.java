@@ -74,5 +74,13 @@ public class HighscoreState extends GameState {
 	public void unOptPause() {
 		// do nothing
 	}
+	@Override
+	public void setFinished(boolean finished) {
+		// do nothing	
+	}
+	@Override
+	public boolean getFinished() {
+		return false;
+	}
 
 }

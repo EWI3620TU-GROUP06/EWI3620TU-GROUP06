@@ -12,12 +12,14 @@ public class PlayState extends GameState {
 	private gStateMan gsm;
 	private MazeRunner mz;
 	private Game game;
+	private boolean finished;
 	private boolean paused;
 	
 	public PlayState(gStateMan gsm, Game game){
 		this.gsm = gsm;
 		this.game = game;
 		this.paused = false;
+		this.finished = false;
 	}
 	@Override
 	public void init(GLAutoDrawable drawable) {
@@ -75,5 +77,15 @@ public class PlayState extends GameState {
 	@Override
 	public void unOptPause() {
 		mz.unOptPause();
+	}
+	@Override
+	public void setFinished(boolean finished) {
+		this.finished = finished;
+		
+	}
+	@Override
+	public boolean getFinished() {
+		return finished;
+		
 	}
 }

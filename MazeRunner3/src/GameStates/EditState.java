@@ -84,4 +84,14 @@ public class EditState extends GameState {
 	public void unOptPause() {
 		me.unOptPause();
 	}
+
+	@Override
+	public void setFinished(boolean finished) {
+		//do nothing
+	}
+
+	@Override
+	public boolean getFinished() {
+		return false;	
+	}
 }

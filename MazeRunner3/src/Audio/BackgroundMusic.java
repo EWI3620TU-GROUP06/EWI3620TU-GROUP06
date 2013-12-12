@@ -17,8 +17,10 @@ public class BackgroundMusic implements Runnable{
 	{
 		try {
 			musicFile = file;
-			musicThread = new Thread(this);
-			musicThread.start();
+			if(musicThread == null){
+				musicThread = new Thread(this);
+				musicThread.start();
+			}
 		} 
 		catch(Exception e){
 			e.printStackTrace();
@@ -28,17 +30,15 @@ public class BackgroundMusic implements Runnable{
 
 	public void run()
 	{
-		while(loop)
-		{
-			try{
-				BufferedInputStream in= new BufferedInputStream( new FileInputStream(musicFile));
+		try{
+			while(loop){
+				BufferedInputStream in = new BufferedInputStream(new FileInputStream(musicFile));
 				player = new Player(in);
 				player.play();
 			}
-			catch (Exception e) { 
-				System.out.println(e);
-				break;
-			}
+		}
+		catch (Exception e) { 
+			e.printStackTrace();
 		}
 	}
 
@@ -47,7 +47,7 @@ public class BackgroundMusic implements Runnable{
 		if(player != null)
 		{
 			player.close();
+			musicThread.interrupt();
 		}
 	}
-
 }
