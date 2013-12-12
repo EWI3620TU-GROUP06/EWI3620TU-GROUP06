@@ -85,7 +85,7 @@ public class Particle extends GameObject implements VisibleObject{
 		
 		RigidBody LoSbreaker = (RigidBody) swarm.getPhysics().getLineofSight(partLocation, globalbest);
 		
-		if((LoSbreaker.getCollisionShape() instanceof SphereShape)){
+		if((LoSbreaker != null) && (LoSbreaker.getCollisionShape() instanceof SphereShape)){
 			velocity = new Vector3f(swarm.getInertiaWeight()*velocity.x,
 					0f,
 					swarm.getInertiaWeight()*velocity.z);
@@ -98,7 +98,7 @@ public class Particle extends GameObject implements VisibleObject{
 					0f,
 					swarm.getSocial()*((float)Math.random())*(globalbest.z - location.z)));
 		}
-		else if (!(LoSbreaker.getCollisionShape() instanceof SphereShape)){
+		else if ((LoSbreaker != null) && !(LoSbreaker.getCollisionShape() instanceof SphereShape)){
 			//Stand still for now
 		}
 	}
