@@ -61,6 +61,11 @@ public class HighscoreState extends GameState {
 	{
 		Audio.playMusic("test");
 	}
+	
+	public void stopMusic(){
+		Audio.stopMusic();
+	}
+	
 	@Override
 	public void setOptPaused() {
 		// do nothing
