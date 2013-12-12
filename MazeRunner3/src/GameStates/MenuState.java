@@ -61,6 +61,11 @@ public class MenuState extends GameState {
 	{
 		Audio.playMusic("menu");
 	}
+	
+	public void stopMusic(){
+		Audio.stopMusic();
+	}
+	
 	@Override
 	public void setOptPaused() {
 		mm.setOptionsMenu();
