@@ -68,7 +68,7 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 		boundY = this.gsm.getState(this.gsm.getCurState()).getCanvas().getBounds().y;
 		
 		// TODO: Set dX and dY to values corresponding to mouse movement
-		if (this.gsm.getCurState() == gStateMan.PLAYSTATE && !this.gsm.getState(this.gsm.getCurState()).getPaused()){
+		if (this.gsm.getCurState() == gStateMan.PLAYSTATE && !this.gsm.getState(this.gsm.getCurState()).getPaused() && !this.gsm.getState(this.gsm.getCurState()).getFinished()){
 			int gamePosX = (int) gsm.getGame().getLocationOnScreen().getX();
 			int gamePosY = (int) gsm.getGame().getLocationOnScreen().getY();
 			int midScreenWidth = gsm.getGame().getWidth()/2;

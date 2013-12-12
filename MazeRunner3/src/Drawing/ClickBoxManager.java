@@ -22,6 +22,14 @@ public abstract class ClickBoxManager {
 	
 	public void setControl(Control control){
 		this.control = control;
+		for(ClickBox c : Boxes)
+		{
+			if(c instanceof TextEditBox)
+			{
+				TextEditBox t = (TextEditBox) c;
+				t.setControl(control);
+			}
+		}
 	}
 	
 	public void setCommand(int i, Command command){

@@ -102,6 +102,34 @@ public class TextBoxManager extends ClickBoxManager{
 		return res;
 	}
 	
+	public static TextBoxManager createFinishMenu(int screenWidth, int screenHeight, String[] commands, gStateMan gsm, Control input){
+		int textScale = 18;
+		TextBoxManager res = new TextBoxManager();
+		
+		float[] white = {1, 1, 1, 1};
+		
+		res.AddBox(TextBox.createTitle(0.5f, 0.5f,
+				screenWidth, screenHeight, 6, "Level CLear!"));
+		TextEditBox editBox = new TextEditBox(0.5f, 0.25f, 
+				screenWidth, screenHeight, 14, 1f, 1f, 1f, 1f);
+		res.AddBox(editBox);
+		res.AddBox(TextBox.createHighscoreBox(0.05f, 
+				0.25f, screenWidth, screenHeight, 14, "Enter Name:", white));
+		
+		
+		for(int i = 0; i < commands.length; i++)
+		{
+			res.AddBox(TextBox.createMenuBox(0.45f, 0.1f, 
+					screenWidth, screenHeight, textScale, commands[i]));
+			
+			if(commands[i].equals("Next Level")){
+				res.setCommand(i + 3, new NextLevelCommand(gsm));
+			}
+			
+		}
+		return res;
+	}
+	
 	public static TextBoxManager createHighscoreMenu(int screenWidth, int screenHeight, int ranking, gStateMan gsm)
 	{
 		int titleScale = 12;

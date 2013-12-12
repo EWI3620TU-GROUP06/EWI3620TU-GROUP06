@@ -67,7 +67,7 @@ public class MazeRunner implements GLEventListener {
 	private TextBoxManager clkbxman;
 	private TextBoxManager optclkbxman;
 	private TextBox deadclkbx;
-	private TextBoxManager finishbxman;
+	private TextBoxManager finishclbxman;
 	private TextBox scoreBox;
 	private Swarm particles;
 	private int currentScore = 0;
@@ -147,6 +147,7 @@ public class MazeRunner implements GLEventListener {
 		// We define an ArrayList of VisibleObjects to store all the objects that need to be
 		// displayed by MazeRunner.
 		visibleObjects = new ArrayList<VisibleObject>();
+		state.setFinished(false);
 		// Add the maze that we will be using.
 
 		if (maze == null){
@@ -182,25 +183,18 @@ public class MazeRunner implements GLEventListener {
 	private void initMenuText(){
 		String[] commands = {"Resume", "Highscores", "Options", "Main Menu", "Quit"};
 		String[] optcommands = {"Toggle Fullscreen", "Back"};
+		String[] highscorecommands = {"Next Level"}; 
 		this.clkbxman = TextBoxManager.createMenu(screenWidth, screenHeight, "Pause", commands, this.state.getGSM());
 		this.optclkbxman = TextBoxManager.createMenu(screenWidth, screenHeight, "Options", optcommands, this.state.getGSM());
-		this.finishbxman = new TextBoxManager();
+		this.finishclbxman = TextBoxManager.createFinishMenu(screenWidth, screenHeight, highscorecommands, this.state.getGSM(), input);
 		
 		this.clkbxman.setControl(input);
 		this.optclkbxman.setControl(input);
+		this.finishclbxman.setControl(input);
 		float[] white = {1, 1, 1, 1};
 		this.scoreBox = TextBox.createHighscoreBox(0.02f, 0.9f, 
 				screenWidth, screenHeight, 22, "Score: 0", white);
 		
-		this.finishbxman.AddBox(TextBox.createTitle(0.5f, 0.5f,
-				screenWidth, screenHeight, 6, "Level CLear!"));
-		TextEditBox editBox = new TextEditBox(0.5f, 0.25f, 
-				screenWidth, screenHeight, 14, 1f, 1f, 1f, 1f);
-		editBox.setControl(input);
-		this.finishbxman.AddBox(editBox);
-		
-		this.finishbxman.AddBox(TextBox.createHighscoreBox(0.05f, 
-				0.25f, screenWidth, screenHeight, 14, "Enter Name:", white));
 		this.deadclkbx = TextBox.createTitle(0.5f, 0.5f, 
 				screenWidth, screenHeight, 6, "You Have Died!");
 	}
@@ -341,12 +335,14 @@ public class MazeRunner implements GLEventListener {
 
 		}
 		if(finished){
-			finishbxman.drawAllText(deltaTime);
+			finishclbxman.drawAllText(deltaTime);
+			state.setFinished(true);
+			showCursor();
 		}
 		DrawingUtil.perspectiveProjection(gl, glu, FOV, screenWidth, screenHeight);
 		gl.glEnable(GL.GL_DEPTH_TEST);
 		gl.glEnable(GL.GL_CULL_FACE);
-		if(pause){
+		if(pause && !finished){
 			if(optpause){
 				this.optclkbxman.update();
 			}
@@ -354,13 +350,15 @@ public class MazeRunner implements GLEventListener {
 				this.clkbxman.update();
 			}
 		}
+		if (finished)
+			this.finishclbxman.update();
 		
 		gl.glLoadIdentity();
 		gl.glFlush();
 		
 		if(finished){
 			String name = "fout";
-			if((name = finishbxman.getText()) != null){
+			if((name = finishclbxman.getText()) != null){
 				SqlReadWrite.Write(new Score(name, currentScore));
 				showCursor();
 				state.getGSM().setState(gStateMan.HIGHSCORESTATE);

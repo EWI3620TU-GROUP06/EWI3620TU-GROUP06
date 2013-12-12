@@ -69,4 +69,13 @@ public class MenuState extends GameState {
 	public void unOptPause() {
 		mm.setMainMenu();
 	}
+	@Override
+	public void setFinished(boolean finished) {
+		// do nothing
+	}
+	@Override
+	public boolean getFinished() {
+		return false;
+		// do nothing
+	}
 }
