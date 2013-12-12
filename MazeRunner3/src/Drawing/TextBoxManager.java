@@ -134,7 +134,7 @@ public class TextBoxManager extends ClickBoxManager{
 		TextBox play = TextBox.createMenuBox(0.36f, 0.15f, 
 				screenWidth, screenHeight, textScale, "New Game");
 		play.setCommand(new PlayCommand(gsm));
-		TextBox DeleteHighscores = TextBox.createMenuBox(0.62f, 0.15f,
+		TextBox DeleteHighscores = TextBox.createMenuBox(0.6f, 0.15f,
 				screenWidth, screenHeight, textScale, "Delete Higscores");
 		DeleteHighscores.setCommand(new DeleteHighscoresCommand(gsm));
 		TextBox quit = TextBox.createMenuBox(0.85f, 0.15f, 
