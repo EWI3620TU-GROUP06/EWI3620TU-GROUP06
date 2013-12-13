@@ -171,11 +171,11 @@ public class MazeRunner implements GLEventListener {
 
 		visibleObjects.add(player);
 
-		particles = new Swarm(p, maze, 10);
+		particles = new Swarm(p, maze, (int) maze.MAZE_SIZE/2);
 		particles.setCognitive(0.055f);
 		particles.setSocial(0.055f);
 		particles.setInertiaWeight(0.95f);
-		particles.generate(10);
+		particles.generate((int) maze.MAZE_SIZE/2);
 		particles.AddToVisible(visibleObjects);
 		p.initParticles(particles);
 
