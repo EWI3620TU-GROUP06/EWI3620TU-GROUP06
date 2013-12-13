@@ -20,4 +20,7 @@ public abstract class GameState {
 	public abstract void stopMusic();
 	public abstract void setFinished(boolean finished);
 	public abstract boolean getFinished();
+	public abstract String getDifficulty();
+	public abstract void setDifficulty(int diff);
+	public abstract int getDiffNumber();
 }

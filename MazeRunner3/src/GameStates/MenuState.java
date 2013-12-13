@@ -83,4 +83,19 @@ public class MenuState extends GameState {
 		return false;
 		// do nothing
 	}
+	@Override
+	public String getDifficulty() {
+		// do not a fucking thing
+		return "";
+	}
+	@Override
+	public void setDifficulty(int diff) {
+		// nothingness
+		
+	}
+	@Override
+	public int getDiffNumber() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

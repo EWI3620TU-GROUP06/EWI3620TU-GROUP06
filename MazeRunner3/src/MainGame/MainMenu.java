@@ -63,10 +63,10 @@ public class MainMenu implements GLEventListener {
 	private void initMenuText(){
 		
 		String[] commands = {"Play", "Load", "Highscores", "Options", "Editor", "Quit"};
-		String[] optcommands = {"Toggle Fullscreen", "Back"};
+		String[] optcommands = {"Toggle Fullscreen", "Difficulty:", "Back"};
 		//Add the clickboxes for the pauze menu
 		this.clkbxman = TextBoxManager.createMenu(screenWidth, screenHeight, "MadBalls", commands, this.state.getGSM()); 
-		this.optclkbxman = TextBoxManager.createMenu(screenWidth, screenHeight, "Options", optcommands, this.state.getGSM());
+		this.optclkbxman = TextBoxManager.createOptionsMenu(screenWidth, screenHeight, "Options", optcommands, this.state.getGSM());
 		this.clkbxman.setControl(input);
 		this.optclkbxman.setControl(input);
 	}

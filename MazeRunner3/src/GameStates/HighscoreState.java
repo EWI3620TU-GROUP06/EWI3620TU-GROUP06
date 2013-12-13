@@ -82,5 +82,20 @@ public class HighscoreState extends GameState {
 	public boolean getFinished() {
 		return false;
 	}
+	@Override
+	public String getDifficulty() {
+		// do nothing
+		return "";
+	}
+	@Override
+	public void setDifficulty(int diff) {
+		// do less than nothing
+		
+	}
+	@Override
+	public int getDiffNumber() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
 }

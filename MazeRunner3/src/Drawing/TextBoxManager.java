@@ -51,6 +51,59 @@ public class TextBoxManager extends ClickBoxManager{
 
 		}
 	}
+	
+	public static TextBoxManager createOptionsMenu(int screenWidth, int screenHeight, String title, String[] commands, gStateMan gsm){
+		
+		int titleScale = 10;
+		int textScale = 18;
+		TextBoxManager res = new TextBoxManager();
+		
+		res.AddBox(TextBox.createTitle(0.5f, 0.8f, 
+				screenWidth, screenHeight, titleScale, title));
+		
+		for(int i = 0; i < commands.length; i++){
+			
+			float posY = (float) (0.8 - 0.7 * (i  + 1) / commands.length);
+			
+			res.AddBox(TextBox.createMenuBox(0.5f, posY, 
+					screenWidth, screenHeight, textScale, commands[i]));
+			
+			if(commands[i].equals("Toggle Fullscreen")){
+				boolean found = false;
+				for(int j = 0; j < i; j++){
+					if(commands[j].equalsIgnoreCase("Difficulty:")){
+						found = true;
+					}
+				}
+				if(found){
+					res.setCommand(i + 2, new FullScreenCommand(gsm));
+				}
+				else{
+					res.setCommand(i + 1, new FullScreenCommand(gsm));
+				}
+			}
+			if(commands[i].equals("Back")){
+				boolean found = false;
+				for(int j = 0; j < i; j++){
+					if(commands[j].equalsIgnoreCase("Difficulty:")){
+						found = true;
+					}
+				}
+				if(found){
+					res.setCommand(i + 2, new BackCommand(gsm));
+				}
+				else{
+					res.setCommand(i + 1, new BackCommand(gsm));
+				}
+			}
+			if(commands[i].equals("Difficulty:")){
+				res.AddBox(new TextBox(0.7f, posY, screenWidth, screenHeight, textScale, "Arial", 0, gsm.getState(gStateMan.PLAYSTATE).getDifficulty(), 
+						1f, 1f, 1f, 1f, false, TextBox.ALIGN_MIDDLE, true));
+				res.setCommand(i + 1, new DifficultyCommand(gsm, res));
+			}
+		}
+		return res;
+	}
 
 	public static TextBoxManager createMenu(int screenWidth, int screenHeight, String title, String[] commands, gStateMan gsm)
 	{
@@ -76,9 +129,6 @@ public class TextBoxManager extends ClickBoxManager{
 			}
 			if(commands[i].equals("Editor")){
 				res.setCommand(i + 1, new EditorCommand(gsm));
-			}
-			if(commands[i].equals("Toggle Fullscreen")){
-				res.setCommand(i + 1, new FullScreenCommand(gsm));
 			}
 			if(commands[i].equals("Play")){
 				res.setCommand(i + 1, new PlayCommand(gsm));
@@ -198,6 +248,15 @@ public class TextBoxManager extends ClickBoxManager{
 				return ((TextEditBox)t).getText();
 		}
 		return null;
+	}
+	
+	public void setChangableText(String text){
+		for(ClickBox t: Boxes){
+			TextBox a = (TextBox) t;
+			if(a.isChangable()){
+				a.setText(text);
+			}
+		}
 	}
 
 }

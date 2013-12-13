@@ -14,6 +14,7 @@ public class PlayState extends GameState {
 	private Game game;
 	private boolean finished;
 	private boolean paused;
+	private int difficulty = 0;
 	
 	public PlayState(gStateMan gsm, Game game){
 		this.gsm = gsm;
@@ -86,6 +87,27 @@ public class PlayState extends GameState {
 	@Override
 	public boolean getFinished() {
 		return finished;
-		
+	}
+	
+	public String getDifficulty(){
+		String res = " ";
+		if(difficulty == 0){
+			res = "Easy";
+		}
+		else if(difficulty == 1){
+			res = "Medium";
+		}
+		else if(difficulty == 2){
+			res = "Hard";
+		}
+		return res;
+	}
+	
+	public int getDiffNumber(){
+		return difficulty;
+	}
+	
+	public void setDifficulty(int diff){
+		difficulty = diff;
 	}
 }

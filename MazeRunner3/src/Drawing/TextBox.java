@@ -17,13 +17,14 @@ public class TextBox extends ClickBox {
 	public static final byte ALIGN_RIGHT = 2;
 	protected byte alignment;
 	protected float relativePos[];
+	private boolean changable;
 
 	protected float[] color;
 
 	public TextBox(float x, float y, int screenWidth, int screenHeight, 
 			int textScale, String Font, int fontStyle, String Text, 
 			float red, float green, float blue, float alpha,
-			boolean clickable, byte alignment){
+			boolean clickable, byte alignment, boolean changable){
 		super (0, 0, screenWidth, screenHeight, 0, 0, clickable);
 		this.color = new float[]{red, green, blue, alpha};
 		this.textScale = textScale;
@@ -36,7 +37,8 @@ public class TextBox extends ClickBox {
 		this.relativePos = new float[]{x, y};
 		
 		updateLocation();
-			
+		
+		this.changable = changable;
 		this.clickable = clickable;
 	}
 
@@ -85,23 +87,27 @@ public class TextBox extends ClickBox {
 		this.Text = text;
 	}
 	
+	public boolean isChangable(){
+		return changable;
+	}
+	
 	public static TextBox createTitle(float x, float y, int screenWidth, int screenHeight, int titleScale, String title)
 	{
 		return new TextBox(x, y, screenWidth, screenHeight, titleScale, "Impact", 0, title, 
-				0.9f, 0.4f, 0.4f, 1f, false, ALIGN_MIDDLE); 
+				0.9f, 0.4f, 0.4f, 1f, false, ALIGN_MIDDLE, false); 
 	}
 	
 	public static TextBox createMenuBox(float x, float y, int screenWidth, int screenHeight, int textScale, String caption)
 	{
 		return new TextBox(x, y, screenWidth, screenHeight, textScale, "Arial", 0, caption, 
-				1f, 1f, 1f, 1f, true, TextBox.ALIGN_MIDDLE);
+				1f, 1f, 1f, 1f, true, TextBox.ALIGN_MIDDLE, false);
 	}
 	
 	public static TextBox createHighscoreBox(float x, float y, int screenWidth, int screenHeight, int textScale, 
 			String caption, float[] colour)
 	{
 		return new TextBox( x, y, screenWidth, screenHeight, textScale, "Arial", 0, caption, 
-				colour[0], colour[1], colour[2], colour[3], false,TextBox.ALIGN_LEFT);
+				colour[0], colour[1], colour[2], colour[3], false,TextBox.ALIGN_LEFT, false);
 	}
 
 }

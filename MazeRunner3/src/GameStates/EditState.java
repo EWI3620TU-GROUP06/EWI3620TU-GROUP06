@@ -94,4 +94,21 @@ public class EditState extends GameState {
 	public boolean getFinished() {
 		return false;	
 	}
+
+	@Override
+	public String getDifficulty() {
+		// Should do nothing
+		return "";
+	}
+
+	@Override
+	public void setDifficulty(int diff) {
+		//do nothing
+	}
+
+	@Override
+	public int getDiffNumber() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

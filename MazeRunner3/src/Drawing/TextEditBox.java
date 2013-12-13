@@ -19,7 +19,7 @@ public class TextEditBox extends TextBox {
 			int textScale, float red, float green, float blue, float alpha)
 	{
 		super(x, y, screenWidth, screenHeight, textScale, "Consolas", 0, "          ", 
-			red, green, blue, alpha, false, ALIGN_LEFT);
+			red, green, blue, alpha, false, ALIGN_LEFT, false);
 		counter = 0;
 		cursorPos = 0;
 	}
