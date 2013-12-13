@@ -1,5 +1,7 @@
 package GameObjects;
 
+import java.util.ArrayList;
+
 import javax.media.opengl.GL;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
@@ -9,41 +11,67 @@ import MainGame.Physics;
 import MazeObjects.Box;
 
 public class MoveableBox extends GameObject implements VisibleObject {
-	
+
 	private Box box;
 	static private int idCount;
 	private int id;
 	private Physics physics;
-	
+	private ArrayList<Integer> pathTime;
+	private ArrayList<Vector3f> pathDirection;
+	private int time = 0;
+	private boolean isMoving = true;
+
 	public MoveableBox(Vector3d pos, int squareSize, int height, Physics physics)
 	{
 		this.location = pos;
 		box = new Box(squareSize, height, (float)location.x, (float)location.z);
 		id = idCount;
-		idCount += 1;
+		idCount ++;
 		this.physics = physics;
 		physics.addBox(new Vector3f((float)pos.x, (float)pos.y, (float)pos.z), squareSize, height);
+		pathTime = new ArrayList<Integer>();
+		pathDirection = new ArrayList<Vector3f>();
+	}
+
+	public void addToPath(int time, Vector3f direction)
+	{
+		if(pathTime.size() > 0)
+			time += pathTime.get(pathTime.size() - 1);
+		pathDirection.add(direction);
+		pathTime.add(time);
 	}
 
 	@Override
 	public void display(GL gl) {
 		box.draw(gl, new float[] {1f, 1f, 1f, 1f});
 	}
-	
-	public void update(Vector3d newPosition)
+
+	public void update(int deltaTime)
 	{
-		location = newPosition; 
-		Vector3f newLocation = new Vector3f((float)location.x, (float)location.y, (float)location.z);
-		
-		box.moveTo(newLocation);
-		newLocation.add(new Vector3f(2.5f, 2.5f, 2.5f));
-		physics.moveBox(id, newLocation);
-		
+		if(isMoving && pathTime.size() > 0)
+		{
+			time += deltaTime;
+			if(time > pathTime.get(pathTime.size() - 1)){
+				time -= pathTime.get(pathTime.size() - 1);
+			}
+			int i = 0;
+			while(i < pathTime.size() - 1 && time > pathTime.get(i) ){
+				i++;
+			}
+			Vector3f newLocation = physics.moveBox(id, pathDirection.get(i));
+			newLocation.sub(new Vector3f(2.5f, 2.5f, 2.5f));
+			box.moveTo(newLocation);
+		}
 	}
-	
+
 	public static void resetIDs()
 	{
 		idCount = 0;
+	}
+	
+	public void setMoving(boolean moving)
+	{
+		isMoving =  moving;
 	}
 
 }

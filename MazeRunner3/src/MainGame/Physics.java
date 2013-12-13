@@ -234,27 +234,26 @@ public class Physics {
 		height = height / 2;
 		position.add(new Vector3f(size, height, size));
 		CollisionShape boxShape = new BoxShape(new Vector3f(size, height, size));
-		boxShape.setMargin(-1f);
 		MotionState boxMotion = new DefaultMotionState(new Transform(new Matrix4f(new Quat4f(0, 0, 0, 1),
 				position, 1.0f)));
 	
-		RigidBodyConstructionInfo boxConstructionInfo = new RigidBodyConstructionInfo(0, boxMotion, boxShape, new Vector3f(0, 0, 0));
+		RigidBodyConstructionInfo boxConstructionInfo = new RigidBodyConstructionInfo(100, boxMotion, boxShape, new Vector3f(0, 0, 0));
 
 		boxConstructionInfo.restitution = 0.3f;
+		boxConstructionInfo.angularDamping = 10f;
 
 		RigidBody newBox = new RigidBody(boxConstructionInfo);
 		movingBoxes.add(newBox);
 		dynamicsWorld.addRigidBody(newBox);
 	}
 	
-	public void moveBox(int index, Vector3f newPosition)
+	public Vector3f moveBox(int index, Vector3f speed)
 	{
 		RigidBody toBeMoved = movingBoxes.get(index);
+		toBeMoved.activate();
+		toBeMoved.setLinearVelocity(speed);
 		Vector3f currentPosition = new Vector3f();
 		toBeMoved.getCenterOfMassPosition(currentPosition);
-		System.out.println(currentPosition.toString());
-		Vector3f change = new Vector3f();
-		change.sub(newPosition, currentPosition);
-		toBeMoved.translate(change);
+		return currentPosition;
 	}
 }

@@ -3,6 +3,7 @@ package MainGame;
 import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
 import javax.vecmath.Vector3d;
+import javax.vecmath.Vector3f;
 
 import com.sun.opengl.util.*;
 
@@ -74,7 +75,6 @@ public class MazeRunner implements GLEventListener {
 	private int currentScore = 0;
 	private int timer = 0;
 	private ArrayList<MoveableBox> boxes = new ArrayList<MoveableBox>();
-	private Vector3d boxLocation = new Vector3d(30, 0 ,10);
 
 	/*
 	 * **********************************************
@@ -162,6 +162,9 @@ public class MazeRunner implements GLEventListener {
 
 		visibleObjects.add( maze );
 		MoveableBox newBox = new MoveableBox(new Vector3d(30, 0, 10), 5, 5, p);
+		newBox.addToPath(1000, new Vector3f(1, 0, 0));
+		newBox.addToPath(1000, new Vector3f(0, 0, 1));
+		newBox.addToPath(1000, new Vector3f(-1, 0, -1));
 		boxes.add(newBox);
 		visibleObjects.add(newBox);
 
@@ -312,9 +315,7 @@ public class MazeRunner implements GLEventListener {
 		camera.getVuv().get(vuv);
 		camera.getVrp().get(vrp);
 		
-		boxLocation.add(new Vector3d(0.1*Math.sin(currentScore), 0, 0.1*Math.cos(currentScore)));
-		//boxLocation = new Vector3d(30, 0, 10);
-		boxes.get(0).update(boxLocation);
+		boxes.get(0).update(deltaTime);
 
 		glu.gluLookAt(pos[0], pos[1], pos[2], 
 				vrp[0], vrp[1], vrp[2], vuv[0], vuv[1], vuv[2]);

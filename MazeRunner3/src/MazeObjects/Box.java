@@ -58,11 +58,9 @@ public class Box extends MazeObject{
 	{
 		Vector3f change = new Vector3f();
 		change.sub(newLocation, vertices.get(0));
-		for(Vector3f vertex : vertices)
-		{
+		for(Vector3f vertex : vertices){
 			vertex.add(change);
 		}
-		System.out.println(vertices.get(0).toString());
 	}
 
 }

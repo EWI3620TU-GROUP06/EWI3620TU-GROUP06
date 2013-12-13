@@ -358,7 +358,6 @@ public class Maze implements VisibleObject {
 				floorColour[3] = 1.0f;
 				float startColour[] = {0.0f, 1.0f, 0.0f, 1.0f };
 				float finishColour[] = { 1.0f, 0.0f, 0.0f, 1.0f };
-				float arrowColour[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 				if (selected[i][j]) {
 					wallColour[0] = 1.0f;
 					wallColour[1] = 1.0f;
