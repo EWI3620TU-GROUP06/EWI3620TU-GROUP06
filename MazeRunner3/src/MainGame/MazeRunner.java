@@ -290,7 +290,7 @@ public class MazeRunner implements GLEventListener {
 			scoreBox.setText("Score: " + currentScore);
 
 			// Update any movement since last frame.
-			particles.update();
+			particles.update(deltaTime);
 			player.update(deltaTime);
 			updateCamera();
 			double pos[] = new double[3];

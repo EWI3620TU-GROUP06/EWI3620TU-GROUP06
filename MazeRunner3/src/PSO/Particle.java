@@ -22,6 +22,7 @@ public class Particle extends GameObject implements VisibleObject{
 	private Swarm swarm;
 	private float dX, dZ;
 	private int counter = 1;
+	private int id;
 	
 	private double orientation;
 	private double totalRotation;
@@ -29,11 +30,12 @@ public class Particle extends GameObject implements VisibleObject{
 	private Texture sphereTexture;
 	GLUquadricImpl sphere;
 	
-	public Particle(Vector3f location, Swarm swarm){
+	public Particle(Vector3f location, Swarm swarm, int id){
 		this.swarm = swarm;
 		this.location = location;
 		this.velocity = new Vector3f(0,0,0);
 		this.localbest = location;
+		this.id = id;
 	}
 	
 	public Vector3f getLoc(){
@@ -58,7 +60,7 @@ public class Particle extends GameObject implements VisibleObject{
 		return localbest;
 	}
 	
-	public void update(){
+	public void update(int deltaTime){
 		
 		if(dX != 0 && dZ != 0){
 			orientation = Math.atan2(dZ,dX);
@@ -111,6 +113,7 @@ public class Particle extends GameObject implements VisibleObject{
 				}
 				else if ((LoSbreaker != null) && !(LoSbreaker.getCollisionShape() instanceof SphereShape)){
 					//Stand still for now
+					swarm.getPhysics().applyParticleForce(id, new Vector3f(0f, (float) deltaTime*10*40, 0f));
 				}
 			}
 		}
