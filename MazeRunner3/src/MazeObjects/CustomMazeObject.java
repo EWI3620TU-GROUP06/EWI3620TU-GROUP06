@@ -21,7 +21,7 @@ public class CustomMazeObject extends MazeObject{
 
 	public CustomMazeObject()
 	{
-		super(false);	
+		super(true);	
 	}
 
 	public CustomMazeObject(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces, Texture texture)
@@ -40,14 +40,6 @@ public class CustomMazeObject extends MazeObject{
 			while(sc.hasNextLine())
 			{
 				String line = sc.nextLine();
-				if(line.startsWith("v "))
-				{
-					String coordinates[] = line.split("[ ]");
-					float x = Float.parseFloat(coordinates[1]);
-					float y = Float.parseFloat(coordinates[2]);
-					float z = Float.parseFloat(coordinates[3]);
-					res.vertices.add(new Vector3f(x, y, z));	
-				}
 				if(line.startsWith("vt"))
 				{
 					String coordinates[] = line.split("[ ]");
@@ -56,8 +48,15 @@ public class CustomMazeObject extends MazeObject{
 					res.texVertices.add(new Vector2f(x, y));
 					res.hasTexture = true;
 				}
-
-				if(line.startsWith("f"))
+				else if(line.startsWith("v"))
+				{
+					String coordinates[] = line.split("[ ]");
+					float x = Float.parseFloat(coordinates[1]);
+					float y = Float.parseFloat(coordinates[2]);
+					float z = Float.parseFloat(coordinates[3]);
+					res.vertices.add(new Vector3f(x, y, z));
+				}
+				else if(line.startsWith("f"))
 				{
 					String points[] = line.split("[ ]");
 					int [] faceArray = new int[points.length - 1];
@@ -76,9 +75,7 @@ public class CustomMazeObject extends MazeObject{
 						}
 					}
 					if(res.hasTexture)
-					{
-						res.addFace(faceArray, texArray);
-					}						
+						res.addFace(faceArray, texArray);					
 					else
 						res.addFace(faceArray);
 				}
@@ -88,6 +85,8 @@ public class CustomMazeObject extends MazeObject{
 			System.out.println("Read in " + res.faces.size() + " faces.");
 
 			res.file = file;
+			
+			res.rotateVerticesX(-90, 0, 0);
 
 			sc.close();
 		}

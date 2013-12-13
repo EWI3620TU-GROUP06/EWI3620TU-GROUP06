@@ -63,7 +63,9 @@ public abstract class DrawingUtil {
 	 */
 	public static void boxOnScreen(GL gl, float x, float y, float sizeX, float sizeY)
 	{
+	
 		gl.glBegin(GL.GL_QUADS);
+		gl.glTexCoord2f(0, 1);
 		gl.glVertex2f(x, y);
 		gl.glTexCoord2f(1, 1);
 		gl.glVertex2f(x + sizeX, y);
@@ -71,7 +73,6 @@ public abstract class DrawingUtil {
 		gl.glVertex2f(x + sizeX, y + sizeY);
 		gl.glTexCoord2f(0, 0);
 		gl.glVertex2f(x, y + sizeY);
-		gl.glTexCoord2f(0, 1);
 		gl.glEnd();
 	}
 	

@@ -30,10 +30,10 @@ public abstract class MazeObject {
 		texVertices = new ArrayList<Vector2f>();
 		if(!foldedTexture)
 		{
-			texVertices.add(new Vector2f(0.5f, 0.5f));
-			texVertices.add(new Vector2f(0.5f, 0.75f));
-			texVertices.add(new Vector2f(0.25f, 0.75f));
-			texVertices.add(new Vector2f(0.25f, 0.5f));
+			texVertices.add(new Vector2f(1, 0));
+			texVertices.add(new Vector2f(1, 1));
+			texVertices.add(new Vector2f(0, 1));
+			texVertices.add(new Vector2f(0, 0));
 		}
 	}
 
@@ -152,12 +152,12 @@ public abstract class MazeObject {
 
 			for(int i = 0; i < face.getLength(); i++)
 			{
-				Vector3f position = vertices.get(face.getVertex(i));
 				if(texture != null)
 				{
 					Vector2f texVertex = texVertices.get(face.getTexVertex(i));
 					gl.glTexCoord2f(texVertex.x, texVertex.y);
 				}
+				Vector3f position = vertices.get(face.getVertex(i));
 				gl.glVertex3f(position.x, position.y, position.z);
 			}
 			gl.glEnd();
@@ -208,6 +208,25 @@ public abstract class MazeObject {
 			double sin = Math.sin(Math.toRadians(angle));
 			vert[0] =((float)(x*cos - z * sin - xRotate * cos + zRotate * sin + xRotate));
 			vert[2] = ((float)(x*sin + z * cos - zRotate * cos - xRotate * sin + zRotate));
+
+			vertex.set(vert);
+		}
+	}
+	
+	public void rotateVerticesX(float angle, double yRotate, double zRotate)
+	{
+		for(int i = 0; i < vertices.size(); i++)
+		{
+			Vector3f vertex = vertices.get(i);
+			float[] vert = new float[3];
+
+			vertex.get(vert);
+			float z = vert[2];
+			float y = vert[1];
+			double cos = Math.cos(Math.toRadians(angle));
+			double sin = Math.sin(Math.toRadians(angle));
+			vert[2] =((float)(z*cos - y * sin - zRotate * cos + yRotate * sin + zRotate));
+			vert[1] = ((float)(z*sin + y * cos - yRotate * cos - zRotate * sin + yRotate));
 
 			vertex.set(vert);
 		}
