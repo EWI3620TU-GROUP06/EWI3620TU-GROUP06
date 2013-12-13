@@ -186,7 +186,7 @@ public class Physics {
 	}
 	
 	public void applyParticleForce(int index, Vector3f v){
-		particles.get(index).applyCentralForce(new Vector3f(10*v.x, 0f, 10*v.z));
+		particles.get(index).applyCentralForce(new Vector3f(10*v.x, 10*v.y, 10*v.z));
 	}
 
 	public Vector3f getPlayerPosition()
@@ -201,6 +201,14 @@ public class Physics {
 		toVect.sub(new Vector3f(0,1f,0));
 		RayResultCallback a = new CollisionWorld.ClosestRayResultCallback(getPlayerPosition(), toVect);
 		dynamicsWorld.rayTest(getPlayerPosition(), toVect, a);
+		return a.hasHit();
+	}
+	
+	public boolean getLowerParticleContact(Vector3f particlelocation){
+		Vector3f toVect = new Vector3f(particlelocation.x, particlelocation.y, particlelocation.z);
+		toVect.sub(new Vector3f(0,1f,0));
+		RayResultCallback a = new CollisionWorld.ClosestRayResultCallback(getPlayerPosition(), toVect);
+		dynamicsWorld.rayTest(particlelocation, toVect, a);
 		return a.hasHit();
 	}
 	

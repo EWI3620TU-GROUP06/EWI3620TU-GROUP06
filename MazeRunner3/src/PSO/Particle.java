@@ -99,21 +99,22 @@ public class Particle extends GameObject implements VisibleObject{
 							0f,
 							swarm.getInertiaWeight()*velocity.z);
 					
-					velocity.add(new Vector3f(swarm.getCognitive()*((float)Math.random())*(localbest.x - location.x),
+					velocity.add(new Vector3f(4f*swarm.getCognitive()*((float)Math.random())*(localbest.x - location.x),
 							0f,
-							swarm.getCognitive()*((float)Math.random())*(localbest.z - location.z)));
+							4f*swarm.getCognitive()*((float)Math.random())*(localbest.z - location.z)));
 					
-					velocity.add(new Vector3f(swarm.getSocial()*((float)Math.random())*(globalbest.x - location.x),
+					velocity.add(new Vector3f(4f*swarm.getSocial()*((float)Math.random())*(globalbest.x - location.x),
 							0f,
-							swarm.getSocial()*((float)Math.random())*(globalbest.z - location.z)));
+							4f*swarm.getSocial()*((float)Math.random())*(globalbest.z - location.z)));
 					
 					//If found, check for enemeh every frame
 					counter = 24;
 					
 				}
 				else if ((LoSbreaker != null) && !(LoSbreaker.getCollisionShape() instanceof SphereShape)){
-					//Stand still for now
-					swarm.getPhysics().applyParticleForce(id, new Vector3f(0f, (float) deltaTime*10*40, 0f));
+					if(swarm.getPhysics().getLowerParticleContact(swarm.getPhysics().getParticleLocation(id))){
+						swarm.getPhysics().applyParticleForce(id, new Vector3f(0f, (float) deltaTime*30, 0f));
+					}
 				}
 			}
 		}
