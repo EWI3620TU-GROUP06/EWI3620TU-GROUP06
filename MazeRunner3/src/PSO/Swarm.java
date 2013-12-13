@@ -33,7 +33,7 @@ public class Swarm {
 		int n = 0;
 		while(n != (numberOfParticles)){
 			Vector3f temploc = genLocation((float)maze.MAZE_SIZE);
-			swarm.add(new Particle(temploc, this));
+			swarm.add(new Particle(temploc, this, n));
 			n++;
 		}
 	}
@@ -112,11 +112,11 @@ public class Swarm {
 		}
 	}
 	
-	public void update(){
+	public void update(int deltaTime){
 		int index = 0;
 		for(Particle s: swarm){
 			s.setLoc(physics.getParticleLocation(index));
-			s.update();
+			s.update(deltaTime);
 			
 			//normally you want to change particle velocity, we want to change it to force to have actual physics
 			physics.applyParticleForce(index, s.getVelocity());

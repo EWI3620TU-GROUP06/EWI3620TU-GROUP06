@@ -21,6 +21,8 @@ public class Particle extends GameObject implements VisibleObject{
 	private Vector3f localbest;
 	private Swarm swarm;
 	private float dX, dZ;
+	private int counter = 1;
+	private int id;
 	
 	private double orientation;
 	private double totalRotation;
@@ -28,11 +30,12 @@ public class Particle extends GameObject implements VisibleObject{
 	private Texture sphereTexture;
 	GLUquadricImpl sphere;
 	
-	public Particle(Vector3f location, Swarm swarm){
+	public Particle(Vector3f location, Swarm swarm, int id){
 		this.swarm = swarm;
 		this.location = location;
 		this.velocity = new Vector3f(0,0,0);
 		this.localbest = location;
+		this.id = id;
 	}
 	
 	public Vector3f getLoc(){
@@ -57,7 +60,7 @@ public class Particle extends GameObject implements VisibleObject{
 		return localbest;
 	}
 	
-	public void update(){
+	public void update(int deltaTime){
 		
 		if(dX != 0 && dZ != 0){
 			orientation = Math.atan2(dZ,dX);
@@ -74,7 +77,7 @@ public class Particle extends GameObject implements VisibleObject{
 		
 		Vector3f globalbest = swarm.getGlobalBest();
 		Vector3f difference = new Vector3f(globalbest.x - location.x, globalbest.y - location.y, globalbest.z - location.z);
-		
+		Vector3f differenceRule = new Vector3f(difference.x, difference.y, difference.z);
 		//Normalize manually and multiply by 2, to make sure ray is outside the spheres.
 		difference = new Vector3f(difference.x/difference.length(), difference.y/difference.length(), difference.z/difference.length());
 		
@@ -83,24 +86,39 @@ public class Particle extends GameObject implements VisibleObject{
 		
 		partLocation.add(difference);
 		
-		RigidBody LoSbreaker = (RigidBody) swarm.getPhysics().getLineofSight(partLocation, globalbest);
+		if(counter == 25){
+			
+			counter = 1;
+			
+			if(differenceRule.length() < swarm.getMaze().getSize()/2){
 		
-		if((LoSbreaker != null) && (LoSbreaker.getCollisionShape() instanceof SphereShape)){
-			velocity = new Vector3f(swarm.getInertiaWeight()*velocity.x,
-					0f,
-					swarm.getInertiaWeight()*velocity.z);
-			
-			velocity.add(new Vector3f(swarm.getCognitive()*((float)Math.random())*(localbest.x - location.x),
-					0f,
-					swarm.getCognitive()*((float)Math.random())*(localbest.z - location.z)));
-			
-			velocity.add(new Vector3f(swarm.getSocial()*((float)Math.random())*(globalbest.x - location.x),
-					0f,
-					swarm.getSocial()*((float)Math.random())*(globalbest.z - location.z)));
+				RigidBody LoSbreaker = (RigidBody) swarm.getPhysics().getLineofSight(partLocation, globalbest);
+				
+				if((LoSbreaker != null) && (LoSbreaker.getCollisionShape() instanceof SphereShape)){
+					velocity = new Vector3f(swarm.getInertiaWeight()*velocity.x,
+							0f,
+							swarm.getInertiaWeight()*velocity.z);
+					
+					velocity.add(new Vector3f(swarm.getCognitive()*((float)Math.random())*(localbest.x - location.x),
+							0f,
+							swarm.getCognitive()*((float)Math.random())*(localbest.z - location.z)));
+					
+					velocity.add(new Vector3f(swarm.getSocial()*((float)Math.random())*(globalbest.x - location.x),
+							0f,
+							swarm.getSocial()*((float)Math.random())*(globalbest.z - location.z)));
+					
+					//If found, check for enemeh every frame
+					counter = 24;
+					
+				}
+				else if ((LoSbreaker != null) && !(LoSbreaker.getCollisionShape() instanceof SphereShape)){
+					//Stand still for now
+					swarm.getPhysics().applyParticleForce(id, new Vector3f(0f, (float) deltaTime*10*40, 0f));
+				}
+			}
 		}
-		else if ((LoSbreaker != null) && !(LoSbreaker.getCollisionShape() instanceof SphereShape)){
-			//Stand still for now
-		}
+		
+		counter++; //add one to the counter to provide checking twice per second
 	}
 	
 	public MazeObject[] getNeighbourTiles(int squaresize){
