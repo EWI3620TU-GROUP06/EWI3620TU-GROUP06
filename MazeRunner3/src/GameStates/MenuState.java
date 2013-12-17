@@ -98,4 +98,25 @@ public class MenuState extends GameState {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+	@Override
+	public int getLevel() {
+		// TODO nothing
+		return 0;
+	}
+	@Override
+	public void setLevel(int lvl) {
+		// TODO nothing
+		
+	}
+	@Override
+	public void setScore(int scr) {
+		// TODO noting
+		
+	}
+
+	@Override
+	public int getScore() {
+		// TODO noting
+		return 0;
+	}
 }

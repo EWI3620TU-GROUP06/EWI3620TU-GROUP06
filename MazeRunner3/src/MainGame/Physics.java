@@ -43,6 +43,9 @@ public class Physics {
 	
 	private CollisionShape ballShape;
 	private Vector3f ballInertia;
+	private CollisionShape partBallShape;
+	private int diff;
+	private float partradius;
 	
 	ArrayList<RigidBody> particles;
 	ArrayList<RigidBody> movingBoxes = new ArrayList<RigidBody>();
@@ -59,8 +62,9 @@ public class Physics {
 	 */
 	private static RigidBody playerBall;
 
-	public Physics(Maze maze)
+	public Physics(Maze maze, int difficulty)
 	{		
+		this.diff = difficulty;
 		Transform DEFAULT_BALL_TRANSFORM = new Transform(new Matrix4f(new Quat4f(0, 0, 0, 1), new Vector3f((float)maze.getStart()[0], (float) maze.getStart()[1], (float)maze.getStart()[2]), 1.0f));
 		/**
 		 * The object that will roughly find out whether bodies are colliding.
@@ -135,13 +139,27 @@ public class Physics {
 	}
 	
 	public void initParticles(Swarm swarm){
+		switch(diff){
+			default:
+				partBallShape = new SphereShape(0.75f);
+				partradius = 0.75f;
+				break;
+			case(1):
+				partBallShape = new SphereShape(1f);
+				partradius = 1.0f;
+				break;
+			case(2):
+				partBallShape = new SphereShape(1.25f);
+				partradius = 1.25f;
+				break;
+		}
 		int n = Swarm.getNumOfParticles();
 		particles = new ArrayList<RigidBody>(n);
 		
 		for(Particle s: swarm.getSwarm()){
 			Transform transform = new Transform(new Matrix4f(new Quat4f(0, 0, 0, 1), s.getLoc(), 1.0f));
 			MotionState pietmotion = new DefaultMotionState(transform);
-			RigidBodyConstructionInfo partConstrInfo = new RigidBodyConstructionInfo(mass, pietmotion, ballShape, ballInertia);
+			RigidBodyConstructionInfo partConstrInfo = new RigidBodyConstructionInfo(mass, pietmotion, partBallShape, ballInertia);
 			partConstrInfo.angularDamping = 10f;
 			partConstrInfo.restitution = 0.4f;
 			RigidBody piet = new RigidBody(partConstrInfo);
@@ -206,7 +224,7 @@ public class Physics {
 	
 	public boolean getLowerParticleContact(Vector3f particlelocation){
 		Vector3f toVect = new Vector3f(particlelocation.x, particlelocation.y, particlelocation.z);
-		toVect.sub(new Vector3f(0,1f,0));
+		toVect.sub(new Vector3f(0,partradius,0));
 		RayResultCallback a = new CollisionWorld.ClosestRayResultCallback(getPlayerPosition(), toVect);
 		dynamicsWorld.rayTest(particlelocation, toVect, a);
 		return a.hasHit();

@@ -15,6 +15,8 @@ public class PlayState extends GameState {
 	private boolean finished;
 	private boolean paused;
 	private int difficulty = 0;
+	private static int level = 1;
+	private static int totalscore = 0;
 	
 	public PlayState(gStateMan gsm, Game game){
 		this.gsm = gsm;
@@ -109,5 +111,29 @@ public class PlayState extends GameState {
 	
 	public void setDifficulty(int diff){
 		difficulty = diff;
+	}
+	@Override
+	public int getLevel() {
+		int res = level;
+		return res;
+	}
+	@Override
+	public void setLevel(int lvl) {
+		level = lvl;		
+	}
+	@Override
+	public void setScore(int scr) {
+		if(scr == 0){
+			totalscore = 0;
+		}
+		else{
+			totalscore = totalscore + scr;
+		}
+		
+	}
+
+	@Override
+	public int getScore() {
+		return totalscore;
 	}
 }

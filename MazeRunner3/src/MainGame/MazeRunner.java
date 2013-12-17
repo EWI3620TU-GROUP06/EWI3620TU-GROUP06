@@ -61,7 +61,7 @@ public class MazeRunner implements GLEventListener {
 	private GameState state;
 	private GLCanvas canvas;
 	private Game game;
-	private FPSAnimator anim;
+	private Animator anim;
 	private boolean pause;
 	private boolean optpause;
 	private boolean dead = false;
@@ -72,6 +72,7 @@ public class MazeRunner implements GLEventListener {
 	private TextBox deadclkbx;
 	private TextBoxManager finishclbxman;
 	private TextBox scoreBox;
+	private TextBox totalScoreBox;
 	private Swarm particles;
 	private int currentScore = 0;
 	private int timer = 0;
@@ -126,7 +127,7 @@ public class MazeRunner implements GLEventListener {
 		/* We need to create an internal thread that instructs OpenGL to continuously repaint itself.
 		 * The Animator class handles that for JOGL.
 		 */
-		anim = new FPSAnimator( canvas, 50 );
+		anim = new Animator(canvas);
 		anim.start();
 	}
 
@@ -157,10 +158,10 @@ public class MazeRunner implements GLEventListener {
 		// Add the maze that we will be using.
 
 		if (maze == null){
-			maze = Maze.read(new File("src/Levels/objTest.mz"));
+			maze = Maze.read(new File("src/Levels/level1.mz"));
 		}
 
-		Physics p = new Physics(maze);
+		Physics p = new Physics(maze, state.getDiffNumber());
 
 		visibleObjects.add( maze );
 		MoveableBox newBox = new MoveableBox(new Vector3d(30, 0, 10), 5, 5, p);
@@ -175,7 +176,7 @@ public class MazeRunner implements GLEventListener {
 
 		// Initialize the player.
 		Vector3d playerPos = new Vector3d(maze.getStart()[0], maze.getStart()[1], maze.getStart()[2]);
-		player = new Player(playerPos, maze.getStart()[3], -45, maze, p);
+		player = new Player(playerPos, maze.getStart()[3], -45, maze, p, state.getDiffNumber());
 
 		visibleObjects.add(player);
 		
@@ -183,11 +184,12 @@ public class MazeRunner implements GLEventListener {
 		powerUps.add(newPower);
 		visibleObjects.add(newPower);
 
-		particles = new Swarm(p, maze, (int) maze.MAZE_SIZE/2);
+		particles = new Swarm(p, maze, (int) (maze.MAZE_SIZE*(state.getDiffNumber() + 1))/4, state.getDiffNumber());
+
 		particles.setCognitive(0.055f);
 		particles.setSocial(0.055f);
 		particles.setInertiaWeight(0.95f);
-		particles.generate((int) maze.MAZE_SIZE/2);
+		particles.generate((int) (maze.MAZE_SIZE*(state.getDiffNumber() + 1))/4);
 		particles.AddToVisible(visibleObjects);
 		p.initParticles(particles);
 
@@ -211,9 +213,10 @@ public class MazeRunner implements GLEventListener {
 		this.optclkbxman.setControl(input);
 		this.finishclbxman.setControl(input);
 		float[] white = {1, 1, 1, 1};
-		this.scoreBox = TextBox.createHighscoreBox(0.02f, 0.9f, 
+		this.scoreBox = TextBox.createHighscoreBox(0.02f, 0.8f, 
 				screenWidth, screenHeight, 22, "Score: 0", white);
-		
+		this.totalScoreBox = TextBox.createHighscoreBox(0.02f, 0.9f,
+				screenWidth, screenHeight, 22, "Total Score: " + state.getScore(), white);
 		this.deadclkbx = TextBox.createTitle(0.5f, 0.5f, 
 				screenWidth, screenHeight, 6, "You Have Died!");
 	}
@@ -239,7 +242,7 @@ public class MazeRunner implements GLEventListener {
 	public void init(GLAutoDrawable drawable) {
 		GL gl = drawable.getGL();
 		GLU glu = new GLU();
-
+		gl.setSwapInterval(1);
 		particles.init(gl);
 		Maze.initTextures(gl);
 		player.init(gl);
@@ -292,16 +295,18 @@ public class MazeRunner implements GLEventListener {
 		int deltaTime = (int)(currentTime - previousTime);
 		previousTime = currentTime;
 		//Only update the movement&camera when not in pause state
+
 		if (!pause || finished){
 			// Calculating time since last frame.
 			timeSinceStart += deltaTime;
 			if(!finished)
-				currentScore = 500 - timeSinceStart / 1000;
+				currentScore = 200*(state.getDiffNumber()+1) - (timeSinceStart*((state.getDiffNumber()*(int)1.2)+1)) / 1000;
 			if(currentScore == 0){
 				dead = true;
 				state.getGSM().setPauseState();
 			}
 			scoreBox.setText("Score: " + currentScore);
+			totalScoreBox.setText("Total Score: " + state.getScore());
 
 			// Update any movement since last frame.
 			particles.update(deltaTime);
@@ -313,9 +318,12 @@ public class MazeRunner implements GLEventListener {
 				dead = true;
 				state.getGSM().setPauseState();
 			}
-			if(maze.isFinish(pos[0], pos[2])){
-				finished = true;
-			}		
+			if(!finished && (maze.isFinish(pos[0], pos[2])))	
+				{
+					finished = true;
+					state.setScore(currentScore);
+				}	
+			
 			
 		}
 		//Always change the camera and draw the game-world
@@ -339,6 +347,7 @@ public class MazeRunner implements GLEventListener {
 		DrawingUtil.orthographicProjection(gl, screenWidth, screenHeight);
 		gl.glDisable(GL.GL_DEPTH_TEST);
 		scoreBox.drawText(0);
+		totalScoreBox.drawText(0);
 		//Draw the menu if pause state
 
 		if(pause && !finished){
@@ -383,7 +392,7 @@ public class MazeRunner implements GLEventListener {
 		if(finished){
 			String name = "fout";
 			if((name = finishclbxman.getText()) != null){
-				SqlReadWrite.Write(new Score(name, currentScore));
+				SqlReadWrite.Write(new Score(name, state.getScore()));
 				showCursor();
 				state.getGSM().setState(gStateMan.HIGHSCORESTATE);
 			}

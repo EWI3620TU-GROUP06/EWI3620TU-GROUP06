@@ -2,6 +2,7 @@ package PSO;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.glu.GLU;
+import javax.vecmath.Matrix3f;
 import javax.vecmath.Vector3f;
 
 import com.bulletphysics.collision.shapes.SphereShape;
@@ -23,6 +24,8 @@ public class Particle extends GameObject implements VisibleObject{
 	private float dX, dZ;
 	private int counter = 1;
 	private int id;
+	private int diff;
+	private float scale;
 	
 	private double orientation;
 	private double totalRotation;
@@ -30,12 +33,25 @@ public class Particle extends GameObject implements VisibleObject{
 	private Texture sphereTexture;
 	GLUquadricImpl sphere;
 	
-	public Particle(Vector3f location, Swarm swarm, int id){
+	public Particle(Vector3f location, Swarm swarm, int id, int difficulty){
 		this.swarm = swarm;
 		this.location = location;
 		this.velocity = new Vector3f(0,0,0);
 		this.localbest = location;
 		this.id = id;
+		this.diff = difficulty;
+		
+		switch(diff){
+		default:
+			scale = 0.75f;
+			break;
+		case(1):
+			scale = 1.0f;
+			break;
+		case(2):
+			scale = 1.25f;
+			break;
+		}
 	}
 	
 	public Vector3f getLoc(){
@@ -78,19 +94,29 @@ public class Particle extends GameObject implements VisibleObject{
 		Vector3f globalbest = swarm.getGlobalBest();
 		Vector3f difference = new Vector3f(globalbest.x - location.x, globalbest.y - location.y, globalbest.z - location.z);
 		Vector3f differenceRule = new Vector3f(difference.x, difference.y, difference.z);
-		//Normalize manually and multiply by 2, to make sure ray is outside the spheres.
+		//Normalize manually to make sure ray is outside the spheres.
 		difference = new Vector3f(difference.x/difference.length(), difference.y/difference.length(), difference.z/difference.length());
-		
+		Matrix3f scaler = new Matrix3f(scale, 0, 0, 0, scale, 0, 0, 0, scale);
+		scaler.transform(difference);
+
 		//Do this to not overwrite the actual globalbest and location with the .add() method
 		Vector3f partLocation = new Vector3f(location.x, location.y, location.z);
 		
+		float multiplier;
+		
+		switch(diff){
+		default: multiplier = 2.5f;break;
+		case 1: multiplier = 3.25f;break;
+		case 2: multiplier = 4f; break;
+		}
+
 		partLocation.add(difference);
 		
 		if(counter == 25){
 			
 			counter = 1;
 			
-			if(differenceRule.length() < swarm.getMaze().getSize()/2){
+			if(differenceRule.length() < swarm.getMaze().getSize()*multiplier/10){
 		
 				RigidBody LoSbreaker = (RigidBody) swarm.getPhysics().getLineofSight(partLocation, globalbest);
 				
@@ -99,13 +125,13 @@ public class Particle extends GameObject implements VisibleObject{
 							0f,
 							swarm.getInertiaWeight()*velocity.z);
 					
-					velocity.add(new Vector3f(4f*swarm.getCognitive()*((float)Math.random())*(localbest.x - location.x),
+					velocity.add(new Vector3f(multiplier*swarm.getCognitive()*((float)Math.random())*(localbest.x - location.x),
 							0f,
-							4f*swarm.getCognitive()*((float)Math.random())*(localbest.z - location.z)));
+							multiplier*swarm.getCognitive()*((float)Math.random())*(localbest.z - location.z)));
 					
-					velocity.add(new Vector3f(4f*swarm.getSocial()*((float)Math.random())*(globalbest.x - location.x),
+					velocity.add(new Vector3f(multiplier*swarm.getSocial()*((float)Math.random())*(globalbest.x - location.x),
 							0f,
-							4f*swarm.getSocial()*((float)Math.random())*(globalbest.z - location.z)));
+							multiplier*swarm.getSocial()*((float)Math.random())*(globalbest.z - location.z)));
 					
 					//If found, check for enemeh every frame
 					counter = 24;
@@ -162,7 +188,7 @@ public class Particle extends GameObject implements VisibleObject{
 		gl.glRotated(-Math.toDegrees(orientation), 0, 1, 0);
 		totalRotation += Math.sqrt((double)(dX*dX + dZ*dZ));
 		gl.glRotated(Math.toDegrees(totalRotation), 0, 0, 1);
-		glu.gluSphere(sphere, 1.0, 20, 20);
+		glu.gluSphere(sphere, scale, 20, 20);
 		sphereTexture.disable();
 
 		gl.glPopMatrix();	

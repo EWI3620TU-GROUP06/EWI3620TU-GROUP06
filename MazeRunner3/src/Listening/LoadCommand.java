@@ -18,6 +18,8 @@ public class LoadCommand implements Command {
 		//Load level to static maze-variable, and GOTO playstate
 		Maze maze = Editor.readMaze();
 		MazeRunner.setMaze(maze);
+		this.gsm.getState(gStateMan.PLAYSTATE).setScore(0);
+		this.gsm.getState(gStateMan.PLAYSTATE).setLevel(1);
 		if(maze != null) { // If level loaded, play, else choose some other menu option
 			this.gsm.setState(gStateMan.PLAYSTATE);
 		}
