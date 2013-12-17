@@ -1,7 +1,10 @@
 package Listening;
 
-import GameStates.gStateMan;
+import java.io.File;
 
+import GameStates.gStateMan;
+import MainGame.Maze;
+import MainGame.MazeRunner;
 
 public class NextLevelCommand implements Command {
 
@@ -14,10 +17,14 @@ public class NextLevelCommand implements Command {
 	}
 	@Override
 	public void execute() {
+//		this.gsm.getGame().remove(this.gsm.getState(this.gsm.getCurState()).getCanvas());
+		Maze maze = Maze.read(new File("src/Levels/test.mz"));
+		MazeRunner.setMaze(maze);
+//		gsm.getInput().reset();
 		this.gsm.setState(gStateMan.PLAYSTATE);
-//		MazeRunner.setMaze(mz);
-		
-		
+//		this.gsm.getState(this.gsm.getCurState()).setFinished(false);
+//		new MazeRunner(this.gsm.getGame(), this.gsm.getState(this.gsm.getCurState()));	
+//		this.gsm.getGame().validate();
 	}
 
 }
