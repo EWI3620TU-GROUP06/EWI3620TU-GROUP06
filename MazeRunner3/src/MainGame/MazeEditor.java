@@ -51,7 +51,7 @@ public class MazeEditor implements GLEventListener {
 	private Maze maze; // The maze.
 	private GameState state;
 	private Game game;
-	private Animator anim;
+	private FPSAnimator anim;
 	private boolean pause;
 	private boolean optpause;
 	private TextBoxManager clkbxman;
@@ -116,7 +116,7 @@ public class MazeEditor implements GLEventListener {
 		 * continuously repaint itself. The Animator class handles that for
 		 * JOGL.
 		 */
-		anim = new Animator(canvas);
+		anim = new FPSAnimator(canvas, 60);
 		anim.start();
 	}
 
@@ -194,7 +194,7 @@ public class MazeEditor implements GLEventListener {
 		// mode.
 		GL gl = drawable.getGL();
 		GLU glu = new GLU();
-		gl.setSwapInterval(1);
+		
 		Maze.initTextures(gl);
 		editBoxManager.initTextures(gl);
 		
