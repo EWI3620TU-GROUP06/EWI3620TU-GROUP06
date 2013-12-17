@@ -21,6 +21,7 @@ public class Swarm {
 	private float inertiaWeight;
 	private static int numberofParticles;
 	private int diff;
+	private float scale;
 	
 	public Swarm(Physics physics, Maze maze, int n, int difficulty){
 		numberofParticles = n;
@@ -29,6 +30,17 @@ public class Swarm {
 		this.swarm = new ArrayList<Particle>(numberofParticles);
 		this.globalbest = physics.getPlayerPosition();
 		this.diff = difficulty;
+		switch(diff){
+		default:
+			scale = 0.75f;
+			break;
+		case(1):
+			scale = 1.0f;
+			break;
+		case(2):
+			scale = 1.25f;
+			break;
+		}
 	}
 	
 	public void generate(int numberOfParticles){
@@ -54,7 +66,7 @@ public class Swarm {
 			return genLocation(Bound);
 		}
 		else{
-			return new Vector3f(maze.SQUARE_SIZE*randX, 1.0f, maze.SQUARE_SIZE*randZ);
+			return new Vector3f(maze.SQUARE_SIZE*randX, scale, maze.SQUARE_SIZE*randZ);
 		}
 	}
 	
