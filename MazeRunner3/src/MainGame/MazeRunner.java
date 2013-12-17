@@ -71,6 +71,7 @@ public class MazeRunner implements GLEventListener {
 	private TextBox deadclkbx;
 	private TextBoxManager finishclbxman;
 	private TextBox scoreBox;
+	private TextBox totalScoreBox;
 	private Swarm particles;
 	private int currentScore = 0;
 	private int timer = 0;
@@ -203,9 +204,10 @@ public class MazeRunner implements GLEventListener {
 		this.optclkbxman.setControl(input);
 		this.finishclbxman.setControl(input);
 		float[] white = {1, 1, 1, 1};
-		this.scoreBox = TextBox.createHighscoreBox(0.02f, 0.9f, 
+		this.scoreBox = TextBox.createHighscoreBox(0.02f, 0.8f, 
 				screenWidth, screenHeight, 22, "Score: 0", white);
-		
+		this.totalScoreBox = TextBox.createHighscoreBox(0.02f, 0.9f,
+				screenWidth, screenHeight, 22, "Total Score: " + state.getScore(), white);
 		this.deadclkbx = TextBox.createTitle(0.5f, 0.5f, 
 				screenWidth, screenHeight, 6, "You Have Died!");
 	}
@@ -284,6 +286,7 @@ public class MazeRunner implements GLEventListener {
 		int deltaTime = (int)(currentTime - previousTime);
 		previousTime = currentTime;
 		//Only update the movement&camera when not in pause state
+
 		if (!pause || finished){
 			// Calculating time since last frame.
 			timeSinceStart += deltaTime;
@@ -294,6 +297,7 @@ public class MazeRunner implements GLEventListener {
 				state.getGSM().setPauseState();
 			}
 			scoreBox.setText("Score: " + currentScore);
+			totalScoreBox.setText("Total Score: " + state.getScore());
 
 			// Update any movement since last frame.
 			particles.update(deltaTime);
@@ -305,9 +309,12 @@ public class MazeRunner implements GLEventListener {
 				dead = true;
 				state.getGSM().setPauseState();
 			}
-			if(maze.isFinish(pos[0], pos[2])){
-				finished = true;
-			}		
+			if(!finished && (maze.isFinish(pos[0], pos[2])))	
+				{
+					finished = true;
+					state.setScore(currentScore);
+				}	
+			
 			
 		}
 		//Always change the camera and draw the game-world
@@ -330,6 +337,7 @@ public class MazeRunner implements GLEventListener {
 		DrawingUtil.orthographicProjection(gl, screenWidth, screenHeight);
 		gl.glDisable(GL.GL_DEPTH_TEST);
 		scoreBox.drawText(0);
+		totalScoreBox.drawText(0);
 		//Draw the menu if pause state
 
 		if(pause && !finished){
@@ -374,7 +382,7 @@ public class MazeRunner implements GLEventListener {
 		if(finished){
 			String name = "fout";
 			if((name = finishclbxman.getText()) != null){
-				SqlReadWrite.Write(new Score(name, currentScore));
+				SqlReadWrite.Write(new Score(name, state.getScore()));
 				showCursor();
 				state.getGSM().setState(gStateMan.HIGHSCORESTATE);
 			}

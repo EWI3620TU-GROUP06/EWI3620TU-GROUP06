@@ -12,6 +12,8 @@ public class PlayCommand implements Command{
 	
 	@Override
 	public void execute() {
+		this.gsm.getState(gStateMan.PLAYSTATE).setScore(0);
+		this.gsm.getState(gStateMan.PLAYSTATE).setLevel(1);
 		this.gsm.setState(gStateMan.PLAYSTATE);
 	}
 

@@ -25,4 +25,6 @@ public abstract class GameState {
 	public abstract int getDiffNumber();
 	public abstract int getLevel();
 	public abstract void setLevel(int lvl);
+	public abstract void setScore(int scr);
+	public abstract int getScore();
 }

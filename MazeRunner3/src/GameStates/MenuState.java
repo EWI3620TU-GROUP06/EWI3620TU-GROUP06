@@ -108,4 +108,15 @@ public class MenuState extends GameState {
 		// TODO nothing
 		
 	}
+	@Override
+	public void setScore(int scr) {
+		// TODO noting
+		
+	}
+
+	@Override
+	public int getScore() {
+		// TODO noting
+		return 0;
+	}
 }
