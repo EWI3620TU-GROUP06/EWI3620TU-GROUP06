@@ -60,7 +60,7 @@ public class MazeRunner implements GLEventListener {
 	private GameState state;
 	private GLCanvas canvas;
 	private Game game;
-	private FPSAnimator anim;
+	private Animator anim;
 	private boolean pause;
 	private boolean optpause;
 	private boolean dead = false;
@@ -125,7 +125,7 @@ public class MazeRunner implements GLEventListener {
 		/* We need to create an internal thread that instructs OpenGL to continuously repaint itself.
 		 * The Animator class handles that for JOGL.
 		 */
-		anim = new FPSAnimator( canvas, 50 );
+		anim = new Animator(canvas);
 		anim.start();
 	}
 
@@ -233,7 +233,7 @@ public class MazeRunner implements GLEventListener {
 	public void init(GLAutoDrawable drawable) {
 		GL gl = drawable.getGL();
 		GLU glu = new GLU();
-
+		gl.setSwapInterval(1);
 		particles.init(gl);
 		Maze.initTextures(gl);
 		player.init(gl);

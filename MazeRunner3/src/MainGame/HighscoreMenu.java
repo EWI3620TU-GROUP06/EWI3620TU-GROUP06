@@ -57,7 +57,7 @@ public class HighscoreMenu implements GLEventListener{
 		/* We need to create an internal thread that instructs OpenGL to continuously repaint itself.
 		 * The Animator class handles that for JOGL.
 		 */
-		Animator anim = new Animator( canvas );
+		Animator anim = new Animator(canvas);
 		anim.start();
 	}
 	
