@@ -23,4 +23,6 @@ public abstract class GameState {
 	public abstract String getDifficulty();
 	public abstract void setDifficulty(int diff);
 	public abstract int getDiffNumber();
+	public abstract int getLevel();
+	public abstract void setLevel(int lvl);
 }

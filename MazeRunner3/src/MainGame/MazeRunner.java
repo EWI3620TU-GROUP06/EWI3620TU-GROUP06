@@ -155,7 +155,7 @@ public class MazeRunner implements GLEventListener {
 		// Add the maze that we will be using.
 
 		if (maze == null){
-			maze = Maze.read(new File("src/Levels/objTest.mz"));
+			maze = Maze.read(new File("src/Levels/level1.mz"));
 		}
 
 		Physics p = new Physics(maze);
