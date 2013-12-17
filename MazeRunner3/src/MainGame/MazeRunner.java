@@ -162,9 +162,10 @@ public class MazeRunner implements GLEventListener {
 
 		visibleObjects.add( maze );
 		MoveableBox newBox = new MoveableBox(new Vector3d(30, 0, 10), 5, 5, p);
-		newBox.addToPath(1000, new Vector3f(1, 0, 0));
-		newBox.addToPath(1000, new Vector3f(0, 0, 1));
-		newBox.addToPath(1000, new Vector3f(-1, 0, -1));
+		
+		newBox.addToPath(1000, new Vector3f(35, 0, 0));
+		newBox.addToPath(7000, new Vector3f(-5, 0, 0));
+		newBox.setCount(1);
 		boxes.add(newBox);
 		visibleObjects.add(newBox);
 
@@ -243,6 +244,8 @@ public class MazeRunner implements GLEventListener {
 		// Enable back-face culling.
 		gl.glCullFace( GL.GL_BACK );
 		gl.glEnable( GL.GL_CULL_FACE );
+		gl.glEnable(GL.GL_SMOOTH);
+		gl.glShadeModel(GL.GL_SMOOTH);
 
 		// Enable Z-buffering.
 		gl.glEnable( GL.GL_DEPTH_TEST );

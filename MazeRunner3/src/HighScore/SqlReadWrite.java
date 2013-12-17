@@ -19,11 +19,17 @@ public class SqlReadWrite {
 	public static void startConnection()
 	{
 		try{
-			Class.forName("org.sqlite.JDBC");
+			Class.forName("com.mysql.jdbc.Driver").newInstance();
+			
 			connect = DriverManager
-					.getConnection("jdbc:sqlite:db/mydatabase.db");
+					.getConnection("jdbc:mysql://sql.ewi.tudelft.nl:3306/WDtech", "haantjes", "wdtech123");
 			Statement stat = connect.createStatement();
-			stat.executeUpdate("CREATE TABLE IF NOT EXISTS highscores (name STRING, score INT, level STRING, time TIMESTAMP);");
+			stat.executeUpdate("CREATE TABLE IF NOT EXISTS highscores("
+					+ "num INT PRIMARY KEY AUTO_INCREMENT,"
+					+ "name CHARACTER( 10 ) NOT NULL,"
+					+ "score INT NOT NULL,"
+					+ "LEVEL CHARACTER( 10 ) NOT NULL,"
+					+ "TIME TIMESTAMP NOT NULL)");
 			stat.close();
 		}
 		catch(Exception e)
@@ -36,7 +42,7 @@ public class SqlReadWrite {
 		try{
 			startConnection();
 			PreparedStatement preparedStatement = connect
-					.prepareStatement("insert into  highscores values (?, ?, ?, ?)");
+					.prepareStatement("insert into  highscores values (default, ?, ?, ?, ?)");
 			preparedStatement.setString(1,  score.getName());
 			preparedStatement.setInt(2, score.getScr());
 			preparedStatement.setString(3,  "Level 1");
@@ -54,6 +60,7 @@ public class SqlReadWrite {
 
 	public static void Read()
 	{
+		highscores = new ArrayList<Score>();
 		try{
 			Timestamp mostRecentTime = new Timestamp(0);
 			startConnection();

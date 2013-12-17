@@ -85,7 +85,7 @@ public class CustomMazeObject extends MazeObject{
 
 			res.file = file;
 			
-			res.rotateVerticesX(-90, 0, 0);
+			res.rotateVerticesX(90, 0, 0);
 
 			sc.close();
 		}

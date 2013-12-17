@@ -20,6 +20,7 @@ public class MoveableBox extends GameObject implements VisibleObject {
 	private ArrayList<Vector3f> pathDirection;
 	private int time = 0;
 	private boolean isMoving = true;
+	private int count = -1;
 
 	public MoveableBox(Vector3d pos, int squareSize, int height, Physics physics)
 	{
@@ -29,8 +30,7 @@ public class MoveableBox extends GameObject implements VisibleObject {
 		idCount ++;
 		this.physics = physics;
 		physics.addBox(new Vector3f((float)pos.x, (float)pos.y, (float)pos.z), squareSize, height);
-		pathTime = new ArrayList<Integer>();
-		pathDirection = new ArrayList<Vector3f>();
+		clearPath();
 	}
 
 	public void addToPath(int time, Vector3f direction)
@@ -53,6 +53,15 @@ public class MoveableBox extends GameObject implements VisibleObject {
 			time += deltaTime;
 			if(time > pathTime.get(pathTime.size() - 1)){
 				time -= pathTime.get(pathTime.size() - 1);
+				if(count > 0)
+					count--;
+				if(count == 0){
+					isMoving = false;
+					Vector3f newLocation = physics.moveBox(id, new Vector3f(0, 0, 0));
+					newLocation.sub(new Vector3f(2.5f, 2.5f, 2.5f));
+					box.moveTo(newLocation);
+					return;
+				}
 			}
 			int i = 0;
 			while(i < pathTime.size() - 1 && time > pathTime.get(i) ){
@@ -67,6 +76,17 @@ public class MoveableBox extends GameObject implements VisibleObject {
 	public static void resetIDs()
 	{
 		idCount = 0;
+	}
+	
+	public void clearPath()
+	{
+		pathTime = new ArrayList<Integer>();
+		pathDirection = new ArrayList<Vector3f>();
+	}
+	
+	public void setCount(int c)
+	{
+		count = c;
 	}
 	
 	public void setMoving(boolean moving)
