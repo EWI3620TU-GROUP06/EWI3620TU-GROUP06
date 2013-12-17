@@ -38,11 +38,15 @@ public class Player extends GameObject implements VisibleObject {
 	private double dX = 0, dZ = 0;
 	private double orientation;
 	private double totalRotation;
+	
+	private float powerFactor = 10;
+	private float jumpFactor = 40;
 
 	private Texture sphereTexture;
 	GLUquadricImpl sphere;
 
 	private Control control = null;
+	float ballColour[] = {1.0f, 1.0f, 1.0f, 1.0f};
 
 	/**
 	 * The Player constructor.
@@ -97,6 +101,11 @@ public class Player extends GameObject implements VisibleObject {
 	{
 		return control;
 	}
+	
+	public void setColour(float[] colour)
+	{
+		ballColour = colour;
+	}
 
 	/**
 	 * Returns the horizontal angle of the orientation.
@@ -128,6 +137,16 @@ public class Player extends GameObject implements VisibleObject {
 	 */
 	public void setVerAngle(double verAngle) {
 		this.verAngle = verAngle;
+	}
+	
+	public void multiplySpeed(float f)
+	{
+		powerFactor = powerFactor * f;
+	}
+	
+	public void multiplyJump(float f)
+	{
+		jumpFactor = jumpFactor * f;
 	}
 
 
@@ -165,7 +184,7 @@ public class Player extends GameObject implements VisibleObject {
 		double cos = Math.cos(Math.toRadians(this.getHorAngle()));
 		double sin = Math.sin(Math.toRadians(this.getHorAngle()));
 
-		int power = deltaTime*10; 
+		float power = deltaTime*powerFactor; 
 
 		if (control.getRight())
 		{
@@ -187,14 +206,14 @@ public class Player extends GameObject implements VisibleObject {
 		{	
 			if(physics.getLowerContact()){
 				physics.clearForces();
-				physics.applyForce(0, power*40, 0);
+				physics.applyForce(0, power*jumpFactor, 0);
 			}
 		}
 	}
 
 	public void display(GL gl) {
 		GLU glu = new GLU();
-		float ballColour[] = {1.0f, 1.0f, 1.0f, 1.0f};
+		
 		sphereTexture.enable(); // Enable the ball texture
 		sphereTexture.bind(); 
 		gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, ballColour, 0);

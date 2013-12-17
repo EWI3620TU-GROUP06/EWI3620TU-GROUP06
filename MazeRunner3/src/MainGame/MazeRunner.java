@@ -11,6 +11,7 @@ import Drawing.*;
 import GameObjects.Camera;
 import GameObjects.MoveableBox;
 import GameObjects.Player;
+import GameObjects.PowerUp;
 import GameStates.GameState;
 import GameStates.gStateMan;
 import HighScore.SqlReadWrite;
@@ -75,6 +76,7 @@ public class MazeRunner implements GLEventListener {
 	private int currentScore = 0;
 	private int timer = 0;
 	private ArrayList<MoveableBox> boxes = new ArrayList<MoveableBox>();
+	private ArrayList<PowerUp> powerUps = new ArrayList<PowerUp>(); 
 
 	/*
 	 * **********************************************
@@ -168,12 +170,18 @@ public class MazeRunner implements GLEventListener {
 		newBox.setCount(1);
 		boxes.add(newBox);
 		visibleObjects.add(newBox);
+		
+		
 
 		// Initialize the player.
 		Vector3d playerPos = new Vector3d(maze.getStart()[0], maze.getStart()[1], maze.getStart()[2]);
 		player = new Player(playerPos, maze.getStart()[3], -45, maze, p);
 
 		visibleObjects.add(player);
+		
+		PowerUp newPower = new PowerUp(new Vector3d(12.5, 2.5, 27.5), 0.5f, player, PowerUp.SPEED);
+		powerUps.add(newPower);
+		visibleObjects.add(newPower);
 
 		particles = new Swarm(p, maze, (int) maze.MAZE_SIZE/2);
 		particles.setCognitive(0.055f);
@@ -319,6 +327,7 @@ public class MazeRunner implements GLEventListener {
 		camera.getVrp().get(vrp);
 		
 		boxes.get(0).update(deltaTime);
+		powerUps.get(0).update(deltaTime, player.getLocation());
 
 		glu.gluLookAt(pos[0], pos[1], pos[2], 
 				vrp[0], vrp[1], vrp[2], vuv[0], vuv[1], vuv[2]);

@@ -74,16 +74,16 @@ public class Maze implements VisibleObject {
 				switch(newMaze[i][j])
 				{
 				case 0 : maze[i][j] = new Floor(SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
-				case 1 : maze[i][j] = new Box(SQUARE_SIZE, SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
-				case 2 : maze[i][j] = new Box(SQUARE_SIZE, (float)SQUARE_SIZE/2, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
-				case 4 : maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE, 0, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
-				case 5 : maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE, 90, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
-				case 6 : maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE, 180, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
-				case 7 : maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE, 270, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
-				case 8 : maze[i][j] = new Ramp(SQUARE_SIZE, (float)SQUARE_SIZE/2, 0, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
-				case 9 : maze[i][j] = new Ramp(SQUARE_SIZE, (float)SQUARE_SIZE/2, 90, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
-				case 10 : maze[i][j] = new Ramp(SQUARE_SIZE, (float)SQUARE_SIZE/2, 180, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
-				case 11 : maze[i][j] = new Ramp(SQUARE_SIZE, (float)SQUARE_SIZE/2, 270, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
+				case 1 : maze[i][j] = new Box(SQUARE_SIZE, SQUARE_SIZE, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
+				case 2 : maze[i][j] = new Box(SQUARE_SIZE, (float)SQUARE_SIZE/2, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
+				case 4 : maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE, 0, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
+				case 5 : maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE, 90, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
+				case 6 : maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE, 180, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
+				case 7 : maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE, 270, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
+				case 8 : maze[i][j] = new Ramp(SQUARE_SIZE, (float)SQUARE_SIZE/2, 0, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
+				case 9 : maze[i][j] = new Ramp(SQUARE_SIZE, (float)SQUARE_SIZE/2, 90, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
+				case 10 : maze[i][j] = new Ramp(SQUARE_SIZE, (float)SQUARE_SIZE/2, 180, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
+				case 11 : maze[i][j] = new Ramp(SQUARE_SIZE, (float)SQUARE_SIZE/2, 270, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
 				default : maze[i][j] = customs.get(-(newMaze[i][j] + 1)).translate(SQUARE_SIZE * i, 0, SQUARE_SIZE * j);
 				}
 			}
@@ -208,8 +208,8 @@ public class Maze implements VisibleObject {
 					switch(drawMode)
 					{
 					case 0 : maze[i][j] = maze[i][j] = new Floor(SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
-					case 1 : maze[i][j] = new Box(SQUARE_SIZE, SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
-					case 2 : maze[i][j]  = new Box(SQUARE_SIZE, SQUARE_SIZE/2, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
+					case 1 : maze[i][j] = new Box(SQUARE_SIZE, SQUARE_SIZE, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
+					case 2 : maze[i][j]  = new Box(SQUARE_SIZE, SQUARE_SIZE/2, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
 					case 3 : 
 						startPosition[0] = i;
 						startPosition[2] = j;
@@ -222,10 +222,10 @@ public class Maze implements VisibleObject {
 						finishPosition[1] = j;
 						break;
 					case 5:
-						maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE, angle, i * SQUARE_SIZE, j * SQUARE_SIZE);
+						maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE, angle, i * SQUARE_SIZE, 0, j * SQUARE_SIZE);
 						break;
 					case 6:
-						maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE / 2, angle, i * SQUARE_SIZE, j * SQUARE_SIZE);
+						maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE / 2, angle, 0, i * SQUARE_SIZE, j * SQUARE_SIZE);
 						break;
 					default : maze[i][j] = customs.get(drawMode - 7).translate(i * SQUARE_SIZE, 0, j*SQUARE_SIZE);
 					}

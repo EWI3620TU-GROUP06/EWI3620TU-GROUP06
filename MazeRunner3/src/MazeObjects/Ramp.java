@@ -10,15 +10,15 @@ public class Ramp extends MazeObject{
 	protected float height;
 	private static Texture texture;
 	
-	public Ramp(float width, float height, int orientation, float x, float z)
+	public Ramp(float width, float height, int orientation, float x, float y, float z)
 	{
 		super(false);
-		addVertex(new Vector3f(x, 0, z));
-		addVertex(new Vector3f(x+width, 0, z));
-		addVertex(new Vector3f(x+width, height, z));
-		addVertex(new Vector3f(x, height, z));
-		addVertex(new Vector3f(x, 0, z+width));
-		addVertex(new Vector3f(x+width, 0, z+width));
+		addVertex(new Vector3f(x, y, z));
+		addVertex(new Vector3f(x+width, y, z));
+		addVertex(new Vector3f(x+width, y + height, z));
+		addVertex(new Vector3f(x, y + height, z));
+		addVertex(new Vector3f(x, y, z+width));
+		addVertex(new Vector3f(x+width, y, z+width));
 		
 		int[] face0 = {0, 3, 2, 1};
 		addFace(face0);

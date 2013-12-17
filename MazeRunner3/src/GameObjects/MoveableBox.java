@@ -25,7 +25,7 @@ public class MoveableBox extends GameObject implements VisibleObject {
 	public MoveableBox(Vector3d pos, int squareSize, int height, Physics physics)
 	{
 		this.location = pos;
-		box = new Box(squareSize, height, (float)location.x, (float)location.z);
+		box = new Box(squareSize, height, (float)location.x, (float) location.y, (float)location.z);
 		id = idCount;
 		idCount ++;
 		this.physics = physics;
