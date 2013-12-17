@@ -159,7 +159,7 @@ public class MazeRunner implements GLEventListener {
 			maze = Maze.read(new File("src/Levels/level1.mz"));
 		}
 
-		Physics p = new Physics(maze);
+		Physics p = new Physics(maze, state.getDiffNumber());
 
 		visibleObjects.add( maze );
 		MoveableBox newBox = new MoveableBox(new Vector3d(30, 0, 10), 5, 5, p);
@@ -172,15 +172,15 @@ public class MazeRunner implements GLEventListener {
 
 		// Initialize the player.
 		Vector3d playerPos = new Vector3d(maze.getStart()[0], maze.getStart()[1], maze.getStart()[2]);
-		player = new Player(playerPos, maze.getStart()[3], -45, maze, p);
+		player = new Player(playerPos, maze.getStart()[3], -45, maze, p, state.getDiffNumber());
 
 		visibleObjects.add(player);
-
-		particles = new Swarm(p, maze, (int) maze.MAZE_SIZE/2);
+	
+		particles = new Swarm(p, maze, (int) (maze.MAZE_SIZE*(state.getDiffNumber() + 1))/4, state.getDiffNumber());
 		particles.setCognitive(0.055f);
 		particles.setSocial(0.055f);
 		particles.setInertiaWeight(0.95f);
-		particles.generate((int) maze.MAZE_SIZE/2);
+		particles.generate((int) (maze.MAZE_SIZE*(state.getDiffNumber() + 1))/4);
 		particles.AddToVisible(visibleObjects);
 		p.initParticles(particles);
 
@@ -291,7 +291,7 @@ public class MazeRunner implements GLEventListener {
 			// Calculating time since last frame.
 			timeSinceStart += deltaTime;
 			if(!finished)
-				currentScore = 500 - timeSinceStart / 1000;
+				currentScore = 200*(state.getDiffNumber()+1) - (timeSinceStart*((state.getDiffNumber()*(int)1.2)+1)) / 1000;
 			if(currentScore == 0){
 				dead = true;
 				state.getGSM().setPauseState();

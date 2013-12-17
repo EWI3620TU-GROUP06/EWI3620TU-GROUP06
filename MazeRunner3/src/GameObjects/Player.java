@@ -38,6 +38,7 @@ public class Player extends GameObject implements VisibleObject {
 	private double dX = 0, dZ = 0;
 	private double orientation;
 	private double totalRotation;
+	private int diff;
 
 	private Texture sphereTexture;
 	GLUquadricImpl sphere;
@@ -59,7 +60,7 @@ public class Player extends GameObject implements VisibleObject {
 	 * @param h		the horizontal angle of the orientation in degrees
 	 * @param v		the vertical angle of the orientation in degrees
 	 */
-	public Player( Vector3d pos, double h, double v, Maze maze, Physics p) {
+	public Player( Vector3d pos, double h, double v, Maze maze, Physics p, int difficulty) {
 		// Set the initial position and viewing direction of the player.
 		super( pos );
 		horAngle = h;
@@ -67,6 +68,7 @@ public class Player extends GameObject implements VisibleObject {
 		//speed = new Vector3f(0.0f, 0.0f, 0.0f);
 		//TODO: juiste startpositie bepalen
 		physics = p;
+		this.diff = difficulty;
 	}
 
 	public void init(GL gl)
@@ -187,7 +189,7 @@ public class Player extends GameObject implements VisibleObject {
 		{	
 			if(physics.getLowerContact()){
 				physics.clearForces();
-				physics.applyForce(0, power*40, 0);
+				physics.applyForce(0, power*(40-8*diff), 0);
 			}
 		}
 	}

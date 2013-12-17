@@ -20,20 +20,22 @@ public class Swarm {
 	private float c_soc;
 	private float inertiaWeight;
 	private static int numberofParticles;
+	private int diff;
 	
-	public Swarm(Physics physics, Maze maze, int n){
+	public Swarm(Physics physics, Maze maze, int n, int difficulty){
 		numberofParticles = n;
 		this.physics = physics;
 		this.maze = maze;
 		this.swarm = new ArrayList<Particle>(numberofParticles);
 		this.globalbest = physics.getPlayerPosition();
+		this.diff = difficulty;
 	}
 	
 	public void generate(int numberOfParticles){
 		int n = 0;
 		while(n != (numberOfParticles)){
 			Vector3f temploc = genLocation((float)maze.MAZE_SIZE);
-			swarm.add(new Particle(temploc, this, n));
+			swarm.add(new Particle(temploc, this, n, diff));
 			n++;
 		}
 	}
