@@ -260,6 +260,7 @@ public class Physics {
 		height = height / 2;
 		position.add(new Vector3f(size, height, size));
 		CollisionShape boxShape = new BoxShape(new Vector3f(size, height, size));
+		boxShape.setMargin(0.1f);
 		MotionState boxMotion = new DefaultMotionState(new Transform(new Matrix4f(new Quat4f(0, 0, 0, 1),
 				position, 1.0f)));
 	
@@ -280,6 +281,13 @@ public class Physics {
 		toBeMoved.setLinearVelocity(speed);
 		Vector3f currentPosition = new Vector3f();
 		toBeMoved.getCenterOfMassPosition(currentPosition);
+		return currentPosition;
+	}
+	
+	public Vector3f getBoxLocation(int index)
+	{
+		Vector3f currentPosition = new Vector3f();
+		movingBoxes.get(index).getCenterOfMassPosition(currentPosition);
 		return currentPosition;
 	}
 }
