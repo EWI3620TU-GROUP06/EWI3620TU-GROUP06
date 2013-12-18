@@ -15,18 +15,19 @@ import com.sun.opengl.util.texture.Texture;
 public class CustomMazeObject extends MazeObject{
 
 	private File file;
-	private Texture texture;
+	private static ArrayList<Texture> textures = new ArrayList<Texture>();
 	private boolean hasTexture = false;
+	private int texNum;
 
 	public CustomMazeObject()
 	{
-		super(true);	
+		super(true);
 	}
 
-	public CustomMazeObject(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces, Texture texture)
+	public CustomMazeObject(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces, int texNum)
 	{
 		super(vertices, texVertices, faces);
-		this.texture = texture;
+		this.texNum = texNum;
 	}
 
 	public static CustomMazeObject readFromOBJ(File file)
@@ -96,14 +97,14 @@ public class CustomMazeObject extends MazeObject{
 		return res;
 	}
 
-	public void addTexture(Texture t)
+	public static void addTexture(Texture t)
 	{
-		texture = t;
+		textures.add(t);
 	}
 
 	public Texture getTexture()
 	{
-		return texture;
+		return textures.get(texNum);
 	}
 
 	public void setTexture(GL gl)
@@ -112,8 +113,20 @@ public class CustomMazeObject extends MazeObject{
 		{
 			String fileName = file.getName();
 			String[] name = fileName.split("[.]");
+			texNum = textures.size();
+			System.out.println(file.getName() + " texNum: " + texNum);
 			addTexture(DrawingUtil.initTexture(gl, name[0]));
 		}
+	}
+	
+	public void setTexNum(int n)
+	{
+		texNum = n;
+	}
+	
+	public int getTexNum()
+	{
+		return texNum;
 	}
 
 	public File getFile()
@@ -123,7 +136,6 @@ public class CustomMazeObject extends MazeObject{
 
 	public CustomMazeObject translate(float x, float y, float z)
 	{
-
 		CustomMazeObject res = this.clone();
 		for(Vector3f vertex : res.vertices)
 			vertex.add(new Vector3f(x, y, z));
@@ -137,7 +149,7 @@ public class CustomMazeObject extends MazeObject{
 		{
 			vertices.add((Vector3f)vertex.clone());
 		}
-		return new CustomMazeObject(vertices, this.texVertices, this.faces, this.texture);
+		return new CustomMazeObject(vertices, this.texVertices, this.faces, this.texNum);
 	}
 
 	public boolean equals(Object other)

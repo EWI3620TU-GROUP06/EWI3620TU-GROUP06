@@ -50,7 +50,7 @@ public class Maze implements VisibleObject {
 	private static Texture floorTexture;
 
 	private MazeObject[][] maze = null;
-	public ArrayList<CustomMazeObject> customs = null;
+	public static ArrayList<CustomMazeObject> customs = new ArrayList<CustomMazeObject>();
 	private int customSize = 0;
 
 	public Maze()
@@ -59,16 +59,14 @@ public class Maze implements VisibleObject {
 		for(int i = 0; i < MAZE_SIZE; i++)
 			for(int j = 0; j < MAZE_SIZE; j++)
 				maze[i][j] = new Floor(SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE);
-		customs = new ArrayList<CustomMazeObject>();
 	}
 
-	public Maze(int mazeSize, int[] start, int[] finish, ArrayList<CustomMazeObject> customs, byte[][] newMaze)
+	public Maze(int mazeSize, int[] start, int[] finish, byte[][] newMaze)
 	{
 		MAZE_SIZE = mazeSize;
 		startPosition = start;
 		finishPosition = finish;
 		maze = new MazeObject[MAZE_SIZE][MAZE_SIZE];
-		this.customs = customs;
 		for(int i = 0; i < MAZE_SIZE; i++){
 			for(int j = 0; j < MAZE_SIZE; j++){
 				switch(newMaze[i][j])
@@ -88,17 +86,16 @@ public class Maze implements VisibleObject {
 				}
 			}
 		}
-		customs = new ArrayList<CustomMazeObject>();
 		selected = new boolean[MAZE_SIZE][MAZE_SIZE];
 	}
-	
+
 	public boolean isFinish(double x, double z)
 	{
-		
+
 		return x > finishPosition[0] * SQUARE_SIZE && x < (finishPosition[0] + 1) * SQUARE_SIZE &&
 				z > finishPosition[1] * SQUARE_SIZE && z < (finishPosition[1] + 1) * SQUARE_SIZE;
 	}
-	
+
 	/**
 	 * Initialize the textures used by the maze.
 	 * @param gl	instance of opengl.
@@ -108,7 +105,7 @@ public class Maze implements VisibleObject {
 	{
 		boxTexture = DrawingUtil.initTexture(gl, "wall");
 		floorTexture = DrawingUtil.initTexture(gl, "floor");
-		
+
 		Box.addTexture(boxTexture);
 		Floor.addTexture(floorTexture);
 		Ramp.addTexture(boxTexture);
@@ -165,7 +162,7 @@ public class Maze implements VisibleObject {
 			MAZE_SIZE += n;
 			MazeObject[][]newMaze = new MazeObject[MAZE_SIZE][MAZE_SIZE];
 			boolean[][]newSelected = new boolean[MAZE_SIZE][MAZE_SIZE];
-			
+
 			for (int i = 0; i < newMaze[0].length; i++){
 				for (int j = 0; j < newMaze.length; j++)
 				{
@@ -176,7 +173,7 @@ public class Maze implements VisibleObject {
 					newSelected[i][j] = false;
 				}
 			}
-				
+
 			maze = newMaze;
 			selected = newSelected;
 		}
@@ -307,7 +304,7 @@ public class Maze implements VisibleObject {
 			int[] newFinish = new int[2];
 			newFinish[0] = sc.nextInt();
 			newFinish[1] = sc.nextInt();
-			ArrayList<CustomMazeObject> customs = new ArrayList<CustomMazeObject>();
+			customs = new ArrayList<CustomMazeObject>();
 			sc.nextLine();
 			while(!sc.hasNextByte()){
 				String line = sc.nextLine();
@@ -331,7 +328,7 @@ public class Maze implements VisibleObject {
 				}
 			}
 			sc.close();
-			return new Maze(mazeSize, newStart, newFinish, customs, newMaze);
+			return new Maze(mazeSize, newStart, newFinish, newMaze);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new Maze();
@@ -345,8 +342,24 @@ public class Maze implements VisibleObject {
 	public void display(GL gl) {
 		if(customSize != customs.size())
 		{
-			for(CustomMazeObject obj : customs)
+			for(CustomMazeObject obj : customs){
 				obj.setTexture(gl);
+				for(int i = 0; i < maze[0].length; i++){
+					for(int j = 0; j < maze.length; j++)
+					{
+						MazeObject object = maze[i][j];
+						if(object instanceof CustomMazeObject){
+							CustomMazeObject that = (CustomMazeObject) object;
+							if(that.equals(obj)){
+								that.setTexNum(obj.getTexNum());
+							}
+								
+						}
+					}
+				}
+			}
+			
+
 		}
 		customSize = customs.size();
 		for (int i = 0; i < MAZE_SIZE; i++) {
@@ -388,7 +401,7 @@ public class Maze implements VisibleObject {
 	{
 		return maze[x][z];
 	}
-	
+
 	public MazeObject[] getNeighbourTiles(int x, int z){
 		MazeObject[] res = new MazeObject[4];
 		// The lines below work for the tile relative

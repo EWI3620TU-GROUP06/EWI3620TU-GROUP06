@@ -71,6 +71,12 @@ public class MoveableBox extends GameObject implements VisibleObject {
 			newLocation.sub(new Vector3f(2.5f, 2.5f, 2.5f));
 			box.moveTo(newLocation);
 		}
+		else
+		{
+			Vector3f newLocation = physics.getBoxLocation(id);
+			newLocation.sub(new Vector3f(2.5f, 2.5f, 2.5f));
+			box.moveTo(newLocation);
+		}
 	}
 
 	public static void resetIDs()
