@@ -56,7 +56,7 @@ public class MazeRunner implements GLEventListener {
 	private Camera camera;									// The camera object.
 	private UserInput input;								// The user input object that controls the player.
 	private static Maze maze; 										// The maze.
-	private long previousTime = Calendar.getInstance().getTimeInMillis(); // Used to calculate elapsed time.
+	private long previousTime; // Used to calculate elapsed time.
 	private int timeSinceStart = 0;
 	private GameState state;
 	private GLCanvas canvas;
@@ -271,6 +271,7 @@ public class MazeRunner implements GLEventListener {
 
 		// Set the shading model.
 		gl.glShadeModel( GL.GL_SMOOTH );
+		previousTime = Calendar.getInstance().getTimeInMillis();
 	}
 
 	/**
@@ -299,9 +300,9 @@ public class MazeRunner implements GLEventListener {
 		if (!pause || finished){
 			// Calculating time since last frame.
 			timeSinceStart += deltaTime;
-			if(!finished)
+			if(!finished && state.getLevel() != 0)
 				currentScore = 200*(state.getDiffNumber()+1) - (timeSinceStart*((state.getDiffNumber()*(int)1.2)+1)) / 1000;
-			if(currentScore == 0){
+			if(currentScore == 0 && state.getLevel() != 0){
 				dead = true;
 				state.getGSM().setPauseState();
 			}
@@ -321,6 +322,7 @@ public class MazeRunner implements GLEventListener {
 			if(!finished && (maze.isFinish(pos[0], pos[2])))	
 				{
 					finished = true;
+					if (state.getLevel() != 0)
 					state.setScore(currentScore);
 				}	
 			
@@ -391,9 +393,12 @@ public class MazeRunner implements GLEventListener {
 		
 		if(finished){
 			String name = "fout";
-			if((name = finishclbxman.getText()) != null){
+			if((name = finishclbxman.getText()) != null && state.getLevel() != 0){
 				SqlReadWrite.Write(new Score(name, state.getScore()));
 				showCursor();
+				state.getGSM().setState(gStateMan.HIGHSCORESTATE);
+			}
+			if(state.getLevel() == 0){
 				state.getGSM().setState(gStateMan.HIGHSCORESTATE);
 			}
 		}
