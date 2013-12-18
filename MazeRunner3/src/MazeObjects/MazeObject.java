@@ -338,7 +338,7 @@ public abstract class MazeObject {
 			{
 				ArrayList<Vector3f> thatFacePoints = that.getFaceVertices(j);
 				ArrayList<Vector3f> commonVertices = retainAll(thisFacePoints, thatFacePoints);
-				if(commonVertices.size() == thatFacePoints.size())
+				if(commonVertices.size() == thatFacePoints.size() && commonVertices.size() == thisFacePoints.size())
 				{
 					this.faces.remove(i);
 					that.faces.remove(j);
