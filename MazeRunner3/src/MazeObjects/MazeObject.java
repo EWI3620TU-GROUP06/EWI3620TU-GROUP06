@@ -145,6 +145,8 @@ public abstract class MazeObject {
 				texture.bind();
 			}
 			gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);
+			gl.glMaterialfv( GL.GL_FRONT, GL.GL_SPECULAR, wallColour, 0);
+			gl.glMateriali( GL.GL_FRONT, GL.GL_SHININESS, 50);
 			Vector3f normal = face.getNormal();
 
 			gl.glNormal3d(normal.x, normal.y, normal.z);

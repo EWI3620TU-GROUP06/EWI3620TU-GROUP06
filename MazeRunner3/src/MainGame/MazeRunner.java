@@ -264,9 +264,9 @@ public class MazeRunner implements GLEventListener {
 		gl.glEnable( GL.GL_DEPTH_TEST );
 
 		// Set and enable the lighting.		
-		float lightColour[] = { 0.00f, 0.00f, 0.00f, 0.0f };				// No ambient
-		float specColour[] = {1f, 1f, 1f, 0f}; //white diffuse
-		float diffColour[] = {1f, 1f, 1f, 0f}; //white specular
+		float lightColour[] = { 0.1f, 0.1f, 0.1f, 1.0f };	// No ambient
+		float diffColour[] = {1f, 1f, 1f, 1.0f}; //White diffuse
+		float specColour[] = {1f, 1f, 1f, 1.0f}; //white specular
 		gl.glLightfv( GL.GL_LIGHT0, GL.GL_POSITION, lightPosition, 0 );	// Note that we're setting Light0.
 		gl.glLightfv( GL.GL_LIGHT0, GL.GL_AMBIENT, lightColour, 0);
 		gl.glLightfv( GL.GL_LIGHT0, GL.GL_SPECULAR, specColour, 0);
