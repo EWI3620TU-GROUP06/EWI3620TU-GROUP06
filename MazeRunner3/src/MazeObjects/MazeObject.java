@@ -260,9 +260,16 @@ public abstract class MazeObject {
 		return vertices.get(index);
 	}
 
-	public int[] getFace(int index)
+	public Face getFace(int index)
 	{
-		return faces.get(index).getVertices();
+		return faces.get(index);
+	}
+	
+	public float getD(int index)
+	{
+		Vector3f normal = faces.get(index).getNormal();
+		Vector3f vertex1 = vertices.get(faces.get(index).getVertices()[0]);
+		return - normal.x*vertex1.x - normal.y*vertex1.y - normal.z*vertex1.z;
 	}
 
 	public float getRestitution()
