@@ -222,12 +222,12 @@ public class Editor extends GameObject{
 	
 	public void addObject(CustomMazeObject obj)
 	{
-		if(!maze.customs.contains(obj)){
-			maze.customs.add(obj);
-			drawMode = (byte)(6 + maze.customs.size());
+		if(!Maze.customs.contains(obj)){
+			Maze.customs.add(obj);
+			drawMode = (byte)(6 + Maze.customs.size());
 		}
 		else
-			drawMode = (byte)(6 + maze.customs.indexOf(obj));
+			drawMode = (byte)(6 + Maze.customs.indexOf(obj));
 		
 	}
 
