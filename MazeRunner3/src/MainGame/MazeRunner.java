@@ -18,6 +18,7 @@ import HighScore.SqlReadWrite;
 import HighScore.Score;
 import Listening.UserInput;
 import Main.Game;
+import MazeObjects.SkyBox;
 import PSO.Swarm;
 
 import java.awt.Cursor;
@@ -79,6 +80,7 @@ public class MazeRunner implements GLEventListener {
 	private ArrayList<MoveableBox> boxes = new ArrayList<MoveableBox>();
 	private ArrayList<PowerUp> powerUps = new ArrayList<PowerUp>(); 
 	float lightPosition[] = { (float)maze.getSize()/2f, 50.0f, (float)maze.getSize()/2f, 1.0f };
+	private SkyBox skybox;
 
 	/*
 	 * **********************************************
@@ -173,8 +175,6 @@ public class MazeRunner implements GLEventListener {
 		newBox.setCount(1);
 		boxes.add(newBox);
 		visibleObjects.add(newBox);
-		
-		
 
 		// Initialize the player.
 		Vector3d playerPos = new Vector3d(maze.getStart()[0], maze.getStart()[1], maze.getStart()[2]);
@@ -196,7 +196,11 @@ public class MazeRunner implements GLEventListener {
 		p.initParticles(particles);
 
 		camera = new Camera(player.getLocation(), player.getHorAngle(), player.getVerAngle() );
-
+		
+		skybox = new SkyBox(200, 200, (float) (camera.getLocation().x - 100), (float) (camera.getLocation().y - 100), (float) (camera.getLocation().z - 100));
+		
+		visibleObjects.add(skybox);
+		
 		input = state.getGSM().getInput();
 		AddListening(input);
 		player.setControl(input);
@@ -247,6 +251,7 @@ public class MazeRunner implements GLEventListener {
 		
 		particles.init(gl);
 		Maze.initTextures(gl);
+		skybox.init(gl);
 		player.init(gl);
 
 		gl.glClearColor(0, 0, 0, 0);								// Set the background color.

@@ -1,11 +1,17 @@
 package MazeObjects;
 
+import javax.media.opengl.GL;
 import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 
+import Drawing.DrawingUtil;
+import Drawing.VisibleObject;
+
 import com.sun.opengl.util.texture.Texture;
 
-public class SkyBox extends MazeObject {
+public class SkyBox extends MazeObject implements VisibleObject{
+	
+	private static Texture texture;
 
 	public SkyBox(float width, float height, float x, float y, float z)
 	{
@@ -61,8 +67,20 @@ public class SkyBox extends MazeObject {
 	
 	@Override
 	public Texture getTexture() {
-		// TODO Auto-generated method stub
-		return null;
+		return texture;
+	}
+	
+	public static void addTexture(Texture t)
+	{
+		texture = t;
+	}
+	
+	public void init(GL gl){
+		texture = DrawingUtil.initTexture(gl, "skybox");
 	}
 
+	@Override
+	public void display(GL gl) {
+		this.draw(gl, new float[]{1f, 1f, 1f, 1f});
+	}
 }
