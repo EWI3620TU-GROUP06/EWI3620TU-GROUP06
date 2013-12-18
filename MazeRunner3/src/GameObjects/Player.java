@@ -220,6 +220,8 @@ public class Player extends GameObject implements VisibleObject {
 		sphereTexture.enable(); // Enable the ball texture
 		sphereTexture.bind(); 
 		gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, ballColour, 0);
+		gl.glMaterialfv( GL.GL_FRONT, GL.GL_SPECULAR, ballColour, 0);
+		gl.glMateriali( GL.GL_FRONT, GL.GL_SHININESS, 100);
 		gl.glPushMatrix();
 		double pos[] = new double[3];
 		location.get(pos);

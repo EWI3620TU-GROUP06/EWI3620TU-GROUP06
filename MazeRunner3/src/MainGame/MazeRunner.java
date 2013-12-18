@@ -78,6 +78,7 @@ public class MazeRunner implements GLEventListener {
 	private int timer = 0;
 	private ArrayList<MoveableBox> boxes = new ArrayList<MoveableBox>();
 	private ArrayList<PowerUp> powerUps = new ArrayList<PowerUp>(); 
+	float lightPosition[] = { (float)maze.getSize()/2f, 50.0f, (float)maze.getSize()/2f, 1.0f };
 
 	/*
 	 * **********************************************
@@ -262,11 +263,14 @@ public class MazeRunner implements GLEventListener {
 		// Enable Z-buffering.
 		gl.glEnable( GL.GL_DEPTH_TEST );
 
-		// Set and enable the lighting.
-		float lightPosition[] = { 0.0f, 50.0f, 0.0f, 1.0f }; 			// High up in the sky!
-		float lightColour[] = { 1.0f, 1.0f, 1.0f, 0.0f };				// White light!
+		// Set and enable the lighting.		
+		float lightColour[] = { 0.00f, 0.00f, 0.00f, 0.0f };				// No ambient
+		float specColour[] = {1f, 1f, 1f, 0f}; //white diffuse
+		float diffColour[] = {1f, 1f, 1f, 0f}; //white specular
 		gl.glLightfv( GL.GL_LIGHT0, GL.GL_POSITION, lightPosition, 0 );	// Note that we're setting Light0.
 		gl.glLightfv( GL.GL_LIGHT0, GL.GL_AMBIENT, lightColour, 0);
+		gl.glLightfv( GL.GL_LIGHT0, GL.GL_SPECULAR, specColour, 0);
+		gl.glLightfv( GL.GL_LIGHT0, GL.GL_DIFFUSE, diffColour, 0);
 		gl.glEnable( GL.GL_LIGHTING );
 		gl.glEnable( GL.GL_LIGHT0 );
 
@@ -291,7 +295,7 @@ public class MazeRunner implements GLEventListener {
 
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT );
 		gl.glLoadIdentity();
-
+		
 		Calendar now = Calendar.getInstance();		
 		long currentTime = now.getTimeInMillis();
 		int deltaTime = (int)(currentTime - previousTime);
@@ -327,7 +331,6 @@ public class MazeRunner implements GLEventListener {
 					state.setScore(currentScore);
 				}	
 			
-			
 		}
 		//Always change the camera and draw the game-world
 		double[] pos = new double[3];
@@ -343,6 +346,8 @@ public class MazeRunner implements GLEventListener {
 		glu.gluLookAt(pos[0], pos[1], pos[2], 
 				vrp[0], vrp[1], vrp[2], vuv[0], vuv[1], vuv[2]);
 
+		gl.glLightfv( GL.GL_LIGHT0, GL.GL_POSITION, lightPosition, 0 );	
+		
 		// Display all the visible objects of MazeRunner.
 		for( Iterator<VisibleObject> it = visibleObjects.iterator(); it.hasNext(); ) {
 			it.next().display(gl);
