@@ -135,6 +135,10 @@ public abstract class MazeObject {
 
 	public void draw(GL gl, float[] wallColour)
 	{
+		gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);
+		gl.glMaterialfv( GL.GL_FRONT, GL.GL_SPECULAR, wallColour, 0);
+		gl.glMateriali( GL.GL_FRONT, GL.GL_SHININESS, 50);
+		
 		for(int j = 0; j < faces.size(); j++)
 		{
 			Face face = faces.get(j);
@@ -144,9 +148,6 @@ public abstract class MazeObject {
 				texture.enable();
 				texture.bind();
 			}
-			gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);
-			gl.glMaterialfv( GL.GL_FRONT, GL.GL_SPECULAR, wallColour, 0);
-			gl.glMateriali( GL.GL_FRONT, GL.GL_SHININESS, 50);
 			Vector3f normal = face.getNormal();
 
 			gl.glNormal3d(normal.x, normal.y, normal.z);
@@ -262,9 +263,9 @@ public abstract class MazeObject {
 		return vertices.get(index);
 	}
 
-	public Face getFace(int index)
+	public int[] getFace(int index)
 	{
-		return faces.get(index);
+		return faces.get(index).getVertices();
 	}
 	
 	public float getD(int index)
