@@ -114,7 +114,6 @@ public class CustomMazeObject extends MazeObject{
 			String fileName = file.getName();
 			String[] name = fileName.split("[.]");
 			texNum = textures.size();
-			System.out.println(file.getName() + " texNum: " + texNum);
 			addTexture(DrawingUtil.initTexture(gl, name[0]));
 		}
 	}

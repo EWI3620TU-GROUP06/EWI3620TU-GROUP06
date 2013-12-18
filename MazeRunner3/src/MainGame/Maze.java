@@ -88,6 +88,22 @@ public class Maze implements VisibleObject {
 		}
 		selected = new boolean[MAZE_SIZE][MAZE_SIZE];
 	}
+	
+	public void removeRedundantFaces()
+	{
+		for(int i = 0; i < maze[0].length; i++){
+			for(int j  = 0; j < maze.length; j++){
+				if(i != maze[0].length - 1)
+				{
+					maze[i][j].removeRedunantFaces(maze[i + 1][j]);
+				}
+				if(j != maze.length - 1)
+				{
+					maze[i][j].removeRedunantFaces(maze[i][j + 1]);
+				}
+			}
+		}
+	}
 
 	public boolean isFinish(double x, double z)
 	{
@@ -222,7 +238,7 @@ public class Maze implements VisibleObject {
 						maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE, angle, i * SQUARE_SIZE, 0, j * SQUARE_SIZE);
 						break;
 					case 6:
-						maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE / 2, angle, 0, i * SQUARE_SIZE, j * SQUARE_SIZE);
+						maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE / 2, angle, i * SQUARE_SIZE, 0, j * SQUARE_SIZE);
 						break;
 					default : maze[i][j] = customs.get(drawMode - 7).translate(i * SQUARE_SIZE, 0, j*SQUARE_SIZE);
 					}

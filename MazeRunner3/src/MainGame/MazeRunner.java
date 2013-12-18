@@ -160,6 +160,7 @@ public class MazeRunner implements GLEventListener {
 		if (maze == null){
 			maze = Maze.read(new File("src/Levels/level1.mz"));
 		}
+		maze.removeRedundantFaces();
 
 		Physics p = new Physics(maze, state.getDiffNumber());
 
