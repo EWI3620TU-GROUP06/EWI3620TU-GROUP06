@@ -174,6 +174,8 @@ public class Physics {
 	{
 		// Runs the JBullet physics simulation for the specified time in seconds.
 		dynamicsWorld.stepSimulation(deltaTime/1000f); //Parameter for stepsim should be in seconds! deltaTime was in millisecs!
+		
+		//TODO:Dit stuk hieronder is de grote boosdoener voor FPS. Dit doen we voor geluid
 		boolean contact = getContact();
 		if(contact && !previous)
 		{
