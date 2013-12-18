@@ -323,6 +323,7 @@ public class MazeRunner implements GLEventListener {
 			particles.update(deltaTime);
 			player.update(deltaTime);
 			updateCamera();
+			skybox.moveTo(new Vector3f((float) (camera.getLocation().x - 100), (float) (camera.getLocation().y - 100), (float) (camera.getLocation().z - 100)));
 			double pos[] = new double[3];
 			player.getLocation().get(pos);
 			if(pos[1] < -10){
