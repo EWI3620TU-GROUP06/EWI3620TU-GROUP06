@@ -5,6 +5,7 @@ import Drawing.DrawingUtil;
 import Drawing.VisibleObject;
 import MazeObjects.Box;
 import MazeObjects.CustomMazeObject;
+import MazeObjects.FinishTile;
 import MazeObjects.Floor;
 import MazeObjects.MazeObject;
 import MazeObjects.Ramp;
@@ -48,6 +49,7 @@ public class Maze implements VisibleObject {
 
 	private static Texture boxTexture;
 	private static Texture floorTexture;
+	private static Texture finishTexture;
 
 	private MazeObject[][] maze = null;
 	public static ArrayList<CustomMazeObject> customs = new ArrayList<CustomMazeObject>();
@@ -121,11 +123,13 @@ public class Maze implements VisibleObject {
 	{
 		boxTexture = DrawingUtil.initTexture(gl, "wall");
 		floorTexture = DrawingUtil.initTexture(gl, "floor");
+		finishTexture = DrawingUtil.initTexture(gl, "finish");
 
 		Box.addTexture(boxTexture);
 		Floor.addTexture(floorTexture);
 		Ramp.addTexture(boxTexture);
 		StartArrow.addTexture(floorTexture);
+		FinishTile.addTexture(finishTexture);
 	}
 
 	/**
@@ -230,7 +234,7 @@ public class Maze implements VisibleObject {
 						maze[i][j] = new StartArrow(SQUARE_SIZE, angle, i * SQUARE_SIZE, j * SQUARE_SIZE);
 						break;
 					case 4 : 
-						maze[i][j] = new Floor(SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE);
+						maze[i][j] = new FinishTile(SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE);
 						finishPosition[0] = i;
 						finishPosition[1] = j;
 						break;
