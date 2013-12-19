@@ -71,9 +71,6 @@ public class Maze implements VisibleObject {
 		maze = new MazeObject[MAZE_SIZE][MAZE_SIZE];
 		for(int i = 0; i < MAZE_SIZE; i++){
 			for(int j = 0; j < MAZE_SIZE; j++){
-				if(finishPosition[0] == i && finishPosition[1] == j){
-					new FinishTile(SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE);
-				}
 				switch(newMaze[i][j])
 				{
 				case 0 : maze[i][j] = new Floor(SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
