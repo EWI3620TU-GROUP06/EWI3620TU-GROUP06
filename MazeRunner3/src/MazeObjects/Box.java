@@ -6,12 +6,13 @@ import com.sun.opengl.util.texture.Texture;
 
 public class Box extends MazeObject{
 	
-	protected float height;
 	private static Texture texture;
 	
 	public Box(float width, float height, float x, float y, float z)
 	{
 		super(false);
+		this.width = width;
+		this.height = height;
 		addVertex(new Vector3f(x, y, z));
 		addVertex(new Vector3f(x+width, y, z));
 		addVertex(new Vector3f(x+width, y + height, z));
@@ -20,8 +21,6 @@ public class Box extends MazeObject{
 		addVertex(new Vector3f(x+width, y, z+width));
 		addVertex(new Vector3f(x+width, y + height, z+width));
 		addVertex(new Vector3f(x, y + height, z+width));
-		
-		this.height= height;
 		
 		int[] face0 = {0, 1, 5, 4};
 		addFace(face0);

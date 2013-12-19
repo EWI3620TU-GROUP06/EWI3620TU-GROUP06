@@ -1,6 +1,8 @@
 package GameObjects;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import javax.media.opengl.GL;
 import javax.vecmath.Vector3d;
@@ -22,15 +24,20 @@ public class MoveableBox extends GameObject implements VisibleObject {
 	private boolean isMoving = true;
 	private int count = -1;
 
-	public MoveableBox(Vector3d pos, int squareSize, int height, Physics physics)
+	public MoveableBox(Vector3d pos, float squareSize, float height)
 	{
 		this.location = pos;
 		box = new Box(squareSize, height, (float)location.x, (float) location.y, (float)location.z);
 		id = idCount;
 		idCount ++;
-		this.physics = physics;
-		physics.addBox(new Vector3f((float)pos.x, (float)pos.y, (float)pos.z), squareSize, height);
+		
 		clearPath();
+	}
+	
+	public void setPhysics(Physics physics)
+	{
+		this.physics = physics;
+		physics.addBox(new Vector3f((float)location.x, (float)location.y, (float)location.z), box.width, box.height);
 	}
 
 	public void addToPath(int time, Vector3f direction)
@@ -98,6 +105,60 @@ public class MoveableBox extends GameObject implements VisibleObject {
 	public void setMoving(boolean moving)
 	{
 		isMoving =  moving;
+	}
+	
+	public void write(PrintWriter wr)
+	{
+		try{
+			int previousTime = 0;
+			wr.write(location.x + " " + location.y + " " + location.z + " " + box.width + " " + box.height + " " + count + "\n");
+		    for(int i = 0; i < pathDirection.size(); i++)
+		    {
+		    	wr.write(pathTime.get(i) - previousTime + "," + pathDirection.get(i).x + "," + pathDirection.get(i).y + "," + pathDirection.get(i).z + ";");
+		    	previousTime = pathTime.get(i);
+		    }
+		    wr.write("\n");
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public static MoveableBox read(Scanner sc)
+	{
+		try{
+			String text = sc.next();
+			double x = Double.parseDouble(text);
+			text = sc.next();
+			double y = Double.parseDouble(text);
+			text = sc.next();
+			double z = Double.parseDouble(text);
+			text = sc.next();
+			float width = Float.parseFloat(text);
+			text = sc.next();
+			float height = Float.parseFloat(text);
+			int count = sc.nextInt();
+			MoveableBox res = new MoveableBox(new Vector3d(x, y, z), width, height);
+			res.setCount(count);
+			sc.nextLine();
+			String line =  sc.nextLine();
+			String[] path = line.split("[;]");
+			for(String pathElement : path)
+			{
+				String[] pathSteps = pathElement.split("[,]");
+				if(pathSteps.length > 3){
+					Vector3f direction = new Vector3f(Float.parseFloat(pathSteps[1]), Float.parseFloat(pathSteps[2]), Float.parseFloat(pathSteps[3]));
+					res.addToPath(Integer.parseInt(pathSteps[0]), direction);
+				}
+			}
+			return res;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 }

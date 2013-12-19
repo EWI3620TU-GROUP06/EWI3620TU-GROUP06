@@ -3,7 +3,7 @@ package Listening;
 import java.io.File;
 
 import GameStates.gStateMan;
-import MainGame.Maze;
+import MainGame.Level;
 import MainGame.MazeRunner;
 
 public class NextLevelCommand implements Command {
@@ -17,12 +17,12 @@ public class NextLevelCommand implements Command {
 	}
 	@Override
 	public void execute() {
-		int level = this.gsm.getState(this.gsm.getCurState()).getLevel() + 1;
-		if(level > 3)
-			level = 1;
-		this.gsm.getState(this.gsm.getCurState()).setLevel(level);
-		Maze maze = Maze.read(new File("src/Levels/level" + level + ".mz"));
-		MazeRunner.setMaze(maze);
+		int lvl = this.gsm.getState(this.gsm.getCurState()).getLevel() + 1;
+		if(lvl > 3)
+			lvl = 1;
+		this.gsm.getState(this.gsm.getCurState()).setLevel(lvl);
+		Level level = Level.readLevel(new File("src/Levels/level" + lvl + ".mz"));
+		MazeRunner.setLevel(level);
 		this.gsm.setState(gStateMan.PLAYSTATE);
 	}
 

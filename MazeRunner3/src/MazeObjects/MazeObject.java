@@ -17,9 +17,11 @@ import com.sun.opengl.util.texture.Texture;
  */
 public abstract class MazeObject {
 
-	ArrayList<Vector3f> vertices;
-	ArrayList<Face> faces;
-	ArrayList<Vector2f> texVertices;
+	protected ArrayList<Vector3f> vertices;
+	protected ArrayList<Face> faces;
+	protected ArrayList<Vector2f> texVertices;
+	public float width;
+	public float height;
 
 	float restitution;
 
@@ -253,6 +255,13 @@ public abstract class MazeObject {
 			else
 				return (byte) (ramp.orientation / 90 + 8);
 		}
+		if(this instanceof FinishTile)
+			return 3;
+		if(this instanceof StartArrow)
+		{
+			StartArrow startArrow = (StartArrow) this;
+			return (byte)(startArrow.orientation / 90 + 12);
+		}
 		if(this instanceof CustomMazeObject)
 			return -1;
 		return 0;
@@ -367,5 +376,10 @@ public abstract class MazeObject {
 		}
 		
 		return res;
+	}
+	
+	public Vector3f getPos()
+	{
+		return vertices.get(0);
 	}
 }

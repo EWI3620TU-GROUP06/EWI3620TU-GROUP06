@@ -1,7 +1,7 @@
 package Listening;
 
 import GameObjects.Editor;
-import MainGame.Maze;
+import MainGame.Level;
 
 public class OpenCommand implements Command{
 	
@@ -13,9 +13,9 @@ public class OpenCommand implements Command{
 	}
 	
 	public void execute() {
-		Maze maze = Editor.readMaze();
-		if(maze != null)
-			editor.setMaze(maze);
+		Level level = Editor.readLevel();
+		if(level != null)
+			editor.setLevel(level);
 		
 	}
 }

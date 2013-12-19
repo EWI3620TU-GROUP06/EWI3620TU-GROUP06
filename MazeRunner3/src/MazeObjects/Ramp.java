@@ -13,6 +13,8 @@ public class Ramp extends MazeObject{
 	public Ramp(float width, float height, int orientation, float x, float y, float z)
 	{
 		super(false);
+		this.width = width;
+		this.height = height;
 		addVertex(new Vector3f(x, y, z));
 		addVertex(new Vector3f(x+width, y, z));
 		addVertex(new Vector3f(x+width, y + height, z));

@@ -48,7 +48,7 @@ public class MazeEditor implements GLEventListener {
 	private Camera camera; // The camera object.
 	private Editor editor; // The editor object;
 	private UserInput input; // The user input object that controls the player/editor.
-	private Maze maze; // The maze.
+	private Level level; // The maze.
 	private GameState state;
 	private Game game;
 	private FPSAnimator anim;
@@ -142,15 +142,15 @@ public class MazeEditor implements GLEventListener {
 		// displayed by MazeRunner.
 		visibleObjects = new ArrayList<VisibleObject>();
 		// Add the maze that we will be using.
-		maze = new Maze();
+		level = new Level(new Maze());
 
-		visibleObjects.add(maze);
+		visibleObjects.add(level.getMaze());
 
-		editor = new Editor(new Vector3d(maze.getSize() / 2, 60, maze.getSize()/2), 0, -89.99999);
+		editor = new Editor(new Vector3d(level.getMaze().getSize() / 2, 60, level.getMaze().getSize()/2), 0, -89.99999);
 
 		camera = new Camera(editor.getLocation(), editor.getHorAngle(), editor.getVerAngle());		
 
-		editBoxManager = new EditBoxManager(maze, editor, screenWidth, screenHeight);
+		editBoxManager = new EditBoxManager(level.getMaze(), editor, screenWidth, screenHeight);
 
 		input = state.getGSM().getInput();
 		AddListening(input);
@@ -159,7 +159,7 @@ public class MazeEditor implements GLEventListener {
 
 		editor.setControl(input);
 		editor.setFOV(FOV);
-		editor.setMaze(maze);
+		editor.setLevel(level);
 
 		editor.setEditBoxManager(editBoxManager);
 	}
@@ -243,12 +243,12 @@ public class MazeEditor implements GLEventListener {
 			editBoxManager.update();
 			editor.update(screenWidth, screenHeight);
 
-			if(editor.getMaze() != visibleObjects.get(0))
+			if(editor.getLevel().getMaze() != visibleObjects.get(0))
 			{
-				maze = editor.getMaze();
+				level = editor.getLevel();
 
 				visibleObjects.remove(0);
-				visibleObjects.add(0, maze);
+				visibleObjects.add(0, level.getMaze());
 			}
 			updateCamera();
 		}
