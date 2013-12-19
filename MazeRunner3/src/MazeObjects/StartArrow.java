@@ -6,7 +6,7 @@ import com.sun.opengl.util.texture.Texture;
 
 public class StartArrow extends MazeObject {
 
-	private float orientation;
+	protected float orientation;
 	private static Texture texture;
 
 	public StartArrow(float width, float angle, float x, float z)
@@ -18,17 +18,9 @@ public class StartArrow extends MazeObject {
 		addVertex(new Vector3f(x, 0, z + width));
 		addVertex(new Vector3f(x + width, 0, z + width));
 		addVertex(new Vector3f(x + width, 0, z));
-		addVertex(new Vector3f(x+width/2, (float)0.01, z+width/2));
-		addVertex(new Vector3f(x+width / 3, (float)0.01, z+width / 3));
-		addVertex(new Vector3f(x+width / 2, (float)0.01, z+width));
-		addVertex(new Vector3f(x+width * 2 / 3, (float)0.01, z+width / 3));
 		
-
 		int face0[] = {0,1,2,3};
 		addFace(face0);
-		
-		int face1[] = {4,5,6,7};
-		addFace(face1);
 
 		rotateVerticesY(angle, x + 2.5, z + 2.5);
 		orientation = angle;

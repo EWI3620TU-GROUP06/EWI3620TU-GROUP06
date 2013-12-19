@@ -27,7 +27,6 @@ public class FinishTile extends MazeObject {
 
 	@Override
 	public Texture getTexture() {
-		System.out.println("added texture");
 		return texture;
 	}
 

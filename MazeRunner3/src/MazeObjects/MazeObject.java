@@ -255,6 +255,13 @@ public abstract class MazeObject {
 			else
 				return (byte) (ramp.orientation / 90 + 8);
 		}
+		if(this instanceof FinishTile)
+			return 3;
+		if(this instanceof StartArrow)
+		{
+			StartArrow startArrow = (StartArrow) this;
+			return (byte)(startArrow.orientation / 90 + 12);
+		}
 		if(this instanceof CustomMazeObject)
 			return -1;
 		return 0;
@@ -369,5 +376,10 @@ public abstract class MazeObject {
 		}
 		
 		return res;
+	}
+	
+	public Vector3f getPos()
+	{
+		return vertices.get(0);
 	}
 }

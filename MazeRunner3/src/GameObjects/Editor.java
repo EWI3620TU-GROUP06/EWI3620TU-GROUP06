@@ -14,6 +14,14 @@ import MazeObjects.CustomMazeObject;
 
 public class Editor extends GameObject{
 
+	public static final byte DRAW_EMPTY = 0;
+	public static final byte DRAW_BOX = 1;
+	public static final byte DRAW_LOW_BOX = 2;
+	public static final byte DRAW_START = 3;
+	public static final byte DRAW_FINISH = 4;
+	public static final byte DRAW_RAMP = 5;
+	public static final byte DRAW_LOW_RAMP = 6;
+	
 	private float FOV;
 
 	private Control control; 

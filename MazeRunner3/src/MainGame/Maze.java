@@ -3,6 +3,7 @@ import javax.media.opengl.GL;
 
 import Drawing.DrawingUtil;
 import Drawing.VisibleObject;
+import GameObjects.Editor;
 import MazeObjects.Box;
 import MazeObjects.CustomMazeObject;
 import MazeObjects.FinishTile;
@@ -74,10 +75,9 @@ public class Maze implements VisibleObject {
 				switch(newMaze[i][j])
 				{
 				case 0 : maze[i][j] = new Floor(SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
-				// TODO weer terug zetten naar box
-				//case 1 : maze[i][j] = new FinishTile(SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE);break;
 				case 1 : maze[i][j] = new Box(SQUARE_SIZE, SQUARE_SIZE, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
 				case 2 : maze[i][j] = new Box(SQUARE_SIZE, (float)SQUARE_SIZE/2, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
+				case 3 : maze[i][j] = new FinishTile(SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
 				case 4 : maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE, 0, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
 				case 5 : maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE, 90, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
 				case 6 : maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE, 180, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
@@ -86,6 +86,10 @@ public class Maze implements VisibleObject {
 				case 9 : maze[i][j] = new Ramp(SQUARE_SIZE, (float)SQUARE_SIZE/2, 90, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
 				case 10 : maze[i][j] = new Ramp(SQUARE_SIZE, (float)SQUARE_SIZE/2, 180, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
 				case 11 : maze[i][j] = new Ramp(SQUARE_SIZE, (float)SQUARE_SIZE/2, 270, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
+				case 12 : maze[i][j] = new StartArrow(SQUARE_SIZE, 0, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
+				case 13 : maze[i][j] = new StartArrow(SQUARE_SIZE, 90, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
+				case 14 : maze[i][j] = new StartArrow(SQUARE_SIZE, 180, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
+				case 15 : maze[i][j] = new StartArrow(SQUARE_SIZE, 270, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
 				default : maze[i][j] = customs.get(-(newMaze[i][j] + 1)).translate(SQUARE_SIZE * i, 0, SQUARE_SIZE * j);
 				}
 			}
@@ -229,28 +233,29 @@ public class Maze implements VisibleObject {
 	{
 		for(int i = 0; i < MAZE_SIZE; i++)
 			for (int j = 0; j < MAZE_SIZE; j++)
-				if (selected[i][j] && !(drawMode != 3 && i == startPosition[0] && j == startPosition[2])
-						&& !(i == finishPosition[0] && j == finishPosition[1])) {
+				if (selected[i][j]) {
 					switch(drawMode)
 					{
-					case 0 : maze[i][j] = maze[i][j] = new Floor(SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
-					case 1 : maze[i][j] = new Box(SQUARE_SIZE, SQUARE_SIZE, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
-					case 2 : maze[i][j]  = new Box(SQUARE_SIZE, SQUARE_SIZE/2, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
-					case 3 : 
+					case Editor.DRAW_EMPTY : maze[i][j] = maze[i][j] = new Floor(SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
+					case Editor.DRAW_BOX : maze[i][j] = new Box(SQUARE_SIZE, SQUARE_SIZE, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
+					case Editor.DRAW_LOW_BOX : maze[i][j]  = new Box(SQUARE_SIZE, SQUARE_SIZE/2, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
+					case Editor.DRAW_START : 
+						maze[startPosition[0]][startPosition[2]] = new Floor(SQUARE_SIZE, startPosition[0] * SQUARE_SIZE, startPosition[2] * SQUARE_SIZE);
 						startPosition[0] = i;
 						startPosition[2] = j;
 						startPosition[3] = angle;
 						maze[i][j] = new StartArrow(SQUARE_SIZE, angle, i * SQUARE_SIZE, j * SQUARE_SIZE);
 						break;
-					case 4 : 
+					case Editor.DRAW_FINISH :
+						maze[finishPosition[0]][finishPosition[1]] = new Floor(SQUARE_SIZE, finishPosition[0] * SQUARE_SIZE, finishPosition[1] * SQUARE_SIZE);
 						maze[i][j] = new FinishTile(SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE);
 						finishPosition[0] = i;
 						finishPosition[1] = j;
 						break;
-					case 5:
+					case Editor.DRAW_RAMP:
 						maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE, angle, i * SQUARE_SIZE, 0, j * SQUARE_SIZE);
 						break;
-					case 6:
+					case Editor.DRAW_LOW_RAMP:
 						maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE / 2, angle, i * SQUARE_SIZE, 0, j * SQUARE_SIZE);
 						break;
 					default : maze[i][j] = customs.get(drawMode - 7).translate(i * SQUARE_SIZE, 0, j*SQUARE_SIZE);
