@@ -13,6 +13,11 @@ public class FinishTile extends MazeObject {
 		addVertex(new Vector3f(x, 0, z + width));
 		addVertex(new Vector3f(x + width, 0, z + width));
 		addVertex(new Vector3f(x + width, 0, z));
+		
+		int face0[] = {0,1,2,3};
+		addFace(face0);
+		
+		restitution = 0.8f;
 	}
 	
 	public static void addTexture(Texture t)
@@ -22,7 +27,7 @@ public class FinishTile extends MazeObject {
 
 	@Override
 	public Texture getTexture() {
-		
+		System.out.println("added texture");
 		return texture;
 	}
 
