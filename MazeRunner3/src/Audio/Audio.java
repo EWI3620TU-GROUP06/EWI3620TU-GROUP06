@@ -6,6 +6,8 @@ import java.io.File;
 public class Audio {
 	
 	private static BackgroundMusic music = null;
+	private static String previousSound = "";
+	private static Sound s;
 	
 	public static void playMusic(String musicName) {
 		try{
@@ -23,12 +25,18 @@ public class Audio {
 	}
 
 	public static void playSound(String soundName) {
-		try{
-			soundName = "src/Music/" + soundName + ".wav";
-			new Sound(new File(soundName));	
+		if(!soundName.equals(previousSound)){
+			try{
+				soundName = "src/Music/" + soundName + ".wav";
+				s = new Sound(new File(soundName));
+				previousSound = soundName;
+			}
+			catch(Exception e){
+				e.printStackTrace();
+			}
 		}
-		catch(Exception e){
-			e.printStackTrace();
+		else{
+			s.run();
 		}
 	}
 }

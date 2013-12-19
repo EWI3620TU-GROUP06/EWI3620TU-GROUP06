@@ -194,7 +194,7 @@ public class MazeRunner implements GLEventListener {
 		particles.generate((int) (maze.MAZE_SIZE*(state.getDiffNumber() + 1))/4);
 		particles.AddToVisible(visibleObjects);
 		p.initParticles(particles);
-
+		
 		camera = new Camera(player.getLocation(), player.getHorAngle(), player.getVerAngle() );
 		
 		skybox = new SkyBox(200, 200, (float) (camera.getLocation().x - 100), (float) (camera.getLocation().y - 100), (float) (camera.getLocation().z - 100));

@@ -2,11 +2,11 @@ package MainGame;
 
 import java.util.ArrayList;
 
-import Audio.Audio;
 import MazeObjects.MazeObject;
 import PSO.Particle;
 import PSO.Swarm;
 
+import com.bulletphysics.BulletGlobals;
 import com.bulletphysics.collision.broadphase.BroadphaseInterface;
 import com.bulletphysics.collision.broadphase.DbvtBroadphase;
 import com.bulletphysics.collision.dispatch.CollisionConfiguration;
@@ -65,6 +65,7 @@ public class Physics {
 	public Physics(Maze maze, int difficulty)
 	{		
 		this.diff = difficulty;
+		Contact c = new Contact();
 		Transform DEFAULT_BALL_TRANSFORM = new Transform(new Matrix4f(new Quat4f(0, 0, 0, 1), new Vector3f((float)maze.getStart()[0], (float) maze.getStart()[1], (float)maze.getStart()[2]), 1.0f));
 		/**
 		 * The object that will roughly find out whether bodies are colliding.
@@ -136,6 +137,7 @@ public class Physics {
 		playerBall.setActivationState(CollisionObject.DISABLE_DEACTIVATION);
 		// Add the control ball to the JBullet world.
 		dynamicsWorld.addRigidBody(playerBall);
+		BulletGlobals.setContactProcessedCallback(c);
 	}
 	
 	public void initParticles(Swarm swarm){
@@ -182,6 +184,10 @@ public class Physics {
 //			Audio.playSound("tick");
 //		}
 //		previous = contact;
+	}
+	
+	public static RigidBody getPlayerBody(){
+		return playerBall;
 	}
 
 	public void applyForce(float x, float y, float z)

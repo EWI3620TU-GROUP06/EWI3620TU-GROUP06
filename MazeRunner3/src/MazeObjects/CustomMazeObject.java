@@ -87,7 +87,15 @@ public class CustomMazeObject extends MazeObject{
 			res.file = file;
 			
 			res.rotateVerticesX(90, 0, 0);
-
+			
+			if(!res.hasTexture)
+			{
+				res.texVertices.add(new Vector2f(1, 0));
+				res.texVertices.add(new Vector2f(1, 1));
+				res.texVertices.add(new Vector2f(0, 1));
+				res.texVertices.add(new Vector2f(0, 0));
+			}
+			
 			sc.close();
 		}
 		catch (Exception e){
@@ -115,6 +123,9 @@ public class CustomMazeObject extends MazeObject{
 			String[] name = fileName.split("[.]");
 			texNum = textures.size();
 			addTexture(DrawingUtil.initTexture(gl, name[0]));
+		}
+		else{
+			addTexture(DrawingUtil.initTexture(gl, "wall"));
 		}
 	}
 	

@@ -144,14 +144,14 @@ public class Particle extends GameObject implements VisibleObject{
 				}
 			}
 			else{ //Not in range, so no LineOfSight check, but do some stuff
+				velocity = new Vector3f(0f, 0f, 0f);
 				Vector3f velo = swarm.getPhysics().getParticleVelocity(id);
 				if(velo.length() < 0.09){
 					velo = new Vector3f(2000f*(diff+2)*(float)Math.random()-1000f*(diff+2), 0f, 2000f*(diff+2)*(float)Math.random()-1000f*(diff+2));
+					swarm.getPhysics().applyParticleForce(id, velo);
 				}
-				swarm.getPhysics().applyParticleForce(id, velo);
 			}
 		}
-		
 		counter++; //add one to the counter to provide checking twice per second
 	}
 	
