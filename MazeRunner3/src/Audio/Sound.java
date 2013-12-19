@@ -18,7 +18,6 @@ public class Sound implements Runnable{
 		try {
 			listener = new AudioListener();
 			audioInputStream = AudioSystem.getAudioInputStream(clipFile);
-
 			clip = AudioSystem.getClip();
 			clip.addLineListener(listener);
 			clip.open(audioInputStream);
@@ -36,16 +35,8 @@ public class Sound implements Runnable{
 
 	public void run()
 	{
+		clip.setMicrosecondPosition((long) 0);
 		clip.start();
-		try{
-			listener.waitUntilDone();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-
-		clip.close();
 	}
 
 }

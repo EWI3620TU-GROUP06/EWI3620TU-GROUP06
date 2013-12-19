@@ -7,6 +7,7 @@ import javax.vecmath.Vector3f;
 
 import com.sun.opengl.util.*;
 
+import Audio.Audio;
 import Drawing.*;
 import GameObjects.Camera;
 import GameObjects.MoveableBox;
@@ -155,6 +156,10 @@ public class MazeRunner implements GLEventListener {
 		// displayed by MazeRunner.
 		visibleObjects = new ArrayList<VisibleObject>();
 		state.setFinished(false);
+		
+		String[] sounds = new String[]{"tick"};
+		Audio.initSounds(sounds);
+		
 		// Add the maze that we will be using.
 
 		if (level == null){
