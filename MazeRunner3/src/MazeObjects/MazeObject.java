@@ -17,9 +17,11 @@ import com.sun.opengl.util.texture.Texture;
  */
 public abstract class MazeObject {
 
-	ArrayList<Vector3f> vertices;
-	ArrayList<Face> faces;
-	ArrayList<Vector2f> texVertices;
+	protected ArrayList<Vector3f> vertices;
+	protected ArrayList<Face> faces;
+	protected ArrayList<Vector2f> texVertices;
+	public float width;
+	public float height;
 
 	float restitution;
 

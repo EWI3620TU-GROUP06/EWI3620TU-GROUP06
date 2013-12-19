@@ -205,6 +205,13 @@ public class Maze implements VisibleObject {
 			for( int j = 0; j < MAZE_SIZE; j++ )
 				selected[i][j] = false;
 	}
+	
+	public void selectedAll()
+	{
+		for( int i = 0; i < MAZE_SIZE; i++ )
+			for( int j = 0; j < MAZE_SIZE; j++ )
+				selected[i][j] = true;
+	}
 
 	/**
 	 * Adds an element to the maze at the selected position(s). 
@@ -264,16 +271,17 @@ public class Maze implements VisibleObject {
 	 * @param file	File to be written.
 	 */
 
-	public void save(File file) {
+	public boolean write(PrintWriter wr) {
 		if (startPosition[0] < 0 || startPosition[0] >= MAZE_SIZE
 				|| startPosition[2] < 0 || startPosition[2] >= MAZE_SIZE) {
 			System.err.println("Invalid start position.");
+			return false;
 		} else if (finishPosition[0] < 0 || finishPosition[0] >= MAZE_SIZE
 				|| finishPosition[1] < 0 || finishPosition[1] >= MAZE_SIZE) {
 			System.err.println("Invalid finish position.");
+			return false;
 		} else {
 			try {
-				PrintWriter wr = new PrintWriter(file);
 				wr.write(MAZE_SIZE + "\n");
 				wr.write(startPosition[0] + " " + startPosition[1] + " "
 						+ startPosition[2] +  " " + startPosition[3] + "\n");
@@ -292,9 +300,11 @@ public class Maze implements VisibleObject {
 							wr.print("\n");
 					}
 				}
-				wr.close();
+				wr.write("\n");
+				return true;
 			} catch (Exception e) {
 				e.printStackTrace();
+				return false;
 			}
 		}
 
@@ -308,9 +318,8 @@ public class Maze implements VisibleObject {
 	 * @return		Maze that was read-in.
 	 */
 
-	public static Maze read(File file) {
+	public static Maze read(Scanner sc) {
 		try {
-			Scanner sc = new Scanner(file);
 			int mazeSize = sc.nextInt();
 			int[] newStart = new int[4];
 			newStart[0] = sc.nextInt();
@@ -343,7 +352,6 @@ public class Maze implements VisibleObject {
 					newMaze[i][j] = sc.nextByte();
 				}
 			}
-			sc.close();
 			return new Maze(mazeSize, newStart, newFinish, newMaze);
 		} catch (Exception e) {
 			e.printStackTrace();

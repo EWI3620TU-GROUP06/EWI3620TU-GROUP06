@@ -2,7 +2,7 @@ package Listening;
 
 import GameObjects.Editor;
 import GameStates.gStateMan;
-import MainGame.Maze;
+import MainGame.Level;
 import MainGame.MazeRunner;
 
 public class LoadCommand implements Command {
@@ -16,11 +16,11 @@ public class LoadCommand implements Command {
 	@Override
 	public void execute() {
 		//Load level to static maze-variable, and GOTO playstate
-		Maze maze = Editor.readMaze();
-		MazeRunner.setMaze(maze);
+		Level level = Editor.readLevel();
+		MazeRunner.setLevel(level);
 		this.gsm.getState(gStateMan.PLAYSTATE).setScore(0);
 		this.gsm.getState(gStateMan.PLAYSTATE).setLevel(0);
-		if(maze != null) { // If level loaded, play, else choose some other menu option
+		if(level != null) { // If level loaded, play, else choose some other menu option
 			this.gsm.setState(gStateMan.PLAYSTATE);
 		}
 	}

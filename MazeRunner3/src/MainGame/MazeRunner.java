@@ -56,7 +56,7 @@ public class MazeRunner implements GLEventListener {
 	private Player player;									// The player object.
 	private Camera camera;									// The camera object.
 	private UserInput input;								// The user input object that controls the player.
-	private static Maze maze; 										// The maze.
+	private static Level level;									// The maze.
 	private long previousTime; // Used to calculate elapsed time.
 	private int timeSinceStart = 0;
 	private GameState state;
@@ -74,12 +74,9 @@ public class MazeRunner implements GLEventListener {
 	private TextBoxManager finishclbxman;
 	private TextBox scoreBox;
 	private TextBox totalScoreBox;
-	private Swarm particles;
 	private int currentScore = 0;
 	private int timer = 0;
-	private ArrayList<MoveableBox> boxes = new ArrayList<MoveableBox>();
-	private ArrayList<PowerUp> powerUps = new ArrayList<PowerUp>(); 
-	float lightPosition[] = { (float)maze.getSize()/2f, 50.0f, (float)maze.getSize()/2f, 1.0f };
+	float lightPosition[] = { (float)level.getMaze().getSize()/2f, 50.0f, (float)level.getMaze().getSize()/2f, 1.0f };
 	private SkyBox skybox;
 
 	/*
@@ -134,8 +131,8 @@ public class MazeRunner implements GLEventListener {
 		anim.start();
 	}
 
-	public static void setMaze(Maze mz){
-		maze = mz;
+	public static void setLevel(Level lvl){
+		level = lvl;
 	}
 
 	/**
@@ -160,40 +157,36 @@ public class MazeRunner implements GLEventListener {
 		state.setFinished(false);
 		// Add the maze that we will be using.
 
-		if (maze == null){
-			maze = Maze.read(new File("src/Levels/level1.mz"));
+		if (level == null){
+			level = Level.readLevel(new File("src/Levels/level1.mz"));
 		}
-		maze.removeRedundantFaces();
+		level.getMaze().removeRedundantFaces();
 
-		Physics p = new Physics(maze, state.getDiffNumber());
+		Physics physics = new Physics(level.getMaze(), state.getDiffNumber());
 
-		visibleObjects.add( maze );
-		MoveableBox newBox = new MoveableBox(new Vector3d(30, 0, 10), 5, 5, p);
+		MoveableBox newBox = new MoveableBox(new Vector3d(30, 0, 10), 5, 5);
 		
 		newBox.addToPath(1000, new Vector3f(35, 0, 0));
 		newBox.addToPath(7000, new Vector3f(-5, 0, 0));
 		newBox.setCount(1);
-		boxes.add(newBox);
-		visibleObjects.add(newBox);
+		level.addMoveableBox(newBox);
 
 		// Initialize the player.
-		Vector3d playerPos = new Vector3d(maze.getStart()[0], maze.getStart()[1], maze.getStart()[2]);
-		player = new Player(playerPos, maze.getStart()[3], -45, maze, p, state.getDiffNumber());
+		Vector3d playerPos = new Vector3d(level.getMaze().getStart()[0], level.getMaze().getStart()[1], level.getMaze().getStart()[2]);
+		player = new Player(playerPos, level.getMaze().getStart()[3], -45, level.getMaze(), physics, state.getDiffNumber());
 
 		visibleObjects.add(player);
 		
-		PowerUp newPower = new PowerUp(new Vector3d(12.5, 2.5, 27.5), 0.5f, player, PowerUp.SPEED);
-		powerUps.add(newPower);
-		visibleObjects.add(newPower);
+		PowerUp newPower = new PowerUp(new Vector3d(12.5, 2.5, 32.5), PowerUp.SPEED);
+		level.addPowerUp(newPower);
 
-		particles = new Swarm(p, maze, (int) (maze.MAZE_SIZE*(state.getDiffNumber() + 1))/4, state.getDiffNumber());
-
+		Swarm particles = new Swarm(physics, level.getMaze(), (int) (level.getMaze().MAZE_SIZE*(state.getDiffNumber() + 1))/4, state.getDiffNumber());
 		particles.setCognitive(0.055f);
 		particles.setSocial(0.055f);
 		particles.setInertiaWeight(0.95f);
-		particles.generate((int) (maze.MAZE_SIZE*(state.getDiffNumber() + 1))/4);
-		particles.AddToVisible(visibleObjects);
-		p.initParticles(particles);
+		particles.generate((int) (level.getMaze().MAZE_SIZE*(state.getDiffNumber() + 1))/4);
+		level.addSwarm(particles);
+		physics.initParticles(particles);
 
 		camera = new Camera(player.getLocation(), player.getHorAngle(), player.getVerAngle() );
 		
@@ -204,7 +197,10 @@ public class MazeRunner implements GLEventListener {
 		input = state.getGSM().getInput();
 		AddListening(input);
 		player.setControl(input);
-
+		
+		level.saveLevel(new File("src\\levels\\levelTest.mz"));
+		level.addToVisible(visibleObjects);
+		level.setAttributes(player, physics);
 	}
 
 	private void initMenuText(){
@@ -249,8 +245,7 @@ public class MazeRunner implements GLEventListener {
 		GL gl = drawable.getGL();
 		GLU glu = new GLU();
 		
-		particles.init(gl);
-		Maze.initTextures(gl);
+		level.init(gl);
 		skybox.init(gl);
 		player.init(gl);
 
@@ -320,17 +315,17 @@ public class MazeRunner implements GLEventListener {
 			totalScoreBox.setText("Total Score: " + state.getScore());
 
 			// Update any movement since last frame.
-			particles.update(deltaTime);
+			level.update(deltaTime, player.getLocation());
 			player.update(deltaTime);
 			updateCamera();
-			skybox.moveTo(new Vector3f((float) (camera.getLocation().x - 100), (float) (camera.getLocation().y - 100), (float) (camera.getLocation().z - 100)));
+		
 			double pos[] = new double[3];
 			player.getLocation().get(pos);
 			if(pos[1] < -10){
 				dead = true;
 				state.getGSM().setPauseState();
 			}
-			if(!finished && (maze.isFinish(pos[0], pos[2])))	
+			if(!finished && (level.getMaze().isFinish(pos[0], pos[2])))	
 				{
 					finished = true;
 					if (state.getLevel() != 0)
@@ -345,9 +340,6 @@ public class MazeRunner implements GLEventListener {
 		camera.getLocation().get(pos);
 		camera.getVuv().get(vuv);
 		camera.getVrp().get(vrp);
-		
-		boxes.get(0).update(deltaTime);
-		powerUps.get(0).update(deltaTime, player.getLocation());
 
 		glu.gluLookAt(pos[0], pos[1], pos[2], 
 				vrp[0], vrp[1], vrp[2], vuv[0], vuv[1], vuv[2]);
@@ -366,7 +358,7 @@ public class MazeRunner implements GLEventListener {
 
 		if(pause && !finished){
 			player.pause();
-			particles.pause();
+			level.pause();
 
 			DrawingUtil.drawTrans(gl, 0, 0, screenWidth, screenHeight, 0.2f, 0.2f, 0.2f, 0.4f);
 			if(dead)
@@ -482,7 +474,8 @@ public class MazeRunner implements GLEventListener {
 		camera.setHorAngle( player.getHorAngle() );
 		camera.setVerAngle( player.getVerAngle() );
 		camera.calculateVRP();
-
+		
+		skybox.moveTo(new Vector3f((float) (camera.getLocation().x - 100), (float) (camera.getLocation().y - 100), (float) (camera.getLocation().z - 100)));
 	}
 
 	public void Pause(){

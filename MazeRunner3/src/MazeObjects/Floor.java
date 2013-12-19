@@ -10,6 +10,8 @@ public class Floor extends MazeObject {
 	
 	public Floor(float width, float x, float z){
 		super(false);
+		this.width = width;
+		height = 0;
 		addVertex(new Vector3f(x, 0, z));
 		addVertex(new Vector3f(x, 0, z + width));
 		addVertex(new Vector3f(x + width, 0, z + width));

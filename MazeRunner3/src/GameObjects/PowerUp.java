@@ -1,5 +1,8 @@
 package GameObjects;
 
+import java.io.PrintWriter;
+import java.util.Scanner;
+
 import javax.media.opengl.GL;
 import javax.vecmath.Vector3d;
 
@@ -12,7 +15,7 @@ public class PowerUp extends GameObject implements VisibleObject {
 	public static final int SPEED = 0;
 	public static final int JUMP = 1;
 
-	private float size;
+	private float size = 0.5f;
 	private int time = 10000;
 	private boolean activated;
 	private boolean used = false;
@@ -21,13 +24,16 @@ public class PowerUp extends GameObject implements VisibleObject {
 	private int type;
 	private Player player;
 
-	public PowerUp(Vector3d pos, float size, Player player, int type)
+	public PowerUp(Vector3d pos, int type)
 	{
 		super(pos);
-		this.size = size;
 		sprite = new Box( size, size, (float)location.x, (float) location.y, (float)location.z);
-		this.player = player;
 		this.type = type;
+	}
+
+	public void setPlayer(Player player)
+	{
+		this.player = player;
 	}
 
 	public void update (int deltaTime, Vector3d playerPos)
@@ -44,7 +50,7 @@ public class PowerUp extends GameObject implements VisibleObject {
 		{
 			Vector3d dif = new Vector3d();
 			dif.sub(playerPos, this.location);
-			if(dif.length() < 1 && !activated)
+			if(dif.length() < 1 + size / 2f && !activated)
 			{
 				activate(true);
 				used = true;
@@ -83,6 +89,39 @@ public class PowerUp extends GameObject implements VisibleObject {
 		if(!used)
 		{
 			sprite.draw(gl, new float[]{1, 1, 1, 1});
+		}
+	}
+
+	public void write(PrintWriter wr)
+	{
+		try{
+			wr.write(location.x + " "  + location.y + " " + location.z + " " + type + "\n");
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public static PowerUp read(String line)
+	{
+		try{
+			String[] elements = line.split("[ ]");
+			if(!elements[0].isEmpty() && elements.length == 4){
+				double x = Double.parseDouble(elements[0]);
+				double y = Double.parseDouble(elements[1]);
+				double z = Double.parseDouble(elements[2]);
+				int type = Integer.parseInt(elements[3]);
+				return new PowerUp(new Vector3d(x, y, z), type);
+			}
+			else
+				return null;
+
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			return null;
 		}
 	}
 

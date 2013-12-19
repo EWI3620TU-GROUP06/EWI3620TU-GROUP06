@@ -8,6 +8,7 @@ import javax.vecmath.Vector3d;
 
 import Drawing.EditBoxManager;
 import Listening.Control;
+import MainGame.Level;
 import MainGame.Maze;
 import MazeObjects.CustomMazeObject;
 
@@ -25,7 +26,7 @@ public class Editor extends GameObject{
 	private int pressedX, pressedY;
 	int angle;
 
-	private Maze maze;
+	private Level level;
 	/*
 	private static float buttonSize;
 	private final int numButtons = 11;*/
@@ -59,8 +60,8 @@ public class Editor extends GameObject{
 	 * @param maze	Maze
 	 */
 
-	public void setMaze(Maze maze) {
-		this.maze = maze;
+	public void setLevel(Level level) {
+		this.level = level;
 	}
 
 	/**
@@ -110,8 +111,8 @@ public class Editor extends GameObject{
 	 * @return	Maze
 	 */
 
-	public Maze getMaze(){
-		return maze;
+	public Level getLevel(){
+		return level;
 	}
 
 	public void setDrawMode(byte drawMode)
@@ -131,7 +132,7 @@ public class Editor extends GameObject{
 		location.get(pos);
 		int notches = control.getNotches();
 		// The Y position can never be lower then the highest wall
-		if(pos[1] + notches > maze.SQUARE_SIZE)
+		if(pos[1] + notches > level.getMaze().SQUARE_SIZE)
 			pos[1] += notches;
 		// Store the position where the left button was originally pressed
 		// This information is used while rotating slope that are to be placed. 
@@ -147,20 +148,20 @@ public class Editor extends GameObject{
 		}
 		// When a selection of squares made by dragging is released, the selected squares are toggled
 		else if(control.getMouseReleased() == 1 && !editBoxManager.isHoovering()){
-			maze.addBlock(drawMode, angle);
+			level.getMaze().addBlock(drawMode, angle);
 		}
 		else
 		{
 			updateCursor(screenHeight, screenWidth, pos);
 			// When dragging, the selected squares are remembered:
 			if(!control.isLeftButtonDragged()){
-				maze.clearSelected();
+				level.getMaze().clearSelected();
 				// highlight the selection:
-				maze.select(selectedX, selectedZ);
+				level.getMaze().select(selectedX, selectedZ);
 			}
 			else if(!editBoxManager.isHoovering() && drawMode < 4)
 			{
-				maze.select(selectedX, selectedZ);
+				level.getMaze().select(selectedX, selectedZ);
 			}
 			else if(!editBoxManager.isHoovering())
 			{
@@ -175,7 +176,7 @@ public class Editor extends GameObject{
 				{
 					angle = dY > 0 ? 180 : 0;
 				}
-				maze.addBlock(drawMode, angle);
+				level.getMaze().addBlock(drawMode, angle);
 			}
 		}
 		location.set(pos);
@@ -199,8 +200,8 @@ public class Editor extends GameObject{
 		double cursorPositionZ = (control.getMouseY() - screenHeight / 2) / pixelsPerUnit + pos[2];
 
 		// cursor position in maze coordinates:
-		selectedX = (int)(cursorPositionX / maze.SQUARE_SIZE);
-		selectedZ = (int)(cursorPositionZ / maze.SQUARE_SIZE);
+		selectedX = (int)(cursorPositionX / level.getMaze().SQUARE_SIZE);
+		selectedZ = (int)(cursorPositionZ / level.getMaze().SQUARE_SIZE);
 	}
 
 	/**
@@ -267,7 +268,7 @@ public class Editor extends GameObject{
 		int returnVal = fc.showDialog(fc, "Save");
 		File file = fc.getSelectedFile();
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			maze.save(file);
+			level.saveLevel(file);
 			return true;
 		}
 		return false;
@@ -279,18 +280,18 @@ public class Editor extends GameObject{
 	 * @return	Maze that was read from the chosen file.
 	 */
 
-	public static Maze readMaze(){
+	public static Level readLevel(){
 		JFileChooser fc = new JFileChooser();
 		selectDirectory(fc, "Maze files", "mz", "maze", "levels");
 
 		int returnVal = fc.showDialog(fc, "Open");
 		File file = fc.getSelectedFile();
-		Maze maze = null;
+		Level level = null;
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			maze = Maze.read(file);
+			level = Level.readLevel(file);
 		}
 
-		return maze;
+		return level;
 	}
 	
 	public static CustomMazeObject readMazeObject(){
