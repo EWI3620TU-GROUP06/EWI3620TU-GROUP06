@@ -195,7 +195,7 @@ public class MazeRunner implements GLEventListener {
 
 		camera = new Camera(player.getLocation(), player.getHorAngle(), player.getVerAngle() );
 		
-		skybox = new SkyBox(200, 200, (float) (camera.getLocation().x - 100), (float) (camera.getLocation().y - 100), (float) (camera.getLocation().z - 100));
+		skybox = new SkyBox(230, 230, (float) (camera.getLocation().x - 115), (float) (camera.getLocation().y - 115), (float) (camera.getLocation().z - 115));
 		
 		visibleObjects.add(skybox);
 		
@@ -480,7 +480,7 @@ public class MazeRunner implements GLEventListener {
 		camera.setVerAngle( player.getVerAngle() );
 		camera.calculateVRP();
 		
-		skybox.moveTo(new Vector3f((float) (camera.getLocation().x - 100), (float) (camera.getLocation().y - 100), (float) (camera.getLocation().z - 100)));
+		skybox.moveTo(new Vector3f((float) (camera.getLocation().x - 115), (float) (camera.getLocation().y - 115), (float) (camera.getLocation().z - 115)));
 	}
 
 	public void Pause(){
