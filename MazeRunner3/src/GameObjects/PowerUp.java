@@ -1,7 +1,6 @@
 package GameObjects;
 
 import java.io.PrintWriter;
-import java.util.Scanner;
 
 import javax.media.opengl.GL;
 import javax.vecmath.Vector3d;
