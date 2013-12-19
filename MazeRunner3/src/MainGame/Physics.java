@@ -50,7 +50,7 @@ public class Physics {
 	ArrayList<RigidBody> particles;
 	ArrayList<RigidBody> movingBoxes = new ArrayList<RigidBody>();
 
-	ObjectArrayList<CollisionObject> walls = new ObjectArrayList<CollisionObject>();
+	static ObjectArrayList<CollisionObject> walls = new ObjectArrayList<CollisionObject>();
 	ObjectArrayList<CollisionObject> floors = new ObjectArrayList<CollisionObject>();
 	/**
 	 * The container for the JBullet physics world. This represents the collision data and motion data, as well as the
@@ -65,7 +65,6 @@ public class Physics {
 	public Physics(Maze maze, int difficulty)
 	{		
 		this.diff = difficulty;
-		Contact c = new Contact();
 		Transform DEFAULT_BALL_TRANSFORM = new Transform(new Matrix4f(new Quat4f(0, 0, 0, 1), new Vector3f((float)maze.getStart()[0], (float) maze.getStart()[1], (float)maze.getStart()[2]), 1.0f));
 		/**
 		 * The object that will roughly find out whether bodies are colliding.
@@ -137,6 +136,8 @@ public class Physics {
 		playerBall.setActivationState(CollisionObject.DISABLE_DEACTIVATION);
 		// Add the control ball to the JBullet world.
 		dynamicsWorld.addRigidBody(playerBall);
+		
+		Contact c = new Contact();
 		BulletGlobals.setContactProcessedCallback(c);
 	}
 	
@@ -297,5 +298,9 @@ public class Physics {
 		Vector3f currentPosition = new Vector3f();
 		movingBoxes.get(index).getCenterOfMassPosition(currentPosition);
 		return currentPosition;
+	}
+	
+	public static ObjectArrayList<CollisionObject> getWalls(){
+		return walls;
 	}
 }
