@@ -203,7 +203,6 @@ public class MazeRunner implements GLEventListener {
 		AddListening(input);
 		player.setControl(input);
 		
-		level.saveLevel(new File("src\\levels\\levelTest.mz"));
 		level.addToVisible(visibleObjects);
 		level.setAttributes(player, physics);
 	}

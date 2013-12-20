@@ -176,10 +176,12 @@ public class Particle extends GameObject implements VisibleObject{
 	@Override
 	public void display(GL gl) {
 		GLU glu = new GLU();
-		float ballColour[] = {1.0f, 1.0f, 1.0f, 1.0f};
 		sphereTexture.enable(); // Enable the ball texture
 		sphereTexture.bind(); 
-		gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, ballColour, 0);
+		gl.glMaterialfv( GL.GL_FRONT, GL.GL_AMBIENT, new float[]{0.774597f, 0.774597f, 0.774597f, 1.0f}, 0);
+		gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, new float[]{0.774597f, 0.774597f, 0.774597f, 1.0f}, 0);
+		gl.glMaterialfv( GL.GL_FRONT, GL.GL_SPECULAR, new float[]{0.774597f, 0.774597f, 0.774597f, 1.0f}, 0);
+		gl.glMateriali( GL.GL_FRONT, GL.GL_SHININESS, 77);
 		gl.glPushMatrix();
 		float pos[] = new float[3];
 		location.get(pos);
