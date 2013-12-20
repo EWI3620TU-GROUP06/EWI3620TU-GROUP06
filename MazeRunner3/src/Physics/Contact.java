@@ -2,6 +2,8 @@ package Physics;
 
 import java.util.Calendar;
 
+import javax.vecmath.Vector3f;
+
 import Audio.Audio;
 
 import com.bulletphysics.ContactProcessedCallback;
@@ -26,6 +28,9 @@ public class Contact extends ContactProcessedCallback {
 			long currentTime = Calendar.getInstance().getTimeInMillis();
 			int deltaTime = (int)(currentTime - prevTime);
 			if(deltaTime > 100){
+				Vector3f out = new Vector3f();
+				Physics.getPlayerBody().getLinearVelocity(out);
+				Audio.setVolume("tick",out.length()-20f);
 				Audio.playSound("tick");
 			}
 			prevTime = currentTime;
@@ -34,6 +39,9 @@ public class Contact extends ContactProcessedCallback {
 			long currentTimeWall = Calendar.getInstance().getTimeInMillis();
 			int deltaTimeWall = (int)(currentTimeWall - prevTimeWall);
 			if(deltaTimeWall > 100){
+				Vector3f out = new Vector3f();
+				Physics.getPlayerBody().getLinearVelocity(out);
+				Audio.setVolume("tick", out.length()-20f);
 				Audio.playSound("tick");
 			}
 			prevTimeWall = currentTimeWall;

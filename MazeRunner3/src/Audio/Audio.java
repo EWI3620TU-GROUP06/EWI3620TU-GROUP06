@@ -38,6 +38,16 @@ public class Audio {
 	}
 
 	public static void playSound(String soundName) {
-			sounds.get(soundName).run();
+		sounds.get(soundName).run();
+	}
+	
+	public static void setVolume(String soundName, float gain){
+		if(gain > 6){
+			gain = 6;
+		}
+		else if(gain < -80){
+			gain = -80;
+		}
+		sounds.get(soundName).setVolume(gain);
 	}
 }
