@@ -194,6 +194,7 @@ public class MazeRunner implements GLEventListener {
 		particles.generate((int) (level.getMaze().MAZE_SIZE*(state.getDiffNumber() + 1))/4);
 		level.addSwarm(particles);
 		physics.initParticles(particles);
+		physics.initContactHandling(); //Initializes sound-handling. MUST BE AFTER initParticles() TO INCLUDE PARTICLE-SOUNDS
 
 		camera = new Camera(player.getLocation(), player.getHorAngle(), player.getVerAngle() );
 		

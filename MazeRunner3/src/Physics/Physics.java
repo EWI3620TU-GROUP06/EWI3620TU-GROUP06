@@ -48,7 +48,7 @@ public class Physics {
 	private int diff;
 	private float partradius;
 	
-	ArrayList<RigidBody> particles;
+	static ArrayList<RigidBody> particles;
 	ArrayList<RigidBody> movingBoxes = new ArrayList<RigidBody>();
 
 	static ObjectArrayList<CollisionObject> walls = new ObjectArrayList<CollisionObject>();
@@ -137,7 +137,9 @@ public class Physics {
 		playerBall.setActivationState(CollisionObject.DISABLE_DEACTIVATION);
 		// Add the control ball to the JBullet world.
 		dynamicsWorld.addRigidBody(playerBall);
-		
+	}
+	
+	public void initContactHandling(){
 		Contact c = new Contact();
 		BulletGlobals.setContactProcessedCallback(c);
 	}
@@ -178,14 +180,6 @@ public class Physics {
 	{
 		// Runs the JBullet physics simulation for the specified time in seconds.
 		dynamicsWorld.stepSimulation(deltaTime/1000f);
-				
-		//TODO:Dit stuk hieronder is de grote boosdoener voor FPS. Dit doen we voor geluid
-//		boolean contact = getContact();
-//		if(contact && !previous)
-//		{
-//			Audio.playSound("tick");
-//		}
-//		previous = contact;
 	}
 	
 	public static RigidBody getPlayerBody(){
@@ -303,5 +297,9 @@ public class Physics {
 	
 	public static ObjectArrayList<CollisionObject> getWalls(){
 		return walls;
+	}
+	
+	public static ArrayList<RigidBody> getParticles(){
+		return particles;
 	}
 }

@@ -9,7 +9,6 @@ import javax.sound.sampled.FloatControl;
 
 public class Sound implements Runnable{
 
-	private Thread soundThread;
 	private AudioListener listener = null;
 	private Clip clip = null;
 	private FloatControl volume;
@@ -25,9 +24,6 @@ public class Sound implements Runnable{
 			clip.open(audioInputStream);
 			volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
 			audioInputStream.close();
-			
-			soundThread = new Thread(this);
-			soundThread.start();
 			
 		} catch(Exception e){
 			e.printStackTrace();
