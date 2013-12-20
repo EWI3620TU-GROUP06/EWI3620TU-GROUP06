@@ -13,6 +13,7 @@ import GameObjects.MoveableBox;
 import GameObjects.Player;
 import GameObjects.PowerUp;
 import PSO.Swarm;
+import Physics.Physics;
 
 public class Level {
 	private Maze maze;

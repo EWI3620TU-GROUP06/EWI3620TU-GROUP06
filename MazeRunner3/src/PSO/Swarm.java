@@ -7,8 +7,8 @@ import javax.vecmath.Vector3f;
 
 import Drawing.VisibleObject;
 import MainGame.Maze;
-import MainGame.Physics;
 import MazeObjects.Floor;
+import Physics.Physics;
 
 public class Swarm {
 	

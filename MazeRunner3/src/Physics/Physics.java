@@ -1,7 +1,8 @@
-package MainGame;
+package Physics;
 
 import java.util.ArrayList;
 
+import MainGame.Maze;
 import MazeObjects.MazeObject;
 import PSO.Particle;
 import PSO.Swarm;

@@ -9,8 +9,8 @@ import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
 import Drawing.VisibleObject;
-import MainGame.Physics;
 import MazeObjects.Box;
+import Physics.Physics;
 
 public class MoveableBox extends GameObject implements VisibleObject {
 
