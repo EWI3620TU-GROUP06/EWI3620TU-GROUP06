@@ -2,7 +2,7 @@ package Physics;
 
 import java.util.ArrayList;
 
-import MainGame.Maze;
+import LevelHandling.Maze;
 import MazeObjects.MazeObject;
 import PSO.Particle;
 import PSO.Swarm;

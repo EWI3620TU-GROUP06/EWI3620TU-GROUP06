@@ -1,7 +1,7 @@
 package Listening;
 
 import GameObjects.Editor;
-import MainGame.Level;
+import LevelHandling.Level;
 
 public class OpenCommand implements Command{
 	

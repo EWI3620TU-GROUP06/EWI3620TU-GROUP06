@@ -17,6 +17,7 @@ import GameStates.GameState;
 import GameStates.gStateMan;
 import HighScore.SqlReadWrite;
 import HighScore.Score;
+import LevelHandling.Level;
 import Listening.UserInput;
 import Main.Game;
 import MazeObjects.SkyBox;

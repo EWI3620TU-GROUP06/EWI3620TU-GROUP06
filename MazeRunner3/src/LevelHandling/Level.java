@@ -1,4 +1,4 @@
-package MainGame;
+package LevelHandling;
 
 import java.io.File;
 import java.io.PrintWriter;

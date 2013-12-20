@@ -2,7 +2,7 @@ package Listening;
 
 import GameObjects.Editor;
 import GameStates.gStateMan;
-import MainGame.Level;
+import LevelHandling.Level;
 import MainGame.MazeRunner;
 
 public class LoadCommand implements Command {

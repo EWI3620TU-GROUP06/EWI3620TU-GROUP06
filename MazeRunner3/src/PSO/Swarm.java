@@ -6,7 +6,7 @@ import javax.media.opengl.GL;
 import javax.vecmath.Vector3f;
 
 import Drawing.VisibleObject;
-import MainGame.Maze;
+import LevelHandling.Maze;
 import MazeObjects.Floor;
 import Physics.Physics;
 

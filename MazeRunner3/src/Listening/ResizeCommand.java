@@ -1,6 +1,6 @@
 package Listening;
 
-import MainGame.Maze;
+import LevelHandling.Maze;
 
 public class ResizeCommand implements Command{
 

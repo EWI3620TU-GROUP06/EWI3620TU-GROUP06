@@ -7,9 +7,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.vecmath.Vector3d;
 
 import Drawing.EditBoxManager;
+import LevelHandling.Level;
+import LevelHandling.Maze;
 import Listening.Control;
-import MainGame.Level;
-import MainGame.Maze;
 import MazeObjects.CustomMazeObject;
 
 public class Editor extends GameObject{

@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import javax.media.opengl.GL;
 
 import GameObjects.Editor;
+import LevelHandling.Maze;
 import Listening.*;
-import MainGame.Maze;
 
 import com.sun.opengl.util.texture.Texture;
 

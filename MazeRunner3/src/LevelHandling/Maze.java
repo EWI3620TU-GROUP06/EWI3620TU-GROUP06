@@ -1,4 +1,4 @@
-package MainGame;
+package LevelHandling;
 import javax.media.opengl.GL;
 
 import Drawing.DrawingUtil;
