@@ -6,8 +6,8 @@ import javax.media.opengl.GL;
 
 import EditorModes.*;
 import GameObjects.Editor;
+import LevelHandling.Level;
 import Listening.*;
-import MainGame.Level;
 
 import com.sun.opengl.util.texture.Texture;
 

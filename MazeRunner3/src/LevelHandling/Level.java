@@ -1,4 +1,4 @@
-package MainGame;
+package LevelHandling;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -13,6 +13,7 @@ import GameObjects.MoveableBox;
 import GameObjects.Player;
 import GameObjects.PowerUp;
 import PSO.Swarm;
+import Physics.Physics;
 
 public class Level {
 	private Maze maze;

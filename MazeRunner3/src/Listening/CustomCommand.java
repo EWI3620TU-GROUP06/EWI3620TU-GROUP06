@@ -2,7 +2,7 @@ package Listening;
 
 import EditorModes.AddRotating;
 import GameObjects.Editor;
-import MainGame.Maze;
+import LevelHandling.Maze;
 import MazeObjects.CustomMazeObject;
 
 public class CustomCommand implements Command {

@@ -8,6 +8,8 @@ import Drawing.*;
 import GameObjects.Camera;
 import GameObjects.Editor;
 import GameStates.GameState;
+import LevelHandling.Level;
+import LevelHandling.Maze;
 import Listening.UserInput;
 import Main.Game;
 

@@ -3,7 +3,7 @@ package Listening;
 import java.io.File;
 
 import GameStates.gStateMan;
-import MainGame.Level;
+import LevelHandling.Level;
 import MainGame.MazeRunner;
 
 public class NextLevelCommand implements Command {

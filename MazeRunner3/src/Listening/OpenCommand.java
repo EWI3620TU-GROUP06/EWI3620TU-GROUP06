@@ -3,7 +3,7 @@ package Listening;
 import EditorModes.AddMode;
 import EditorModes.AddStatic;
 import GameObjects.Editor;
-import MainGame.Level;
+import LevelHandling.Level;
 
 public class OpenCommand implements Command{
 	

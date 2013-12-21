@@ -1,6 +1,6 @@
 package EditorModes;
 
-import MainGame.Level;
+import LevelHandling.Level;
 
 public class AddStart extends AddMode {
 	

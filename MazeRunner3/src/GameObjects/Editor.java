@@ -6,12 +6,13 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.vecmath.Vector3d;
 
-import EditorModes.AddMode;
-import EditorModes.AddStatic;
-import EditorModes.EditMode;
+
+import EditorModes.*;
+
+import LevelHandling.Level;
+import LevelHandling.Maze;
+
 import Listening.Control;
-import MainGame.Level;
-import MainGame.Maze;
 import MazeObjects.CustomMazeObject;
 
 public class Editor extends GameObject{

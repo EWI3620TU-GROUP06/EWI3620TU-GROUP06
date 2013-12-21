@@ -10,9 +10,9 @@ import com.sun.opengl.util.texture.Texture;
 
 import Drawing.DrawingUtil;
 import Drawing.VisibleObject;
+import LevelHandling.Maze;
 import Listening.Control;
-import MainGame.Maze;
-import MainGame.Physics;
+import Physics.Physics;
 
 /**
  * Player represents the actual player in MazeRunner.
