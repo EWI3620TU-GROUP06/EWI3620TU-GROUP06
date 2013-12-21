@@ -1,6 +1,8 @@
 package Listening;
 
+import EditorModes.AddRotating;
 import GameObjects.Editor;
+import MainGame.Maze;
 import MazeObjects.CustomMazeObject;
 
 public class CustomCommand implements Command {
@@ -15,9 +17,11 @@ public class CustomCommand implements Command {
 	public void execute() {
 		CustomMazeObject custom = Editor.readMazeObject();
 		if(custom != null){
-			editor.addObject(custom);
-		}
-		
-	}
+			if(!Maze.customs.contains(custom)){
+				Maze.customs.add(custom);
+			}
+			editor.setEditMode(new AddRotating(editor.getLevel(), (byte)(-Maze.customs.indexOf(custom) - 1)));
 
+		}
+	}
 }

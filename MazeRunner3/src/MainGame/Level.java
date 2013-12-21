@@ -76,12 +76,12 @@ public class Level {
 	
 	public void addToVisible(ArrayList<VisibleObject> visibleObjects)
 	{
+		visibleObjects.add(maze);
 		swarm.AddToVisible(visibleObjects);
 		for(MoveableBox moveBox : moveableBoxes)
 			visibleObjects.add(moveBox);
 		for(PowerUp powerUp : powerUps)
 			visibleObjects.add(powerUp);
-		visibleObjects.add(maze);
 	}
 	
 	public void setAttributes(Player player, Physics physics)

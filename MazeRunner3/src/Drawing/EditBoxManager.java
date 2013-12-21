@@ -4,52 +4,87 @@ import java.util.ArrayList;
 
 import javax.media.opengl.GL;
 
+import EditorModes.*;
 import GameObjects.Editor;
 import Listening.*;
-import MainGame.Maze;
+import MainGame.Level;
 
 import com.sun.opengl.util.texture.Texture;
 
 public class EditBoxManager extends ClickBoxManager {
 
-	private boolean hoovering = false;
-	private static final int numButtons = 12;
+	private static final int numStandardButtons = 5;
+	private static final int numAddButtons = 8;
+	private int numButtons;
 	private int buttonSize;
+	private ArrayList<EditBox> addBoxes;
 
-	public EditBoxManager(Maze maze, Editor editor, int screenWidth, int screenHeight)
+	public EditBoxManager(Level level, Editor editor, int screenWidth, int screenHeight)
 	{
 		super();
-		setButtonSize(numButtons, screenWidth, screenHeight);
+		addBoxes = new ArrayList<EditBox>();
+		
 		ArrayList<Command> commands = new ArrayList<Command>();
-		commands.add(new ResizeCommand(maze, 1));
-		commands.add(new ResizeCommand(maze, -1));
-		for(byte i = 0; i < 7; i++){
-			commands.add(new DrawModeCommand(editor, i));
-		}
+		commands.add(new SwitchMenuModeCommand(this));
+		commands.add(new ResizeCommand(level.getMaze(), 1));
+		commands.add(new ResizeCommand(level.getMaze(), -1));
 		commands.add(new SaveCommand(editor));
 		commands.add(new OpenCommand(editor));
-		commands.add(new CustomCommand(editor));
 
-		for (int i = 0; i < numButtons; i++)
+		for (int i = 0; i < numStandardButtons; i++)
 		{
 			EditBox newBox = new EditBox(i*buttonSize, screenHeight - buttonSize, screenWidth, screenHeight, buttonSize, true);
 			newBox.setCommand(commands.get(i));
 			this.AddBox(newBox);
 		}
+		
+		commands.clear();
+		commands.add(new EditModeCommand(editor, new AddStatic(level, AddMode.ADD_FLOOR)));
+		commands.add(new EditModeCommand(editor, new AddStatic(level, AddMode.ADD_BOX)));
+		commands.add(new EditModeCommand(editor, new AddStatic(level, AddMode.ADD_LOW_BOX)));
+		commands.add(new EditModeCommand(editor, new AddStart(level)));
+		commands.add(new EditModeCommand(editor, new AddFinish(level)));
+		commands.add(new EditModeCommand(editor, new AddRotating(level, AddMode.ADD_RAMP)));
+		commands.add(new EditModeCommand(editor, new AddRotating(level, AddMode.ADD_LOW_RAMP)));
+		commands.add(new CustomCommand(editor));
+		
+		for(int i = 0; i < numAddButtons; i++)
+		{
+			EditBox newBox = new EditBox(i*buttonSize, screenHeight - buttonSize, screenWidth, screenHeight, buttonSize, true);
+			newBox.setCommand(commands.get(i));
+			addBoxes.add(newBox);
+		}
+		
+		this.Boxes.addAll(addBoxes);
+		numButtons = Boxes.size();
+		setButtonSize(numButtons, screenWidth, screenHeight);
 	}
-
+	
 	public void initTextures(GL gl)
 	{
-		for(int i = 0; i < numButtons; i++)
+		for(int i = 0; i < numStandardButtons; i++)
 		{
-			Texture pressedTexture = DrawingUtil.initTexture(gl, "button " + i + " pressed");
-			Texture notPressedTexture = DrawingUtil.initTexture(gl, "button " + i + " not pressed");
+			Texture pressedTexture = DrawingUtil.initTexture(gl, "standard button " + i + " pressed");
+			Texture notPressedTexture = DrawingUtil.initTexture(gl, "standard button " + i + " not pressed");
 			((EditBox)Boxes.get(i)).setTextures(pressedTexture, notPressedTexture);
+		}
+		
+		for(int i = 0; i < numAddButtons; i++)
+		{
+			Texture pressedTexture = DrawingUtil.initTexture(gl, "add button " + i + " pressed");
+			Texture notPressedTexture = DrawingUtil.initTexture(gl, "add button " + i + " not pressed");
+			((EditBox)addBoxes.get(i)).setTextures(pressedTexture, notPressedTexture);
 		}
 	}
 
 	public boolean isHoovering()
 	{
+		boolean hoovering = false;
+		for(ClickBox a: Boxes){
+			if(a.isInBounds(control.getMouseX(), control.getMouseY())){
+				hoovering = true;
+			}
+		}
 		return hoovering;
 	}
 
@@ -66,7 +101,7 @@ public class EditBoxManager extends ClickBoxManager {
 			for(int i = 0; i < Boxes.size(); i++){
 				EditBox e = (EditBox) Boxes.get(i);
 				if(e.isClickable() && e.isInBounds(control.getMouseX(), control.getMouseY())){
-					if(e.hasDrawModeCommand())
+					if(e.hasEditModeCommand())
 					{
 						e.setPressed(true);
 						for(int j = 0; j < Boxes.size(); j++)
@@ -77,14 +112,6 @@ public class EditBoxManager extends ClickBoxManager {
 						}
 					}
 					e.execute();
-				}
-			}
-		}
-		else{
-			hoovering = false;
-			for(ClickBox a: Boxes){
-				if(a.isInBounds(control.getMouseX(), control.getMouseY())){
-					hoovering = true;
 				}
 			}
 		}

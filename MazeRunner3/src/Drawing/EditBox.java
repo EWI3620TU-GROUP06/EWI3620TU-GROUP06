@@ -2,7 +2,7 @@ package Drawing;
 
 import javax.media.opengl.GL;
 
-import Listening.DrawModeCommand;
+import Listening.EditModeCommand;
 
 import com.sun.opengl.util.texture.Texture;
 
@@ -58,8 +58,9 @@ public class EditBox extends ClickBox {
 		isPressed = pressed;
 	}
 	
-	public boolean hasDrawModeCommand()
+	public boolean hasEditModeCommand()
 	{
-		return command instanceof DrawModeCommand;
+		return command instanceof EditModeCommand;
 	}
+
 }

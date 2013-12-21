@@ -1,5 +1,7 @@
 package MazeObjects;
 
+import java.util.ArrayList;
+
 import javax.media.opengl.GL;
 import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
@@ -68,6 +70,11 @@ public class SkyBox extends MazeObject implements VisibleObject{
 		//rotateVerticesX(180, y, z);
 	}
 	
+	public SkyBox(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces)
+	{
+		super(vertices, texVertices, faces);
+	}
+	
 	@Override
 	public Texture getTexture() {
 		return texture;
@@ -132,5 +139,27 @@ public class SkyBox extends MazeObject implements VisibleObject{
 			if(texture != null)
 				texture.disable();
 		}
+	}
+	public MazeObject translate(float x, float y, float z)
+	{
+		SkyBox res = (SkyBox)this.clone();
+		for(Vector3f vertex : res.vertices)
+			vertex.add(new Vector3f(x, y, z));
+		return res;
+	}
+
+	public MazeObject clone()
+	{
+		ArrayList<Vector3f> vertices = new ArrayList<Vector3f>();
+		for(Vector3f vertex : this.vertices)
+		{
+			vertices.add((Vector3f)vertex.clone());
+		}
+		return new SkyBox(vertices, this.texVertices, this.faces);
+	}
+	
+	public boolean equals(Object other)
+	{
+		return other instanceof SkyBox;
 	}
 }

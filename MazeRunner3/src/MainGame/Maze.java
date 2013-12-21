@@ -3,19 +3,19 @@ import javax.media.opengl.GL;
 
 import Drawing.DrawingUtil;
 import Drawing.VisibleObject;
-import GameObjects.Editor;
 import MazeObjects.Box;
 import MazeObjects.CustomMazeObject;
 import MazeObjects.FinishTile;
 import MazeObjects.Floor;
 import MazeObjects.MazeObject;
 import MazeObjects.Ramp;
-import MazeObjects.StartArrow;
+import MazeObjects.StartTile;
 
 import com.sun.opengl.util.texture.Texture;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 /**
@@ -41,7 +41,7 @@ import java.util.Scanner;
 public class Maze implements VisibleObject {
 
 	public int MAZE_SIZE = 10;
-	public final int SQUARE_SIZE = 5;
+	public static final int SQUARE_SIZE = 5;
 
 	private boolean[][] selected = new boolean[MAZE_SIZE][MAZE_SIZE];
 
@@ -53,6 +53,17 @@ public class Maze implements VisibleObject {
 	private static Texture finishTexture;
 
 	private MazeObject[][] maze = null;
+	public static final ArrayList<MazeObject> standards = new ArrayList<MazeObject>(Arrays.asList(new MazeObject[]{
+			new Floor(SQUARE_SIZE, 0, 0),
+			new Box(SQUARE_SIZE, SQUARE_SIZE, 0, 0, 0),
+			new Box(SQUARE_SIZE, (float)SQUARE_SIZE/2, 0, 0, 0),
+			new StartTile(SQUARE_SIZE, 0, 0),
+			new FinishTile(SQUARE_SIZE, 0, 0),
+			new Ramp(SQUARE_SIZE, SQUARE_SIZE, 0, 0, 0),
+			new Ramp(SQUARE_SIZE, (float)SQUARE_SIZE / 2,  0, 0, 0)	
+	}));
+
+
 	public static ArrayList<CustomMazeObject> customs = new ArrayList<CustomMazeObject>();
 	private int customSize = 0;
 
@@ -61,10 +72,10 @@ public class Maze implements VisibleObject {
 		maze = new MazeObject[MAZE_SIZE][MAZE_SIZE];
 		for(int i = 0; i < MAZE_SIZE; i++)
 			for(int j = 0; j < MAZE_SIZE; j++)
-				maze[i][j] = new Floor(SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE);
+				maze[i][j] = new Floor(SQUARE_SIZE, i * SQUARE_SIZE, j*SQUARE_SIZE);
 	}
 
-	public Maze(int mazeSize, int[] start, int[] finish, byte[][] newMaze)
+	public Maze(int mazeSize, int[] start, int[] finish, byte[][] object, byte[][] rotation)
 	{
 		MAZE_SIZE = mazeSize;
 		startPosition = start;
@@ -72,31 +83,17 @@ public class Maze implements VisibleObject {
 		maze = new MazeObject[MAZE_SIZE][MAZE_SIZE];
 		for(int i = 0; i < MAZE_SIZE; i++){
 			for(int j = 0; j < MAZE_SIZE; j++){
-				switch(newMaze[i][j])
-				{
-				case 0 : maze[i][j] = new Floor(SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
-				case 1 : maze[i][j] = new Box(SQUARE_SIZE, SQUARE_SIZE, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
-				case 2 : maze[i][j] = new Box(SQUARE_SIZE, (float)SQUARE_SIZE/2, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
-				case 3 : maze[i][j] = new FinishTile(SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
-				case 4 : maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE, 0, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
-				case 5 : maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE, 90, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
-				case 6 : maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE, 180, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
-				case 7 : maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE, 270, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
-				case 8 : maze[i][j] = new Ramp(SQUARE_SIZE, (float)SQUARE_SIZE/2, 0, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
-				case 9 : maze[i][j] = new Ramp(SQUARE_SIZE, (float)SQUARE_SIZE/2, 90, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
-				case 10 : maze[i][j] = new Ramp(SQUARE_SIZE, (float)SQUARE_SIZE/2, 180, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
-				case 11 : maze[i][j] = new Ramp(SQUARE_SIZE, (float)SQUARE_SIZE/2, 270, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
-				case 12 : maze[i][j] = new StartArrow(SQUARE_SIZE, 0, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
-				case 13 : maze[i][j] = new StartArrow(SQUARE_SIZE, 90, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
-				case 14 : maze[i][j] = new StartArrow(SQUARE_SIZE, 180, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
-				case 15 : maze[i][j] = new StartArrow(SQUARE_SIZE, 270, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
-				default : maze[i][j] = customs.get(-(newMaze[i][j] + 1)).translate(SQUARE_SIZE * i, 0, SQUARE_SIZE * j);
-				}
+				if(object[i][j] < 0)
+					maze[i][j] = customs.get(-(object[i][j] + 1)).translate(SQUARE_SIZE * i, 0, SQUARE_SIZE * j);
+				else
+					maze[i][j] = standards.get(object[i][j]).translate(SQUARE_SIZE * i, 0, SQUARE_SIZE * j);
+				maze[i][j].rotateVerticesX(rotation[i][j]%4*90, 0, (float)(j + 0.5f)*SQUARE_SIZE);
+				maze[i][j].rotateVerticesY(rotation[i][j]/4*90, (float)(i + 0.5f)*SQUARE_SIZE, (float)(j + 0.5f)*SQUARE_SIZE);
 			}
 		}
 		selected = new boolean[MAZE_SIZE][MAZE_SIZE];
 	}
-	
+
 	public void removeRedundantFaces()
 	{
 		for(int i = 0; i < maze[0].length; i++){
@@ -115,7 +112,6 @@ public class Maze implements VisibleObject {
 
 	public boolean isFinish(double x, double z)
 	{
-
 		return x > finishPosition[0] * SQUARE_SIZE && x < (finishPosition[0] + 1) * SQUARE_SIZE &&
 				z > finishPosition[1] * SQUARE_SIZE && z < (finishPosition[1] + 1) * SQUARE_SIZE;
 	}
@@ -133,8 +129,8 @@ public class Maze implements VisibleObject {
 
 		Box.addTexture(boxTexture);
 		Floor.addTexture(floorTexture);
+		StartTile.addTexture(floorTexture);
 		Ramp.addTexture(boxTexture);
-		StartArrow.addTexture(floorTexture);
 		FinishTile.addTexture(finishTexture);
 	}
 
@@ -195,7 +191,7 @@ public class Maze implements VisibleObject {
 					if(i < maze[0].length && j < maze.length)
 						newMaze[i][j] = maze[i][j];
 					else
-						newMaze[i][j] = new Floor(SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE);
+						newMaze[i][j] = standards.get(0).translate(i * SQUARE_SIZE, 0, j*SQUARE_SIZE);
 					newSelected[i][j] = false;
 				}
 			}
@@ -215,7 +211,7 @@ public class Maze implements VisibleObject {
 			for( int j = 0; j < MAZE_SIZE; j++ )
 				selected[i][j] = false;
 	}
-	
+
 	public void selectedAll()
 	{
 		for( int i = 0; i < MAZE_SIZE; i++ )
@@ -223,43 +219,53 @@ public class Maze implements VisibleObject {
 				selected[i][j] = true;
 	}
 
+	public void setStart(int rotation)
+	{
+		maze[startPosition[0]][startPosition[2]] = standards.get(0).translate(startPosition[0]*SQUARE_SIZE, startPosition[1]*SQUARE_SIZE, startPosition[2]*SQUARE_SIZE);
+		for(int i = 0; i < MAZE_SIZE; i++){
+			for (int j = 0; j < MAZE_SIZE; j++){
+				if(selected[i][j] && !(i == finishPosition[0] && j == finishPosition[1])){
+					startPosition[0] = i;
+					startPosition[2] = j;
+					startPosition[3] = rotation;
+					break;
+				}
+			}
+		}
+		maze[startPosition[0]][startPosition[2]] = standards.get(3).translate(startPosition[0]*SQUARE_SIZE, startPosition[1]*SQUARE_SIZE, startPosition[2]*SQUARE_SIZE);
+	}
+
+	public void setFinish()
+	{
+		maze[finishPosition[0]][finishPosition[1]] = standards.get(0).translate(finishPosition[0]*SQUARE_SIZE, 0, finishPosition[1]*SQUARE_SIZE);
+		for(int i = 0; i < MAZE_SIZE; i++){
+			for (int j = 0; j < MAZE_SIZE; j++){
+				if(selected[i][j]&& !(i == startPosition[0] && j == startPosition[2])){
+					finishPosition[0] = i;
+					finishPosition[1] = j;
+					break;
+				}
+			}
+		}
+		maze[finishPosition[0]][finishPosition[1]] = standards.get(4).translate(finishPosition[0]*SQUARE_SIZE, 0, finishPosition[1]*SQUARE_SIZE);
+	}
+
 	/**
 	 * Adds an element to the maze at the selected position(s). 
 	 * @param drawMode	Which element needs to be added. See Editor for drawMode declarations.
-	 * @param angle		Orientation of the element the needs to be added: This value is always a multiple of ninety degrees.
 	 */
 
-	public void addBlock(byte drawMode, int angle)
-	{
+	public void addBlock(byte drawMode, int rotation)
+	{			
 		for(int i = 0; i < MAZE_SIZE; i++)
 			for (int j = 0; j < MAZE_SIZE; j++)
-				if (selected[i][j]) {
-					switch(drawMode)
-					{
-					case Editor.DRAW_EMPTY : maze[i][j] = maze[i][j] = new Floor(SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE); break;
-					case Editor.DRAW_BOX : maze[i][j] = new Box(SQUARE_SIZE, SQUARE_SIZE, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
-					case Editor.DRAW_LOW_BOX : maze[i][j]  = new Box(SQUARE_SIZE, SQUARE_SIZE/2, i * SQUARE_SIZE, 0, j * SQUARE_SIZE); break;
-					case Editor.DRAW_START : 
-						maze[startPosition[0]][startPosition[2]] = new Floor(SQUARE_SIZE, startPosition[0] * SQUARE_SIZE, startPosition[2] * SQUARE_SIZE);
-						startPosition[0] = i;
-						startPosition[2] = j;
-						startPosition[3] = angle;
-						maze[i][j] = new StartArrow(SQUARE_SIZE, angle, i * SQUARE_SIZE, j * SQUARE_SIZE);
-						break;
-					case Editor.DRAW_FINISH :
-						maze[finishPosition[0]][finishPosition[1]] = new Floor(SQUARE_SIZE, finishPosition[0] * SQUARE_SIZE, finishPosition[1] * SQUARE_SIZE);
-						maze[i][j] = new FinishTile(SQUARE_SIZE, i * SQUARE_SIZE, j * SQUARE_SIZE);
-						finishPosition[0] = i;
-						finishPosition[1] = j;
-						break;
-					case Editor.DRAW_RAMP:
-						maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE, angle, i * SQUARE_SIZE, 0, j * SQUARE_SIZE);
-						break;
-					case Editor.DRAW_LOW_RAMP:
-						maze[i][j] = new Ramp(SQUARE_SIZE, SQUARE_SIZE / 2, angle, i * SQUARE_SIZE, 0, j * SQUARE_SIZE);
-						break;
-					default : maze[i][j] = customs.get(drawMode - 7).translate(i * SQUARE_SIZE, 0, j*SQUARE_SIZE);
-					}
+				if (selected[i][j] && !(i == startPosition[0] && j == startPosition[2]) &&
+						!(i == finishPosition[0] && j == finishPosition[1])) {
+					if(drawMode < 0)
+						maze[i][j] = customs.get(-drawMode - 1).translate(i * SQUARE_SIZE, 0, j*SQUARE_SIZE);
+					else
+						maze[i][j] = standards.get(drawMode).translate(i * SQUARE_SIZE, 0, j*SQUARE_SIZE);
+					maze[i][j].rotateVerticesY(rotation, (float)(i + 0.5f) * SQUARE_SIZE, (float)(j + 0.5f) * SQUARE_SIZE);
 				}
 	}
 
@@ -267,13 +273,20 @@ public class Maze implements VisibleObject {
 	 * Rotates the selected element(s) by ninety degrees, is the selected element(s) can  be rotated.
 	 */
 
-	public void rotateSelected()
+	public void rotateSelected(boolean x, boolean y, boolean z)
 	{
-		for(int i = 0; i < MAZE_SIZE; i++)
-			for (int j = 0; j < MAZE_SIZE; j++)
-				if (selected[i][j])
-					maze[i][j].rotateVerticesY(90, (i + 0.5) * SQUARE_SIZE, (j + 0.5) * SQUARE_SIZE);
-
+		for(int i = 0; i < MAZE_SIZE; i++){
+			for (int j = 0; j < MAZE_SIZE; j++){
+				if (selected[i][j]){
+					if(x)
+						maze[i][j].rotateVerticesX(90, 0, (j + 0.5) * SQUARE_SIZE);
+					if(y)
+						maze[i][j].rotateVerticesY(90, (i + 0.5) * SQUARE_SIZE, (j + 0.5) * SQUARE_SIZE);
+					if(z)
+						maze[i][j].rotateVerticesZ(90, (i + 0.5) * SQUARE_SIZE, 0);
+				}
+			}
+		}
 	}
 
 	/**
@@ -299,12 +312,15 @@ public class Maze implements VisibleObject {
 				wr.write(finishPosition[0] + " " + finishPosition[1] + "\n");
 				for(CustomMazeObject custom: customs)
 					wr.write(custom.getFile().getCanonicalPath() + "\n");
+				wr.write(0 + "\n");
 				for (int i = 0; i < maze[0].length; i++) {
 					for (int j = 0; j < maze.length; j++) {
 						if(customs.contains(maze[i][j]))
 							wr.print(-1 - customs.indexOf(maze[i][j]));
 						else
-							wr.print(maze[i][j].getCode());
+							wr.print(standards.indexOf(maze[i][j]));
+						int[] rotation = maze[i][j].rotation;
+						wr.print("," + (rotation[0]/90%4 + 4*(rotation[1]/90%4) + 16*(rotation[2]/90%4)));
 						if (j < maze.length - 1)
 							wr.print(" ");
 						else
@@ -357,13 +373,18 @@ public class Maze implements VisibleObject {
 				}
 				customs.add(CustomMazeObject.readFromOBJ(new File(fileName)));
 			}
-			byte[][] newMaze = new byte[mazeSize][mazeSize];
+			sc.next();
+			byte[][] objects = new byte[mazeSize][mazeSize];
+			byte[][] rotation = new byte[mazeSize][mazeSize];
 			for (int i = 0; i < mazeSize; i++) {
 				for (int j = 0; j < mazeSize; j++) {
-					newMaze[i][j] = sc.nextByte();
+					String line = sc.next();
+					String[] objectElements = line.split("[,]");
+					objects[i][j] = Byte.parseByte(objectElements[0]);
+					rotation[i][j] = Byte.parseByte(objectElements[1]);
 				}
 			}
-			return new Maze(mazeSize, newStart, newFinish, newMaze);
+			return new Maze(mazeSize, newStart, newFinish, objects, rotation);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new Maze();
@@ -388,12 +409,12 @@ public class Maze implements VisibleObject {
 							if(that.equals(obj)){
 								that.setTexNum(obj.getTexNum());
 							}
-								
+
 						}
 					}
 				}
 			}
-			
+
 
 		}
 		customSize = customs.size();

@@ -1,5 +1,7 @@
 package Listening;
 
+import EditorModes.AddMode;
+import EditorModes.AddStatic;
 import GameObjects.Editor;
 import MainGame.Level;
 
@@ -16,6 +18,6 @@ public class OpenCommand implements Command{
 		Level level = Editor.readLevel();
 		if(level != null)
 			editor.setLevel(level);
-		
+		editor.setEditMode(new AddStatic(editor.getLevel(), AddMode.ADD_FLOOR));
 	}
 }

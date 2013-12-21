@@ -6,61 +6,49 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.vecmath.Vector3d;
 
-import Drawing.EditBoxManager;
+import EditorModes.AddMode;
+import EditorModes.AddStatic;
+import EditorModes.EditMode;
 import Listening.Control;
 import MainGame.Level;
 import MainGame.Maze;
 import MazeObjects.CustomMazeObject;
 
 public class Editor extends GameObject{
-
-	public static final byte DRAW_EMPTY = 0;
-	public static final byte DRAW_BOX = 1;
-	public static final byte DRAW_LOW_BOX = 2;
-	public static final byte DRAW_START = 3;
-	public static final byte DRAW_FINISH = 4;
-	public static final byte DRAW_RAMP = 5;
-	public static final byte DRAW_LOW_RAMP = 6;
 	
+	private EditMode editMode;
+
 	private float FOV;
 
 	private Control control; 
-	private EditBoxManager editBoxManager;
 
 	private double horAngle, verAngle;
 
 	private int selectedX, selectedZ;
 
-	private int pressedX, pressedY;
 	int angle;
 
 	private Level level;
-	/*
-	private static float buttonSize;
-	private final int numButtons = 11;*/
-
-	private byte drawMode;
 
 	public Editor(Vector3d pos, double h, double v)
 	{
 		super(pos);
 		horAngle = h;
 		verAngle = v;
+		editMode = new AddStatic(level, AddMode.ADD_FLOOR);
 	}
 
 	/**
 	 * Sets the Field of View of the editor
 	 * @param FOV	Field of View
 	 */
-
-	public void setFOV(float FOV)
+	
+	public void initSet(Level level, float FOV, Control control)
 	{
+		this.level = level;
 		this.FOV = FOV;
-	}
-
-	public void setEditBoxManager(EditBoxManager ebm)
-	{
-		editBoxManager = ebm;
+		this.control = control;
+		editMode = new AddStatic(level, AddMode.ADD_FLOOR);
 	}
 
 	/**
@@ -73,17 +61,6 @@ public class Editor extends GameObject{
 	}
 
 	/**
-	 * Sets the Control object that will control the player's motion
-	 * <p>
-	 * The control must be set if the object should be moved.
-	 * @param input
-	 */
-	public void setControl(Control control)
-	{
-		this.control = control;
-	}
-
-	/**
 	 * Returns the horizontal angle of the orientation.
 	 * @return the horAngle
 	 */
@@ -91,13 +68,6 @@ public class Editor extends GameObject{
 		return horAngle;
 	}
 
-	/**
-	 * Sets the horizontal angle of the orientation.
-	 * @param horAngle the horAngle to set
-	 */
-	public void setHorAngle(double horAngle) {
-		this.horAngle = horAngle;
-	}
 
 	/**
 	 * Returns the vertical angle of the orientation.
@@ -107,25 +77,13 @@ public class Editor extends GameObject{
 		return verAngle;
 	}
 
-	/**
-	 * Sets the vertical angle of the orientation.
-	 * @param verAngle the verAngle to set
-	 */
-	public void setVerAngle(double verAngle) {
-		this.verAngle = verAngle;
-	}
-	/**
-	 * Gets the maze
-	 * @return	Maze
-	 */
-
 	public Level getLevel(){
 		return level;
 	}
-
-	public void setDrawMode(byte drawMode)
+	
+	public void setEditMode(EditMode editMode)
 	{
-		this.drawMode = drawMode;
+		this.editMode = editMode;
 	}
 
 	/**
@@ -136,58 +94,30 @@ public class Editor extends GameObject{
 
 	public void update(int screenWidth, int screenHeight)
 	{
-		double pos[] = new double[3];
-		location.get(pos);
 		int notches = control.getNotches();
 		// The Y position can never be lower then the highest wall
-		if(pos[1] + notches > level.getMaze().SQUARE_SIZE)
-			pos[1] += notches;
-		// Store the position where the left button was originally pressed
-		// This information is used while rotating slope that are to be placed. 
-		if(control.isLeftButtonPressed())
-		{
-			pressedX = control.getMouseX();
-			pressedY = control.getMouseY();
-		}
+		if(location.y + notches > Maze.SQUARE_SIZE)
+			location.y += notches;
 		// When dragging the right mouse button, the camera is moved.
 		if(control.isRightButtonDragged()){
-
-			updateLocation(screenHeight, pos);
-		}
-		// When a selection of squares made by dragging is released, the selected squares are toggled
-		else if(control.getMouseReleased() == 1 && !editBoxManager.isHoovering()){
-			level.getMaze().addBlock(drawMode, angle);
+			updateLocation(screenHeight);
 		}
 		else
 		{
-			updateCursor(screenHeight, screenWidth, pos);
-			// When dragging, the selected squares are remembered:
-			if(!control.isLeftButtonDragged()){
+			updateCursor(screenHeight, screenWidth);
+			if(control.isLeftButtonPressed())
+				editMode.mousePressed(selectedX, selectedZ);
+			else if(control.getMouseReleased() == 1){
+				editMode.mouseReleased();
+			}
+			else if(control.isLeftButtonDragged()){
+				editMode.mouseDragged(selectedX, selectedZ);
+			}
+			else{
 				level.getMaze().clearSelected();
-				// highlight the selection:
 				level.getMaze().select(selectedX, selectedZ);
-			}
-			else if(!editBoxManager.isHoovering() && drawMode < 4)
-			{
-				level.getMaze().select(selectedX, selectedZ);
-			}
-			else if(!editBoxManager.isHoovering())
-			{
-				// If the element to be added is rotatable: find the correct orientation.
-				int dX = control.getMouseX() - pressedX;
-				int dY = control.getMouseY() - pressedY;
-				if(Math.abs(dX) > Math.abs(dY) )
-				{
-					angle = dX > 0 ? 90 : 270;
-				}
-				else
-				{
-					angle = dY > 0 ? 180 : 0;
-				}
-				level.getMaze().addBlock(drawMode, angle);
 			}
 		}
-		location.set(pos);
 	}
 
 	/**
@@ -197,19 +127,19 @@ public class Editor extends GameObject{
 	 * @param screenWidth	Width of the current window
 	 */
 
-	private void updateCursor(int screenHeight, int screenWidth, double[] pos)
+	private void updateCursor(int screenHeight, int screenWidth)
 	{
 		// The field of view relates to the portion of the map that is visible:
 		double halfTan = Math.tan(Math.toRadians(FOV/2));
-		double pixelsPerUnit = (screenHeight/2) / (halfTan * pos[1]); 
+		double pixelsPerUnit = (screenHeight/2) / (halfTan * location.y); 
 
 		// cursor position in ogl coordinates:
-		double cursorPositionX = (control.getMouseX() - screenWidth / 2) / pixelsPerUnit + pos[0];
-		double cursorPositionZ = (control.getMouseY() - screenHeight / 2) / pixelsPerUnit + pos[2];
+		double cursorPositionX = (control.getMouseX() - screenWidth / 2) / pixelsPerUnit + location.x;
+		double cursorPositionZ = (control.getMouseY() - screenHeight / 2) / pixelsPerUnit + location.z;
 
 		// cursor position in maze coordinates:
-		selectedX = (int)(cursorPositionX / level.getMaze().SQUARE_SIZE);
-		selectedZ = (int)(cursorPositionZ / level.getMaze().SQUARE_SIZE);
+		selectedX = (int)(cursorPositionX / Maze.SQUARE_SIZE);
+		selectedZ = (int)(cursorPositionZ / Maze.SQUARE_SIZE);
 	}
 
 	/**
@@ -218,26 +148,15 @@ public class Editor extends GameObject{
 	 * @param screenHeight	Height of the current window.
 	 */
 
-	private void updateLocation(int screenHeight, double[] pos)
+	private void updateLocation(int screenHeight)
 	{
 		// The field of view relates to the portion of the map that is visible:
 		double halfTan = Math.tan(Math.toRadians(FOV/2));
-		double pixelsPerUnit = (screenHeight/2) / (halfTan * pos[1]); 
+		double pixelsPerUnit = (screenHeight/2) / (halfTan * location.y); 
 
 		// camera position in ogl coordinates:
-		pos[0]= pos[0] - control.getdX() / pixelsPerUnit;
-		pos[2] = pos[2] - control.getdY() / pixelsPerUnit;
-	}
-	
-	public void addObject(CustomMazeObject obj)
-	{
-		if(!Maze.customs.contains(obj)){
-			Maze.customs.add(obj);
-			drawMode = (byte)(6 + Maze.customs.size());
-		}
-		else
-			drawMode = (byte)(6 + Maze.customs.indexOf(obj));
-		
+		location.x = location.x - control.getdX() / pixelsPerUnit;
+		location.z = location.z - control.getdY() / pixelsPerUnit;
 	}
 
 	/**
@@ -301,7 +220,7 @@ public class Editor extends GameObject{
 
 		return level;
 	}
-	
+
 	public static CustomMazeObject readMazeObject(){
 		JFileChooser fc = new JFileChooser();
 		selectDirectory(fc, "Maze Objects", "obj", "object", "objects");

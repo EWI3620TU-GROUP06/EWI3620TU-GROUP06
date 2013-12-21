@@ -7,29 +7,36 @@ import javax.vecmath.Vector3f;
 
 import com.sun.opengl.util.texture.Texture;
 
-public class Floor extends MazeObject {
-	
+public class StartTile extends MazeObject {
+
 	private static Texture texture;
-	
-	public Floor(float width, float x, float z){
+
+	public StartTile(float width, float x, float z)
+	{
 		super(false);
 		this.width = width;
-		height = 0;
+		this.height = width;
 		addVertex(new Vector3f(x, 0, z));
 		addVertex(new Vector3f(x, 0, z + width));
 		addVertex(new Vector3f(x + width, 0, z + width));
 		addVertex(new Vector3f(x + width, 0, z));
-
+		
 		int face0[] = {0,1,2,3};
 		addFace(face0);
-		
-		restitution = 0.8f;
+
+		restitution = 0.1f;
 	}
 	
-	public Floor(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces)
+	public StartTile(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces)
 	{
 		super(vertices, texVertices, faces);
-		restitution = 0.8f;
+		restitution = 0.1f;
+	}
+
+
+	public void setAngle(float angle)
+	{
+		rotateVerticesY(angle - rotation[1], 2.5, 2.5);
 	}
 	
 	public static void addTexture(Texture t)
@@ -44,7 +51,7 @@ public class Floor extends MazeObject {
 	
 	public MazeObject translate(float x, float y, float z)
 	{
-		Floor res = (Floor)this.clone();
+		StartTile res = (StartTile)this.clone();
 		for(Vector3f vertex : res.vertices)
 			vertex.add(new Vector3f(x, y, z));
 		return res;
@@ -57,12 +64,12 @@ public class Floor extends MazeObject {
 		{
 			vertices.add((Vector3f)vertex.clone());
 		}
-		return new Floor(vertices, this.texVertices, this.faces);
+		return new StartTile(vertices, this.texVertices, this.faces);
 	}
 	
 	public boolean equals(Object other)
 	{
-		return other instanceof Floor;
+		return other instanceof StartTile;
 	}
-	
+
 }

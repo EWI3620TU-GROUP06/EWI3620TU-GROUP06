@@ -1,5 +1,8 @@
 package MazeObjects;
 
+import java.util.ArrayList;
+
+import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 
 import com.sun.opengl.util.texture.Texture;
@@ -43,6 +46,14 @@ public class Box extends MazeObject{
 		restitution = 0.4f;
 	}
 	
+	public Box(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces, float width, float height)
+	{
+		super(vertices, texVertices, faces);
+		restitution = 0.1f;
+		this.width = width;
+		this.height = height;
+	}
+	
 	public static void addTexture(Texture t)
 	{
 		texture = t;
@@ -60,6 +71,36 @@ public class Box extends MazeObject{
 		for(Vector3f vertex : vertices){
 			vertex.add(change);
 		}
+	}
+	
+	public MazeObject translate(float x, float y, float z)
+	{
+		Box res = (Box)this.clone();
+		for(Vector3f vertex : res.vertices)
+			vertex.add(new Vector3f(x, y, z));
+		return res;
+	}
+
+	public MazeObject clone()
+	{
+		ArrayList<Vector3f> vertices = new ArrayList<Vector3f>();
+		for(Vector3f vertex : this.vertices)
+		{
+			vertices.add((Vector3f)vertex.clone());
+		}
+		@SuppressWarnings("unchecked")
+		ArrayList<Face> faces = (ArrayList<Face>) this.faces.clone();
+		return new Box(vertices, this.texVertices, faces, this.width, this.height);
+	}
+	
+	public boolean equals(Object other)
+	{
+		if( other instanceof Box)
+		{
+			Box that = (Box) other;
+			return this.height == that.height && this.width == that.width;
+		}
+		return false;
 	}
 
 }

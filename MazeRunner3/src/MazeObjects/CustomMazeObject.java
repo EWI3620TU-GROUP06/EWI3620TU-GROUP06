@@ -144,15 +144,15 @@ public class CustomMazeObject extends MazeObject{
 		return file;
 	}
 
-	public CustomMazeObject translate(float x, float y, float z)
+	public MazeObject translate(float x, float y, float z)
 	{
-		CustomMazeObject res = this.clone();
+		CustomMazeObject res = (CustomMazeObject)this.clone();
 		for(Vector3f vertex : res.vertices)
 			vertex.add(new Vector3f(x, y, z));
 		return res;
 	}
 
-	public CustomMazeObject clone()
+	public MazeObject clone()
 	{
 		ArrayList<Vector3f> vertices = new ArrayList<Vector3f>();
 		for(Vector3f vertex : this.vertices)
@@ -167,7 +167,7 @@ public class CustomMazeObject extends MazeObject{
 		if(other instanceof CustomMazeObject)
 		{
 			CustomMazeObject that = (CustomMazeObject) other;
-			return this.faces == that.faces;
+			return this.file.getAbsolutePath() == that.file.getAbsolutePath();
 		}
 		return false;
 	}

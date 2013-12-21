@@ -22,6 +22,7 @@ public abstract class MazeObject {
 	protected ArrayList<Vector2f> texVertices;
 	public float width;
 	public float height;
+	public int[] rotation = {0, 0, 0};
 
 	float restitution;
 
@@ -140,7 +141,7 @@ public abstract class MazeObject {
 		gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, wallColour, 0);
 		gl.glMaterialfv( GL.GL_FRONT, GL.GL_SPECULAR, wallColour, 0);
 		gl.glMateriali( GL.GL_FRONT, GL.GL_SHININESS, 50);
-		
+
 		for(int j = 0; j < faces.size(); j++)
 		{
 			Face face = faces.get(j);
@@ -199,72 +200,49 @@ public abstract class MazeObject {
 	 * @param zRotate	Z coordinate of the point around which is to be rotated
 	 */
 
-	public void rotateVerticesY(float angle, double xRotate, double zRotate)
-	{
-		for(int i = 0; i < vertices.size(); i++)
-		{
-			Vector3f vertex = vertices.get(i);
-			float[] vert = new float[3];
-
-			vertex.get(vert);
-			float x = vert[0];
-			float z = vert[2];
-			double cos = Math.cos(Math.toRadians(angle));
-			double sin = Math.sin(Math.toRadians(angle));
-			vert[0] =((float)(x*cos - z * sin - xRotate * cos + zRotate * sin + xRotate));
-			vert[2] = ((float)(x*sin + z * cos - zRotate * cos - xRotate * sin + zRotate));
-
-			vertex.set(vert);
-		}
-	}
-	
 	public void rotateVerticesX(float angle, double yRotate, double zRotate)
 	{
 		for(int i = 0; i < vertices.size(); i++)
 		{
 			Vector3f vertex = vertices.get(i);
-			float[] vert = new float[3];
-
-			vertex.get(vert);
-			float z = vert[2];
-			float y = vert[1];
+			float y = vertex.y;
+			float z = vertex.z;
 			double cos = Math.cos(Math.toRadians(angle));
 			double sin = Math.sin(Math.toRadians(angle));
-			vert[2] =((float)(z*cos - y * sin - zRotate * cos + yRotate * sin + zRotate));
-			vert[1] = ((float)(z*sin + y * cos - yRotate * cos - zRotate * sin + yRotate));
-
-			vertex.set(vert);
+			vertex.z=((float)(z*cos - y * sin - zRotate * cos + yRotate * sin + zRotate));
+			vertex.y = ((float)(z*sin + y * cos - yRotate * cos - zRotate * sin + yRotate));
 		}
+		rotation[0] += angle;
 	}
-
-	public byte getCode()
+	
+	public void rotateVerticesY(float angle, double xRotate, double zRotate)
 	{
-		if(this instanceof Box)
+		for(int i = 0; i < vertices.size(); i++)
 		{
-			Box box = (Box) this;
-			if(box.height == 5)
-				return 1;
-			else
-				return 2;
+			Vector3f vertex = vertices.get(i);
+			float x = vertex.x;
+			float z = vertex.z;
+			double cos = Math.cos(Math.toRadians(angle));
+			double sin = Math.sin(Math.toRadians(angle));
+			vertex.x =((float)(x*cos - z * sin - xRotate * cos + zRotate * sin + xRotate));
+			vertex.z = ((float)(x*sin + z * cos - zRotate * cos - xRotate * sin + zRotate));
 		}
-		if(this instanceof Ramp)
+		rotation[1] += angle;
+	}
+	
+	public void rotateVerticesZ(float angle, double xRotate, double yRotate)
+	{
+		for(int i = 0; i < vertices.size(); i++)
 		{
-			Ramp ramp = (Ramp) this;
-			if(ramp.height == 5)
-				return (byte) (ramp.orientation / 90 + 4);
-			else
-				return (byte) (ramp.orientation / 90 + 8);
+			Vector3f vertex = vertices.get(i);
+			float y = vertex.y;
+			float x = vertex.x;
+			double cos = Math.cos(Math.toRadians(angle));
+			double sin = Math.sin(Math.toRadians(angle));
+			vertex.y =((float)(y*cos - x * sin - yRotate * cos + xRotate * sin + yRotate));
+			vertex.x = ((float)(y*sin + x * cos - xRotate * cos - yRotate * sin + xRotate));
 		}
-		if(this instanceof FinishTile)
-			return 3;
-		if(this instanceof StartArrow)
-		{
-			StartArrow startArrow = (StartArrow) this;
-			return (byte)(startArrow.orientation / 90 + 12);
-		}
-		if(this instanceof CustomMazeObject)
-			return -1;
-		return 0;
+		rotation[2] += angle;
 	}
 
 	public Vector3f getVertex(int index)
@@ -276,7 +254,7 @@ public abstract class MazeObject {
 	{
 		return faces.get(index).getVertices();
 	}
-	
+
 	public float getD(int index)
 	{
 		Vector3f normal = faces.get(index).getNormal();
@@ -327,7 +305,10 @@ public abstract class MazeObject {
 	}
 
 	public abstract Texture getTexture();
-	
+	public abstract MazeObject translate(float x, float y, float z);
+	public abstract MazeObject clone();
+	public abstract boolean equals(Object other);
+
 	public ArrayList<Vector3f> getFaceVertices(int index)
 	{
 		ArrayList<Vector3f> res = new ArrayList<Vector3f>();
@@ -338,7 +319,7 @@ public abstract class MazeObject {
 		}
 		return res;
 	}
-	
+
 	public void removeRedunantFaces(MazeObject that)
 	{
 		for (int i  = 0; i < this.faces.size(); i++)
@@ -357,12 +338,12 @@ public abstract class MazeObject {
 			}
 		}
 	}
-	
-	
+
+
 	public ArrayList<Vector3f> retainAll(ArrayList<Vector3f> l1, ArrayList<Vector3f> l2)
 	{
 		ArrayList<Vector3f> res = new ArrayList<Vector3f>();
-		
+
 		for(Vector3f v1 : l1)
 		{
 			for(Vector3f v2 : l2)
@@ -374,10 +355,10 @@ public abstract class MazeObject {
 				}
 			}
 		}
-		
+
 		return res;
 	}
-	
+
 	public Vector3f getPos()
 	{
 		return vertices.get(0);

@@ -150,18 +150,14 @@ public class MazeEditor implements GLEventListener {
 
 		camera = new Camera(editor.getLocation(), editor.getHorAngle(), editor.getVerAngle());		
 
-		editBoxManager = new EditBoxManager(level.getMaze(), editor, screenWidth, screenHeight);
+		editBoxManager = new EditBoxManager(level, editor, screenWidth, screenHeight);
 
 		input = state.getGSM().getInput();
 		AddListening(input);
 
 		editBoxManager.setControl(input);
 
-		editor.setControl(input);
-		editor.setFOV(FOV);
-		editor.setLevel(level);
-
-		editor.setEditBoxManager(editBoxManager);
+		editor.initSet(level, FOV, input);
 	}
 
 	private void initMenuText(){
@@ -241,7 +237,13 @@ public class MazeEditor implements GLEventListener {
 
 		if (!pause){
 			editBoxManager.update();
-			editor.update(screenWidth, screenHeight);
+			if(!editBoxManager.isHoovering())
+				editor.update(screenWidth, screenHeight);
+			else{
+				input.isLeftButtonPressed();
+				input.isLeftButtonDragged();
+				input.getMouseReleased();
+			}
 
 			if(editor.getLevel().getMaze() != visibleObjects.get(0))
 			{
