@@ -66,7 +66,7 @@ public class Swarm {
 			return genLocation(Bound);
 		}
 		else{
-			return new Vector3f(maze.SQUARE_SIZE*randX, scale, maze.SQUARE_SIZE*randZ);
+			return new Vector3f(Maze.SQUARE_SIZE*randX, scale, Maze.SQUARE_SIZE*randZ);
 		}
 	}
 	

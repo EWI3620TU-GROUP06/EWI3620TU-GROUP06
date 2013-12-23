@@ -13,7 +13,7 @@ public class SwitchMenuModeCommand implements Command {
 
 	@Override
 	public void execute() {
-		//TODO: implementation
+		editbxman.toggleMenuMode();
 	}
 
 }

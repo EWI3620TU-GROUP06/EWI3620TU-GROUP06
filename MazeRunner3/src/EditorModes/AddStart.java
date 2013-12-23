@@ -16,7 +16,8 @@ public class AddStart extends AddMode {
 		int dZ = mazeZ - pressedZ;
 		double unrounded = Math.atan2(dX, -dZ) / (0.5 * Math.PI);
 		rotation = 90 * (int)(Math.round(unrounded));
-		level.getMaze().setStart(rotation);
+		level.getMaze().removeBlocks(drawMode);
+		level.getMaze().addBlock(drawMode, rotation);
 	}
 	
 	@Override
@@ -24,13 +25,15 @@ public class AddStart extends AddMode {
 		pressedX = mazeX;
 		pressedZ = mazeZ;
 		level.getMaze().select(mazeX, mazeZ);
-		level.getMaze().setStart(rotation);
+		level.getMaze().removeBlocks(drawMode);
+		level.getMaze().addBlock(drawMode, rotation);
 	}
 	
 	@Override
 	public void mouseReleased()
 	{
-		level.getMaze().setStart(rotation);
+		level.getMaze().removeBlocks(drawMode);
+		level.getMaze().addBlock(drawMode, rotation);
 	}
 
 }

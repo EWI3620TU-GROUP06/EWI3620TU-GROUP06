@@ -66,6 +66,11 @@ public abstract class MazeObject {
 	{
 		return vertices.size();
 	}
+	
+	public int[] getRotation()
+	{
+		return rotation;
+	}
 
 	public int getNumFaces()
 	{
@@ -361,6 +366,12 @@ public abstract class MazeObject {
 
 	public Vector3f getPos()
 	{
-		return vertices.get(0);
+		Vector3f corner = new Vector3f(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
+		for(Vector3f vertex : vertices)
+		{
+			if(vertex.length() < corner.length())
+				corner = vertex;
+		}
+		return corner;
 	}
 }

@@ -25,10 +25,8 @@ public class EditBox extends ClickBox {
 	}
 	
 	public void reshape(int screenWidth, int screenHeight){
-		
-		this.screenHeight = screenHeight; 
-		this.screenWidth = screenWidth; 
-		
+		ClickBox.screenHeight = screenHeight; 
+		ClickBox.screenWidth = screenWidth; 
 	}
 	
 	public void setButtonSize(int buttonSize)

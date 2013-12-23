@@ -149,17 +149,16 @@ public class MazeEditor implements GLEventListener {
 		visibleObjects.add(level.getMaze());
 
 		editor = new Editor(new Vector3d(level.getMaze().getSize() / 2, 60, level.getMaze().getSize()/2), 0, -89.99999);
-
+		input = state.getGSM().getInput();
+		editor.initSet(level, FOV, input);
+		
 		camera = new Camera(editor.getLocation(), editor.getHorAngle(), editor.getVerAngle());		
 
-		editBoxManager = new EditBoxManager(level, editor, screenWidth, screenHeight);
+		editBoxManager = new EditBoxManager(editor, screenWidth, screenHeight);
 
-		input = state.getGSM().getInput();
 		AddListening(input);
 
 		editBoxManager.setControl(input);
-
-		editor.initSet(level, FOV, input);
 	}
 
 	private void initMenuText(){

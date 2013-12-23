@@ -6,7 +6,6 @@ import javax.media.opengl.GL;
 
 import EditorModes.*;
 import GameObjects.Editor;
-import LevelHandling.Level;
 import Listening.*;
 
 import com.sun.opengl.util.texture.Texture;
@@ -15,65 +14,73 @@ public class EditBoxManager extends ClickBoxManager {
 
 	private static final int numStandardButtons = 5;
 	private static final int numAddButtons = 8;
+	private static final int numChangeButtons = 1;
 	private int numButtons;
 	private int buttonSize;
-	private ArrayList<EditBox> addBoxes;
+	private ArrayList<ClickBox> addBoxes;
+	private ArrayList<ClickBox> changeBoxes;
 
-	public EditBoxManager(Level level, Editor editor, int screenWidth, int screenHeight)
+	public EditBoxManager(Editor editor, int screenWidth, int screenHeight)
 	{
 		super();
-		addBoxes = new ArrayList<EditBox>();
-		
+		addBoxes = new ArrayList<ClickBox>();
+		changeBoxes = new ArrayList<ClickBox>();
+
 		ArrayList<Command> commands = new ArrayList<Command>();
 		commands.add(new SwitchMenuModeCommand(this));
-		commands.add(new ResizeCommand(level.getMaze(), 1));
-		commands.add(new ResizeCommand(level.getMaze(), -1));
+		commands.add(new ResizeCommand(editor.getLevel().getMaze(), 1));
+		commands.add(new ResizeCommand(editor.getLevel().getMaze(), -1));
 		commands.add(new SaveCommand(editor));
 		commands.add(new OpenCommand(editor));
 
-		for (int i = 0; i < numStandardButtons; i++)
-		{
-			EditBox newBox = new EditBox(i*buttonSize, screenHeight - buttonSize, screenWidth, screenHeight, buttonSize, true);
-			newBox.setCommand(commands.get(i));
-			this.AddBox(newBox);
-		}
-		
+		addButtons(numStandardButtons, commands, Boxes, screenWidth, screenHeight);
+
 		commands.clear();
-		commands.add(new EditModeCommand(editor, new AddStatic(level, AddMode.ADD_FLOOR)));
-		commands.add(new EditModeCommand(editor, new AddStatic(level, AddMode.ADD_BOX)));
-		commands.add(new EditModeCommand(editor, new AddStatic(level, AddMode.ADD_LOW_BOX)));
-		commands.add(new EditModeCommand(editor, new AddStart(level)));
-		commands.add(new EditModeCommand(editor, new AddFinish(level)));
-		commands.add(new EditModeCommand(editor, new AddRotating(level, AddMode.ADD_RAMP)));
-		commands.add(new EditModeCommand(editor, new AddRotating(level, AddMode.ADD_LOW_RAMP)));
+		commands.add(new EditModeCommand(editor, new AddStatic(editor.getLevel(), AddMode.ADD_FLOOR)));
+		commands.add(new EditModeCommand(editor, new AddStatic(editor.getLevel(), AddMode.ADD_BOX)));
+		commands.add(new EditModeCommand(editor, new AddStatic(editor.getLevel(), AddMode.ADD_LOW_BOX)));
+		commands.add(new EditModeCommand(editor, new AddStart(editor.getLevel())));
+		commands.add(new EditModeCommand(editor, new AddFinish(editor.getLevel())));
+		commands.add(new EditModeCommand(editor, new AddRotating(editor.getLevel(), AddMode.ADD_RAMP)));
+		commands.add(new EditModeCommand(editor, new AddRotating(editor.getLevel(), AddMode.ADD_LOW_RAMP)));
 		commands.add(new CustomCommand(editor));
-		
-		for(int i = 0; i < numAddButtons; i++)
-		{
-			EditBox newBox = new EditBox(i*buttonSize, screenHeight - buttonSize, screenWidth, screenHeight, buttonSize, true);
-			newBox.setCommand(commands.get(i));
-			addBoxes.add(newBox);
-		}
-		
+
+		addButtons(numAddButtons, commands, addBoxes, screenWidth, screenHeight);
+
+		commands.clear();
+		commands.add(new EditModeCommand(editor, new MoveObject(editor.getLevel())));
+
+		addButtons(numChangeButtons, commands, changeBoxes, screenWidth, screenHeight);
+
 		this.Boxes.addAll(addBoxes);
 		numButtons = Boxes.size();
 		setButtonSize(numButtons, screenWidth, screenHeight);
 	}
-	
+
+	private void addButtons(int num, ArrayList<Command> commands, ArrayList<ClickBox> boxes, int screenWidth, int screenHeight)
+	{
+		for(int i = 0; i < num; i++)
+		{
+			EditBox newBox = new EditBox(i*buttonSize, screenHeight - buttonSize, screenWidth, screenHeight, buttonSize, true);
+			newBox.setCommand(commands.get(i));
+			boxes.add(newBox);
+		}
+	}
+
+
 	public void initTextures(GL gl)
 	{
-		for(int i = 0; i < numStandardButtons; i++)
-		{
-			Texture pressedTexture = DrawingUtil.initTexture(gl, "standard button " + i + " pressed");
-			Texture notPressedTexture = DrawingUtil.initTexture(gl, "standard button " + i + " not pressed");
-			((EditBox)Boxes.get(i)).setTextures(pressedTexture, notPressedTexture);
-		}
-		
-		for(int i = 0; i < numAddButtons; i++)
-		{
-			Texture pressedTexture = DrawingUtil.initTexture(gl, "add button " + i + " pressed");
-			Texture notPressedTexture = DrawingUtil.initTexture(gl, "add button " + i + " not pressed");
-			((EditBox)addBoxes.get(i)).setTextures(pressedTexture, notPressedTexture);
+		setTextures(gl, numStandardButtons, Boxes, "standard button ");
+		setTextures(gl, numAddButtons, addBoxes, "add button ");
+		setTextures(gl, numChangeButtons, changeBoxes, "change button ");
+	}
+
+	private void setTextures(GL gl, int num, ArrayList<ClickBox> boxes, String buttonName)
+	{
+		for(int i = 0; i < num; i++){
+			Texture pressedTexture = DrawingUtil.initTexture(gl, buttonName + i + " pressed");
+			Texture notPressedTexture = DrawingUtil.initTexture(gl, buttonName + i + " not pressed");
+			((EditBox)boxes.get(i)).setTextures(pressedTexture, notPressedTexture);
 		}
 	}
 
@@ -142,12 +149,28 @@ public class EditBoxManager extends ClickBoxManager {
 
 	public void drawTextures(GL gl)
 	{
-		for(ClickBox a :  Boxes)
+		for(int i = 0; i < numButtons; i++)
 		{
-			EditBox t = (EditBox) a;
+			EditBox t = (EditBox) Boxes.get(i);
 
 			t.drawTexture(gl);
 		}
+	}
+
+	public void toggleMenuMode()
+	{
+		if(Boxes.contains(addBoxes.get(0)))
+		{
+			Boxes.removeAll(addBoxes);
+			Boxes.addAll(changeBoxes);
+		}
+		else if(Boxes.contains(changeBoxes.get(0)))
+		{
+			Boxes.removeAll(changeBoxes);
+			Boxes.addAll(addBoxes);
+		}
+		numButtons = Boxes.size();
+		reshape(ClickBox.screenWidth, ClickBox.screenHeight);
 	}
 
 }

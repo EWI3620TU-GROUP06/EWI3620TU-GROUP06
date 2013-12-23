@@ -81,7 +81,7 @@ public class TextEditBox extends TextBox {
 				cursor[i] = ' ';
 		}
 		Text = String.copyValueOf(text);
-		renderer.beginRendering(this.screenWidth, this.screenHeight);
+		renderer.beginRendering(screenWidth, screenHeight);
 		renderer.setColor(color[0], color[1], color[2], color[3]);
 		renderer.draw(Text,location[0],location[1]);
 		renderer.draw(String.copyValueOf(cursor),location[0],location[1]);

@@ -13,19 +13,22 @@ public class AddFinish extends AddMode {
 	public void mouseDragged(int mazeX, int mazeZ) {
 		level.getMaze().clearSelected();
 		level.getMaze().select(mazeX, mazeZ);
-		level.getMaze().setFinish();
+		level.getMaze().removeBlocks(drawMode);
+		level.getMaze().addBlock(drawMode, rotation);
 	}
 
 	@Override
 	public void mouseReleased()
 	{
-		level.getMaze().setFinish();
+		level.getMaze().removeBlocks(drawMode);
+		level.getMaze().addBlock(drawMode, rotation);
 	}
 
 	@Override
 	public void mousePressed(int mazeX, int mazeZ) {
 		level.getMaze().select(mazeX, mazeZ);
-		level.getMaze().setFinish();
+		level.getMaze().removeBlocks(drawMode);
+		level.getMaze().addBlock(drawMode, rotation);
 	}
 
 }

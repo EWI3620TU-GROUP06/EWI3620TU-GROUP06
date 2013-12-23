@@ -28,10 +28,8 @@ public class TextBox extends ClickBox {
 		super (0, 0, screenWidth, screenHeight, 0, 0, clickable);
 		this.color = new float[]{red, green, blue, alpha};
 		this.textScale = textScale;
-		this.screenWidth = screenWidth;
-		this.screenHeight = screenHeight;
 		this.Font = Font;
-		renderer = new TextRenderer(new Font(Font, fontStyle, this.screenWidth/textScale));
+		renderer = new TextRenderer(new Font(Font, fontStyle, screenWidth/textScale));
 		this.Text = Text;
 		this.alignment = alignment;
 		this.relativePos = new float[]{x, y};
@@ -44,16 +42,16 @@ public class TextBox extends ClickBox {
 
 
 	public void reshape(int screenWidth, int screenHeight){
-		this.screenWidth = screenWidth;
-		this.screenHeight = screenHeight;
+		ClickBox.screenWidth = screenWidth;
+		ClickBox.screenHeight = screenHeight;
 
-		renderer = new TextRenderer(new Font(Font, fontStyle, this.screenWidth/textScale));
+		renderer = new TextRenderer(new Font(Font, fontStyle, screenWidth/textScale));
 		
 		updateLocation();
 	}
 
 	public void drawText(int deltaTime){
-		renderer.beginRendering(this.screenWidth, this.screenHeight);
+		renderer.beginRendering(screenWidth, screenHeight);
 		renderer.setColor(color[0], color[1], color[2], color[3]);
 		renderer.draw(Text,location[0],location[1]);
 		renderer.flush();

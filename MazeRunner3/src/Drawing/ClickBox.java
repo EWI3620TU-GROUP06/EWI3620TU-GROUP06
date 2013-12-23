@@ -6,15 +6,15 @@ public abstract class ClickBox {
 
 	protected int[] location;
 
-	protected int screenWidth;
-	protected int screenHeight;
+	public static int screenWidth;
+	public static int screenHeight;
 	protected int[] Bounds;
 	protected boolean clickable;
 	protected Command command;
 	
 	public ClickBox(int x, int y, int screenWidth, int screenHeight, int boundX, int boundY, boolean clickable){
-		this.screenWidth = screenWidth;
-		this.screenHeight = screenHeight;
+		ClickBox.screenWidth = screenWidth;
+		ClickBox.screenHeight = screenHeight;
 		this.location = new int[]{x, y};
 		this.clickable = clickable;
 		this.Bounds = new int[]{location[0], location[0] + boundX, location[1] + boundY, location[1]};
