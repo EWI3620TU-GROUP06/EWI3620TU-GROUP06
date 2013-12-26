@@ -89,8 +89,8 @@ public class Physics {
 		// 0.25 metres is an added buffer between the ground and potential colliding bodies, used to prevent the bodies
 		// from partially going through the floor. It is also possible to think of this as the plane being lifted 0.25m.
 		// CollisionShape groundShape = new StaticPlaneShape(new Vector3f(0, 1, 0), 0.25f);
-		for(int i = 0; i < maze.MAZE_SIZE; i++)
-			for(int j = 0; j < maze.MAZE_SIZE; j++)
+		for(int i = 0; i < maze.MAZE_SIZE_X; i++)
+			for(int j = 0; j < maze.MAZE_SIZE_Z; j++)
 			{
 
 				MazeObject mazeObject = maze.get(i, j);
