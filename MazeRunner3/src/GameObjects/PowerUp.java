@@ -19,7 +19,7 @@ public class PowerUp extends GameObject implements VisibleObject {
 	public static final byte JUMP = 1;
 	public static final byte COIN = 2;
 
-	private float size = 0.5f;
+	private float size = 0.75f;
 	private int time = 10000;
 	private boolean activated;
 	private boolean used = false;
