@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import javax.media.opengl.GL;
 import javax.vecmath.Vector3d;
 
+import Audio.Audio;
 import Drawing.VisibleObject;
 import MainGame.MazeRunner;
 import MazeObjects.Box;
@@ -79,8 +80,8 @@ public class PowerUp extends GameObject implements VisibleObject {
 			player.setColour(new float[] {0.5f, 1, 0.5f, 1});
 			if(type == COIN){
 				mazeRunner.addScore(10);
-				System.out.println("Pling!");
 			}
+			Audio.playSound("test");
 		}
 		if(!active)
 		{
