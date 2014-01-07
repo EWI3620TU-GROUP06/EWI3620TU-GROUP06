@@ -187,6 +187,8 @@ public class MazeRunner implements GLEventListener {
 		visibleObjects.add(player);
 		
 		PowerUp newPower = new PowerUp(new Vector3d(22.5, 2.5, 42.5), PowerUp.COIN);
+		PowerUp newPower2 = new PowerUp(new Vector3d(22.5, 2.5, 40.5), PowerUp.SPEED);
+		level.addPowerUp(newPower2);
 		level.addPowerUp(newPower);
 
 		Swarm particles = new Swarm(physics, level.getMaze(), (int) (level.getMaze().MAZE_SIZE_X*(state.getDiffNumber() + 1))/4, state.getDiffNumber());

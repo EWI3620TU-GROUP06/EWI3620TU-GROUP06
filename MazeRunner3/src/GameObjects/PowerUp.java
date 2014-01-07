@@ -37,7 +37,9 @@ public class PowerUp extends GameObject implements VisibleObject {
 			sprite = sprite.translate((float)location.x, (float) location.y + 0.75f, (float)location.z);	
 		}
 		else{
-		sprite = new Box( size, size, (float)location.x, (float) location.y, (float)location.z);}
+			sprite = CustomMazeObject.readFromOBJ(new File("src/Objects/mushroom.obj"));
+			sprite = sprite.translate((float)location.x, (float) location.y + 0.75f, (float)location.z);
+			}
 		this.type = type;
 	}
 
