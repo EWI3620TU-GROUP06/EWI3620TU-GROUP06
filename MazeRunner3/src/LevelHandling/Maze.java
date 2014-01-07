@@ -268,11 +268,11 @@ public class Maze implements VisibleObject {
 			for (int j = 0; j < maze[0].length; j++){
 				if (selected[i][j]){
 					if(x)
-						maze[i][j].rotateVerticesX(90, 0, (j + 0.5) * SQUARE_SIZE);
+						maze[i][j].rotateVerticesX(90, 2.5, (j + 0.5) * SQUARE_SIZE);
 					if(y)
 						maze[i][j].rotateVerticesY(90, (i + 0.5) * SQUARE_SIZE, (j + 0.5) * SQUARE_SIZE);
 					if(z)
-						maze[i][j].rotateVerticesZ(90, (i + 0.5) * SQUARE_SIZE, 0);
+						maze[i][j].rotateVerticesZ(90, (i + 0.5) * SQUARE_SIZE, 2.5);
 				}
 			}
 		}

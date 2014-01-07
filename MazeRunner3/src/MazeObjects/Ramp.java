@@ -29,7 +29,7 @@ public class Ramp extends MazeObject{
 		int[] face1 = {1, 2, 5};
 		addFace(face1);
 		
-		int[] face2 = {0, 4, 5, 1};
+		int[] face2 = {0, 1, 5, 4};
 		addFace(face2);
 		
 		int[] face3 = {0, 4, 3};
