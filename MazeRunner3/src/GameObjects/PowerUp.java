@@ -13,9 +13,9 @@ import MazeObjects.MazeObject;
 
 public class PowerUp extends GameObject implements VisibleObject {
 
-	public static final int SPEED = 0;
-	public static final int JUMP = 1;
-	public static final int COIN = 2;
+	public static final byte SPEED = 0;
+	public static final byte JUMP = 1;
+	public static final byte COIN = 2;
 
 	private float size = 0.5f;
 	private int time = 10000;
@@ -23,11 +23,11 @@ public class PowerUp extends GameObject implements VisibleObject {
 	private boolean used = false;
 	private MazeObject sprite;
 	private float rotationSpeed = 0.25f;
-	private int type;
+	private byte type;
 	private Player player;
 	private MazeRunner mazeRunner;
 
-	public PowerUp(Vector3d pos, int type)
+	public PowerUp(Vector3d pos, byte type)
 	{
 		super(pos);
 		sprite = new Box( size, size, (float)location.x, (float) location.y, (float)location.z);
@@ -124,7 +124,7 @@ public class PowerUp extends GameObject implements VisibleObject {
 				double x = Double.parseDouble(elements[0]);
 				double y = Double.parseDouble(elements[1]);
 				double z = Double.parseDouble(elements[2]);
-				int type = Integer.parseInt(elements[3]);
+				byte type = Byte.parseByte(elements[3]);
 				return new PowerUp(new Vector3d(x, y, z), type);
 			}
 			else

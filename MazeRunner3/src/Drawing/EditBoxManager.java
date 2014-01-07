@@ -6,6 +6,7 @@ import javax.media.opengl.GL;
 
 import EditorModes.*;
 import GameObjects.Editor;
+import GameObjects.PowerUp;
 import Listening.*;
 
 import com.sun.opengl.util.texture.Texture;
@@ -13,18 +14,21 @@ import com.sun.opengl.util.texture.Texture;
 public class EditBoxManager extends ClickBoxManager {
 
 	private static final int numStandardButtons = 5;
-	private static final int numAddButtons = 8;
+	private static final int numObjectButtons = 8;
 	private static final int numChangeButtons = 4;
+	private static final int numAddButtons = 2;
 	private int numButtons;
 	private int buttonSize;
-	private ArrayList<ClickBox> addBoxes;
+	private ArrayList<ClickBox> objectBoxes;
 	private ArrayList<ClickBox> changeBoxes;
+	private ArrayList<ClickBox> addBoxes;
 
 	public EditBoxManager(Editor editor, int screenWidth, int screenHeight)
 	{
 		super();
-		addBoxes = new ArrayList<ClickBox>();
+		objectBoxes = new ArrayList<ClickBox>();
 		changeBoxes = new ArrayList<ClickBox>();
+		addBoxes = new ArrayList<ClickBox>();
 
 		ArrayList<Command> commands = new ArrayList<Command>();
 		commands.add(new SwitchMenuModeCommand(this));
@@ -45,7 +49,7 @@ public class EditBoxManager extends ClickBoxManager {
 		commands.add(new EditModeCommand(editor, new AddRotating(editor.getLevel(), AddMode.ADD_LOW_RAMP)));
 		commands.add(new CustomCommand(editor));
 
-		addButtons(numAddButtons, commands, addBoxes, screenWidth, screenHeight);
+		addButtons(numObjectButtons, commands, objectBoxes, screenWidth, screenHeight);
 
 		commands.clear();
 		commands.add(new EditModeCommand(editor, new MoveObject(editor.getLevel())));
@@ -54,8 +58,14 @@ public class EditBoxManager extends ClickBoxManager {
 		commands.add(new EditModeCommand(editor, new RotateObject(editor.getLevel(), 2)));
 
 		addButtons(numChangeButtons, commands, changeBoxes, screenWidth, screenHeight);
+		
+		commands.clear();
+		commands.add(new EditModeCommand(editor, new AddPowerUp(editor.getLevel(), PowerUp.SPEED)));
+		commands.add(new EditModeCommand(editor, new AddPowerUp(editor.getLevel(), PowerUp.JUMP)));
+		
+		addButtons(numAddButtons, commands, addBoxes, screenWidth, screenHeight);
 
-		this.Boxes.addAll(addBoxes);
+		this.Boxes.addAll(objectBoxes);
 		numButtons = Boxes.size();
 		setButtonSize(numButtons, screenWidth, screenHeight);
 	}
@@ -74,8 +84,9 @@ public class EditBoxManager extends ClickBoxManager {
 	public void initTextures(GL gl)
 	{
 		setTextures(gl, numStandardButtons, Boxes, "standard button ");
-		setTextures(gl, numAddButtons, addBoxes, "add button ");
+		setTextures(gl, numObjectButtons, objectBoxes, "object button ");
 		setTextures(gl, numChangeButtons, changeBoxes, "change button ");
+		setTextures(gl, numAddButtons, addBoxes, "add button ");
 	}
 
 	private void setTextures(GL gl, int num, ArrayList<ClickBox> boxes, String buttonName)
@@ -162,15 +173,20 @@ public class EditBoxManager extends ClickBoxManager {
 
 	public void toggleMenuMode()
 	{
-		if(Boxes.contains(addBoxes.get(0)))
+		if(Boxes.contains(objectBoxes.get(0)))
 		{
-			Boxes.removeAll(addBoxes);
+			Boxes.removeAll(objectBoxes);
 			Boxes.addAll(changeBoxes);
 		}
 		else if(Boxes.contains(changeBoxes.get(0)))
 		{
 			Boxes.removeAll(changeBoxes);
 			Boxes.addAll(addBoxes);
+		}
+		else if(Boxes.contains(addBoxes.get(0)))
+		{
+			Boxes.removeAll(addBoxes);
+			Boxes.addAll(objectBoxes);
 		}
 		numButtons = Boxes.size();
 		reshape(ClickBox.screenWidth, ClickBox.screenHeight);
