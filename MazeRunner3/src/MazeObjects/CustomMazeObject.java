@@ -24,11 +24,12 @@ public class CustomMazeObject extends MazeObject{
 		super(true);
 	}
 
-	public CustomMazeObject(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces, int texNum, File file)
+	public CustomMazeObject(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces, int texNum, File file, boolean hasTexture)
 	{
 		super(vertices, texVertices, faces);
 		this.texNum = texNum;
 		this.file = file;
+		this.hasTexture = hasTexture;
 	}
 
 	public static CustomMazeObject readFromOBJ(File file)
@@ -160,7 +161,7 @@ public class CustomMazeObject extends MazeObject{
 		{
 			vertices.add((Vector3f)vertex.clone());
 		}
-		return new CustomMazeObject(vertices, this.texVertices, this.faces, this.texNum, file);
+		return new CustomMazeObject(vertices, this.texVertices, this.faces, this.texNum, file, hasTexture);
 	}
 
 	public boolean equals(Object other)
