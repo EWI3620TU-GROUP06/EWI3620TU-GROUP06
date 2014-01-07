@@ -81,6 +81,7 @@ public class MazeRunner implements GLEventListener {
 	private int timer = 0;
 	float lightPosition[] = { (float)level.getMaze().getSize()/2f, 50.0f, (float)level.getMaze().getSize()/2f, 1.0f };
 	private SkyBox skybox;
+	private boolean playingsound;
 
 	/*
 	 * **********************************************
@@ -159,7 +160,8 @@ public class MazeRunner implements GLEventListener {
 		visibleObjects = new ArrayList<VisibleObject>();
 		state.setFinished(false);
 		
-		String[] sounds = new String[]{"tick"};
+		String[] sounds = new String[]{"tick","test2"};
+		playingsound = false;
 		Audio.initSounds(sounds);
 		
 		// Add the maze that we will be using.
@@ -381,6 +383,10 @@ public class MazeRunner implements GLEventListener {
 
 		}
 		if(finished){
+			if(!playingsound){
+				Audio.playSound("test2");
+				playingsound = true;
+			}
 			finishclbxman.drawAllText(deltaTime);
 			state.setFinished(true);
 			showCursor();
@@ -415,6 +421,10 @@ public class MazeRunner implements GLEventListener {
 		}
 		
 		if(dead){
+			if(!playingsound){
+				Audio.playSound("test2");
+				playingsound = true;
+				}
 			timer += deltaTime;
 			if(timer > 2000){
 				showCursor();
