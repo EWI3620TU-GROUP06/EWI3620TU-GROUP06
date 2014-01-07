@@ -106,7 +106,9 @@ public class Maze implements VisibleObject {
 
 	public boolean isFinish(double x, double z)
 	{
-		return maze[(int)x / SQUARE_SIZE][(int)z / SQUARE_SIZE].equals(standards.get(AddMode.ADD_FINISH));
+		if(x >= 0 && x < MAZE_SIZE_X*SQUARE_SIZE && z >= 0 && z < MAZE_SIZE_Z*SQUARE_SIZE)
+			return maze[(int)x / SQUARE_SIZE][(int)z / SQUARE_SIZE].equals(standards.get(AddMode.ADD_FINISH));
+		return false;
 	}
 
 	/**
