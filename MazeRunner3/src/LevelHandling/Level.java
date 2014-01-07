@@ -21,6 +21,7 @@ public class Level {
 	private ArrayList<PowerUp> powerUps = new ArrayList<PowerUp>();
 	private ArrayList<MoveableBox> moveableBoxes = new ArrayList<MoveableBox>();
 	private Swarm swarm;
+	private boolean added = false;
 	
 	public Level(Maze mz){
 		this.maze = mz;
@@ -38,6 +39,7 @@ public class Level {
 	
 	public void addPowerUp(PowerUp pU){
 		this.powerUps.add(pU);
+		added = true;
 	}
 	
 	public ArrayList<PowerUp> getPowerUps(){
@@ -46,6 +48,7 @@ public class Level {
 	
 	public void addMoveableBox(MoveableBox mB){
 		this.moveableBoxes.add(mB);
+		added = true;
 	}
 	
 	public ArrayList<MoveableBox> getMoveableBoxes(){
@@ -64,7 +67,8 @@ public class Level {
 	
 	public void update(int deltaTime, Vector3d playerPos)
 	{
-		swarm.update(deltaTime);
+		if(swarm != null)
+			swarm.update(deltaTime);
 		for(MoveableBox moveBox : moveableBoxes)
 			moveBox.update(deltaTime);
 		for(PowerUp powerUp : powerUps)
@@ -79,11 +83,28 @@ public class Level {
 	public void addToVisible(ArrayList<VisibleObject> visibleObjects)
 	{
 		visibleObjects.add(maze);
-		swarm.AddToVisible(visibleObjects);
+		if(swarm != null)
+			swarm.AddToVisible(visibleObjects);
 		for(MoveableBox moveBox : moveableBoxes)
 			visibleObjects.add(moveBox);
 		for(PowerUp powerUp : powerUps)
 			visibleObjects.add(powerUp);
+	}
+	
+	public boolean addedSomething()
+	{
+		boolean res = added;
+		added = false;
+		return res;
+	}
+	
+	public void removeFromVisible(ArrayList<VisibleObject> visibleObjects)
+	{
+		visibleObjects.remove(maze);
+		for(MoveableBox moveBox : moveableBoxes)
+			visibleObjects.remove(moveBox);
+		for(PowerUp powerUp : powerUps)
+			visibleObjects.remove(powerUp);
 	}
 	
 	public void setAttributes(Player player, Physics physics, MazeRunner mazeRunner)

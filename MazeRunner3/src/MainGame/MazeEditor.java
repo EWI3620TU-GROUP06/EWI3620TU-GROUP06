@@ -246,12 +246,11 @@ public class MazeEditor implements GLEventListener {
 				input.getMouseReleased();
 			}
 
-			if(editor.getLevel().getMaze() != visibleObjects.get(0))
+			if(editor.getLevel() != level || level.addedSomething())
 			{
+				level.removeFromVisible(visibleObjects);
 				level = editor.getLevel();
-
-				visibleObjects.remove(0);
-				visibleObjects.add(0, level.getMaze());
+				level.addToVisible(visibleObjects);
 			}
 			updateCamera();
 		}
@@ -361,6 +360,7 @@ public class MazeEditor implements GLEventListener {
 	 */
 
 	private void updateCamera() {
+		level.update(0, new Vector3d(0,0,0));
 
 		camera.setLocation(editor.getLocation());
 		camera.setHorAngle(editor.getHorAngle());
