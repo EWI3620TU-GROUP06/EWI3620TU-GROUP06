@@ -229,7 +229,7 @@ public abstract class MazeObject {
 			float z = vertex.z;
 			double cos = Math.cos(Math.toRadians(angle));
 			double sin = Math.sin(Math.toRadians(angle));
-			vertex.x =((float)(x*cos - z * sin - xRotate * cos + zRotate * sin + xRotate));
+			vertex.x = ((float)(x*cos - z * sin - xRotate * cos + zRotate * sin + xRotate));
 			vertex.z = ((float)(x*sin + z * cos - zRotate * cos - xRotate * sin + zRotate));
 		}
 		rotation[1] += angle;

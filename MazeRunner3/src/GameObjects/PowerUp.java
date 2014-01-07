@@ -1,5 +1,6 @@
 package GameObjects;
 
+import java.io.File;
 import java.io.PrintWriter;
 
 import javax.media.opengl.GL;
@@ -9,6 +10,7 @@ import Audio.Audio;
 import Drawing.VisibleObject;
 import MainGame.MazeRunner;
 import MazeObjects.Box;
+import MazeObjects.CustomMazeObject;
 import MazeObjects.MazeObject;
 
 public class PowerUp extends GameObject implements VisibleObject {
@@ -17,7 +19,7 @@ public class PowerUp extends GameObject implements VisibleObject {
 	public static final byte JUMP = 1;
 	public static final byte COIN = 2;
 
-	private float size = 0.5f;
+	private float size = 0.75f;
 	private int time = 10000;
 	private boolean activated;
 	private boolean used = false;
@@ -30,7 +32,12 @@ public class PowerUp extends GameObject implements VisibleObject {
 	public PowerUp(Vector3d pos, byte type)
 	{
 		super(pos);
-		sprite = new Box( size, size, (float)location.x, (float) location.y, (float)location.z);
+		if(type == COIN){
+			sprite = CustomMazeObject.readFromOBJ(new File("src/Objects/coin.obj"));
+			sprite = sprite.translate((float)location.x, (float) location.y + 0.75f, (float)location.z);	
+		}
+		else{
+		sprite = new Box( size, size, (float)location.x, (float) location.y, (float)location.z);}
 		this.type = type;
 	}
 
@@ -64,7 +71,7 @@ public class PowerUp extends GameObject implements VisibleObject {
 				used = true;
 			}
 		}
-		sprite.rotateVerticesY(deltaTime * rotationSpeed, (float)location.x + 0.5f * size, (float)location.z + 0.5f * size);
+		sprite.rotateVerticesY(deltaTime * rotationSpeed, ((float)location.x + 0.5f * size), ((float)location.z + 0.5f * size));
 	}
 
 	public boolean isActive()
@@ -136,6 +143,13 @@ public class PowerUp extends GameObject implements VisibleObject {
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	public void initTextures(GL gl){
+		if(type == COIN){
+		((CustomMazeObject) sprite).setTexture(gl);
+		}
+		
 	}
 
 }

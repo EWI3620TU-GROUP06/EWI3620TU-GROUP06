@@ -62,6 +62,8 @@ public class Level {
 	public void init(GL gl)
 	{
 		Maze.initTextures(gl);
+		for(PowerUp powerUp : powerUps)
+			powerUp.initTextures(gl);
 		swarm.init(gl);
 	}
 	
