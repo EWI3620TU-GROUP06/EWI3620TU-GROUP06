@@ -12,6 +12,7 @@ import Drawing.VisibleObject;
 import GameObjects.MoveableBox;
 import GameObjects.Player;
 import GameObjects.PowerUp;
+import MainGame.MazeRunner;
 import PSO.Swarm;
 import Physics.Physics;
 
@@ -85,12 +86,15 @@ public class Level {
 			visibleObjects.add(powerUp);
 	}
 	
-	public void setAttributes(Player player, Physics physics)
+	public void setAttributes(Player player, Physics physics, MazeRunner mazeRunner)
 	{
 		for(MoveableBox moveBox : moveableBoxes)
 			moveBox.setPhysics(physics);;
 		for(PowerUp powerUp : powerUps)
+		{
 			powerUp.setPlayer(player);
+			powerUp.setMazeRunner(mazeRunner);
+		}
 	}
 	
 	public void saveLevel(File file)

@@ -6,6 +6,7 @@ import javax.media.opengl.GL;
 import javax.vecmath.Vector3d;
 
 import Drawing.VisibleObject;
+import MainGame.MazeRunner;
 import MazeObjects.Box;
 import MazeObjects.MazeObject;
 
@@ -13,6 +14,7 @@ public class PowerUp extends GameObject implements VisibleObject {
 
 	public static final int SPEED = 0;
 	public static final int JUMP = 1;
+	public static final int COIN = 2;
 
 	private float size = 0.5f;
 	private int time = 10000;
@@ -22,6 +24,7 @@ public class PowerUp extends GameObject implements VisibleObject {
 	private float rotationSpeed = 0.25f;
 	private int type;
 	private Player player;
+	private MazeRunner mazeRunner;
 
 	public PowerUp(Vector3d pos, int type)
 	{
@@ -33,6 +36,11 @@ public class PowerUp extends GameObject implements VisibleObject {
 	public void setPlayer(Player player)
 	{
 		this.player = player;
+	}
+	
+	public void setMazeRunner(MazeRunner mzr)
+	{
+		mazeRunner = mzr;
 	}
 
 	public void update (int deltaTime, Vector3d playerPos)
@@ -65,17 +73,22 @@ public class PowerUp extends GameObject implements VisibleObject {
 
 	private void activate(boolean active)
 	{
-		activated = active;
 		float factor = 3;
-		if(active)
+		if(active && !activated)
 		{
 			player.setColour(new float[] {0.5f, 1, 0.5f, 1});
+			if(type == COIN){
+				mazeRunner.addScore(10);
+				System.out.println("Pling!");
+			}
 		}
 		if(!active)
 		{
 			factor = (float)1 / factor;
-			player.setColour(new float[] {1, 1, 1, 1});
+			if(activated)
+				player.setColour(new float[] {1, 1, 1, 1});
 		}
+		activated = active;
 		switch(type){
 		case SPEED: player.multiplySpeed(factor); player.multiplyJump((float)1 / factor);break;
 		case JUMP: player.multiplyJump(factor); break;

@@ -184,7 +184,7 @@ public class MazeRunner implements GLEventListener {
 
 		visibleObjects.add(player);
 		
-		PowerUp newPower = new PowerUp(new Vector3d(12.5, 2.5, 32.5), PowerUp.SPEED);
+		PowerUp newPower = new PowerUp(new Vector3d(22.5, 2.5, 42.5), PowerUp.COIN);
 		level.addPowerUp(newPower);
 
 		Swarm particles = new Swarm(physics, level.getMaze(), (int) (level.getMaze().MAZE_SIZE_X*(state.getDiffNumber() + 1))/4, state.getDiffNumber());
@@ -207,7 +207,7 @@ public class MazeRunner implements GLEventListener {
 		player.setControl(input);
 		
 		level.addToVisible(visibleObjects);
-		level.setAttributes(player, physics);
+		level.setAttributes(player, physics, this);
 	}
 
 	private void initMenuText(){
@@ -472,9 +472,9 @@ public class MazeRunner implements GLEventListener {
 	 */
 
 	private void updateCamera() {
-		Vector3d cameraPos = new Vector3d(3 *Math.sin( Math.toRadians(player.getHorAngle())) * Math.cos( Math.toRadians(player.getVerAngle())),
-				Math.sin(Math.toRadians(player.getVerAngle()) + 1),
-				3 *Math.cos( Math.toRadians(player.getHorAngle())) * Math.cos(Math.toRadians(player.getVerAngle()))); 
+		Vector3d cameraPos = new Vector3d(4 *Math.sin( Math.toRadians(player.getHorAngle())) * Math.cos( Math.toRadians(player.getVerAngle())),
+				Math.sin(Math.toRadians(player.getVerAngle())) + 1.5,
+				4 *Math.cos( Math.toRadians(player.getHorAngle())) * Math.cos(Math.toRadians(player.getVerAngle()))); 
 		cameraPos.add(player.getLocation());
 
 		camera.setLocation( cameraPos);
@@ -504,6 +504,11 @@ public class MazeRunner implements GLEventListener {
 			input.reset();
 			hideCursor();
 		}
+	}
+	
+	public void addScore(int addition)
+	{
+		timeSinceStart -= addition * 1000;
 	}
 
 	public void unOptPause(){
