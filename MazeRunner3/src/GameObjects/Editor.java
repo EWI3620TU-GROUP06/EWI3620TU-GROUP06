@@ -15,6 +15,11 @@ import LevelHandling.Maze;
 import Listening.Control;
 import MazeObjects.CustomMazeObject;
 
+/**
+ * the editor class is used to give the editor mode it functionality some of the methods in this class are described
+ * below. 
+ *
+ */
 public class Editor extends GameObject{
 	
 	private EditMode editMode;

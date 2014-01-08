@@ -7,6 +7,10 @@ import javax.media.opengl.GLAutoDrawable;
 import Listening.UserInput;
 import Main.Game;
 
+/**
+ * the gStateMan class is used to switch between gamestates.
+ *
+ */
 public class gStateMan {
 	
 	private ArrayList<GameState> gameStates;
@@ -31,6 +35,11 @@ public class gStateMan {
 		update();
 	}
 	
+	/**
+	 * the method setState is used to switch between states this happens for instance the when you die in the
+	 * game the state is directly switched to the higscore state
+	 * @param s		the integer is to make clear to which state the switch is made
+	 */
 	public void setState(int s){
 		gameStates.get(currentState).stopMusic();
 		game.remove(gameStates.get(currentState).getCanvas());

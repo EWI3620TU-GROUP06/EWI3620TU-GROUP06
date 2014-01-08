@@ -7,6 +7,12 @@ import Audio.Audio;
 import Main.Game;
 import MainGame.HighscoreMenu;
 
+/**
+ * the highscore state is switched on when you are done playing or when you die, when you switch to this state 
+ * the higscore menu is drawn.
+ *
+ */
+
 public class HighscoreState extends GameState {
 
 	private HighscoreMenu hm;
@@ -25,7 +31,6 @@ public class HighscoreState extends GameState {
 	
 	public void init(GLAutoDrawable drawable) {
 		hm.init(drawable);
-		System.out.println("init gedaan mainmenu");
 	}
 	
 	@Override

@@ -7,6 +7,12 @@ import Audio.Audio;
 import Main.Game;
 import MainGame.MainMenu;
 
+/**
+ * the menustate is the fist state in the game and is state you constantly return when you want switch from playing 
+ * the game and editing levels.
+ *
+ */
+
 public class MenuState extends GameState {
 	
 	private MainMenu mm;

@@ -7,6 +7,9 @@ import Audio.Audio;
 import Main.Game;
 import MainGame.MazeRunner;
 
+/**
+ * in the playstate we set up the game in this class the actual maze runner is created.  
+ */
 public class PlayState extends GameState {
 	
 	private gStateMan gsm;

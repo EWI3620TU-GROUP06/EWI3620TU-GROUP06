@@ -13,6 +13,10 @@ import MainGame.MazeRunner;
 import MazeObjects.CustomMazeObject;
 import MazeObjects.MazeObject;
 
+/**
+ * the powerup class enables us to place powerups in the game some of the methods are described below
+ */
+
 public class PowerUp extends GameObject implements VisibleObject {
 
 	public static final byte SPEED = 0;
@@ -30,7 +34,12 @@ public class PowerUp extends GameObject implements VisibleObject {
 	private byte type;
 	private Player player;
 	private MazeRunner mazeRunner;
-
+	
+	/**
+	 * in this constructor we give a power up a sprite and we give this sprite a location
+	 * @param pos	the position of the powerup
+	 * @param type	the type of the powerup
+	 */
 	public PowerUp(Vector3d pos, byte type)
 	{
 		super(pos);
@@ -48,6 +57,12 @@ public class PowerUp extends GameObject implements VisibleObject {
 		mazeRunner = mzr;
 	}
 
+	/**
+	 * in this update method we determine if the powerup is gatherd by the the player and we let the sprit that
+	 * is used to represent the powerup turn around.
+	 * @param deltaTime		used to set the length of the powerup
+	 * @param playerPos		used to determine if the powerup is picked
+	 */
 	public void update (int deltaTime, Vector3d playerPos)
 	{
 		if(activated)
@@ -75,7 +90,11 @@ public class PowerUp extends GameObject implements VisibleObject {
 	{
 		return activated;
 	}
-
+	
+	/**
+	 * this method is used to activate the powerup and give it the functionality it has in the game
+	 * @param active
+	 */
 	private void activate(boolean active)
 	{
 		float factor = 3;

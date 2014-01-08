@@ -3,6 +3,12 @@ package GameStates;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCanvas;
 
+/**
+ * GameState is the abstract class in this package all the methods described below are inhereted in the other 
+ * classes in this package
+ *
+ */
+
 public abstract class GameState {
 	protected gStateMan gsm;
 	public abstract void init(GLAutoDrawable drawable);
