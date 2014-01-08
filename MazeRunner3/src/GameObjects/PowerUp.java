@@ -36,10 +36,14 @@ public class PowerUp extends GameObject implements VisibleObject {
 			sprite = CustomMazeObject.readFromOBJ(new File("src/Objects/coin.obj"));
 			sprite = sprite.translate((float)location.x, (float) location.y + 0.75f, (float)location.z);	
 		}
-		else{
-			sprite = CustomMazeObject.readFromOBJ(new File("src/Objects/mushroom.obj"));
+		if(type == SPEED){
+			sprite = CustomMazeObject.readFromOBJ(new File("src/Objects/mushroomspeed.obj"));
 			sprite = sprite.translate((float)location.x, (float) location.y + 0.75f, (float)location.z);
-			}
+		}
+		if(type == JUMP){
+			sprite = CustomMazeObject.readFromOBJ(new File("src/Objects/mushroomjump.obj"));
+			sprite = sprite.translate((float)location.x, (float) location.y + 0.75f, (float)location.z);
+		}
 		this.type = type;
 	}
 
@@ -148,8 +152,8 @@ public class PowerUp extends GameObject implements VisibleObject {
 	}
 	
 	public void initTextures(GL gl){
-		if(type == COIN){
-		((CustomMazeObject) sprite).setTexture(gl);
+		if(type == COIN || type == SPEED || type == JUMP){
+			((CustomMazeObject) sprite).setTexture(gl);
 		}
 		
 	}

@@ -217,6 +217,10 @@ public abstract class MazeObject {
 			vertex.z=((float)(z*cos - y * sin - zRotate * cos + yRotate * sin + zRotate));
 			vertex.y = ((float)(z*sin + y * cos - yRotate * cos - zRotate * sin + yRotate));
 		}
+		
+		for(Face face: faces){
+			calculateNormal(face);
+		}
 		rotation[0] += angle;
 	}
 	
@@ -232,6 +236,10 @@ public abstract class MazeObject {
 			vertex.x = ((float)(x*cos - z * sin - xRotate * cos + zRotate * sin + xRotate));
 			vertex.z = ((float)(x*sin + z * cos - zRotate * cos - xRotate * sin + zRotate));
 		}
+		
+		for(Face face: faces){
+			calculateNormal(face);
+		}
 		rotation[1] += angle;
 	}
 	
@@ -246,6 +254,10 @@ public abstract class MazeObject {
 			double sin = Math.sin(Math.toRadians(angle));
 			vertex.y =((float)(y*cos - x * sin - yRotate * cos + xRotate * sin + yRotate));
 			vertex.x = ((float)(y*sin + x * cos - xRotate * cos - yRotate * sin + xRotate));
+		}
+		
+		for(Face face: faces){
+			calculateNormal(face);
 		}
 		rotation[2] += angle;
 	}
