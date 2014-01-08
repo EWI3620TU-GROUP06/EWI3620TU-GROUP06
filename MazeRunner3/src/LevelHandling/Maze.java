@@ -118,6 +118,7 @@ public class Maze implements VisibleObject {
 
 	public static void initTextures(GL gl)
 	{
+		CustomMazeObject.clearTextures();
 		Texture boxTexture = DrawingUtil.initTexture(gl, "wall");
 		Texture floorTexture = DrawingUtil.initTexture(gl, "floor");
 		Texture finishTexture = DrawingUtil.initTexture(gl, "finish");

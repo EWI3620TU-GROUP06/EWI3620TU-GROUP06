@@ -2,6 +2,7 @@ package GameObjects;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 
 import javax.media.opengl.GL;
 import javax.vecmath.Vector3d;
@@ -9,7 +10,6 @@ import javax.vecmath.Vector3d;
 import Audio.Audio;
 import Drawing.VisibleObject;
 import MainGame.MazeRunner;
-import MazeObjects.Box;
 import MazeObjects.CustomMazeObject;
 import MazeObjects.MazeObject;
 
@@ -23,8 +23,10 @@ public class PowerUp extends GameObject implements VisibleObject {
 	private int time = 10000;
 	private boolean activated;
 	private boolean used = false;
+	private static ArrayList<MazeObject> sprites = new ArrayList<MazeObject>();
 	private MazeObject sprite;
-	private float rotationSpeed = 0.25f;
+	
+	private float rotationSpeed = 0.1f;
 	private byte type;
 	private Player player;
 	private MazeRunner mazeRunner;
@@ -32,18 +34,7 @@ public class PowerUp extends GameObject implements VisibleObject {
 	public PowerUp(Vector3d pos, byte type)
 	{
 		super(pos);
-		if(type == COIN){
-			sprite = CustomMazeObject.readFromOBJ(new File("src/Objects/coin.obj"));
-			sprite = sprite.translate((float)location.x, (float) location.y + 0.75f, (float)location.z);	
-		}
-		if(type == SPEED){
-			sprite = CustomMazeObject.readFromOBJ(new File("src/Objects/mushroomspeed.obj"));
-			sprite = sprite.translate((float)location.x, (float) location.y + 0.75f, (float)location.z);
-		}
-		if(type == JUMP){
-			sprite = CustomMazeObject.readFromOBJ(new File("src/Objects/mushroomjump.obj"));
-			sprite = sprite.translate((float)location.x, (float) location.y + 0.75f, (float)location.z);
-		}
+		sprite = sprites.get(type).translate((float)location.x, (float) location.y + 0.75f, (float)location.z);
 		this.type = type;
 	}
 
@@ -151,11 +142,24 @@ public class PowerUp extends GameObject implements VisibleObject {
 		}
 	}
 	
-	public void initTextures(GL gl){
-		if(type == COIN || type == SPEED || type == JUMP){
+	public static void initSprites()
+	{
+		sprites.clear();
+		sprites.add(CustomMazeObject.readFromOBJ(new File("src/Objects/mushroomspeed.obj")));
+		sprites.add(CustomMazeObject.readFromOBJ(new File("src/Objects/mushroomjump.obj")));
+		sprites.add(CustomMazeObject.readFromOBJ(new File("src/Objects/coin.obj")));
+	}
+	
+	public static void initTextures(GL gl){
+		for(MazeObject sprite : sprites)
+		{
 			((CustomMazeObject) sprite).setTexture(gl);
 		}
-		
+	}
+	
+	public void setTextNum()
+	{
+		((CustomMazeObject) sprite).setTexNum(((CustomMazeObject) sprites.get(type)).getTexNum());
 	}
 
 }

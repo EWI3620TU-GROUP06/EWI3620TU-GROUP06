@@ -111,6 +111,11 @@ public class CustomMazeObject extends MazeObject{
 	{
 		textures.add(t);
 	}
+	
+	public static void clearTextures()
+	{
+		textures.clear();
+	}
 
 	public Texture getTexture()
 	{

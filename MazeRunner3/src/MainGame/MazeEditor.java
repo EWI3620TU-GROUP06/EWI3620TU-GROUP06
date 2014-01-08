@@ -217,6 +217,8 @@ public class MazeEditor implements GLEventListener {
 
 		// Set the shading model.
 		gl.glShadeModel(GL.GL_SMOOTH);
+		
+		level.init(gl);
 	}
 
 	/**

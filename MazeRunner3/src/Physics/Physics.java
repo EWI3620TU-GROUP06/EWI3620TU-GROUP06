@@ -268,7 +268,7 @@ public class Physics {
 		MotionState boxMotion = new DefaultMotionState(new Transform(new Matrix4f(new Quat4f(0, 0, 0, 1),
 				position, 1.0f)));
 	
-		RigidBodyConstructionInfo boxConstructionInfo = new RigidBodyConstructionInfo(100, boxMotion, boxShape, new Vector3f(0, 0, 0));
+		RigidBodyConstructionInfo boxConstructionInfo = new RigidBodyConstructionInfo(1000, boxMotion, boxShape, new Vector3f(0, 0, 0));
 
 		boxConstructionInfo.restitution = 0.3f;
 		boxConstructionInfo.angularDamping = 10f;

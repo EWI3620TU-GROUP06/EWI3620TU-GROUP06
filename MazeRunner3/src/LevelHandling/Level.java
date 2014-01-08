@@ -25,6 +25,7 @@ public class Level {
 	
 	public Level(Maze mz){
 		this.maze = mz;
+		PowerUp.initSprites();
 	}
 	
 	public void addSwarm(Swarm swarm)
@@ -62,9 +63,11 @@ public class Level {
 	public void init(GL gl)
 	{
 		Maze.initTextures(gl);
+		PowerUp.initTextures(gl);
 		for(PowerUp powerUp : powerUps)
-			powerUp.initTextures(gl);
-		swarm.init(gl);
+			powerUp.setTextNum();
+		if(swarm != null)
+			swarm.init(gl);
 	}
 	
 	public void update(int deltaTime, Vector3d playerPos)
