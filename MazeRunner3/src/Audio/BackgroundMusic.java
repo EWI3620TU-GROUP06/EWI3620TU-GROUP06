@@ -5,7 +5,10 @@ import java.io.File;
 import java.io.FileInputStream;
 
 import javazoom.jl.player.Player;
-
+/**
+ * the class background music is used to play the music in the background of the game.
+ *
+ */
 public class BackgroundMusic implements Runnable{
 
 	private Player player = null;

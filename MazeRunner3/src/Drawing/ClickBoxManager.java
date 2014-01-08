@@ -5,6 +5,13 @@ import java.util.ArrayList;
 import Listening.Command;
 import Listening.Control;
 
+/**
+ * in the clickboxmanager an arraylist filled with click boxes, we use this arraylist to make the drawing of the
+ * boxes easier. 
+ * @author luukmiddelweerd
+ *
+ */
+
 public abstract class ClickBoxManager {
 
 	protected ArrayList<ClickBox> Boxes;

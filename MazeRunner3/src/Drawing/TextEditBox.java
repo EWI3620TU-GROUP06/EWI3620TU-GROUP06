@@ -1,10 +1,13 @@
 package Drawing;
 
-
-
 import java.awt.event.KeyEvent;
 
 import Listening.Control;
+
+/**
+ * the class texteditbox enables us to let a player type his name in for instance the higscore state.
+ *
+ */
 
 public class TextEditBox extends TextBox {
 	

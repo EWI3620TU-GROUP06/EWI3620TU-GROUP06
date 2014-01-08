@@ -2,6 +2,11 @@ package Drawing;
 
 import Listening.Command;
 
+/**
+ * the class clickbox is an abstract class for all the clickboxes. the clickboxes have options to be clickable
+ * which means they can execute an command. 
+ *
+ */
 public abstract class ClickBox {
 
 	protected int[] location;
@@ -44,7 +49,10 @@ public abstract class ClickBox {
 	public void setClickable(boolean click){
 		this.clickable = click;
 	}
-
+	
+	/*
+	 * in the method setCommand the command of the clickbox is set
+	 */
 	public void setCommand(Command command){
 		this.command = command;
 	}
@@ -53,6 +61,9 @@ public abstract class ClickBox {
 		command.execute();
 	}
 	
+	/*
+	 * the method isInBounds is used to determine if the mouse is clicked inside a clickbox
+	 */
 	public boolean isInBounds(int x, int y){
 
 		if(x > Bounds[0] && x < Bounds[1]

@@ -3,7 +3,10 @@ package Audio;
 import java.io.File;
 import java.util.HashMap;
 
-
+/**
+ * in this class we enable the programm to use music during the game all the methods used are very straight forward.
+ *
+ */
 public class Audio {
 	
 	private static BackgroundMusic music = null;

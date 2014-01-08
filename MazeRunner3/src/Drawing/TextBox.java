@@ -5,6 +5,12 @@ import java.awt.geom.Rectangle2D;
 
 import com.sun.opengl.util.j2d.TextRenderer;
 
+/**
+ * the textbox class is used to render all the texts used in the menu's and all the other differnt states and gives
+ * us the opportunity for instance to change the alignment of each text. 
+ *
+ */
+
 public class TextBox extends ClickBox {
 
 	protected TextRenderer renderer;

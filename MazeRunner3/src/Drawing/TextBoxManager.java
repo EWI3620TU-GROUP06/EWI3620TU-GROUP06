@@ -7,6 +7,11 @@ import HighScore.Score;
 import HighScore.SqlReadWrite;
 import Listening.*;
 
+/**
+ * the textbox manager is used to make it easier to draw menu's in this class we also give functionallity to the 
+ * menuboxes. 
+ *
+ */
 public class TextBoxManager extends ClickBoxManager{
 
 	public void AddBox(ClickBox box)

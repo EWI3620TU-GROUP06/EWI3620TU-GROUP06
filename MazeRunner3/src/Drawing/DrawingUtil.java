@@ -10,8 +10,16 @@ import com.sun.opengl.util.texture.Texture;
 import com.sun.opengl.util.texture.TextureData;
 import com.sun.opengl.util.texture.TextureIO;
 
-
+/**
+ * the DrawingUtil class is used to draw all the actual boxes on the screen. the metods are all discribed below.
+ *
+ */
 public abstract class DrawingUtil {
+	
+	/**
+	 * the drawTrans method is used to draw a transparant sqaure over the game when we are in the pause state or in
+	 * the finish state.
+	 */
 
 	public static void drawTrans(GL gl, float x, float y, float width, float height
 			,float r, float g, float b, float a){

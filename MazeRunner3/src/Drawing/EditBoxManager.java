@@ -11,6 +11,11 @@ import Listening.*;
 
 import com.sun.opengl.util.texture.Texture;
 
+/**
+ * the editboxmanger puts the diffent editboxes in arraylists and enables us to draw the boxes with different
+ * textures for example the buttons in the editor state.
+ *
+ */
 public class EditBoxManager extends ClickBoxManager {
 	
 	public static final byte OBJECT_MODE = 0;
