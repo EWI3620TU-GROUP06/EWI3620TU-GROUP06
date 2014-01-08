@@ -6,6 +6,10 @@ import Listening.EditModeCommand;
 
 import com.sun.opengl.util.texture.Texture;
 
+/**
+ * the editbox class lets us put editboxes these are used in the editor state.
+ *
+ */
 public class EditBox extends ClickBox {
 	
 	Texture pressed, notPressed;
