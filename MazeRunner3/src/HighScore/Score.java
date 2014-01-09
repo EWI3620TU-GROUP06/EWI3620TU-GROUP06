@@ -1,5 +1,8 @@
 package HighScore;
 
+/**
+ * the class Score gives us the oppertunity to make an object score which will be saved in the sql database.
+ */
 public class Score {
 	private String name;
 	private int score;

@@ -87,7 +87,12 @@ public class Maze implements VisibleObject {
 		}
 		selected = new boolean[MAZE_SIZE_X][MAZE_SIZE_Z];
 	}
-
+	
+	/**
+	 * the method removeRedundantFaces removes all the non-visible faces from the levels. this is needed to
+	 * remain a framerate around 60.
+	 */
+	
 	public void removeRedundantFaces()
 	{
 		for(int i = 0; i < maze.length; i++){
