@@ -11,8 +11,8 @@ import javax.vecmath.Vector3f;
 import com.sun.opengl.util.texture.Texture;
 
 /**
- *	Class that contains the a number of points, represented by vectors, and faces, represented by arrays of numbers
- *	referencing those points, to create three dimensional objects that are in the maze.
+ *	Class that contains the a number of points, represented by vectors, and faces,
+ *	to create three dimensional objects that are in the maze.
  *
  */
 public abstract class MazeObject {
@@ -57,11 +57,6 @@ public abstract class MazeObject {
 		vertices.add(point);
 	}
 
-	/**
-	 * Get the number of vertices contain in this object
-	 * @return	number of vertices
-	 */
-
 	public int getNumVertices()
 	{
 		return vertices.size();
@@ -78,8 +73,9 @@ public abstract class MazeObject {
 	}
 
 	/**
-	 * Add a face to the list of faces
-	 * @param face	face to be added
+	 * Add a face to the list of faces. The face must contain at least three numbers of the vertices it connects, 
+	 * and those vertices must already be in the list of vertices.
+	 * @param faceArray	array of the numbers of the vertices the face connects
 	 */
 
 	public void addFace(int[] faceArray)
@@ -102,6 +98,15 @@ public abstract class MazeObject {
 		this.faces.add(face);
 	}
 
+	/**
+	 * Add a face to the list of faces. The face must contain at least three numbers of the vertices it connects, 
+	 * and those vertices must already be in the list of vertices. Also, it must contain a equal number of texture 
+	 * vertex numbers, and those vertices must also already be in the texture vertices array.
+	 * 
+	 * @param faceArray	array of the numbers of the vertices the face connects
+	 * @param texArray	array of the numbers of texture vertices the face connects
+	 */
+	
 	public void addFace(int[] faceArray, int[] texArray)
 	{
 		if(faceArray.length != texArray.length)
@@ -199,9 +204,9 @@ public abstract class MazeObject {
 	}
 
 	/**
-	 * Rotates all vertices around the vertical axis in a given point.
+	 * Rotates all vertices around the X axis in a given point.
 	 * @param angle		Angle with which needs to be rotated
-	 * @param xRotate	X coordinate of the point around which is to be rotated
+	 * @param yRotate	Y coordinate of the point around which is to be rotated
 	 * @param zRotate	Z coordinate of the point around which is to be rotated
 	 */
 
@@ -224,6 +229,13 @@ public abstract class MazeObject {
 		rotation[0] += angle;
 	}
 	
+	/**
+	 * Rotates all vertices around the Y axis in a given point.
+	 * @param angle		Angle with which needs to be rotated
+	 * @param xRotate	X coordinate of the point around which is to be rotated
+	 * @param zRotate	Z coordinate of the point around which is to be rotated
+	 */
+	
 	public void rotateVerticesY(float angle, double xRotate, double zRotate)
 	{
 		for(int i = 0; i < vertices.size(); i++)
@@ -242,6 +254,13 @@ public abstract class MazeObject {
 		}
 		rotation[1] += angle;
 	}
+	
+	/**
+	 * Rotates all vertices around the Z axis in a given point.
+	 * @param angle		Angle with which needs to be rotated
+	 * @param xRotate	X coordinate of the point around which is to be rotated
+	 * @param yRotate	Y coordinate of the point around which is to be rotated
+	 */
 	
 	public void rotateVerticesZ(float angle, double xRotate, double yRotate)
 	{
@@ -272,17 +291,16 @@ public abstract class MazeObject {
 		return faces.get(index).getVertices();
 	}
 
-	public float getD(int index)
-	{
-		Vector3f normal = faces.get(index).getNormal();
-		Vector3f vertex1 = vertices.get(faces.get(index).getVertices()[0]);
-		return - normal.x*vertex1.x - normal.y*vertex1.y - normal.z*vertex1.z;
-	}
-
 	public float getRestitution()
 	{
 		return restitution;
 	}
+	
+	/**
+	 * Checks if a certain face has a horizontal normal vector,
+	 * @param index	Number of the face to be checked
+	 * @return		boolean that represents whether the face has a horizontal normal. 
+	 */
 
 	public boolean isNormalHorizontal(int index)
 	{
@@ -291,6 +309,10 @@ public abstract class MazeObject {
 		normal.get(norm);
 		return norm[1] == 0;
 	}
+	
+	/**
+	 * Removes all vertices that are not connected to other vertices in a face. 
+	 */
 
 	public void removeRedundantVertices()
 	{
@@ -326,6 +348,12 @@ public abstract class MazeObject {
 	public abstract MazeObject clone();
 	public abstract boolean equals(Object other);
 
+	/**
+	 * Gets all vertices that are connected by a certain face.
+	 * @param index	number of the face to be checked
+	 * @return		arraylist of vectors that that face connects.
+	 */
+
 	public ArrayList<Vector3f> getFaceVertices(int index)
 	{
 		ArrayList<Vector3f> res = new ArrayList<Vector3f>();
@@ -336,6 +364,12 @@ public abstract class MazeObject {
 		}
 		return res;
 	}
+	
+	/**
+	 * Removes all faces that this MazeObject and another Maze object share: 
+	 * all faces that have the same set of Vertices are removed.
+	 * @param that
+	 */
 
 	public void removeRedunantFaces(MazeObject that)
 	{
@@ -345,7 +379,9 @@ public abstract class MazeObject {
 			for(int j  = 0; j < that.faces.size(); j++)
 			{
 				ArrayList<Vector3f> thatFacePoints = that.getFaceVertices(j);
-				ArrayList<Vector3f> commonVertices = retainAll(thisFacePoints, thatFacePoints);
+				@SuppressWarnings("unchecked")
+				ArrayList<Vector3f> commonVertices = (ArrayList<Vector3f>) thisFacePoints.clone();
+				commonVertices.retainAll(thatFacePoints);
 				if(commonVertices.size() == thatFacePoints.size() && commonVertices.size() == thisFacePoints.size())
 				{
 					this.faces.remove(i);
@@ -354,26 +390,6 @@ public abstract class MazeObject {
 				}
 			}
 		}
-	}
-
-
-	public ArrayList<Vector3f> retainAll(ArrayList<Vector3f> l1, ArrayList<Vector3f> l2)
-	{
-		ArrayList<Vector3f> res = new ArrayList<Vector3f>();
-
-		for(Vector3f v1 : l1)
-		{
-			for(Vector3f v2 : l2)
-			{
-				if(Math.abs(v1.x - v2.x) < 0.01 &&Math.abs(v1.y - v2.y) < 0.01 && Math.abs(v1.z - v2.z) < 0.01)
-				{
-					if(!res.contains(v1))
-						res.add(v1);
-				}
-			}
-		}
-
-		return res;
 	}
 
 	public Vector3f getPos()
