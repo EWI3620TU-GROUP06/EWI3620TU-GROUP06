@@ -16,6 +16,7 @@ import GameStates.gStateMan;
 import HighScore.SqlReadWrite;
 import HighScore.Score;
 import LevelHandling.Level;
+import LevelHandling.Maze;
 import Listening.UserInput;
 import Main.Game;
 import MazeObjects.SkyBox;
@@ -177,11 +178,11 @@ public class MazeRunner implements GLEventListener {
 
 		visibleObjects.add(player);
 
-		Swarm particles = new Swarm(physics, level.getMaze(), (int) (level.getMaze().MAZE_SIZE_X*(state.getDiffNumber() + 1))/4, state.getDiffNumber());
+		Swarm particles = new Swarm(physics, level.getMaze(), (int) (Maze.MAZE_SIZE_X*(state.getDiffNumber() + 1))/4, state.getDiffNumber());
 		particles.setCognitive(0.055f);
 		particles.setSocial(0.055f);
 		particles.setInertiaWeight(0.95f);
-		particles.generate((int) (level.getMaze().MAZE_SIZE_X*(state.getDiffNumber() + 1))/4);
+		particles.generate((int) (Maze.MAZE_SIZE_X*(state.getDiffNumber() + 1))/4);
 		level.addSwarm(particles);
 		physics.initParticles(particles);
 		physics.initContactHandling(); //Initializes sound-handling. MUST BE AFTER initParticles() TO INCLUDE PARTICLE-SOUNDS
