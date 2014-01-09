@@ -184,12 +184,13 @@ public class Maze implements VisibleObject {
 	 * @param n	the amount by which the maze size needs to be changed. 
 	 */
 
-	public void addToSize(int n)
+	public void setSize(int x, int z)
 	{
-		if(MAZE_SIZE_X + n > 0)
+		if(x > 0 && z > 0)
 		{
 			// Create new maze and selected arrays
-			MAZE_SIZE_X += n;
+			MAZE_SIZE_X = x;
+			MAZE_SIZE_Z = z;
 			MazeObject[][]newMaze = new MazeObject[MAZE_SIZE_X][MAZE_SIZE_Z];
 			boolean[][]newSelected = new boolean[MAZE_SIZE_X][MAZE_SIZE_Z];
 

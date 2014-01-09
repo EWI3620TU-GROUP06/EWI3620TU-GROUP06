@@ -98,7 +98,6 @@ public class MazeRunner implements GLEventListener {
 	 * to function as the view controller.
 	 */
 	public MazeRunner(Game game, GameState state) {
-		MoveableBox.resetIDs();
 		this.game = game;
 		this.state = state;
 		this.screenWidth = game.getScreenWidth();
@@ -173,26 +172,11 @@ public class MazeRunner implements GLEventListener {
 
 		Physics physics = new Physics(level.getMaze(), state.getDiffNumber());
 
-		MoveableBox newBox = new MoveableBox(new Vector3d(30, 0, 10), 5, 5);
-		
-		newBox.addToPath(1000, new Vector3f(35, 0, 0));
-		newBox.addToPath(7000, new Vector3f(-5, 0, 0));
-		newBox.setCount(1);
-		newBox.setActivationTile(1, 0, 1);
-		level.addMoveableBox(newBox);
-
 		// Initialize the player.
 		Vector3d playerPos = new Vector3d(level.getMaze().getStart()[0], level.getMaze().getStart()[1], level.getMaze().getStart()[2]);
 		player = new Player(playerPos, level.getMaze().getStart()[3], -45, level.getMaze(), physics, state.getDiffNumber());
 
 		visibleObjects.add(player);
-		
-		PowerUp newPower = new PowerUp(new Vector3d(22.5, 2.5, 42.5), PowerUp.COIN);
-		PowerUp newPower2 = new PowerUp(new Vector3d(22.5, 2.5, 35.5), PowerUp.SPEED);
-		PowerUp newPower3 = new PowerUp(new Vector3d(24.5, 2.5, 35.5), PowerUp.JUMP);
-		level.addPowerUp(newPower);
-		level.addPowerUp(newPower2);
-		level.addPowerUp(newPower3);
 
 		Swarm particles = new Swarm(physics, level.getMaze(), (int) (level.getMaze().MAZE_SIZE_X*(state.getDiffNumber() + 1))/4, state.getDiffNumber());
 		particles.setCognitive(0.055f);

@@ -258,7 +258,7 @@ public class Physics {
 		dynamicsWorld.clearForces();
 	}
 	
-	public void addBox(Vector3f position, float size, float height)
+	public int addBox(Vector3f position, float size, float height)
 	{
 		size =  size / 2;
 		height = height / 2;
@@ -268,7 +268,7 @@ public class Physics {
 		MotionState boxMotion = new DefaultMotionState(new Transform(new Matrix4f(new Quat4f(0, 0, 0, 1),
 				position, 1.0f)));
 	
-		RigidBodyConstructionInfo boxConstructionInfo = new RigidBodyConstructionInfo(1000, boxMotion, boxShape, new Vector3f(0, 0, 0));
+		RigidBodyConstructionInfo boxConstructionInfo = new RigidBodyConstructionInfo(50, boxMotion, boxShape, new Vector3f(0, 0, 0));
 
 		boxConstructionInfo.restitution = 0.3f;
 		boxConstructionInfo.angularDamping = 10f;
@@ -276,6 +276,8 @@ public class Physics {
 		RigidBody newBox = new RigidBody(boxConstructionInfo);
 		movingBoxes.add(newBox);
 		dynamicsWorld.addRigidBody(newBox);
+		
+		return movingBoxes.size() - 1;
 	}
 	
 	public Vector3f moveBox(int index, Vector3f speed)

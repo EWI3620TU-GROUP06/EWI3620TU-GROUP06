@@ -23,13 +23,11 @@ import Physics.Physics;
 public class MoveableBox extends GameObject implements VisibleObject {
 
 	private Box box;
-	static private int idCount;
 	private int id;
 	private Physics physics;
 	private ArrayList<Integer> pathTime;
 	private ArrayList<Vector3f> pathDirection;
 	private int time = 0;
-	private boolean isMoving = true;
 	private int count = -1;
 	private int activationTileX, activationTileY, activationTileZ;
 
@@ -37,8 +35,6 @@ public class MoveableBox extends GameObject implements VisibleObject {
 	{
 		this.location = pos;
 		box = new Box(squareSize, height, (float)location.x, (float) location.y, (float)location.z);
-		id = idCount;
-		idCount ++;
 
 		clearPath();
 		activationTileX = -1;
@@ -49,7 +45,7 @@ public class MoveableBox extends GameObject implements VisibleObject {
 	public void setPhysics(Physics physics)
 	{
 		this.physics = physics;
-		physics.addBox(new Vector3f((float)location.x, (float)location.y, (float)location.z), box.width, box.height);
+		id = physics.addBox(new Vector3f((float)location.x, (float)location.y, (float)location.z), box.width, box.height);
 	}
 
 	public void setActivationTile(int x, int y, int z)
@@ -58,7 +54,6 @@ public class MoveableBox extends GameObject implements VisibleObject {
 		activationTileY = y;
 		activationTileZ = z;
 		count = 0;
-		isMoving = false;
 	}
 
 	public boolean isActivationTile(double x, double y, double z)
@@ -71,7 +66,6 @@ public class MoveableBox extends GameObject implements VisibleObject {
 		if (isActivationTile(x,y,z))
 		{
 			count = -1;
-			isMoving = true;
 		}
 	}
 
@@ -81,6 +75,20 @@ public class MoveableBox extends GameObject implements VisibleObject {
 			time += pathTime.get(pathTime.size() - 1);
 		pathDirection.add(direction);
 		pathTime.add(time);
+	}
+	
+	public void addReversePath()
+	{
+		int i = pathTime.size() - 1;
+		while (i >= 0)
+		{
+			addToPath(1000, new Vector3f(-pathDirection.get(i).x,
+					-pathDirection.get(i).y,
+					-pathDirection.get(i).z));
+			i--;
+		}
+		count = -1;
+		
 	}
 
 	@Override
@@ -92,7 +100,7 @@ public class MoveableBox extends GameObject implements VisibleObject {
 	{
 		if(physics != null)
 		{
-			if(isMoving && pathTime.size() > 0)
+			if(pathTime.size() > 0)
 			{
 				time += deltaTime;
 				if(time > pathTime.get(pathTime.size() - 1)){
@@ -100,7 +108,6 @@ public class MoveableBox extends GameObject implements VisibleObject {
 					if(count > 0)
 						count--;
 					if(count == 0){
-						isMoving = false;
 						Vector3f newLocation = physics.moveBox(id, new Vector3f(0, 0, 0));
 						newLocation.sub(new Vector3f(2.5f, 2.5f, 2.5f));
 						box.moveTo(newLocation);
@@ -124,11 +131,6 @@ public class MoveableBox extends GameObject implements VisibleObject {
 		}
 	}
 
-	public static void resetIDs()
-	{
-		idCount = 0;
-	}
-
 	public void clearPath()
 	{
 		pathTime = new ArrayList<Integer>();
@@ -138,13 +140,6 @@ public class MoveableBox extends GameObject implements VisibleObject {
 	public void setCount(int c)
 	{
 		count = c;
-		if(c != 0)
-			isMoving = true;
-	}
-
-	public void setMoving(boolean moving)
-	{
-		isMoving =  moving;
 	}
 
 	public void write(PrintWriter wr)
@@ -194,6 +189,7 @@ public class MoveableBox extends GameObject implements VisibleObject {
 				if(pathSteps.length > 3){
 					Vector3f direction = new Vector3f(Float.parseFloat(pathSteps[1]), Float.parseFloat(pathSteps[2]), Float.parseFloat(pathSteps[3]));
 					res.addToPath(Integer.parseInt(pathSteps[0]), direction);
+					System.out.println("Added path " + pathSteps[0] + " " + pathSteps[1] + " " + pathSteps[2] + " " + pathSteps[3]);
 				}
 			}
 			return res;

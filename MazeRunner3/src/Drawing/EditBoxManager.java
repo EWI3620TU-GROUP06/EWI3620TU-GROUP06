@@ -41,7 +41,7 @@ public class EditBoxManager extends ClickBoxManager {
 
 		ArrayList<Command> commands = new ArrayList<Command>();
 		
-		commands.add(new ResizeCommand(editor.getLevel().getMaze(), 1));
+		commands.add(new EditModeCommand(editor, new ResizeMode(editor.getLevel())));
 		commands.add(new SaveCommand(editor));
 		commands.add(new OpenCommand(editor));
 
