@@ -2,7 +2,14 @@ package EditorModes;
 
 import LevelHandling.Level;
 
-public abstract class AddMode extends EditMode{
+/**
+ * ObjectMode is an abstract class that extends EditMode and that is the parent of all Edit Mode that add 
+ * MazeObjects to the maze.
+ * @author Tom Hogervorst
+ *
+ */
+
+public abstract class ObjectMode extends EditMode{
 	
 	public static final byte ADD_FLOOR = 0;
 	public static final byte ADD_BOX = 1;
@@ -15,7 +22,7 @@ public abstract class AddMode extends EditMode{
 	protected byte drawMode;
 	protected int rotation;
 	
-	public AddMode(Level level, Byte drawMode)
+	public ObjectMode(Level level, Byte drawMode)
 	{
 		super(level);
 		this.drawMode = drawMode;

@@ -41,7 +41,7 @@ public class Editor extends GameObject{
 		super(pos);
 		horAngle = h;
 		verAngle = v;
-		editMode = new AddStatic(level, AddMode.ADD_FLOOR);
+		editMode = new AddStatic(level, ObjectMode.ADD_FLOOR);
 	}
 
 	/**
@@ -54,7 +54,7 @@ public class Editor extends GameObject{
 		this.level = level;
 		this.FOV = FOV;
 		this.control = control;
-		editMode = new AddStatic(level, AddMode.ADD_FLOOR);
+		editMode = new AddStatic(level, ObjectMode.ADD_FLOOR);
 	}
 
 	/**

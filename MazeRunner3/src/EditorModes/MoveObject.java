@@ -7,6 +7,15 @@ import LevelHandling.Maze;
 import MazeObjects.Floor;
 import MazeObjects.MazeObject;
 
+/**
+ * MoveObject moves the MazeObject that is selected when the mouse is clicked, to the position 
+ * of the dragged mouse. A Floor MazeObject is added on the moved objects original place.
+ * When the mouse is released, the object is fixed in place.
+ * and 
+ * @author Tom2
+ *
+ */
+
 public class MoveObject extends EditMode {
 	
 	MazeObject selected;

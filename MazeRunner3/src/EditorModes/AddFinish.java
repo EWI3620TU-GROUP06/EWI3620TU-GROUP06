@@ -2,11 +2,19 @@ package EditorModes;
 
 import LevelHandling.Level;
 
-public class AddFinish extends AddMode {
+/**
+ * Add finish adds a FinishTile MazeObject at the position the mouse is clicked or is dragged to.
+ * Previous FinishTiles are removed: there can be only one finish Tile. 
+ * 
+ * @author Tom Hogervorst
+ *
+ */
+
+public class AddFinish extends ObjectMode {
 
 	public AddFinish(Level level)
 	{
-		super(level, AddMode.ADD_FINISH);
+		super(level, ObjectMode.ADD_FINISH);
 	}
 	
 	@Override

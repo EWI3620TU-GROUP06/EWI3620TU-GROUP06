@@ -92,8 +92,8 @@ public class PowerUp extends GameObject implements VisibleObject {
 	}
 	
 	/**
-	 * this method is used to activate the powerup and give it the functionality it has in the game
-	 * @param active
+	 * this method is used to activate the power-up and give it the functionality it has in the game
+	 * @param active	Boolean that is used to either activate or deactivate the power-up.
 	 */
 	private void activate(boolean active)
 	{

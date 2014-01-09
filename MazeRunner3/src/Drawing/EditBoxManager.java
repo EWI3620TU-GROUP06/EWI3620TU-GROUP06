@@ -49,13 +49,13 @@ public class EditBoxManager extends ClickBoxManager {
 
 		commands.clear();
 		commands.add(new SwitchMenuModeCommand(this, OBJECT_MODE));
-		commands.add(new EditModeCommand(editor, new AddStatic(editor.getLevel(), AddMode.ADD_FLOOR)));
-		commands.add(new EditModeCommand(editor, new AddStatic(editor.getLevel(), AddMode.ADD_BOX)));
-		commands.add(new EditModeCommand(editor, new AddStatic(editor.getLevel(), AddMode.ADD_LOW_BOX)));
+		commands.add(new EditModeCommand(editor, new AddStatic(editor.getLevel(), ObjectMode.ADD_FLOOR)));
+		commands.add(new EditModeCommand(editor, new AddStatic(editor.getLevel(), ObjectMode.ADD_BOX)));
+		commands.add(new EditModeCommand(editor, new AddStatic(editor.getLevel(), ObjectMode.ADD_LOW_BOX)));
 		commands.add(new EditModeCommand(editor, new AddStart(editor.getLevel())));
 		commands.add(new EditModeCommand(editor, new AddFinish(editor.getLevel())));
-		commands.add(new EditModeCommand(editor, new AddRotating(editor.getLevel(), AddMode.ADD_RAMP)));
-		commands.add(new EditModeCommand(editor, new AddRotating(editor.getLevel(), AddMode.ADD_LOW_RAMP)));
+		commands.add(new EditModeCommand(editor, new AddRotating(editor.getLevel(), ObjectMode.ADD_RAMP)));
+		commands.add(new EditModeCommand(editor, new AddRotating(editor.getLevel(), ObjectMode.ADD_LOW_RAMP)));
 		commands.add(new CustomCommand(editor));
 
 		addButtons(numObjectButtons, commands, objectBoxes, screenWidth, screenHeight);

@@ -2,6 +2,13 @@ package EditorModes;
 
 import LevelHandling.Level;
 
+/**
+ * The maze size is set so that the position the mouse is pressed or dragged to becomes the bottom-rightmost tile.
+ * 
+ * @author Tom Hogervorst
+ *
+ */
+
 public class ResizeMode extends EditMode {
 
 	public ResizeMode(Level level) {

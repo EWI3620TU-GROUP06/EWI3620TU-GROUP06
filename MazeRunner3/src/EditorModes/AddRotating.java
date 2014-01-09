@@ -2,7 +2,16 @@ package EditorModes;
 
 import LevelHandling.Level;
 
-public class AddRotating extends AddMode {
+/**
+ * AddRotating adds a rotatable MazeObject such as a ramp on the tile that was clicked.
+ * The added MazeObject can be rotated by dragging the mouse after clicking in: the MazeObject is rotated 
+ * towards the mouse position and is fixed in place upon releasing it.
+ * 
+ * @author Tom Hogervorst
+ *
+ */
+
+public class AddRotating extends ObjectMode {
 	
 	private int pressedX, pressedZ;
 

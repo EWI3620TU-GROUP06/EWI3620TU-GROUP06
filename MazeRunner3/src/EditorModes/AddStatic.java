@@ -2,7 +2,14 @@ package EditorModes;
 
 import LevelHandling.Level;
 
-public class AddStatic extends AddMode {
+/**
+ * AddStatic adds non-rotatable MazeObjects such as Box of Floor on the selected tiles. 
+ * Tiles can be selected by clicking and dragging: objects are added when the mouse is released.
+ * @author Tom Hogervorst
+ *
+ */
+
+public class AddStatic extends ObjectMode {
 	
 	public AddStatic(Level level, byte drawMode)
 	{

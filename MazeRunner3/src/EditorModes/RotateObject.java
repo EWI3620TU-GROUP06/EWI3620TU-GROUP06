@@ -2,9 +2,14 @@ package EditorModes;
 
 import LevelHandling.Level;
 
-public class RotateObject extends EditMode {
-	
+/**
+ * The selected Maze Object is rotated 90 degrees around a certain axis when the mouse is pressed.
+ * 
+ * @author Tom Hogervorst.
+ *
+ */
 
+public class RotateObject extends EditMode {
 	
 	private boolean[] axes = {false, false, false};
 	

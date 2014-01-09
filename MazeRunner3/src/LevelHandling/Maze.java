@@ -3,7 +3,7 @@ import javax.media.opengl.GL;
 
 import Drawing.DrawingUtil;
 import Drawing.VisibleObject;
-import EditorModes.AddMode;
+import EditorModes.ObjectMode;
 import MazeObjects.Box;
 import MazeObjects.CustomMazeObject;
 import MazeObjects.FinishTile;
@@ -112,7 +112,7 @@ public class Maze implements VisibleObject {
 	public boolean isFinish(double x, double z)
 	{
 		if(x >= 0 && x < MAZE_SIZE_X*SQUARE_SIZE && z >= 0 && z < MAZE_SIZE_Z*SQUARE_SIZE)
-			return maze[(int)x / SQUARE_SIZE][(int)z / SQUARE_SIZE].equals(standards.get(AddMode.ADD_FINISH));
+			return maze[(int)x / SQUARE_SIZE][(int)z / SQUARE_SIZE].equals(standards.get(ObjectMode.ADD_FINISH));
 		return false;
 	}
 
@@ -169,7 +169,7 @@ public class Maze implements VisibleObject {
 		for(int i = 0; i <  maze[0].length; i++){
 			for(int j = 0; j < maze[0].length; j++)
 			{
-				if(maze[i][j].equals(standards.get(AddMode.ADD_START)))
+				if(maze[i][j].equals(standards.get(ObjectMode.ADD_START)))
 				{
 					res[0] = maze[i][j].getPos().x;
 					res[1] = maze[i][j].getPos().y;
@@ -238,7 +238,7 @@ public class Maze implements VisibleObject {
 		for(int i = 0; i < maze.length; i++){
 			for (int j = 0; j < maze[0].length; j++){
 				if(maze[i][j].equals(standards.get(drawMode))){
-					maze[i][j] = standards.get(AddMode.ADD_FLOOR).translate(i * SQUARE_SIZE, 0, j * SQUARE_SIZE);
+					maze[i][j] = standards.get(ObjectMode.ADD_FLOOR).translate(i * SQUARE_SIZE, 0, j * SQUARE_SIZE);
 				}
 			}
 		}
@@ -253,8 +253,8 @@ public class Maze implements VisibleObject {
 	{			
 		for(int i = 0; i < maze.length; i++){
 			for (int j = 0; j < maze[0].length; j++){
-				if (selected[i][j] && !maze[i][j].equals(standards.get(AddMode.ADD_FINISH)) 
-						&& !maze[i][j].equals(standards.get(AddMode.ADD_START))) {
+				if (selected[i][j] && !maze[i][j].equals(standards.get(ObjectMode.ADD_FINISH)) 
+						&& !maze[i][j].equals(standards.get(ObjectMode.ADD_START))) {
 					if(drawMode < 0)
 						maze[i][j] = customs.get(-drawMode - 1).translate(i * SQUARE_SIZE, 0, j*SQUARE_SIZE);
 					else
@@ -298,10 +298,10 @@ public class Maze implements VisibleObject {
 		for(int i = 0; i <  maze.length; i++){
 			for(int j = 0; j < maze[0].length; j++)
 			{
-				if(maze[i][j].equals(standards.get(AddMode.ADD_START))){
+				if(maze[i][j].equals(standards.get(ObjectMode.ADD_START))){
 					start = true;
 				}
-				if(maze[i][j].equals(standards.get(AddMode.ADD_FINISH))){
+				if(maze[i][j].equals(standards.get(ObjectMode.ADD_FINISH))){
 					finish = true;
 				}
 			}

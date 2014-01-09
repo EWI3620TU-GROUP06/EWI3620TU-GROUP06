@@ -2,12 +2,20 @@ package EditorModes;
 
 import LevelHandling.Level;
 
-public class AddStart extends AddMode {
+/**
+ * AddStart adds a StartArrow MazeObject at the position the mouse is clicked. And rotates it towards the mouse
+ * when it is dragged. Previous StartArrows are removed: there can be only one start Position. 
+ * 
+ * @author Tom Hogervorst
+ *
+ */
+
+public class AddStart extends ObjectMode {
 	
 	private int pressedX, pressedZ;
 	
 	public AddStart(Level level){
-		super(level, AddMode.ADD_START);
+		super(level, ObjectMode.ADD_START);
 	}
 
 	@Override

@@ -6,6 +6,14 @@ import GameObjects.PowerUp;
 import LevelHandling.Level;
 import LevelHandling.Maze;
 
+/**
+ * AddPowerUp adds a powerUp of a certain type on the tile where the mouse was clicked. 
+ * This Edit mode has no functions when dragging the mouse;
+ * 
+ * @author Tom Hogervorst
+ *
+ */
+
 public class AddPowerUp extends EditMode {
 	
 	private byte type;

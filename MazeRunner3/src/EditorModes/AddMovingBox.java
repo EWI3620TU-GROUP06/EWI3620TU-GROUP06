@@ -7,6 +7,15 @@ import GameObjects.MoveableBox;
 import LevelHandling.Level;
 import LevelHandling.Maze;
 
+/**
+ * AddMovingBox adds a movable box on the tile de mouse was clicked. By dragging, the path of the 
+ * box can be selected: the box will move to all selected tiles in order and then back,
+ * with a speed of 1 second per tile.
+ * 
+ * @author Tom Hogervorst
+ *
+ */
+
 public class AddMovingBox extends EditMode {
 	
 	private int pressedX, pressedZ;
