@@ -10,12 +10,21 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+/**
+ * the class SqlReadWrite gives all the functionality to the sql database the methods used to read and write 
+ * highscores in the sql database are stated in this class.
+ *
+ */
 public class SqlReadWrite {
 
 	private static Connection connect = null;
 	public static ArrayList<Score> highscores = new ArrayList<Score>();
 	public static Score mostRecentScore = null;
-
+	
+	/**
+	 * the method startConnection is used to setup the connection with the sql database and creates if the 
+	 * table does not all ready exist a table where it is possible to save highscores.
+	 */
 	public static void startConnection()
 	{
 		try{
@@ -37,6 +46,11 @@ public class SqlReadWrite {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * the write method is used to put scores in the sql table which is saved in the online data base.
+	 * @param score		the object score has all the information that we put in the table
+	 */
 
 	public static void Write(Score score){
 		try{
@@ -58,6 +72,11 @@ public class SqlReadWrite {
 		}
 	}
 
+	/**
+	 * the Read method reads all the highscores saved in the table and then puts it in a arraylist, the higscores
+	 * are selected from the database using an sql query.  
+	 */
+	
 	public static void Read()
 	{
 		highscores = new ArrayList<Score>();
@@ -83,6 +102,10 @@ public class SqlReadWrite {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * the delete highscores method drops the highscores table from the database.
+	 */
 	
 	public static void DeleteHigHscores(){
 		try {

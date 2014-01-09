@@ -16,6 +16,11 @@ import MainGame.MazeRunner;
 import PSO.Swarm;
 import Physics.Physics;
 
+/**
+ * the level class makes an object level which contains information about the maze, powerups and swarm in each level
+ *
+ */
+
 public class Level {
 	private Maze maze;
 	private ArrayList<PowerUp> powerUps = new ArrayList<PowerUp>();
@@ -87,6 +92,11 @@ public class Level {
 		swarm.pause();
 	}
 	
+	/**
+	 * the method addToVisibleObjects adds all the maze, swarm and the powerups of each level to the visible 
+	 * objects wich will displayed.
+	 */
+	
 	public void addToVisible(ArrayList<VisibleObject> visibleObjects)
 	{
 		visibleObjects.add(maze);
@@ -105,6 +115,11 @@ public class Level {
 		return res;
 	}
 	
+	/**
+	 * the method removeFromVisibleObjects removes the maze, swarm and the powerups of each level from the visible 
+	 * objects wich will displayed.
+	 */
+	
 	public void removeFromVisible(ArrayList<VisibleObject> visibleObjects)
 	{
 		visibleObjects.remove(maze);
@@ -113,6 +128,11 @@ public class Level {
 		for(PowerUp powerUp : powerUps)
 			visibleObjects.remove(powerUp);
 	}
+	
+	/**
+	 * the setattrributes method sets the all the interactive components in the game to interact with the player
+	 * the physics.
+	 */
 	
 	public void setAttributes(Player player, Physics physics, MazeRunner mazeRunner)
 	{
@@ -124,6 +144,11 @@ public class Level {
 			powerUp.setMazeRunner(mazeRunner);
 		}
 	}
+	
+	/**
+	 * the save level method saves a whole level in a file including the movable boxes, powerups and maze
+	 * @param file
+	 */
 	
 	public void saveLevel(File file)
 	{
