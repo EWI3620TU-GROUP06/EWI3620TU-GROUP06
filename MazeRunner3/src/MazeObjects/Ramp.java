@@ -77,8 +77,11 @@ public class Ramp extends MazeObject{
 		{
 			vertices.add((Vector3f)vertex.clone());
 		}
-		@SuppressWarnings("unchecked")
-		ArrayList<Face> faces = (ArrayList<Face>) this.faces.clone();
+		ArrayList<Face> faces = new ArrayList<Face>();
+		for(Face face : this.faces)
+		{
+			faces.add(face.clone());
+		}
 		return new Ramp(vertices, this.texVertices, faces, this.width, this.height);
 	}
 	

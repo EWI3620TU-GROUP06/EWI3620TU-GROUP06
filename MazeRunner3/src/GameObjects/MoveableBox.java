@@ -13,6 +13,13 @@ import LevelHandling.Maze;
 import MazeObjects.Box;
 import Physics.Physics;
 
+/**
+ * Moveable Box is a class that handles a cube-shaped maze object which can move through the level. 
+ * 
+ * @author Tom Hogervorst
+ *
+ */
+
 public class MoveableBox extends GameObject implements VisibleObject {
 
 	private Box box;
@@ -54,13 +61,13 @@ public class MoveableBox extends GameObject implements VisibleObject {
 		isMoving = false;
 	}
 
-	public boolean isActivationTile(float x, float y, float z)
+	public boolean isActivationTile(double x, double y, double z)
 	{
 		return ((int)(x/Maze.SQUARE_SIZE) == activationTileX) && ((int)(z/Maze.SQUARE_SIZE) == activationTileZ) &&
-				(Math.abs(y - activationTileY) < 0.1);
+				(Math.abs(y - activationTileY - 1) < 0.1);
 	}
 
-	public void activate(float x, float y, float z){
+	public void activate(double x, double y, double z){
 		if (isActivationTile(x,y,z))
 		{
 			count = -1;

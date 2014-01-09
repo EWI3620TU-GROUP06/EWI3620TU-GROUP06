@@ -74,8 +74,10 @@ public class Level {
 	{
 		if(swarm != null)
 			swarm.update(deltaTime);
-		for(MoveableBox moveBox : moveableBoxes)
+		for(MoveableBox moveBox : moveableBoxes){
 			moveBox.update(deltaTime);
+			moveBox.activate(playerPos.x, playerPos.y, playerPos.z);
+		}
 		for(PowerUp powerUp : powerUps)
 			powerUp.update(deltaTime, playerPos);
 	}

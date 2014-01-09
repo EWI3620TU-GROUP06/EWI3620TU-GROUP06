@@ -49,5 +49,10 @@ public class Face {
 	{
 		return vertices;
 	}
+	
+	public Face clone()
+	{
+		return new Face(vertices, texVertices);
+	}
 
 }

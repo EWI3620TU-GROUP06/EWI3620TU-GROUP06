@@ -165,7 +165,7 @@ public class MazeEditor implements GLEventListener {
 		String[] commands = {"Resume", "Options","Main Menu", "Quit"};
 		String[] optcommands = {"Toggle Fullscreen", "Back"};
 		this.clkbxman = TextBoxManager.createMenu(screenWidth, screenHeight, "Pause", commands, this.state.getGSM());
-		this.optclkbxman = TextBoxManager.createMenu(screenWidth, screenHeight, "Options", optcommands, this.state.getGSM());
+		this.optclkbxman = TextBoxManager.createOptionsMenu(screenWidth, screenHeight, "Options", optcommands, this.state.getGSM());
 		this.clkbxman.setControl(input);
 		this.optclkbxman.setControl(input);
 	}

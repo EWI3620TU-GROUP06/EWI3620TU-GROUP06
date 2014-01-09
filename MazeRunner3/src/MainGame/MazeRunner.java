@@ -178,6 +178,7 @@ public class MazeRunner implements GLEventListener {
 		newBox.addToPath(1000, new Vector3f(35, 0, 0));
 		newBox.addToPath(7000, new Vector3f(-5, 0, 0));
 		newBox.setCount(1);
+		newBox.setActivationTile(1, 0, 1);
 		level.addMoveableBox(newBox);
 
 		// Initialize the player.
@@ -221,7 +222,7 @@ public class MazeRunner implements GLEventListener {
 		String[] optcommands = {"Toggle Fullscreen", "Back"};
 		String[] highscorecommands = {"Next Level"}; 
 		this.clkbxman = TextBoxManager.createMenu(screenWidth, screenHeight, "Pause", commands, this.state.getGSM());
-		this.optclkbxman = TextBoxManager.createMenu(screenWidth, screenHeight, "Options", optcommands, this.state.getGSM());
+		this.optclkbxman = TextBoxManager.createOptionsMenu(screenWidth, screenHeight, "Options", optcommands, this.state.getGSM());
 		this.finishclbxman = TextBoxManager.createFinishMenu(screenWidth, screenHeight, highscorecommands, this.state.getGSM(), input);
 		
 		this.clkbxman.setControl(input);
