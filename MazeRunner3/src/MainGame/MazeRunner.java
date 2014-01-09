@@ -339,7 +339,7 @@ public class MazeRunner implements GLEventListener {
 				dead = true;
 				state.getGSM().setPauseState();
 			}
-			if(!finished && (level.getMaze().isFinish(pos[0], pos[2])))	
+			if(!finished && (level.getMaze().isFinish(pos[0], pos[2])) && (pos[1] < 2))	
 				{
 					finished = true;
 					if (state.getLevel() != 0)
@@ -425,7 +425,7 @@ public class MazeRunner implements GLEventListener {
 			}
 		}
 		
-		if(dead){
+		if(dead && !finished){
 			if(!playingsound){
 				Audio.playSound("test2");
 				playingsound = true;
