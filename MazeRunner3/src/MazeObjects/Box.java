@@ -1,16 +1,28 @@
 package MazeObjects;
 
 import java.util.ArrayList;
-
 import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 
 import com.sun.opengl.util.texture.Texture;
 
+/**
+ * the class box is used to put the maze object box in the maze. the box used to create walls.
+ */
+
 public class Box extends MazeObject{
 	
 	private static Texture texture;
 	
+	/**
+	 * the object box has an given height and position. when the box is made it gets is faces which are used 
+	 * by the physics to detect collision.
+	 * @param width		width of the box	
+	 * @param height	height of the box 
+	 * @param x			x position in the maze
+	 * @param y			y position in the maze
+	 * @param z			z position in the maze
+	 */
 	public Box(float width, float height, float x, float y, float z)
 	{
 		super(false);
@@ -73,6 +85,10 @@ public class Box extends MazeObject{
 		}
 	}
 	
+	/**
+	 * when the object box is translated it is cloned first and then we move the box to a different place in the maze
+	 */
+	
 	public MazeObject translate(float x, float y, float z)
 	{
 		Box res = (Box)this.clone();
@@ -80,7 +96,10 @@ public class Box extends MazeObject{
 			vertex.add(new Vector3f(x, y, z));
 		return res;
 	}
-
+	
+	/**
+	 * the method clone is used by the translate method 
+	 */
 	public MazeObject clone()
 	{
 		ArrayList<Vector3f> vertices = new ArrayList<Vector3f>();

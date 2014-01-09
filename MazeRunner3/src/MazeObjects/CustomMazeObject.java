@@ -12,6 +12,11 @@ import Drawing.DrawingUtil;
 
 import com.sun.opengl.util.texture.Texture;
 
+/**
+ * the class customMazeObject is used to place custom objects in the maze these objects are imported from
+ * a .obj file
+ */
+
 public class CustomMazeObject extends MazeObject{
 
 	private File file;
@@ -31,7 +36,12 @@ public class CustomMazeObject extends MazeObject{
 		this.file = file;
 		this.hasTexture = hasTexture;
 	}
-
+	
+	/**
+	 * the read method gives the oppertunity to load custom objects from a file in this file are vertices for the
+	 * points in the of the object, the faces of the object and vertices used for the textures. the texture is also 
+	 * placed on the object in this method.
+	 */
 	public static CustomMazeObject readFromOBJ(File file)
 	{
 		CustomMazeObject res = new CustomMazeObject();
@@ -121,7 +131,10 @@ public class CustomMazeObject extends MazeObject{
 	{
 		return textures.get(texNum);
 	}
-
+	
+	/**
+	 * used to set a texture on the custom object
+	 */
 	public void setTexture(GL gl)
 	{
 		if(hasTexture)
@@ -151,6 +164,9 @@ public class CustomMazeObject extends MazeObject{
 		return file;
 	}
 
+	/**
+	 * translate and clone same as in box
+	 */
 	public MazeObject translate(float x, float y, float z)
 	{
 		CustomMazeObject res = (CustomMazeObject)this.clone();
@@ -168,7 +184,7 @@ public class CustomMazeObject extends MazeObject{
 		}
 		return new CustomMazeObject(vertices, this.texVertices, this.faces, this.texNum, file, hasTexture);
 	}
-
+	
 	public boolean equals(Object other)
 	{
 		if(other instanceof CustomMazeObject)

@@ -7,6 +7,9 @@ import javax.vecmath.Vector3f;
 
 import com.sun.opengl.util.texture.Texture;
 
+/**
+ * the finishTile is the finish of the game when the player is on this tile the game is finished. 
+ */
 public class FinishTile extends MazeObject {
 	private static Texture texture;
 	
@@ -39,6 +42,9 @@ public class FinishTile extends MazeObject {
 		return texture;
 	}
 	
+	/**
+	 * same as box
+	 */
 	public MazeObject translate(float x, float y, float z)
 	{
 		FinishTile res = (FinishTile)this.clone();

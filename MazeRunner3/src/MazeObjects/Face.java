@@ -2,6 +2,10 @@ package MazeObjects;
 
 import javax.vecmath.Vector3f;
 
+/**
+ * the class face is used to give the all the objects its faces, these fases are used to detect collision.
+ */
+
 public class Face {
 
 	private int[] vertices;
