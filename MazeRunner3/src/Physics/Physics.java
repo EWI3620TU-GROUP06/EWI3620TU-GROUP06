@@ -304,4 +304,15 @@ public class Physics {
 	public static ArrayList<RigidBody> getParticles(){
 		return particles;
 	}
+	
+	public boolean cameraInWall(float cameraX, float cameraY, float cameraZ)
+	{
+		Vector3f cameraPos = new Vector3f(cameraX, cameraY, cameraZ);
+		Vector3f toVect = getPlayerPosition();
+		toVect.sub(new Vector3f(0,-1.2f,0));
+		RayResultCallback a = new CollisionWorld.ClosestRayResultCallback(cameraPos, toVect);
+		dynamicsWorld.rayTest(cameraPos, toVect, a);
+		return a.hasHit();
+	
+	}
 }

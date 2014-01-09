@@ -10,9 +10,7 @@ import com.sun.opengl.util.*;
 import Audio.Audio;
 import Drawing.*;
 import GameObjects.Camera;
-import GameObjects.MoveableBox;
 import GameObjects.Player;
-import GameObjects.PowerUp;
 import GameStates.GameState;
 import GameStates.gStateMan;
 import HighScore.SqlReadWrite;
@@ -57,7 +55,8 @@ public class MazeRunner implements GLEventListener {
 	private int screenWidth, screenHeight;					// Screen size for reshaping
 	private ArrayList<VisibleObject> visibleObjects;		// A list of objects that will be displayed on screen.
 	private Player player;									// The player object.
-	private Camera camera;									// The camera object.
+	private Camera camera;
+	private Physics physics;
 	private UserInput input;								// The user input object that controls the player.
 	private static Level level;									// The maze.
 	private long previousTime; // Used to calculate elapsed time.
@@ -170,7 +169,7 @@ public class MazeRunner implements GLEventListener {
 		}
 		level.getMaze().removeRedundantFaces();
 
-		Physics physics = new Physics(level.getMaze(), state.getDiffNumber());
+		physics = new Physics(level.getMaze(), state.getDiffNumber());
 
 		// Initialize the player.
 		Vector3d playerPos = new Vector3d(level.getMaze().getStart()[0], level.getMaze().getStart()[1], level.getMaze().getStart()[2]);
@@ -471,13 +470,26 @@ public class MazeRunner implements GLEventListener {
 	 */
 
 	private void updateCamera() {
-		Vector3d cameraPos = new Vector3d(4 *Math.sin( Math.toRadians(player.getHorAngle())) * Math.cos( Math.toRadians(player.getVerAngle())),
+		float distance = 4;
+		Vector3d cameraPos = new Vector3d(distance *Math.sin( Math.toRadians(player.getHorAngle())) * Math.cos( Math.toRadians(player.getVerAngle())),
 				Math.sin(Math.toRadians(player.getVerAngle())) + 1.5,
-				4 *Math.cos( Math.toRadians(player.getHorAngle())) * Math.cos(Math.toRadians(player.getVerAngle()))); 
+				distance *Math.cos( Math.toRadians(player.getHorAngle())) * Math.cos(Math.toRadians(player.getVerAngle()))); 
 		cameraPos.add(player.getLocation());
-
-		camera.setLocation( cameraPos);
-		camera.setHorAngle( player.getHorAngle() );
+		if(!physics.cameraInWall((float) cameraPos.x, (float) cameraPos.y, (float) cameraPos.z)){
+			camera.setLocation( cameraPos);
+			camera.setHorAngle( player.getHorAngle() );
+		}
+		else{
+			while(physics.cameraInWall((float) cameraPos.x, (float) cameraPos.y, (float) cameraPos.z) && distance >=0){
+				distance -= 0.1f;
+				cameraPos = new Vector3d(distance *Math.sin( Math.toRadians(player.getHorAngle())) * Math.cos( Math.toRadians(player.getVerAngle())),
+					Math.sin(Math.toRadians(player.getVerAngle())) + 1.5,
+					distance *Math.cos( Math.toRadians(player.getHorAngle())) * Math.cos(Math.toRadians(player.getVerAngle())));
+				cameraPos.add(player.getLocation());
+			}
+			camera.setLocation( cameraPos);
+			camera.setHorAngle( player.getHorAngle() );
+		}
 		camera.setVerAngle( player.getVerAngle() );
 		camera.calculateVRP();
 		
