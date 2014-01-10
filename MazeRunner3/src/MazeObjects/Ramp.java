@@ -38,7 +38,7 @@ public class Ramp extends MazeObject{
 		int[] face4 = {2, 3, 4, 5};
 		addFace(face4);
 		
-		this.height =  height;
+		this.yMin = y;
 		
 		restitution = 0.0f;
 	}

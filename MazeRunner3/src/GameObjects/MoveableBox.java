@@ -45,7 +45,7 @@ public class MoveableBox extends GameObject implements VisibleObject {
 	public void setPhysics(Physics physics)
 	{
 		this.physics = physics;
-		id = physics.addBox(new Vector3f((float)location.x, (float)location.y, (float)location.z), box.width, box.height);
+		id = physics.addBox(new Vector3f((float)location.x, (float)location.y, (float)location.z), box.getWidth(), box.getHeight());
 	}
 
 	public void setActivationTile(int x, int y, int z)
@@ -146,7 +146,7 @@ public class MoveableBox extends GameObject implements VisibleObject {
 	{
 		try{
 			int previousTime = 0;
-			wr.write(location.x + " " + location.y + " " + location.z + " " + box.width + " " + box.height + " " + count + " " + activationTileX + " " + activationTileY + " " + activationTileZ + "\n");
+			wr.write(location.x + " " + location.y + " " + location.z + " " + box.getWidth() + " " + box.getHeight() + " " + count + " " + activationTileX + " " + activationTileY + " " + activationTileZ + "\n");
 			for(int i = 0; i < pathDirection.size(); i++)
 			{
 				wr.write(pathTime.get(i) - previousTime + "," + pathDirection.get(i).x + "," + pathDirection.get(i).y + "," + pathDirection.get(i).z + ";");
@@ -189,7 +189,6 @@ public class MoveableBox extends GameObject implements VisibleObject {
 				if(pathSteps.length > 3){
 					Vector3f direction = new Vector3f(Float.parseFloat(pathSteps[1]), Float.parseFloat(pathSteps[2]), Float.parseFloat(pathSteps[3]));
 					res.addToPath(Integer.parseInt(pathSteps[0]), direction);
-					System.out.println("Added path " + pathSteps[0] + " " + pathSteps[1] + " " + pathSteps[2] + " " + pathSteps[3]);
 				}
 			}
 			return res;

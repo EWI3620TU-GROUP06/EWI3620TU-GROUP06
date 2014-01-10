@@ -49,11 +49,11 @@ public class Maze implements VisibleObject {
 
 	private MazeObject[][] maze = null;
 	public static final ArrayList<MazeObject> standards = new ArrayList<MazeObject>(Arrays.asList(new MazeObject[]{
-			new Floor(SQUARE_SIZE, 0, 0),
+			new Floor(SQUARE_SIZE, 0, 0, 0),
 			new Box(SQUARE_SIZE, SQUARE_SIZE, 0, 0, 0),
 			new Box(SQUARE_SIZE, (float)SQUARE_SIZE/2, 0, 0, 0),
-			new StartTile(SQUARE_SIZE, 0, 0),
-			new FinishTile(SQUARE_SIZE, 0, 0),
+			new StartTile(SQUARE_SIZE, 0, 0, 0),
+			new FinishTile(SQUARE_SIZE, 0, 0, 0),
 			new Ramp(SQUARE_SIZE, SQUARE_SIZE, 0, 0, 0),
 			new Ramp(SQUARE_SIZE, (float)SQUARE_SIZE / 2,  0, 0, 0)	
 	}));
@@ -67,7 +67,7 @@ public class Maze implements VisibleObject {
 		maze = new MazeObject[MAZE_SIZE_X][MAZE_SIZE_Z];
 		for(int i = 0; i < maze.length; i++)
 			for(int j = 0; j < maze[0].length; j++)
-				maze[i][j] = new Floor(SQUARE_SIZE, i * SQUARE_SIZE, j*SQUARE_SIZE);
+				maze[i][j] = new Floor(SQUARE_SIZE, i * SQUARE_SIZE, 0, j*SQUARE_SIZE);
 	}
 
 	public Maze(int mazeSizeX, int mazeSizeZ, byte[][] object, byte[][] rotation)
@@ -210,7 +210,7 @@ public class Maze implements VisibleObject {
 					if(i < maze.length && j < maze[0].length)
 						newMaze[i][j] = maze[i][j];
 					else
-						newMaze[i][j] = new Floor(SQUARE_SIZE, i * SQUARE_SIZE, j*SQUARE_SIZE);
+						newMaze[i][j] = new Floor(SQUARE_SIZE, i * SQUARE_SIZE, 0, j*SQUARE_SIZE);
 					newSelected[i][j] = false;
 				}
 			}
@@ -432,7 +432,7 @@ public class Maze implements VisibleObject {
 	{
 		if(x >= 0 && x < MAZE_SIZE_X && z >= 0 && z < MAZE_SIZE_Z)
 			return maze[x][z];
-		return new Floor(0, 0, 0);
+		return new Floor(0, 0, 0, 0);
 	}
 
 	public void set(MazeObject mazeObject)

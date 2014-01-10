@@ -11,9 +11,10 @@ public class StartTile extends MazeObject {
 
 	private static Texture texture;
 
-	public StartTile(float width, float x, float z)
+	public StartTile(float width, float x, float y, float z)
 	{
 		super(false);
+		this.yMin = y;
 		this.width = width;
 		this.height = width;
 		addVertex(new Vector3f(x, 0, z));

@@ -46,7 +46,7 @@ public class MoveObject extends EditMode {
 	public void mousePressed(int mazeX, int mazeZ) {
 		level.getMaze().select(mazeX, mazeZ);
 		selected = level.getMaze().get(mazeX,  mazeZ);
-		previous = new Floor(Maze.SQUARE_SIZE, mazeX * Maze.SQUARE_SIZE, mazeZ * Maze.SQUARE_SIZE);
+		previous = new Floor(Maze.SQUARE_SIZE, mazeX * Maze.SQUARE_SIZE, 0, mazeZ * Maze.SQUARE_SIZE);
 	}
 
 }

@@ -28,6 +28,7 @@ public class Box extends MazeObject{
 		super(false);
 		this.width = width;
 		this.height = height;
+		this.yMin = y;
 		addVertex(new Vector3f(x, y, z));
 		addVertex(new Vector3f(x+width, y, z));
 		addVertex(new Vector3f(x+width, y + height, z));

@@ -20,8 +20,10 @@ public abstract class MazeObject {
 	protected ArrayList<Vector3f> vertices;
 	protected ArrayList<Face> faces;
 	protected ArrayList<Vector2f> texVertices;
-	public float width;
-	public float height;
+	protected float width;
+	protected float height;
+	protected float yMin;
+	
 	public int[] rotation = {0, 0, 0};
 
 	float restitution;
@@ -45,6 +47,22 @@ public abstract class MazeObject {
 		this.vertices = vertices;
 		this.texVertices = texVertices;
 		this.faces = faces;
+	}
+
+	public float getWidth() {
+		return width;
+	}
+
+	public float getHeight() {
+		return height;
+	}
+
+	public float getYMin() {
+		return yMin;
+	}
+	
+	public float getYMax(){
+		return yMin + height;
 	}
 
 	/**

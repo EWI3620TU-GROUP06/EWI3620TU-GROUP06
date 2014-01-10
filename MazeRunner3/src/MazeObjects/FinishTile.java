@@ -13,8 +13,10 @@ import com.sun.opengl.util.texture.Texture;
 public class FinishTile extends MazeObject {
 	private static Texture texture;
 	
-	public FinishTile(float width, float x, float z){
+	public FinishTile(float width, float x, float y, float z){
 		super(false);
+		this.yMin = y;
+		height = 0;
 		addVertex(new Vector3f(x, 0, z));
 		addVertex(new Vector3f(x, 0, z + width));
 		addVertex(new Vector3f(x + width, 0, z + width));

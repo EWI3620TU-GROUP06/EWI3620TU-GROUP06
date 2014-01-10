@@ -108,6 +108,22 @@ public class CustomMazeObject extends MazeObject{
 				res.texVertices.add(new Vector2f(0, 0));
 			}
 			
+			float yMin = Float.MAX_VALUE;
+			for (Vector3f vertex : res.vertices)
+			{
+				if(vertex.y < yMin)
+					yMin = vertex.y;
+			}
+			res.yMin = yMin;
+			
+			float yMax = Float.MIN_VALUE;
+			for (Vector3f vertex : res.vertices)
+			{
+				if(vertex.y > yMax)
+					yMax = vertex.y;
+			}
+			res.height = yMax - yMin;
+			
 			sc.close();
 		}
 		catch (Exception e){

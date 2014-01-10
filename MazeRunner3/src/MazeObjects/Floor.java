@@ -11,10 +11,11 @@ public class Floor extends MazeObject {
 	
 	private static Texture texture;
 	
-	public Floor(float width, float x, float z){
+	public Floor(float width, float x, float y, float z){
 		super(false);
 		this.width = width;
 		height = 0;
+		this.yMin = y;
 		addVertex(new Vector3f(x, 0, z));
 		addVertex(new Vector3f(x, 0, z + width));
 		addVertex(new Vector3f(x + width, 0, z + width));
