@@ -6,6 +6,7 @@ import java.util.Calendar;
 import javax.vecmath.Vector3f;
 
 import Audio.Audio;
+import LevelHandling.Maze;
 
 import com.bulletphysics.ContactProcessedCallback;
 import com.bulletphysics.collision.dispatch.CollisionObject;
@@ -18,10 +19,22 @@ public class Contact extends ContactProcessedCallback {
 	private boolean firstrun = true;
 	private long prevTime;
 	private long prevTimeWall;
-	private long prevTimePart;
-	ObjectArrayList<CollisionObject > walls = Physics.getWalls();
+	ObjectArrayList<CollisionObject> walls = Physics.getWalls();
 	ArrayList<RigidBody> particles = Physics.getParticles();
+	private long[] prevTimeParticles = new long[particles.size()];
+	private long[] prevTimePartWalls = new long[particles.size()];
+	private int diff = Physics.getDiff();
+	private float multiplier;
+	private int Mazesize = (Maze.MAZE_SIZE_X + Maze.MAZE_SIZE_X)/ 2 *Maze.SQUARE_SIZE;
 
+	public void initMultiplier(){
+		switch(diff){
+		default: multiplier = 2.5f;break;
+		case 1: multiplier = 3.25f;break;
+		case 2: multiplier = 4f; break;
+		}
+	}
+	
 	@Override
 	public boolean contactProcessed(ManifoldPoint arg0, Object arg1, Object arg2) {
 		
@@ -43,6 +56,7 @@ public class Contact extends ContactProcessedCallback {
 			prevTime = currentTime;
 		}
 		
+		//Onderstaande afzonderlijke wall-checker moet er zijn, anders komt de deltaTime nooit > 100 voor muren!
 		if((walls.contains(body1) && body2 == Physics.getPlayerBody()) || (walls.contains(body2) && body1 == Physics.getPlayerBody())){
 			long currentTimeWall = Calendar.getInstance().getTimeInMillis();
 			if(firstrun){
@@ -59,25 +73,70 @@ public class Contact extends ContactProcessedCallback {
 			prevTimeWall = currentTimeWall;
 		}
 		
-		if((particles.contains(body1) && body2 != Physics.getPlayerBody()) || (particles.contains(body2) && body1 != Physics.getPlayerBody())){
+		if(particles.contains(body1) || particles.contains(body2)){
 			long currentTimePart = Calendar.getInstance().getTimeInMillis();
+			int id = particles.indexOf(body1);
+			if(id == -1){
+				id = particles.indexOf(body2);
+			}
 			if(firstrun){
-				prevTimePart = currentTimePart;
+				prevTimeParticles[id] = currentTimePart;
 				firstrun = false;
 			}
-			int deltaTimePart = (int)(currentTimePart - prevTimePart);
+			int deltaTimePart = (int)(currentTimePart - prevTimeParticles[id]);
 			if(deltaTimePart > 100){
-//				Vector3f out = new Vector3f();
-				//find the appropriate particles' velocity here and adjust according to distance as well
-//				particles.get(particles.indexOf(body1)).getLinearVelocity(out);
+				Vector3f out = new Vector3f();
+				Vector3f dist = new Vector3f();
+				Vector3f playPos =  new Vector3f();
 				
-//				Audio.setVolume("tick", out.length()-20f);
-//				Audio.playSound("tick");
+				//find the appropriate particles' velocity here and adjust according to distance as well
+				particles.get(id).getLinearVelocity(out);
+				particles.get(id).getCenterOfMassPosition(dist);
+				Physics.getPlayerBody().getCenterOfMassPosition(playPos);
+				
+				//now here partPos
+				dist.sub(playPos);
+				if(dist.length() < Mazesize*multiplier/10){
+					Audio.setVolume("tick", out.length() + Mazesize*multiplier/(10*dist.length())-30f);
+					Audio.playSound("tick");
+				}	
 			}
-			prevTimePart = currentTimePart;
+			prevTimeParticles[id] = currentTimePart;
+		}
+		
+		
+		//Aparte wall checker again, alleen dan voor particles
+		if((walls.contains(body1) && particles.contains(body2)) || (walls.contains(body2) && particles.contains(body1))){
+			long currentTimePartWall = Calendar.getInstance().getTimeInMillis();
+			int id = particles.indexOf(body1);
+			if(id == -1){
+				id = particles.indexOf(body2);
+			}
+			if(firstrun){
+				prevTimePartWalls[id] = currentTimePartWall;
+				firstrun = false;
+			}
+			int deltaTimePartWall = (int)(currentTimePartWall - prevTimePartWalls[id]);
+			if(deltaTimePartWall > 100){
+				Vector3f out = new Vector3f();
+				Vector3f dist = new Vector3f();
+				Vector3f playPos =  new Vector3f();
+				
+				//find the appropriate particles' velocity here and adjust according to distance as well
+				particles.get(id).getLinearVelocity(out);
+				particles.get(id).getCenterOfMassPosition(dist);
+				Physics.getPlayerBody().getCenterOfMassPosition(playPos);
+				
+				//now here partPos
+				dist.sub(playPos);
+				if(dist.length() < Mazesize*multiplier/10){
+					Audio.setVolume("tick", out.length() + Mazesize*multiplier/(10*dist.length())-30f);
+					Audio.playSound("tick");
+				}
+			}
+			prevTimePartWalls[id] = currentTimePartWall;
 		}
 		
 		return false;
 	}
-
 }

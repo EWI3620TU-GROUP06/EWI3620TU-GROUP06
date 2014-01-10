@@ -45,7 +45,7 @@ public class Physics {
 	private CollisionShape ballShape;
 	private Vector3f ballInertia;
 	private CollisionShape partBallShape;
-	private int diff;
+	private static int diff;
 	private float partradius;
 	
 	static ArrayList<RigidBody> particles;
@@ -65,7 +65,7 @@ public class Physics {
 
 	public Physics(Maze maze, int difficulty)
 	{		
-		this.diff = difficulty;
+		diff = difficulty;
 		Transform DEFAULT_BALL_TRANSFORM = new Transform(new Matrix4f(new Quat4f(0, 0, 0, 1), new Vector3f((float)maze.getStart()[0], (float) maze.getStart()[1], (float)maze.getStart()[2]), 1.0f));
 		/**
 		 * The object that will roughly find out whether bodies are colliding.
@@ -89,8 +89,8 @@ public class Physics {
 		// 0.25 metres is an added buffer between the ground and potential colliding bodies, used to prevent the bodies
 		// from partially going through the floor. It is also possible to think of this as the plane being lifted 0.25m.
 		// CollisionShape groundShape = new StaticPlaneShape(new Vector3f(0, 1, 0), 0.25f);
-		for(int i = 0; i < maze.MAZE_SIZE_X; i++)
-			for(int j = 0; j < maze.MAZE_SIZE_Z; j++)
+		for(int i = 0; i < Maze.MAZE_SIZE_X; i++)
+			for(int j = 0; j < Maze.MAZE_SIZE_Z; j++)
 			{
 
 				MazeObject mazeObject = maze.get(i, j);
@@ -141,6 +141,7 @@ public class Physics {
 	
 	public void initContactHandling(){
 		Contact c = new Contact();
+		c.initMultiplier();
 		BulletGlobals.setContactProcessedCallback(c);
 	}
 	
@@ -210,7 +211,11 @@ public class Physics {
 	public void applyParticleForce(int index, Vector3f v){
 		particles.get(index).applyCentralForce(new Vector3f(10*v.x, 10*v.y, 10*v.z));
 	}
-
+	
+	public static int getDiff(){
+		return diff;
+	}
+	
 	public Vector3f getPlayerPosition()
 	{
 		Vector3f res = new Vector3f();

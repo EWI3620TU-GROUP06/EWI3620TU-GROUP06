@@ -46,7 +46,7 @@ public class Swarm {
 	public void generate(int numberOfParticles){
 		int n = 0;
 		while(n != (numberOfParticles)){
-			Vector3f temploc = genLocation((float)maze.MAZE_SIZE_X);
+			Vector3f temploc = genLocation((float)Maze.MAZE_SIZE_X);
 			swarm.add(new Particle(temploc, this, n, diff));
 			n++;
 		}

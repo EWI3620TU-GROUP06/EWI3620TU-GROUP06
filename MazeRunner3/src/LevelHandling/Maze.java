@@ -41,8 +41,8 @@ import java.util.Scanner;
  */
 public class Maze implements VisibleObject {
 
-	public int MAZE_SIZE_X = 10;
-	public int MAZE_SIZE_Z = 10;
+	public static int MAZE_SIZE_X = 10;
+	public static int MAZE_SIZE_Z = 10;
 	public static final int SQUARE_SIZE = 5;
 
 	private boolean[][] selected = new boolean[MAZE_SIZE_X][MAZE_SIZE_Z];
