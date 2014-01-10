@@ -1,10 +1,6 @@
 package EditorModes;
 
-import javax.vecmath.Vector3d;
-
-import GameObjects.PowerUp;
 import LevelHandling.Level;
-import LevelHandling.Maze;
 
 /**
  * AddPowerUp adds a powerUp of a certain type on the tile where the mouse was clicked. 
@@ -35,7 +31,7 @@ public class AddPowerUp extends EditMode {
 
 	@Override
 	public void mousePressed(int mazeX, int mazeZ) {
-		level.addPowerUp(new PowerUp(new Vector3d(mazeX * Maze.SQUARE_SIZE + 2.5, 2.5, mazeZ * Maze.SQUARE_SIZE+2.5), type));	
+		level.addPowerUp(mazeX, mazeZ, type);	
 	}
 
 }

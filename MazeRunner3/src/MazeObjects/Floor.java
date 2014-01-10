@@ -60,7 +60,6 @@ public class Floor extends MazeObject {
 		ArrayList<Face> faces = new ArrayList<Face>();
 		for(Face face : this.faces)
 		{
-			System.out.println("cloned face");
 			faces.add(face.clone());
 		}
 		return new Floor(vertices, this.texVertices, faces);
