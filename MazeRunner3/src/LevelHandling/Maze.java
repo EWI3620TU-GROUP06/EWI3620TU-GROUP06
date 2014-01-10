@@ -153,9 +153,14 @@ public class Maze implements VisibleObject {
 	 * @return	the size of the maze in opengl units
 	 */
 
-	public double getSize()
+	public double getSizeX()
 	{
-		return (MAZE_SIZE_X + MAZE_SIZE_Z) / 2 * SQUARE_SIZE;
+		return MAZE_SIZE_X * SQUARE_SIZE;
+	}
+	
+	public double getSizeZ()
+	{
+		return  MAZE_SIZE_Z * SQUARE_SIZE;
 	}
 
 	/**
@@ -205,7 +210,7 @@ public class Maze implements VisibleObject {
 					if(i < maze.length && j < maze[0].length)
 						newMaze[i][j] = maze[i][j];
 					else
-						newMaze[i][j] = standards.get(0).translate(i * SQUARE_SIZE, 0, j*SQUARE_SIZE);
+						newMaze[i][j] = new Floor(SQUARE_SIZE, i * SQUARE_SIZE, j*SQUARE_SIZE);
 					newSelected[i][j] = false;
 				}
 			}

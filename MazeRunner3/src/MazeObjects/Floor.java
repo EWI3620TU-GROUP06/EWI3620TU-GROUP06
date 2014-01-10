@@ -57,7 +57,13 @@ public class Floor extends MazeObject {
 		{
 			vertices.add((Vector3f)vertex.clone());
 		}
-		return new Floor(vertices, this.texVertices, this.faces);
+		ArrayList<Face> faces = new ArrayList<Face>();
+		for(Face face : this.faces)
+		{
+			System.out.println("cloned face");
+			faces.add(face.clone());
+		}
+		return new Floor(vertices, this.texVertices, faces);
 	}
 	
 	public boolean equals(Object other)

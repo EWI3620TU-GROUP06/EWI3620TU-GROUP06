@@ -148,7 +148,7 @@ public class MazeEditor implements GLEventListener {
 
 		visibleObjects.add(level.getMaze());
 
-		editor = new Editor(new Vector3d(level.getMaze().getSize() / 2, 60, level.getMaze().getSize()/2), 0, -89.99999);
+		editor = new Editor(new Vector3d(level.getMaze().getSizeX() / 2, 60, level.getMaze().getSizeZ()/2), 0, -89.99999);
 		input = state.getGSM().getInput();
 		editor.initSet(level, FOV, input);
 		

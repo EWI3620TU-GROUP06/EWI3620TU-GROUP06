@@ -106,7 +106,7 @@ public abstract class DrawingUtil {
 		gl.glViewport(0, 0, screenWidth, screenHeight);
 		gl.glMatrixMode(GL.GL_PROJECTION);
 		gl.glLoadIdentity();
-		glu.gluPerspective(FOV, (float)screenWidth / (float)screenHeight, 0.1f, 200f); 
+		glu.gluPerspective(FOV, (float)screenWidth / (float)screenHeight, 0.001f, 200f); 
 		gl.glMatrixMode(GL.GL_MODELVIEW);
 	}
 	

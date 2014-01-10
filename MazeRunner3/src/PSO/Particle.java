@@ -115,8 +115,8 @@ public class Particle extends GameObject implements VisibleObject{
 		if(counter == 25){
 			
 			counter = 1;
-			
-			if(differenceRule.length() < swarm.getMaze().getSize()*multiplier/10){
+			double averageSize = (swarm.getMaze().getSizeX() + swarm.getMaze().getSizeZ())/2;
+			if(differenceRule.length() < averageSize*multiplier/10){
 		
 				RigidBody LoSbreaker = (RigidBody) swarm.getPhysics().getLineofSight(partLocation, globalbest);
 				

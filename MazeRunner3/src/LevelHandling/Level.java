@@ -25,6 +25,8 @@ public class Level {
 	private Maze maze;
 	private ArrayList<PowerUp> powerUps = new ArrayList<PowerUp>();
 	private ArrayList<MoveableBox> moveableBoxes = new ArrayList<MoveableBox>();
+	private ArrayList<MoveableBox> removedBoxes = new ArrayList<MoveableBox>();
+	private ArrayList<PowerUp> removedPowerUps = new ArrayList<PowerUp>();
 	private Swarm swarm;
 	private boolean added = false;
 	
@@ -44,8 +46,11 @@ public class Level {
 	}
 	
 	public void addPowerUp(PowerUp pU){
-		this.powerUps.add(pU);
-		added = true;
+		Vector3d l = pU.getLocation();
+		if(l.x > 0 && l.x < maze.getSizeX() && l.z > 0  && l.z < maze.getSizeZ()){
+			this.powerUps.add(pU);
+			added = true;
+		}
 	}
 	
 	public ArrayList<PowerUp> getPowerUps(){
@@ -53,8 +58,11 @@ public class Level {
 	}
 	
 	public void addMoveableBox(MoveableBox mB){
-		this.moveableBoxes.add(mB);
-		added = true;
+		Vector3d l = mB.getLocation();
+		if(l.x >= 0 && l.x < maze.getSizeX() && l.z >= 0  && l.z < maze.getSizeZ()){
+			this.moveableBoxes.add(mB);
+			added = true;
+		}
 	}
 	
 	public ArrayList<MoveableBox> getMoveableBoxes(){
@@ -108,6 +116,32 @@ public class Level {
 			visibleObjects.add(powerUp);
 	}
 	
+	public void resize(int x, int z)
+	{
+		maze.setSize(x, z);
+		System.out.println("new maze size: " + maze.getSizeX() + " " + maze.getSizeZ());
+		
+		for(int i = 0; i < powerUps.size(); i++)
+		{
+			PowerUp pU = powerUps.get(i);
+			Vector3d l = pU.getLocation();
+			if( l.x > maze.getSizeX() || l.z > maze.getSizeZ()){
+				removedPowerUps.add(pU);
+				added = true;
+			}
+		}
+		
+		for(int i = 0; i < moveableBoxes.size(); i++)
+		{
+			MoveableBox mB = moveableBoxes.get(i);
+			Vector3d l = mB.getLocation();
+			if( l.x >= maze.getSizeX() || l.z >= maze.getSizeZ()){
+				removedBoxes.add(mB);
+				added = true;
+			}
+		}
+	}
+	
 	public boolean addedSomething()
 	{
 		boolean res = added;
@@ -127,6 +161,10 @@ public class Level {
 			visibleObjects.remove(moveBox);
 		for(PowerUp powerUp : powerUps)
 			visibleObjects.remove(powerUp);
+		moveableBoxes.removeAll(removedBoxes);
+		removedBoxes.clear();
+		powerUps.removeAll(removedPowerUps);
+		removedPowerUps.clear();
 	}
 	
 	/**
@@ -187,13 +225,11 @@ public class Level {
 				PowerUp newPower = PowerUp.read(line);
 				if(newPower != null)
 					res.powerUps.add(newPower);
-				System.out.println("Added power up");
 			}
 			while(sc.hasNext()){
 				MoveableBox newMoveBox = MoveableBox.read(sc);
 				if(newMoveBox != null)
 					res.moveableBoxes.add(newMoveBox);
-				System.out.println("Added moving box");
 			}
 			sc.close();	
 			return res;

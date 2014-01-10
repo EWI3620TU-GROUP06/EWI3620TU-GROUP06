@@ -17,7 +17,7 @@ public class ResizeMode extends EditMode {
 
 	@Override
 	public void mouseDragged(int mazeX, int mazeZ) {
-		level.getMaze().setSize(mazeX + 1, mazeZ + 1);
+		level.resize(mazeX + 1, mazeZ + 1);
 		level.getMaze().select(mazeX, mazeZ);
 	}
 
@@ -28,7 +28,7 @@ public class ResizeMode extends EditMode {
 
 	@Override
 	public void mousePressed(int mazeX, int mazeZ) {
-		level.getMaze().setSize(mazeX + 1, mazeZ + 1);
+		level.resize(mazeX + 1, mazeZ + 1);
 		level.getMaze().select(mazeX, mazeZ);
 	}
 
