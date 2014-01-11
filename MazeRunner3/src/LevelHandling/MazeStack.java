@@ -11,27 +11,21 @@ public class MazeStack {
 	public MazeStack(float x, float z)
 	{
 		stack = new ArrayList<MazeObject>();
-		stack.add(new Floor(Maze.SQUARE_SIZE, x, -10, z));
+		stack.add(new Floor(Maze.SQUARE_SIZE, x, 0, z));
 	}
 
 	public void add(MazeObject mzObj)
 	{
 		float yMin = mzObj.getYMin();
-		float yMax = yMin;
-
-		if(stack.size() > 0)
-		{
-			yMax = getTop().getYMax();
-			if( mzObj.hasBottom(stack.get(stack.size() - 1).getYMax())){
-				if(getTop().getHeight() == 0)
-					removeTop();
-				getTop().setTop(false);
+		float yMax = getTop().getYMax();
+		mzObj = mzObj.translate(0, yMax - yMin, 0);
+		if( mzObj.hasBottom(stack.get(stack.size() - 1).getYMax()) || mzObj.getHeight() == 0){
+			if(getTop().getHeight() == 0){
+				removeTop();
 			}
-			mzObj = mzObj.translate(0, yMax - yMin, 0);
+			getTop().setTop(false);
 		}
-		else
-			mzObj = mzObj.translate(0, -10, 0);
-
+		
 		stack.add(mzObj);
 	}
 
@@ -41,10 +35,7 @@ public class MazeStack {
 		{
 			stack.remove(stack.size() - 1);
 		}
-		if(stack.size() > 0)
-		{
-			getTop().setTop(true);
-		}
+		getTop().setTop(true);
 	}
 
 	public ArrayList<MazeObject> get()
@@ -54,10 +45,7 @@ public class MazeStack {
 
 	public float getHeight()
 	{
-		if(stack.size() > 0)
-			return stack.get(stack.size() - 1).getHeight();
-		else
-			return 0;
+		return stack.get(stack.size() - 1).getHeight();
 	}
 
 	public int size()
@@ -67,10 +55,7 @@ public class MazeStack {
 
 	public MazeObject getTop()
 	{
-		if(stack.size() > 0)
-			return stack.get(stack.size() - 1);
-		else
-			return null;
+		return stack.get(stack.size() - 1);
 	}
 
 	public void clear()
@@ -139,8 +124,8 @@ public class MazeStack {
 	public static MazeStack standard(float x, float z)
 	{
 		MazeStack res = new MazeStack(x, z);
-		res.add(new Box(Maze.SQUARE_SIZE, Maze.SQUARE_SIZE, x, -10, z));
-		res.add(new Box(Maze.SQUARE_SIZE, Maze.SQUARE_SIZE, x, -5, z));
+		res.add(new Box(Maze.SQUARE_SIZE, Maze.SQUARE_SIZE, x, 0, z));
+		res.add(new Box(Maze.SQUARE_SIZE, Maze.SQUARE_SIZE, x, 0, z));
 		res.add(new Floor(Maze.SQUARE_SIZE, x, 0, z));
 		return res;
 	}

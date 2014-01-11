@@ -1,6 +1,5 @@
 package Listening;
 
-import EditorModes.AddStatic;
 import EditorModes.EditMode;
 import GameObjects.Editor;
 
@@ -18,8 +17,6 @@ public class EditModeCommand implements Command {
 	public void execute()
 	{
 		editMode.setLevel(editor.getLevel());
-		if(editMode instanceof AddStatic)
-			System.out.println("Add static ");
 		editor.setEditMode(editMode);
 	}
 	

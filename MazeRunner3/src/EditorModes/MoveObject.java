@@ -19,10 +19,10 @@ import MazeObjects.MazeObject;
  */
 
 public class MoveObject extends EditMode {
-	
+
 	MazeObject selected;
-	MazeObject previous;
-	
+	int pressedX, pressedZ;
+
 	public MoveObject(Level level)
 	{
 		super(level);
@@ -30,15 +30,18 @@ public class MoveObject extends EditMode {
 
 	@Override
 	public void mouseDragged(int mazeX, int mazeZ) {
-		level.getMaze().set(previous);
-		ArrayList<MazeObject> stack =	level.getMaze().get(mazeX, mazeZ);
-		previous = stack.get(stack.size() - 1);
-		
-		level.getMaze().clearSelected();
-		level.getMaze().select(mazeX,  mazeZ);
-		Vector3f pos = (Vector3f)selected.getPos().clone();
-		pos.sub(new Vector3f(mazeX*Maze.SQUARE_SIZE, 0, mazeZ*Maze.SQUARE_SIZE), pos);
-		level.getMaze().set(selected.translate(pos.x, pos.y, pos.z));
+		if(mazeX != pressedX || mazeZ != pressedZ)
+		{
+			level.getMaze().removeTop(pressedX, pressedZ);
+
+			level.getMaze().clearSelected();
+			level.getMaze().select(mazeX,  mazeZ);
+			Vector3f pos = (Vector3f)selected.getPos().clone();
+			pos.sub(new Vector3f(mazeX*Maze.SQUARE_SIZE, 0, mazeZ*Maze.SQUARE_SIZE), pos);
+			level.getMaze().set(selected.translate(pos.x, pos.y, pos.z), mazeX, mazeZ);
+			pressedX = mazeX;
+			pressedZ = mazeZ;
+		}
 	}
 
 	@Override
@@ -51,7 +54,8 @@ public class MoveObject extends EditMode {
 		level.getMaze().select(mazeX, mazeZ);
 		ArrayList<MazeObject> stack =	level.getMaze().get(mazeX, mazeZ);
 		selected = stack.get(stack.size() - 1);
-		previous = new Floor(Maze.SQUARE_SIZE, mazeX * Maze.SQUARE_SIZE, 0, mazeZ * Maze.SQUARE_SIZE);
+		pressedX = mazeX;
+		pressedZ = mazeZ;
 	}
 
 }

@@ -482,7 +482,7 @@ public class MazeRunner implements GLEventListener {
 		}
 		else{
 			while(physics.cameraInWall((float) cameraPos.x, (float) cameraPos.y, (float) cameraPos.z) && distance >=0){
-				distance -= 0.05f;
+				distance -= 0.1f;
 				cameraPos = new Vector3d(distance *Math.sin( Math.toRadians(player.getHorAngle())) * Math.cos( Math.toRadians(player.getVerAngle())),
 					Math.sin(Math.toRadians(player.getVerAngle())) + 1.5,
 					distance *Math.cos( Math.toRadians(player.getHorAngle())) * Math.cos(Math.toRadians(player.getVerAngle())));
