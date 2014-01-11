@@ -41,13 +41,13 @@ public class Physics {
 	private float mass = 10f;
 
 	boolean previous = false;
-	
+
 	private CollisionShape ballShape;
 	private Vector3f ballInertia;
 	private CollisionShape partBallShape;
 	private static int diff;
 	private float partradius;
-	
+
 	static ArrayList<RigidBody> particles;
 	ArrayList<RigidBody> movingBoxes = new ArrayList<RigidBody>();
 
@@ -93,26 +93,29 @@ public class Physics {
 			for(int j = 0; j < Maze.MAZE_SIZE_Z; j++)
 			{
 
-				MazeObject mazeObject = maze.get(i, j);
-				for(int k = 0; k < mazeObject.getNumFaces(); k++)
+				ArrayList<MazeObject> stack = maze.get(i, j);
+				for(MazeObject mazeObject :  stack)
 				{
-					ConvexHullShape thisShape = new ConvexHullShape(new ObjectArrayList<Vector3f>());
-					int[] face = mazeObject.getFace(k);
-					for(int l = 0; l < face.length; l++)
+					for(int k = 0; k < mazeObject.getNumFaces(); k++)
 					{
-						thisShape.addPoint(mazeObject.getVertex(face[l]));
-					}
-					MotionState faceMotionState = new DefaultMotionState(new Transform(new Matrix4f(new Quat4f(0, 0, 0, 1),
-							new Vector3f(0, 0, 0), 1.0f)));
-					RigidBodyConstructionInfo faceConstructionInfo = new RigidBodyConstructionInfo(0, faceMotionState, thisShape, new Vector3f(0, 0, 0));
+						ConvexHullShape thisShape = new ConvexHullShape(new ObjectArrayList<Vector3f>());
+						int[] face = mazeObject.getFace(k);
+						for(int l = 0; l < face.length; l++)
+						{
+							thisShape.addPoint(mazeObject.getVertex(face[l]));
+						}
+						MotionState faceMotionState = new DefaultMotionState(new Transform(new Matrix4f(new Quat4f(0, 0, 0, 1),
+								new Vector3f(0, 0, 0), 1.0f)));
+						RigidBodyConstructionInfo faceConstructionInfo = new RigidBodyConstructionInfo(0, faceMotionState, thisShape, new Vector3f(0, 0, 0));
 
-					faceConstructionInfo.restitution = mazeObject.getRestitution();
-					RigidBody faceRigidBody = new RigidBody(faceConstructionInfo);
-					if(mazeObject.isNormalHorizontal(k))
-						walls.add(faceRigidBody);
-					else
-						floors.add(faceRigidBody);
-					dynamicsWorld.addRigidBody(faceRigidBody);
+						faceConstructionInfo.restitution = mazeObject.getRestitution();
+						RigidBody faceRigidBody = new RigidBody(faceConstructionInfo);
+						if(mazeObject.isNormalHorizontal(k))
+							walls.add(faceRigidBody);
+						else
+							floors.add(faceRigidBody);
+						dynamicsWorld.addRigidBody(faceRigidBody);
+					}
 				}
 
 			}
@@ -138,31 +141,31 @@ public class Physics {
 		// Add the control ball to the JBullet world.
 		dynamicsWorld.addRigidBody(playerBall);
 	}
-	
+
 	public void initContactHandling(){
 		Contact c = new Contact();
 		c.initMultiplier();
 		BulletGlobals.setContactProcessedCallback(c);
 	}
-	
+
 	public void initParticles(Swarm swarm){
 		switch(diff){
-			default:
-				partBallShape = new SphereShape(0.75f);
-				partradius = 0.75f;
-				break;
-			case(1):
-				partBallShape = new SphereShape(1f);
-				partradius = 1.0f;
-				break;
-			case(2):
-				partBallShape = new SphereShape(1.25f);
-				partradius = 1.25f;
-				break;
+		default:
+			partBallShape = new SphereShape(0.75f);
+			partradius = 0.75f;
+			break;
+		case(1):
+			partBallShape = new SphereShape(1f);
+		partradius = 1.0f;
+		break;
+		case(2):
+			partBallShape = new SphereShape(1.25f);
+		partradius = 1.25f;
+		break;
 		}
 		int n = Swarm.getNumOfParticles();
 		particles = new ArrayList<RigidBody>(n);
-		
+
 		for(Particle s: swarm.getSwarm()){
 			Transform transform = new Transform(new Matrix4f(new Quat4f(0, 0, 0, 1), s.getLoc(), 1.0f));
 			MotionState pietmotion = new DefaultMotionState(transform);
@@ -182,7 +185,7 @@ public class Physics {
 		// Runs the JBullet physics simulation for the specified time in seconds.
 		dynamicsWorld.stepSimulation(deltaTime/1000f);
 	}
-	
+
 	public static RigidBody getPlayerBody(){
 		return playerBall;
 	}
@@ -195,27 +198,27 @@ public class Physics {
 		// Apply the force to the controllable ball.
 		playerBall.applyCentralForce(force);
 	}
-	
+
 	public Vector3f getParticleLocation(int index){
 		Vector3f out = new Vector3f();
 		particles.get(index).getCenterOfMassPosition(out);
 		return out;
 	}
-	
+
 	public Vector3f getParticleVelocity(int index){
 		Vector3f out = new Vector3f();
 		particles.get(index).getLinearVelocity(out);
 		return out;
 	}
-	
+
 	public void applyParticleForce(int index, Vector3f v){
 		particles.get(index).applyCentralForce(new Vector3f(10*v.x, 10*v.y, 10*v.z));
 	}
-	
+
 	public static int getDiff(){
 		return diff;
 	}
-	
+
 	public Vector3f getPlayerPosition()
 	{
 		Vector3f res = new Vector3f();
@@ -230,7 +233,7 @@ public class Physics {
 		dynamicsWorld.rayTest(getPlayerPosition(), toVect, a);
 		return a.hasHit();
 	}
-	
+
 	public boolean getLowerParticleContact(Vector3f particlelocation){
 		Vector3f toVect = new Vector3f(particlelocation.x, particlelocation.y, particlelocation.z);
 		toVect.sub(new Vector3f(0,partradius,0));
@@ -238,7 +241,7 @@ public class Physics {
 		dynamicsWorld.rayTest(particlelocation, toVect, a);
 		return a.hasHit();
 	}
-	
+
 	public CollisionObject getLineofSight(Vector3f fromVect, Vector3f toVect){
 		RayResultCallback a = new CollisionWorld.ClosestRayResultCallback(fromVect, toVect);
 		dynamicsWorld.rayTest(fromVect, toVect, a);
@@ -262,7 +265,7 @@ public class Physics {
 	public void clearForces(){
 		dynamicsWorld.clearForces();
 	}
-	
+
 	public int addBox(Vector3f position, float size, float height)
 	{
 		size =  size / 2;
@@ -272,7 +275,7 @@ public class Physics {
 		boxShape.setMargin(0.1f);
 		MotionState boxMotion = new DefaultMotionState(new Transform(new Matrix4f(new Quat4f(0, 0, 0, 1),
 				position, 1.0f)));
-	
+
 		RigidBodyConstructionInfo boxConstructionInfo = new RigidBodyConstructionInfo(50, boxMotion, boxShape, new Vector3f(0, 0, 0));
 
 		boxConstructionInfo.restitution = 0.3f;
@@ -281,10 +284,10 @@ public class Physics {
 		RigidBody newBox = new RigidBody(boxConstructionInfo);
 		movingBoxes.add(newBox);
 		dynamicsWorld.addRigidBody(newBox);
-		
+
 		return movingBoxes.size() - 1;
 	}
-	
+
 	public Vector3f moveBox(int index, Vector3f speed)
 	{
 		RigidBody toBeMoved = movingBoxes.get(index);
@@ -294,22 +297,22 @@ public class Physics {
 		toBeMoved.getCenterOfMassPosition(currentPosition);
 		return currentPosition;
 	}
-	
+
 	public Vector3f getBoxLocation(int index)
 	{
 		Vector3f currentPosition = new Vector3f();
 		movingBoxes.get(index).getCenterOfMassPosition(currentPosition);
 		return currentPosition;
 	}
-	
+
 	public static ObjectArrayList<CollisionObject> getWalls(){
 		return walls;
 	}
-	
+
 	public static ArrayList<RigidBody> getParticles(){
 		return particles;
 	}
-	
+
 	public boolean cameraInWall(float cameraX, float cameraY, float cameraZ)
 	{
 		Vector3f cameraPos = new Vector3f(cameraX, cameraY, cameraZ);
@@ -318,6 +321,6 @@ public class Physics {
 		RayResultCallback a = new CollisionWorld.ClosestRayResultCallback(cameraPos, toVect);
 		dynamicsWorld.rayTest(cameraPos, toVect, a);
 		return a.hasHit();
-	
+
 	}
 }

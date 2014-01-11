@@ -1,5 +1,7 @@
 package EditorModes;
 
+import java.util.ArrayList;
+
 import javax.vecmath.Vector3f;
 
 import LevelHandling.Level;
@@ -29,7 +31,9 @@ public class MoveObject extends EditMode {
 	@Override
 	public void mouseDragged(int mazeX, int mazeZ) {
 		level.getMaze().set(previous);
-		previous = level.getMaze().get(mazeX, mazeZ);
+		ArrayList<MazeObject> stack =	level.getMaze().get(mazeX, mazeZ);
+		previous = stack.get(stack.size() - 1);
+		
 		level.getMaze().clearSelected();
 		level.getMaze().select(mazeX,  mazeZ);
 		Vector3f pos = (Vector3f)selected.getPos().clone();
@@ -45,7 +49,8 @@ public class MoveObject extends EditMode {
 	@Override
 	public void mousePressed(int mazeX, int mazeZ) {
 		level.getMaze().select(mazeX, mazeZ);
-		selected = level.getMaze().get(mazeX,  mazeZ);
+		ArrayList<MazeObject> stack =	level.getMaze().get(mazeX, mazeZ);
+		selected = stack.get(stack.size() - 1);
 		previous = new Floor(Maze.SQUARE_SIZE, mazeX * Maze.SQUARE_SIZE, 0, mazeZ * Maze.SQUARE_SIZE);
 	}
 

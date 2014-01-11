@@ -50,6 +50,8 @@ public class Ramp extends MazeObject{
 		
 		this.width = width;
 		this.height = height;
+		calculateYMin();
+
 	}
 
 	public static void addTexture(Texture t)
@@ -67,6 +69,7 @@ public class Ramp extends MazeObject{
 		Ramp res = (Ramp)this.clone();
 		for(Vector3f vertex : res.vertices)
 			vertex.add(new Vector3f(x, y, z));
+		res.calculateYMin();
 		return res;
 	}
 

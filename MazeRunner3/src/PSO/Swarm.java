@@ -62,7 +62,7 @@ public class Swarm {
 		float randX = Bound*((float) Math.random());
 		float randZ = Bound*((float) Math.random());
 		
-		if(!(maze.get((int)randX,(int)randZ) instanceof Floor)){
+		if(!(maze.get((int)randX, 0, (int)randZ) instanceof Floor)){
 			return genLocation(Bound);
 		}
 		else{

@@ -1,6 +1,7 @@
 package MazeObjects;
 
 import java.util.ArrayList;
+
 import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 
@@ -65,6 +66,7 @@ public class Box extends MazeObject{
 		restitution = 0.1f;
 		this.width = width;
 		this.height = height;
+		calculateYMin();
 	}
 	
 	public static void addTexture(Texture t)
@@ -95,6 +97,7 @@ public class Box extends MazeObject{
 		Box res = (Box)this.clone();
 		for(Vector3f vertex : res.vertices)
 			vertex.add(new Vector3f(x, y, z));
+		res.calculateYMin();
 		return res;
 	}
 	
@@ -108,8 +111,14 @@ public class Box extends MazeObject{
 		{
 			vertices.add((Vector3f)vertex.clone());
 		}
-		@SuppressWarnings("unchecked")
-		ArrayList<Face> faces = (ArrayList<Face>) this.faces.clone();
+		ArrayList<Face> faces = new ArrayList<Face>();
+		for(Face face : this.faces)
+		{
+			faces.add(face.clone());
+		}
+		for(Face face: faces){
+			calculateNormal(face);
+		}
 		return new Box(vertices, this.texVertices, faces, this.width, this.height);
 	}
 	

@@ -10,7 +10,8 @@ public class Face {
 
 	private int[] vertices;
 	private int[] texVertices;
-	private Vector3f normal;
+	private Vector3f normal = new Vector3f();
+	private boolean enabled = true;
 
 	public Face(int[] vertices)
 	{
@@ -22,6 +23,7 @@ public class Face {
 	{
 		this.vertices = vertices;
 		this.texVertices = texVertices;
+		enabled = true;
 	}
 
 	public int getVertex(int index)
@@ -53,6 +55,17 @@ public class Face {
 	{
 		return vertices;
 	}
+	
+	public void setEnabled(boolean enable)
+	{
+		this.enabled = enable;
+	}
+	
+	public boolean isEnabled()
+	{
+		return enabled;
+	}
+	
 	
 	public Face clone()
 	{

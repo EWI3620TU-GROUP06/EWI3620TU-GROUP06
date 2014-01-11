@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 
+import LevelHandling.Maze;
+
 import com.sun.opengl.util.texture.Texture;
 
 public class Floor extends MazeObject {
@@ -16,13 +18,17 @@ public class Floor extends MazeObject {
 		this.width = width;
 		height = 0;
 		this.yMin = y;
-		addVertex(new Vector3f(x, 0, z));
-		addVertex(new Vector3f(x, 0, z + width));
-		addVertex(new Vector3f(x + width, 0, z + width));
-		addVertex(new Vector3f(x + width, 0, z));
+		addVertex(new Vector3f(x, y, z));
+		addVertex(new Vector3f(x, y, z + width));
+		addVertex(new Vector3f(x + width, y, z + width));
+		addVertex(new Vector3f(x + width, y, z));
 
 		int face0[] = {0,1,2,3};
 		addFace(face0);
+		
+		for(Face face: faces){
+			calculateNormal(face);
+		}
 		
 		restitution = 0.8f;
 	}
@@ -30,6 +36,9 @@ public class Floor extends MazeObject {
 	public Floor(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces)
 	{
 		super(vertices, texVertices, faces);
+		width = Maze.SQUARE_SIZE;
+		calculateYMin();
+		calculateHeight();
 		restitution = 0.8f;
 	}
 	
@@ -48,6 +57,7 @@ public class Floor extends MazeObject {
 		Floor res = (Floor)this.clone();
 		for(Vector3f vertex : res.vertices)
 			vertex.add(new Vector3f(x, y, z));
+		res.calculateYMin();
 		return res;
 	}
 
@@ -62,6 +72,9 @@ public class Floor extends MazeObject {
 		for(Face face : this.faces)
 		{
 			faces.add(face.clone());
+		}
+		for(Face face: faces){
+			calculateNormal(face);
 		}
 		return new Floor(vertices, this.texVertices, faces);
 	}

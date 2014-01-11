@@ -58,7 +58,7 @@ public class Level {
 	}
 	
 	public void addPowerUp(int mazeX, int mazeZ, byte type){
-		PowerUp pU = new PowerUp(new Vector3d(mazeX * Maze.SQUARE_SIZE + 2.5, 2.5, mazeZ * Maze.SQUARE_SIZE+2.5), type);
+		PowerUp pU = new PowerUp(new Vector3d(mazeX * Maze.SQUARE_SIZE + 2.5, maze.getHeight(mazeX, mazeZ) + 0.5f * Maze.SQUARE_SIZE, mazeZ * Maze.SQUARE_SIZE+2.5), type);
 		Vector3d l = pU.getLocation();
 		if(l.x > 0 && l.x < maze.getSizeX() && l.z > 0  && l.z < maze.getSizeZ() && getPowerUp(mazeX, mazeZ) == null){
 			this.powerUps.add(pU);
@@ -83,7 +83,7 @@ public class Level {
 	}
 	
 	public void addMoveableBox(int mazeX, int mazeZ){
-		MoveableBox mB = new MoveableBox(new Vector3d(mazeX * Maze.SQUARE_SIZE, 0, mazeZ * Maze.SQUARE_SIZE), 
+		MoveableBox mB = new MoveableBox(new Vector3d(mazeX * Maze.SQUARE_SIZE, maze.getHeight(mazeX, mazeZ), mazeZ * Maze.SQUARE_SIZE), 
 				Maze.SQUARE_SIZE, Maze.SQUARE_SIZE);
 		Vector3d l = mB.getLocation();
 		if(l.x >= 0 && l.x < maze.getSizeX() && l.z >= 0  && l.z < maze.getSizeZ() && getMoveableBox(mazeX, mazeZ) == null){

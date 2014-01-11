@@ -32,7 +32,7 @@ public class RotateObject extends EditMode {
 
 	@Override
 	public void mousePressed(int mazeX, int mazeZ) {
-		level.getMaze().rotateSelected(axes[0], axes[1], axes[2]);
+		level.getMaze().rotateTop(mazeX, mazeZ, 90, axes[0], axes[1], axes[2]);
 	}
 
 }
