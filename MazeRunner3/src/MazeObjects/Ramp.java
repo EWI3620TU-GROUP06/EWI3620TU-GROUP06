@@ -13,7 +13,7 @@ public class Ramp extends MazeObject{
 	
 	public Ramp(float width, float height, float x, float y, float z)
 	{
-		super(false);
+		super(true);
 		this.width = width;
 		this.height = height;
 		addVertex(new Vector3f(x, y, z));
@@ -22,21 +22,31 @@ public class Ramp extends MazeObject{
 		addVertex(new Vector3f(x, y + height, z));
 		addVertex(new Vector3f(x, y, z+width));
 		addVertex(new Vector3f(x+width, y, z+width));
+		texVertices.add(new Vector2f(0,0));
+		texVertices.add(new Vector2f(0,1));
+		texVertices.add(new Vector2f(1,1));
+		texVertices.add(new Vector2f(1,0));
+		texVertices.add(new Vector2f(0,height / width));
+		texVertices.add(new Vector2f(1,height / width));
+		
+		int[] texFaceBottom = {0,1,2,3};
+		int[] texFaceSide1 = {0,4,3};
+		int[] texFaceSide2 = {0,5,3};
 		
 		int[] face0 = {0, 3, 2, 1};
-		addFace(face0);
+		addFace(face0, texFaceBottom);
 		
 		int[] face1 = {1, 2, 5};
-		addFace(face1);
+		addFace(face1, texFaceSide1);
 		
 		int[] face2 = {0, 1, 5, 4};
-		addFace(face2);
+		addFace(face2, texFaceBottom);
 		
-		int[] face3 = {0, 4, 3};
-		addFace(face3);
+		int[] face3 = {4, 3, 0};
+		addFace(face3, texFaceSide2);
 		
 		int[] face4 = {2, 3, 4, 5};
-		addFace(face4);
+		addFace(face4, texFaceBottom);
 		
 		this.yMin = y;
 		

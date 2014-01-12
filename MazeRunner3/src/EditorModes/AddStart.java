@@ -11,23 +11,29 @@ import LevelHandling.Level;
  */
 
 public class AddStart extends ObjectMode {
-	
+
 	private int pressedX, pressedZ;
-	
+
 	public AddStart(Level level){
 		super(level, ObjectMode.ADD_START);
 	}
 
 	@Override
 	public void mouseDragged(int mazeX, int mazeZ) {
-		int dX = mazeX - pressedX;
-		int dZ = mazeZ - pressedZ;
-		double unrounded = Math.atan2(dX, -dZ) / (0.5 * Math.PI);
-		rotation = 90 * (int)(Math.round(unrounded));
-		level.getMaze().removeBlocks(drawMode);
-		level.getMaze().addBlock(drawMode, rotation);
+		if(mazeX != pressedX ||mazeZ != pressedZ)
+		{
+			int dX = mazeX - pressedX;
+			int dZ = mazeZ - pressedZ;
+			double unrounded = Math.atan2(dX, -dZ) / (0.5 * Math.PI);
+			rotation = 90 * (int)(Math.round(unrounded));
+			level.getMaze().removeBlocks(drawMode);
+			level.getMaze().addBlock(drawMode, rotation);
+			pressedX = mazeX;
+			pressedZ = mazeZ;
+		}
+		
 	}
-	
+
 	@Override
 	public void mousePressed(int mazeX, int mazeZ){
 		pressedX = mazeX;
@@ -36,7 +42,7 @@ public class AddStart extends ObjectMode {
 		level.getMaze().removeBlocks(drawMode);
 		level.getMaze().addBlock(drawMode, rotation);
 	}
-	
+
 	@Override
 	public void mouseReleased()
 	{

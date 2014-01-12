@@ -11,14 +11,23 @@ public class MazeStack {
 	public MazeStack(float x, float z)
 	{
 		stack = new ArrayList<MazeObject>();
-		stack.add(new Floor(Maze.SQUARE_SIZE, x, 0, z));
+		stack.add(new Bottom(Maze.SQUARE_SIZE, x, -100, z));
+		if(getTop() instanceof Bottom)
+		{
+			System.out.println(getTop().getYMax());
+		}
 	}
 
 	public void add(MazeObject mzObj)
 	{
 		float yMin = mzObj.getYMin();
 		float yMax = getTop().getYMax();
+		if(mzObj instanceof Pit)
+		{
+			System.out.println(yMin + " " + yMax + " " + (getTop() instanceof Bottom));
+		}
 		mzObj = mzObj.translate(0, yMax - yMin, 0);
+		
 		if( mzObj.hasBottom(stack.get(stack.size() - 1).getYMax()) || mzObj.getHeight() == 0){
 			if(getTop().getHeight() == 0){
 				removeTop();
@@ -143,8 +152,7 @@ public class MazeStack {
 	public static MazeStack standard(float x, float z)
 	{
 		MazeStack res = new MazeStack(x, z);
-		res.add(new Box(Maze.SQUARE_SIZE, Maze.SQUARE_SIZE, x, 0, z));
-		res.add(new Box(Maze.SQUARE_SIZE, Maze.SQUARE_SIZE, x, 0, z));
+		res.stack.add(new Pit(Maze.SQUARE_SIZE, 100, x, -100, z));
 		res.add(new Floor(Maze.SQUARE_SIZE, x, 0, z));
 		return res;
 	}

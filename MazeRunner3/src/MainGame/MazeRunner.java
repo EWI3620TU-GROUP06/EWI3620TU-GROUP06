@@ -178,14 +178,14 @@ public class MazeRunner implements GLEventListener {
 
 		visibleObjects.add(player);
 
-		Swarm particles = new Swarm(physics, level.getMaze(), (int) (Maze.MAZE_SIZE_X*(state.getDiffNumber() + 1))/4, state.getDiffNumber());
+		/*Swarm particles = new Swarm(physics, level.getMaze(), (int) (Maze.MAZE_SIZE_X*(state.getDiffNumber() + 1))/4, state.getDiffNumber());
 		particles.setCognitive(0.055f);
 		particles.setSocial(0.055f);
 		particles.setInertiaWeight(0.95f);
 		particles.generate((int) (Maze.MAZE_SIZE_X*(state.getDiffNumber() + 1))/4);
 		level.addSwarm(particles);
 		physics.initParticles(particles);
-		physics.initContactHandling(); //Initializes sound-handling. MUST BE AFTER initParticles() TO INCLUDE PARTICLE-SOUNDS
+		physics.initContactHandling(); //Initializes sound-handling. MUST BE AFTER initParticles() TO INCLUDE PARTICLE-SOUNDS*/
 
 		camera = new Camera(player.getLocation(), player.getHorAngle(), player.getVerAngle() );
 		
@@ -323,7 +323,7 @@ public class MazeRunner implements GLEventListener {
 				dead = true;
 				state.getGSM().setPauseState();
 			}
-			if(!finished && (level.getMaze().isFinish(pos[0], pos[2])) && (pos[1] < 2))	
+			if(!finished && (level.getMaze().isFinish(pos[0], pos[1], pos[2])))	
 				{
 					finished = true;
 					if (state.getLevel() != 0)

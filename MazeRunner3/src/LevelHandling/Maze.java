@@ -4,13 +4,7 @@ import javax.media.opengl.GL;
 import Drawing.DrawingUtil;
 import Drawing.VisibleObject;
 import EditorModes.ObjectMode;
-import MazeObjects.Box;
-import MazeObjects.CustomMazeObject;
-import MazeObjects.FinishTile;
-import MazeObjects.Floor;
-import MazeObjects.MazeObject;
-import MazeObjects.Ramp;
-import MazeObjects.StartTile;
+import MazeObjects.*;
 
 import com.sun.opengl.util.texture.Texture;
 
@@ -55,7 +49,9 @@ public class Maze implements VisibleObject {
 			new StartTile(SQUARE_SIZE, 0, 0, 0),
 			new FinishTile(SQUARE_SIZE, 0, 0, 0),
 			new Ramp(SQUARE_SIZE, SQUARE_SIZE, 0, 0, 0),
-			new Ramp(SQUARE_SIZE, (float)SQUARE_SIZE / 2,  0, 0, 0)	
+			new Ramp(SQUARE_SIZE, (float)SQUARE_SIZE / 2,  0, 0, 0),
+			new Pit(SQUARE_SIZE, 100, 0, -100, 0),
+			new Bottom(SQUARE_SIZE, 0, -100, 0)
 	}));
 
 
@@ -101,10 +97,14 @@ public class Maze implements VisibleObject {
 		}
 	}
 
-	public boolean isFinish(double x, double z)
+	public boolean isFinish(double x, double y, double z)
 	{
-		if(x >= 0 && x < MAZE_SIZE_X*SQUARE_SIZE && z >= 0 && z < MAZE_SIZE_Z*SQUARE_SIZE)
-			return maze[(int)x / SQUARE_SIZE][(int)z / SQUARE_SIZE].equals(standards.get(ObjectMode.ADD_FINISH));
+		if(x >= 0 && x < MAZE_SIZE_X*SQUARE_SIZE && z >= 0 && z < MAZE_SIZE_Z*SQUARE_SIZE){
+			MazeObject finishTile = null;
+			if((finishTile = maze[(int)x / SQUARE_SIZE][(int)z / SQUARE_SIZE].getInstanceOf(standards.get(ObjectMode.ADD_FINISH))) != null){
+				return y > finishTile.getYMin() && y < finishTile.getYMax();
+			}
+		}
 		return false;
 	}
 
@@ -120,12 +120,16 @@ public class Maze implements VisibleObject {
 		Texture floorTexture = DrawingUtil.initTexture(gl, "floor");
 		Texture finishTexture = DrawingUtil.initTexture(gl, "finish");
 		Texture startTexture = DrawingUtil.initTexture(gl, "start");
+		Texture pitTexture = DrawingUtil.initTexture(gl, "pit");
+		Texture bottomTexture = DrawingUtil.initTexture(gl, "bottom");
 
 		Box.addTexture(boxTexture);
 		Floor.addTexture(floorTexture);
 		StartTile.addTexture(startTexture);
 		Ramp.addTexture(boxTexture);
 		FinishTile.addTexture(finishTexture);
+		Pit.addTexture(pitTexture);
+		Bottom.addTexture(bottomTexture);
 	}
 
 	/**
@@ -154,7 +158,7 @@ public class Maze implements VisibleObject {
 	{
 		return  MAZE_SIZE_Z * SQUARE_SIZE;
 	}
-	
+
 	public float getHeight(int x, int z)
 	{
 		return maze[x][z].getHeight();
@@ -235,13 +239,13 @@ public class Maze implements VisibleObject {
 			for( int j = 0; j < maze[0].length; j++ )
 				selected[i][j] = -2;
 	}
-	
+
 	public void removeTop(int x, int z)
 	{
 		if(x >= 0 && x < MAZE_SIZE_X && z >= 0 && z < MAZE_SIZE_Z)
 			maze[x][z].removeTop();
 	}
-	
+
 	public void rotateTop(int x, int z, int angle, boolean xAxis, boolean yAxis, boolean zAxis)
 	{
 		if(xAxis)
@@ -275,7 +279,7 @@ public class Maze implements VisibleObject {
 		for(int i = 0; i < maze.length; i++){
 			for (int j = 0; j < maze[0].length; j++){
 				if (selected[i][j] != -1 ) {
-					
+
 					if(drawMode < 0)
 						maze[i][j].add(customs.get(-drawMode - 1).translate(i * SQUARE_SIZE, 0, j*SQUARE_SIZE));
 					else
@@ -388,13 +392,11 @@ public class Maze implements VisibleObject {
 						byte rotation = Byte.parseByte(objectElements[1]);
 						if(object < 0)
 							res.maze[i][j].add(customs.get(-(object + 1)).translate(SQUARE_SIZE * i, 0, SQUARE_SIZE * j));
-						else
-						{
-							res.maze[i][j].add(
-									standards.get(object).translate(SQUARE_SIZE * i, 0, SQUARE_SIZE * j));
-						}
-						res.maze[i][j].getTop().rotateVerticesX(rotation%4*90, 0, (float)(j + 0.5f)*SQUARE_SIZE);
-						res.maze[i][j].getTop().rotateVerticesY(rotation/4*90, (float)(i + 0.5f)*SQUARE_SIZE, (float)(j + 0.5f)*SQUARE_SIZE);
+						else if (object != 8)
+							res.maze[i][j].add(standards.get(object).translate(SQUARE_SIZE * i, 0, SQUARE_SIZE * j));
+						res.maze[i][j].rotateTopX(((float)j+ 0.5f) * SQUARE_SIZE, rotation%4*90);
+						res.maze[i][j].rotateTopY(((float)i+ 0.5f) * SQUARE_SIZE, ((float)j+ 0.5f) * SQUARE_SIZE, rotation/4*90);
+						res.maze[i][j].rotateTopZ(((float)i+ 0.5f) * SQUARE_SIZE, rotation/16*90);
 					}
 				}
 			}
@@ -435,10 +437,13 @@ public class Maze implements VisibleObject {
 				ArrayList<MazeObject> stack = maze[i][j].get();
 				for(int k = 0; k < stack.size(); k++)
 				{
-					if (selected[i][j] == k || selected[i][j] == -2) {
-						stack.get(k).draw(gl,  selectedColour);
-					} else {
-						stack.get(k).draw(gl,  notSelectedColour);
+					MazeObject object = stack.get(k);
+					if(!(selected[i][j] == -2 && object instanceof Bottom)){
+						if (selected[i][j] == k || selected[i][j] == -2) {
+							stack.get(k).draw(gl,  selectedColour);
+						} else {
+							stack.get(k).draw(gl,  notSelectedColour);
+						}
 					}
 				}
 			}
@@ -451,7 +456,7 @@ public class Maze implements VisibleObject {
 			return maze[x][z].get().get(y);
 		return new Floor(0, 0, 0, 0);
 	}
-	
+
 	public ArrayList<MazeObject> get(int x, int z)
 	{
 		if(x >= 0 && x < MAZE_SIZE_X && z >= 0 && z < MAZE_SIZE_Z)

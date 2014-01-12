@@ -474,9 +474,9 @@ public void removeRedunantFaces(MazeObject that)
 			commonVertices.retainAll(thatFacePoints);
 			if(commonVertices.size() == thatFacePoints.size() && commonVertices.size() == thisFacePoints.size())
 			{
-				if(!(this instanceof Floor))
+				if(!(this instanceof Floor || this instanceof StartTile || this instanceof FinishTile))
 					this.faces.remove(i);
-				if(!(that instanceof Floor))
+				if(!(that instanceof Floor || that instanceof StartTile || that instanceof FinishTile))
 					that.faces.remove(j);
 				break;
 			}

@@ -9,6 +9,7 @@ import GameObjects.Editor;
 import GameObjects.PowerUp;
 import Listening.*;
 
+import com.sun.opengl.util.GLUT;
 import com.sun.opengl.util.texture.Texture;
 
 /**

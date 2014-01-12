@@ -32,6 +32,7 @@ public class Level {
 	
 	public Level(Maze mz){
 		this.maze = mz;
+		maze.selectedAll();
 		PowerUp.initSprites();
 	}
 	
@@ -122,7 +123,8 @@ public class Level {
 	
 	public void pause()
 	{
-		swarm.pause();
+		if(swarm != null)
+			swarm.pause();
 	}
 	
 	/**
