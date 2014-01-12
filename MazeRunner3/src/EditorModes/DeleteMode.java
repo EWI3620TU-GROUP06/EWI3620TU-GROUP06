@@ -15,6 +15,10 @@ public class DeleteMode extends EditMode {
 		if(mazeX != pressedX || mazeZ != pressedZ)
 		{
 			level.getMaze().removeTop(mazeX, mazeZ);
+			level.getMaze().clearSelected();
+			level.getMaze().select(mazeX, mazeZ);
+			pressedX = mazeX;
+			pressedZ = mazeZ;
 		}
 	}
 

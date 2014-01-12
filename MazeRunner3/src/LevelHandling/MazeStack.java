@@ -45,7 +45,7 @@ public class MazeStack {
 
 	public float getHeight()
 	{
-		return stack.get(stack.size() - 1).getHeight();
+		return stack.get(stack.size() - 1).getYMax();
 	}
 
 	public int size()
@@ -118,6 +118,25 @@ public class MazeStack {
 		if(stack.size() > 1)
 		{
 			stack.get(stack.size() - 2).setTop(!toBeRotated.hasBottom(stack.get(stack.size() - 2).getYMax()));
+		}
+	}
+	
+	public void removeRedundantFaces(MazeStack that)
+	{
+		for(int i = 0; i < stack.size(); i++)
+		{
+			MazeObject thisObject = this.stack.get(i);
+			if(i < stack.size() - 1)
+				thisObject.removeRedunantFaces(this.stack.get(i + 1));
+			for(MazeObject thatObject : that.stack)
+			{
+				if(thisObject.getHeight() == thatObject.getHeight() &&
+						thisObject.getYMin() == thatObject.getYMin())
+				{
+					thisObject.removeRedunantFaces(thatObject);
+				}
+					
+			}
 		}
 	}
 

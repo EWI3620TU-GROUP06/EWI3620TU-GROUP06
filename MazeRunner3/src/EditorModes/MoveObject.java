@@ -6,7 +6,6 @@ import javax.vecmath.Vector3f;
 
 import LevelHandling.Level;
 import LevelHandling.Maze;
-import MazeObjects.Floor;
 import MazeObjects.MazeObject;
 
 /**

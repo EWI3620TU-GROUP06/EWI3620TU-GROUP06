@@ -85,23 +85,21 @@ public class Maze implements VisibleObject {
 	 * the method removeRedundantFaces removes all the non-visible faces from the levels. this is needed to
 	 * remain a framerate around 60.
 	 */
-	/*
 	public void removeRedundantFaces()
 	{
 		for(int i = 0; i < maze.length; i++){
 			for(int j  = 0; j < maze[0].length; j++){
 				if(i != maze[0].length - 1)
 				{
-					maze[i][j].removeRedunantFaces(maze[i + 1][j]);
+					maze[i][j].removeRedundantFaces(maze[i + 1][j]);
 				}
 				if(j != maze.length - 1)
 				{
-					maze[i][j].removeRedunantFaces(maze[i][j + 1]);
+					maze[i][j].removeRedundantFaces(maze[i][j + 1]);
 				}
 			}
 		}
 	}
-	 */
 
 	public boolean isFinish(double x, double z)
 	{
@@ -461,14 +459,10 @@ public class Maze implements VisibleObject {
 		return new ArrayList<MazeObject>();
 	}
 
-	public void set(MazeObject mazeObject)
+	public void set(MazeObject mazeObject, int x, int z)
 	{
-		for(int i = 0; i < maze.length; i++){
-			for(int j = 0; j < maze[0].length; j++){
-				if(selected[i][j] >= 0)
-					maze[i][j].replace(maze[i][j].getTop(), mazeObject); 
-			}
-		}
+		if(x >= 0 && x < MAZE_SIZE_X && z >= 0 && z < MAZE_SIZE_Z)
+			maze[x][z].add(mazeObject); 
 	}
 
 	public MazeObject[] getNeighbourTiles(int x, int z){
