@@ -174,8 +174,7 @@ public class MazeRunner implements GLEventListener {
 
 		// Initialize the player.
 		Vector3d playerPos = new Vector3d(level.getMaze().getStart()[0], level.getMaze().getStart()[1], level.getMaze().getStart()[2]);
-		player = new Player(playerPos, level.getMaze().getStart()[3], -45, level.getMaze(), physics, state.getDiffNumber());
-
+		player = new Player(playerPos, -level.getMaze().getStart()[3], -45, level.getMaze(), physics, state.getDiffNumber());
 		visibleObjects.add(player);
 
 		Swarm particles = new Swarm(physics, level.getMaze(), (int) (Maze.MAZE_SIZE_X*(state.getDiffNumber() + 1))/4, state.getDiffNumber());
@@ -467,7 +466,7 @@ public class MazeRunner implements GLEventListener {
 	/**
 	 * updateCamera() updates the camera position and orientation.
 	 * <p>
-	 * This is done by copying the locations from the Player, since MazeRunner runs on a first person view.
+	 * This is done by copying the locations from the Player, since MazeRunner runs on a third person view.
 	 */
 
 	private void updateCamera() {
