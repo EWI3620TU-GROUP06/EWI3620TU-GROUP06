@@ -33,7 +33,7 @@ import java.util.Calendar;
 import java.util.Iterator;
 
 /** 
- * MazeRunner is the base class of the game, functioning as the view controller and game logic manager.
+ * MazeRunner is the base class of the gameplay.
  * <p>
  * Functioning as the window containing everything, it initializes both JOGL, the 
  * game objects and the game logic needed for MazeRunner.
