@@ -76,7 +76,7 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 			this.dX = (xdragPos - midScreenWidth);
 			this.dY = (ydragPos - midScreenHeight);
 			
-			robot.mouseMove(midScreenWidth + gamePosX + boundX, midScreenHeight + gamePosY + boundY);
+			robot.mouseMove(midScreenWidth + gamePosX + boundX, midScreenHeight + gamePosY + boundY); // robot used to hold the mouse in the middle of the screen only in playstate
 			xdragPos = midScreenWidth;
 			ydragPos = midScreenHeight;
 			

@@ -12,6 +12,11 @@ import GameStates.GameState;
 import Listening.UserInput;
 import Main.Game;
 
+/**
+ * the mainMenu class sets up the main menu and its functionalities the mainmenu is one of the four states used in
+ * the main game.
+ *
+ */
 public class MainMenu implements GLEventListener {
 	
 	private int screenWidth, screenHeight;				// Screen size to handle reshaping
@@ -32,7 +37,9 @@ public class MainMenu implements GLEventListener {
 		initJOGL();
 		initMenuText();
 	}
-	
+	/**
+	 * the init jogl method sets up the opengl environment and canvas in wich this menu is drawn
+	 */
 	private void initJOGL()	{
 		// First, we set up JOGL. We start with the default settings.
 		GLCapabilities caps = new GLCapabilities();
@@ -43,11 +50,6 @@ public class MainMenu implements GLEventListener {
 		// Now we add the canvas, where OpenGL will actually draw for us. We'll use settings we've just defined. 
 		canvas = new GLCanvas( caps );
 		game.add( canvas );
-		/* We need to add a GLEventListener to interpret OpenGL events for us. Since MazeRunner implements
-		 * GLEventListener, this means that we add the necesary init(), display(), displayChanged() and reshape()
-		 * methods to this class.
-		 * These will be called when we are ready to perform the OpenGL phases of MazeRunner. 
-		 */
 		canvas.addGLEventListener( this );
 		canvas.requestFocus();
 		input = state.getGSM().getInput();
@@ -60,6 +62,10 @@ public class MainMenu implements GLEventListener {
 		anim.start();
 	}
 	
+	/**
+	* the initMenuText method creates the clickboxes for the main menu and the options menu these clickboxes are described in the
+	* drawing package.
+	*/
 	private void initMenuText(){
 		
 		String[] commands = {"Play", "Load", "Highscores", "Options", "Editor", "Quit"};
@@ -71,6 +77,10 @@ public class MainMenu implements GLEventListener {
 		this.optclkbxman.setControl(input);
 	}
 	
+	/**
+	 * the init method sets up the drawing mode for the othographicProjection and initializes the background
+	 * texture used.
+	 */
 	@Override
 	public void init(GLAutoDrawable drawable) {
 		GL gl = drawable.getGL();
@@ -80,7 +90,10 @@ public class MainMenu implements GLEventListener {
 		// Preload the texture we want to use!
 		backgroundTexture = DrawingUtil.initTexture(gl, "mainmenu");
 		}
-		
+	
+	/**
+	 * the display method draws all the visibles on the canvas.
+	 */	
 	@Override
 	public void display(GLAutoDrawable drawable) {
 		GL gl = drawable.getGL();
@@ -125,7 +138,10 @@ public class MainMenu implements GLEventListener {
 		// Hopefully not needed
 		
 	}
-
+	
+	/**
+	 * the reshape method reshapes all the visibles in the canvas and the canvas and frame it self.
+	 */
 	@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width,
 			int height) {
@@ -150,6 +166,11 @@ public class MainMenu implements GLEventListener {
 		return this.canvas;
 	}
 	
+	
+	/**
+	 * the method Addlinstening adds the listeners needed in the higscore state to the canvas
+	 * @param input	the object user input is passed to set the eventlisteners
+	 */
 	private void AddListening(UserInput input){
 		canvas.addMouseListener(input);
 		canvas.addMouseMotionListener(input);

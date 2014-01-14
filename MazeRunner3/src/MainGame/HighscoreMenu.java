@@ -14,6 +14,11 @@ import Main.Game;
 
 import com.sun.opengl.util.Animator;
 import com.sun.opengl.util.texture.Texture;
+/**
+ * the class highscoremenu is used to create the highscore in the higscore state this is one of the four mainstates
+ * in this game
+ *
+ */
 
 public class HighscoreMenu implements GLEventListener{
 
@@ -33,6 +38,9 @@ public class HighscoreMenu implements GLEventListener{
 		initJOGL();
 		initMenuText();
 	}
+	/**
+	 * the init jogl method sets up the opengl environment and canvas in wich this menu is drawn
+	 */
 	
 	private void initJOGL()	{
 		// First, we set up JOGL. We start with the default settings.
@@ -44,11 +52,6 @@ public class HighscoreMenu implements GLEventListener{
 		// Now we add the canvas, where OpenGL will actually draw for us. We'll use settings we've just defined. 
 		canvas = new GLCanvas( caps );
 		game.add( canvas );
-		/* We need to add a GLEventListener to interpret OpenGL events for us. Since MazeRunner implements
-		 * GLEventListener, this means that we add the necesary init(), display(), displayChanged() and reshape()
-		 * methods to this class.
-		 * These will be called when we are ready to perform the OpenGL phases of MazeRunner. 
-		 */
 		canvas.addGLEventListener( this );
 		canvas.requestFocus();
 		input = state.getGSM().getInput();
@@ -61,12 +64,20 @@ public class HighscoreMenu implements GLEventListener{
 		anim.start();
 	}
 	
+	/**
+	 * the initMenuText method creates the clickboxes for the higscore menu these clickboxes are described in the
+	 * drawing package.
+	 */
 	private void initMenuText(){
 		//Add the clickboxes for the pauze menu
 		this.clkbxman = TextBoxManager.createHighscoreMenu(screenWidth, screenHeight, 11, this.state.getGSM());
 		this.clkbxman.setControl(input);
 	}
 	
+	/**
+	 * the init method sets up the drawing mode for the othographicProjection and initializes the background
+	 * texture used.
+	 */
 	@Override
 	public void init(GLAutoDrawable drawable) {
 		GL gl = drawable.getGL();
@@ -76,7 +87,10 @@ public class HighscoreMenu implements GLEventListener{
 		// Preload the texture we want to use!
 		backgroundTexture = DrawingUtil.initTexture(gl, "mainmenu");
 	}
-		
+	
+	/**
+	 * the display method draws all the visibles on the canvas and sets up the lightning in this state.
+	 */
 	@Override
 	public void display(GLAutoDrawable drawable) {
 		GL gl = drawable.getGL();
@@ -115,7 +129,11 @@ public class HighscoreMenu implements GLEventListener{
 		// Hopefully not needed
 		
 	}
-
+	
+	/**
+	 * the reshape method reshapes all the visibles in the canvas and the canvas and frame it self.
+	 */
+	
 	@Override
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width,
 			int height) {
@@ -139,6 +157,10 @@ public class HighscoreMenu implements GLEventListener{
 		return this.canvas;
 	}
 	
+	/**
+	 * the method Addlinstening adds the listeners needed in the higscore state to the canvas
+	 * @param input	the object user input is passed to set the eventlisteners
+	 */
 	private void AddListening(UserInput input){
 		canvas.addMouseListener(input);
 		canvas.addMouseMotionListener(input);

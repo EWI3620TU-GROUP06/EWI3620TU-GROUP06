@@ -19,19 +19,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * MazeRunner is the base class of the game, functioning as the view controller
- * and game logic manager.
+ * the mazeEditor class sets up the maze editor which is one of the four main game states in this game.
  * <p>
- * Functioning as the window containing everything, it initializes both JOGL,
- * the game objects and the game logic needed for MazeRunner.
- * <p>
- * For more information on JOGL, visit <a
- * href="http://jogamp.org/wiki/index.php/Main_Page">this page</a> for general
- * information, and <a
- * href="https://jogamp.org/deployment/jogamp-next/javadoc/jogl/javadoc/">this
- * page</a> for the specification of the API.
- * 
- * @author Bruno Scheele, revised by Mattijs Driel
+ * the maze editor let us create custom mazes and create levels in wich the game "Mad Balls" can be played.
+ *  
  * 
  */
 public class MazeEditor implements GLEventListener {
@@ -62,18 +53,10 @@ public class MazeEditor implements GLEventListener {
 
 	/*
 	 * **********************************************
-	 * * Initialization methods * **********************************************
+	 * * Initialization methods					    * 
+	 * **********************************************
 	 */
-	/**
-	 * Initializes the complete MazeRunner game.
-	 * <p>
-	 * MazeRunner extends Java AWT Frame, to function as the window. It creats a
-	 * canvas on itself where JOGL will be able to paint the OpenGL graphics. It
-	 * then initializes all game components and initializes JOGL, giving it the
-	 * proper settings to accurately display MazeRunner. Finally, it adds itself
-	 * as the OpenGL event listener, to be able to function as the view
-	 * controller.
-	 */
+
 	public MazeEditor(Game game, GameState state) {
 		//No window anymore!
 		this.game = game;
@@ -84,12 +67,8 @@ public class MazeEditor implements GLEventListener {
 	}
 
 	/**
-	 * initJOGL() sets up JOGL to work properly.
-	 * <p>
-	 * It sets the capabilities we want for MazeRunner, and uses these to create
-	 * the GLCanvas upon which MazeRunner will actually display our screen. To
-	 * indicate to OpenGL that is has to enter a continuous loop, it uses an
-	 * Animator, which is part of the JOGL api.
+	 * the init jogl method sets up the opengl environment and canvas in wich the editor options and the edited
+	 * maze is drawn.
 	 */
 	private void initJOGL() {
 		// First, we set up JOGL. We start with the default settings.
@@ -103,13 +82,6 @@ public class MazeEditor implements GLEventListener {
 		// use settings we've just defined.
 		canvas = new GLCanvas(caps);
 		game.add(canvas);
-		/*
-		 * We need to add a GLEventListener to interpret OpenGL events for us.
-		 * Since MazeRunner implements GLEventListener, this means that we add
-		 * the necesary init(), display(), displayChanged() and reshape()
-		 * methods to this class. These will be called when we are ready to
-		 * perform the OpenGL phases of MazeRunner.
-		 */
 		canvas.addGLEventListener(this);
 		canvas.requestFocus();
 
@@ -123,25 +95,12 @@ public class MazeEditor implements GLEventListener {
 	}
 
 	/**
-	 * initializeObjects() creates all the objects needed for the game to start
-	 * normally.
-	 * <p>
-	 * This includes the following:
-	 * <ul>
-	 * <li>the default Maze
-	 * <li>the Player
-	 * <li>the Camera
-	 * <li>the User input
-	 * </ul>
-	 * <p>
-	 * Remember that every object that should be visible on the screen, should
-	 * be added to the visualObjects list of MazeRunner through the add method,
-	 * so it will be displayed automagically.
+	 * the init objects intializes all the objects that need to be displayed in the editor such as the maze.
 	 */
 	private void initObjects() {
 		// We define an ArrayList of VisibleObjects to store all the objects
 		// that need to be
-		// displayed by MazeRunner.
+		// displayed by the editor.
 		visibleObjects = new ArrayList<VisibleObject>();
 		// Add the maze that we will be using.
 		level = new Level(new Maze());
@@ -161,6 +120,10 @@ public class MazeEditor implements GLEventListener {
 		editBoxManager.setControl(input);
 	}
 
+	/**
+	 * the initMenuText method creates the clickboxes for the higscore menu these clickboxes are described in the
+	 * drawing package.
+	 */
 	private void initMenuText(){
 		String[] commands = {"Resume", "Options","Main Menu", "Quit"};
 		String[] optcommands = {"Toggle Fullscreen", "Back"};
@@ -176,15 +139,9 @@ public class MazeEditor implements GLEventListener {
 	 */
 
 	/**
-	 * init(GLAutodrawable) is called to initialize the OpenGL context, giving
-	 * it the proper parameters for viewing.
-	 * <p>
-	 * Implemented through GLEventListener. It sets up most of the OpenGL
-	 * settings for the viewing, as well as the general lighting.
-	 * <p>
-	 * It is <b>very important</b> to realize that there should be no drawing at
-	 * all in this method.
+	 * the init method sets up the drawing mode for the editor and sets up the ligth in the editor
 	 */
+	 
 	public void init(GLAutoDrawable drawable) {
 		//drawable.setGL(new DebugGL(drawable.getGL())); // We set the OpenGL
 		// pipeline to Debugging
@@ -226,7 +183,7 @@ public class MazeEditor implements GLEventListener {
 	 * new frame and handles all of the drawing.
 	 * <p>
 	 * Implemented through GLEventListener. In order to draw everything needed,
-	 * it iterates through MazeRunners' list of visibleObjects. For each
+	 * it iterates through the editors list of visibleObjects. For each
 	 * visibleObject, this method calls the object's display(GL) function, which
 	 * specifies how that object should be drawn. The object is passed a
 	 * reference of the GL context, so it knows where to draw.
@@ -267,7 +224,7 @@ public class MazeEditor implements GLEventListener {
 		glu.gluLookAt(pos[0], pos[1], pos[2], 
 				vrp[0], vrp[1], vrp[2], vuv[0], vuv[1], vuv[2]);
 
-		// Display all the visible objects of MazeRunner.
+		// Display all the visible objects of editor.
 		for (Iterator<VisibleObject> it = visibleObjects.iterator(); it
 				.hasNext();) {
 			it.next().display(gl);
@@ -309,27 +266,14 @@ public class MazeEditor implements GLEventListener {
 		gl.glFlush();
 	}
 
-	/**
-	 * displayChanged(GLAutoDrawable, boolean, boolean) is called upon whenever
-	 * the display mode changes.
-	 * <p>
-	 * Implemented through GLEventListener. Seeing as this does not happen very
-	 * often, we leave this unimplemented.
-	 */
 	public void displayChanged(GLAutoDrawable drawable, boolean modeChanged,
 			boolean deviceChanged) {
 		// GL gl = drawable.getGL();
 	}
+	 /**
+	 * the reshape method reshapes all the visibles in the canvas and the canvas and frame it self.
+	 */ 
 
-	/**
-	 * reshape(GLAutoDrawable, int, int, int, int, int) is called upon whenever
-	 * the viewport changes shape, to update the viewport setting accordingly.
-	 * <p>
-	 * Implemented through GLEventListener. This mainly happens when the window
-	 * changes size, thus changin the canvas (and the viewport that OpenGL
-	 * associates with it). It adjust the projection matrix to accomodate the
-	 * new shape.
-	 */
 	public void reshape(GLAutoDrawable drawable, int x, int y, int width,
 			int height) {
 		GL gl = drawable.getGL();
@@ -357,8 +301,7 @@ public class MazeEditor implements GLEventListener {
 	/**
 	 * updateCamera() updates the camera position and orientation.
 	 * <p>
-	 * This is done by copying the locations from the Player, since MazeRunner
-	 * runs on a first person view.
+	 * This is done by copying the locations from the editor.
 	 */
 
 	private void updateCamera() {
@@ -394,7 +337,11 @@ public class MazeEditor implements GLEventListener {
 	public void unOptPause(){
 		this.optpause = false;
 	}
-
+	
+	/**
+	 * the method Addlinstening adds the listeners needed in the higscore state to the canvas
+	 * @param input	the object user input is passed to set the eventlisteners
+	 */
 	private void AddListening(UserInput input){
 		canvas.addMouseListener(input);
 		canvas.addMouseMotionListener(input);

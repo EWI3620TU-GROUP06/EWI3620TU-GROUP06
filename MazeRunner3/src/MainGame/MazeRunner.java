@@ -91,7 +91,7 @@ public class MazeRunner implements GLEventListener {
 	/**
 	 * Initializes the complete MazeRunner game.
 	 * <p>
-	 * MazeRunner extends Java AWT Frame, to function as the window. It creates a canvas on 
+	 * MazeRunner creates a canvas on 
 	 * itself where JOGL will be able to paint the OpenGL graphics. It then initializes all 
 	 * game components and initializes JOGL, giving it the proper settings to accurately 
 	 * display MazeRunner. Finally, it adds itself as the OpenGL event listener, to be able 
@@ -106,7 +106,9 @@ public class MazeRunner implements GLEventListener {
 		initObjects();						// Initialize all the objects!
 		initMenuText();
 	}
-
+	/**
+	 * the init jogl method sets up the opengl environment and canvas in wich this menu is drawn
+	 */
 	private void initJOGL()	{
 		// First, we set up JOGL. We start with the default settings.
 		GLCapabilities caps = new GLCapabilities();
@@ -125,7 +127,7 @@ public class MazeRunner implements GLEventListener {
 		canvas.addGLEventListener( this );
 		canvas.requestFocus();
 
-		hideCursor();
+		hideCursor(); //hide cursor while playing
 
 		/* We need to create an internal thread that instructs OpenGL to continuously repaint itself.
 		 * The Animator class handles that for JOGL.
@@ -143,10 +145,12 @@ public class MazeRunner implements GLEventListener {
 	 * <p>
 	 * This includes the following:
 	 * <ul>
-	 * <li> the default Maze
+	 * <li> the default level
 	 * <li> the Player
 	 * <li> the Camera
-	 * <li> the User input
+	 * <li> the physics
+	 * <li> the sounds
+	 * <li> the skybox
 	 * </ul>
 	 * <p>
 	 * Remember that every object that should be visible on the screen, should be added to the
@@ -199,7 +203,10 @@ public class MazeRunner implements GLEventListener {
 		level.addToVisible(visibleObjects);
 		level.setAttributes(player, physics, this);
 	}
-
+	 /**
+	 * the initMenuText method creates the clickboxes for the pause menu these clickboxes are described in the
+	 * drawing package.
+	 */
 	private void initMenuText(){
 		String[] commands = {"Resume", "Highscores", "Options", "Main Menu", "Quit"};
 		String[] optcommands = {"Toggle Fullscreen", "Back"};
@@ -277,13 +284,8 @@ public class MazeRunner implements GLEventListener {
 	}
 
 	/**
-	 * display(GLAutoDrawable) is called upon whenever OpenGL is ready to draw a new frame and handles all of the drawing.
-	 * <p>
-	 * Implemented through GLEventListener. 
-	 * In order to draw everything needed, it iterates through MazeRunners' list of visibleObjects. 
-	 * For each visibleObject, this method calls the object's display(GL) function, which specifies 
-	 * how that object should be drawn. The object is passed a reference of the GL context, so it 
-	 * knows where to draw.
+	 * the display method draws all the visibles on the canvas. And gives us all the possibilities to draw the
+	 * to draw overlays in the mazerunner when paused, finished or died.
 	 */
 	public void display(GLAutoDrawable drawable) {
 
@@ -422,12 +424,6 @@ public class MazeRunner implements GLEventListener {
 	}
 
 
-	/**
-	 * displayChanged(GLAutoDrawable, boolean, boolean) is called upon whenever the display mode changes.
-	 * <p>
-	 * Implemented through GLEventListener. 
-	 * Seeing as this does not happen very often, we leave this unimplemented.
-	 */
 	public void displayChanged(GLAutoDrawable drawable, boolean modeChanged, boolean deviceChanged) {
 		// GL gl = drawable.getGL();
 	}
@@ -500,7 +496,10 @@ public class MazeRunner implements GLEventListener {
 		
 		skybox.moveTo(new Vector3f((float) (camera.getLocation().x - 115), (float) (camera.getLocation().y - 115), (float) (camera.getLocation().z - 115)));
 	}
-
+	
+	/**
+	 * method used to pause the game only possible when the player is not dead also shows the cursor in the canvas
+	 */
 	public void Pause(){
 		pause = true;
 		input.reset();
@@ -511,7 +510,7 @@ public class MazeRunner implements GLEventListener {
 	public void OptPause(){
 		this.optpause = true;
 	}
-
+	
 	public void unPause(){
 		if(!dead)
 		{
@@ -521,7 +520,11 @@ public class MazeRunner implements GLEventListener {
 			hideCursor();
 		}
 	}
-	
+	/**
+	 * funcitonallity discrebed below
+	 * @param addition		the parameter addition is used to add score to the current score when the player picked
+	 * up the powerup add score
+	 */
 	public void addScore(int addition)
 	{
 		timeSinceStart -= addition * 1000;
@@ -538,7 +541,10 @@ public class MazeRunner implements GLEventListener {
 	private void showCursor(){
 		game.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
-
+	/**
+	* the method Addlinstening adds the listeners needed in the higscore state to the canvas
+	* @param input	the object user input is passed to set the eventlisteners
+	*/
 	private void AddListening(UserInput input){
 		canvas.addMouseListener(input);
 		canvas.addMouseMotionListener(input);

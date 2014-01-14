@@ -164,7 +164,11 @@ public abstract class Control
 	{
 		return upperCase;
 	}
-
+	
+	/**
+	 * the reset method sets all the variables to its initial values.
+	 */
+	
 	public void reset(){
 		forward = false;
 		back = false;
