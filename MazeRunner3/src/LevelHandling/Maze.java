@@ -260,11 +260,7 @@ public class Maze implements VisibleObject {
 	{
 		for(int i = 0; i < maze.length; i++){
 			for (int j = 0; j < maze[0].length; j++){
-				MazeObject mzObj = maze[i][j].getInstanceOf(standards.get(drawMode));
-				if(mzObj != null){
-					maze[i][j].replace(mzObj, standards.get(ObjectMode.ADD_FLOOR).translate(
-							i * SQUARE_SIZE, mzObj.getYMin(), j * SQUARE_SIZE ));
-				}
+				maze[i][j].remove(standards.get(drawMode));
 			}
 		}
 	}

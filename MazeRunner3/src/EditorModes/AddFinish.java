@@ -28,8 +28,7 @@ public class AddFinish extends ObjectMode {
 	@Override
 	public void mouseReleased()
 	{
-		level.getMaze().removeBlocks(drawMode);
-		level.getMaze().addBlock(drawMode, rotation);
+		
 	}
 
 	@Override
