@@ -3,10 +3,12 @@ package Physics;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
 import Audio.Audio;
 import LevelHandling.Maze;
+import MainGame.MazeRunner;
 
 import com.bulletphysics.ContactProcessedCallback;
 import com.bulletphysics.collision.dispatch.CollisionObject;
@@ -135,6 +137,19 @@ public class Contact extends ContactProcessedCallback {
 				}
 			}
 			prevTimePartWalls[id] = currentTimePartWall;
+		}
+		
+		if(body1.equals(Physics.camera)|| body2.equals(Physics.camera))
+		{
+			Vector3f posPlayer = new Vector3f();
+			Vector3f posCam = new Vector3f();
+			Physics.camera.getCenterOfMassPosition(posCam);
+			Physics.getPlayerBody().getCenterOfMassPosition(posPlayer);
+			double x = posCam.x + (posPlayer.x - posCam.x)*0.5;
+			double y = posCam.y;
+			double z = posCam.z + (posPlayer.z - posCam.z)*0.5;
+			MazeRunner.camera.setLocation(new Vector3d(x,y,z));
+			MazeRunner.camColl = true;
 		}
 		
 		return false;

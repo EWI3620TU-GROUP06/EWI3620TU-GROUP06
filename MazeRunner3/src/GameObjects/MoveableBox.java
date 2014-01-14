@@ -30,7 +30,14 @@ public class MoveableBox extends GameObject implements VisibleObject {
 	private int time = 0;
 	private int count = -1;
 	private int activationTileX, activationTileY, activationTileZ;
-
+	
+	/**
+	 * Creates a new moveable box of the given size on the given location.
+	 * @param pos			Position of the new moveable box
+	 * @param squareSize	Width of new the moveable box
+	 * @param height		height of the moveable box
+	 */
+	
 	public MoveableBox(Vector3d pos, float squareSize, float height)
 	{
 		this.location = pos;
@@ -41,12 +48,25 @@ public class MoveableBox extends GameObject implements VisibleObject {
 		activationTileY = -1;
 		activationTileZ = -1;
 	}
+	
+	/**
+	 * Creates a moveable box in the physics world, and sets the id of this box to the id of the 
+	 * created box in the physics world
+	 * @param physics	Instance of physics used.
+	 */
 
 	public void setPhysics(Physics physics)
 	{
 		this.physics = physics;
 		id = physics.addBox(new Vector3f((float)location.x, (float)location.y, (float)location.z), box.getWidth(), box.getHeight());
 	}
+	
+	/**
+	 * Sets the activation tile of this box. When the player touches this tile, the box starts moving.
+	 * @param x	x coordinate of the new activation tile.
+	 * @param y	y coordinate of the new activation tile.
+	 * @param z	z coordinate of the new activation tile.
+	 */
 
 	public void setActivationTile(int x, int y, int z)
 	{
@@ -75,20 +95,6 @@ public class MoveableBox extends GameObject implements VisibleObject {
 			time += pathTime.get(pathTime.size() - 1);
 		pathDirection.add(direction);
 		pathTime.add(time);
-	}
-	
-	public void addReversePath()
-	{
-		int i = pathTime.size() - 1;
-		while (i >= 0)
-		{
-			addToPath(1000, new Vector3f(-pathDirection.get(i).x,
-					-pathDirection.get(i).y,
-					-pathDirection.get(i).z));
-			i--;
-		}
-		count = -1;
-		
 	}
 
 	@Override

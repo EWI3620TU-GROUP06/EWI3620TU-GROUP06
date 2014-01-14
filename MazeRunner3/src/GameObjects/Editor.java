@@ -21,7 +21,7 @@ import MazeObjects.CustomMazeObject;
  *
  */
 public class Editor extends GameObject{
-	
+
 	private EditMode editMode;
 
 	private float FOV;
@@ -45,10 +45,13 @@ public class Editor extends GameObject{
 	}
 
 	/**
-	 * Sets the Field of View of the editor
-	 * @param FOV	Field of View
+	 * Sets some variables needed to use the editor. Control and field of view cannot be altered outside of this 
+	 * method, because they do not need to be changed after initialization.
+	 * @param level		Initial Level of that is loaded into the editor
+	 * @param FOV		Field of view of the camera: used to calculate the cursor position.
+	 * @param control	User input used to control the editor
 	 */
-	
+
 	public void initSet(Level level, float FOV, Control control)
 	{
 		this.level = level;
@@ -82,18 +85,37 @@ public class Editor extends GameObject{
 	public double getVerAngle() {
 		return verAngle;
 	}
+	
+	/**
+	 * Returns the level that is being edited
+	 * @return	the edited level
+	 */
 
 	public Level getLevel(){
 		return level;
 	}
 	
+	/**
+	 * Sets the mode of the editor to a certain mode.
+	 * @param editMode	new edit mode
+	 */
+
 	public void setEditMode(EditMode editMode)
 	{
 		this.editMode = editMode;
 	}
 
 	/**
-	 * Updates the editor according to the inputs and current state of the editor
+	 * Updates the editor according to the inputs and current mode of the editor.
+	 * <p>
+	 * In order, these actions are taken: 
+	 * <ol>
+	 * <li> The new camera position is calculated. The camera can be moved by dragging the right mouse button 
+	 * and by rotating the mouse wheel.
+	 * <li> The new Cursor position is calculated: The cursor highlights the top element of the maze stack over 
+	 * which the mouse is currently hovering.
+	 * <li> Actions are taken if the mouse is clicked, dragged or released according to the current edit mode.
+	 * </ol>
 	 * @param screenWidth	Width of the current window
 	 * @param screenHeight	Height of the current window
 	 */
@@ -226,6 +248,11 @@ public class Editor extends GameObject{
 
 		return level;
 	}
+	
+	/**
+	 * Reads in a custom maze object from an .obj file in the object folder.
+	 * @return	The Custom maze that was read in.
+	 */
 
 	public static CustomMazeObject readMazeObject(){
 		JFileChooser fc = new JFileChooser();

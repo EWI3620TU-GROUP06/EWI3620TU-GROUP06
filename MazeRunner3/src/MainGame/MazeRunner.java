@@ -56,7 +56,7 @@ public class MazeRunner implements GLEventListener {
 	private int screenWidth, screenHeight;					// Screen size for reshaping
 	private ArrayList<VisibleObject> visibleObjects;		// A list of objects that will be displayed on screen.
 	private Player player;									// The player object.
-	private Camera camera;
+	public static Camera camera;
 	private Physics physics;
 	private UserInput input;								// The user input object that controls the player.
 	private static Level level;									// The maze.
@@ -82,7 +82,10 @@ public class MazeRunner implements GLEventListener {
 	float lightPosition[] = { (float)level.getMaze().getSizeX()/2f, 50.0f, (float)level.getMaze().getSizeZ()/2f, 1.0f };
 	private SkyBox skybox;
 	private boolean playingsound;
-
+	
+	public static boolean camColl = false;
+	public static float distance = 4;
+	
 	/*
 	 * **********************************************
 	 * *		Initialization methods				*
@@ -178,14 +181,14 @@ public class MazeRunner implements GLEventListener {
 
 		visibleObjects.add(player);
 
-		/*Swarm particles = new Swarm(physics, level.getMaze(), (int) (Maze.MAZE_SIZE_X*(state.getDiffNumber() + 1))/4, state.getDiffNumber());
+		Swarm particles = new Swarm(physics, level.getMaze(), (int) (Maze.MAZE_SIZE_X*(state.getDiffNumber() + 1))/4, state.getDiffNumber());
 		particles.setCognitive(0.055f);
 		particles.setSocial(0.055f);
 		particles.setInertiaWeight(0.95f);
 		particles.generate((int) (Maze.MAZE_SIZE_X*(state.getDiffNumber() + 1))/4);
 		level.addSwarm(particles);
 		physics.initParticles(particles);
-		physics.initContactHandling(); //Initializes sound-handling. MUST BE AFTER initParticles() TO INCLUDE PARTICLE-SOUNDS*/
+		physics.initContactHandling(); //Initializes sound-handling. MUST BE AFTER initParticles() TO INCLUDE PARTICLE-SOUNDS
 
 		camera = new Camera(player.getLocation(), player.getHorAngle(), player.getVerAngle() );
 		
@@ -471,31 +474,22 @@ public class MazeRunner implements GLEventListener {
 	 */
 
 	private void updateCamera() {
-		float distance = 4;
-		Vector3d cameraPos = new Vector3d(distance *Math.sin( Math.toRadians(player.getHorAngle())) * Math.cos( Math.toRadians(player.getVerAngle())),
+		
+		Vector3d cameraPos = new Vector3d(distance * Math.sin( Math.toRadians(player.getHorAngle())) * Math.cos( Math.toRadians(player.getVerAngle())),
 				Math.sin(Math.toRadians(player.getVerAngle())) + 1.5,
-				distance *Math.cos( Math.toRadians(player.getHorAngle())) * Math.cos(Math.toRadians(player.getVerAngle()))); 
+				distance * Math.cos( Math.toRadians(player.getHorAngle())) * Math.cos(Math.toRadians(player.getVerAngle()))); 
 		cameraPos.add(player.getLocation());
-		if(!physics.cameraInWall((float) cameraPos.x, (float) cameraPos.y, (float) cameraPos.z)){
-			camera.setLocation( cameraPos);
-			camera.setHorAngle( player.getHorAngle() );
+		
+		physics.setCameraPosition((float)cameraPos.x, (float)cameraPos.y, (float)cameraPos.z);
+		
+		if(!camColl)
+		{
+			camera.setLocation(cameraPos);
 		}
-		else{
-			while(physics.cameraInWall((float) cameraPos.x, (float) cameraPos.y, (float) cameraPos.z) && distance >=0){
-				distance -= 0.1f;
-				cameraPos = new Vector3d(distance *Math.sin( Math.toRadians(player.getHorAngle())) * Math.cos( Math.toRadians(player.getVerAngle())),
-					Math.sin(Math.toRadians(player.getVerAngle())) + 1.5,
-					distance *Math.cos( Math.toRadians(player.getHorAngle())) * Math.cos(Math.toRadians(player.getVerAngle())));
-				cameraPos.add(player.getLocation());
-			}
-			distance -= 0.5f;
-			cameraPos = new Vector3d(distance *Math.sin( Math.toRadians(player.getHorAngle())) * Math.cos( Math.toRadians(player.getVerAngle())),
-				Math.sin(Math.toRadians(player.getVerAngle())) + 1.5,
-				distance *Math.cos( Math.toRadians(player.getHorAngle())) * Math.cos(Math.toRadians(player.getVerAngle())));
-			cameraPos.add(player.getLocation());
-			camera.setLocation( cameraPos);
-			camera.setHorAngle( player.getHorAngle() );
-		}
+		else
+			camColl = false;
+		
+		camera.setHorAngle( player.getHorAngle() );
 		camera.setVerAngle( player.getVerAngle() );
 		camera.calculateVRP();
 		

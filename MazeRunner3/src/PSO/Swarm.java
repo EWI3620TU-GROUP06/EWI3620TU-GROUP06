@@ -7,7 +7,6 @@ import javax.vecmath.Vector3f;
 
 import Drawing.VisibleObject;
 import LevelHandling.Maze;
-import MazeObjects.Floor;
 import Physics.Physics;
 
 public class Swarm {
@@ -62,11 +61,11 @@ public class Swarm {
 		float randX = Bound*((float) Math.random());
 		float randZ = Bound*((float) Math.random());
 		
-		if(!(maze.get((int)randX, 1, (int)randZ) instanceof Floor)){
+		if((maze.getFloorHeight((int)randX, (int)randZ) == -1)){
 			return genLocation(Bound);
 		}
 		else{
-			return new Vector3f(Maze.SQUARE_SIZE*randX, scale, Maze.SQUARE_SIZE*randZ);
+			return new Vector3f(Maze.SQUARE_SIZE*randX, maze.getFloorHeight((int)randX, (int)randZ) + scale, Maze.SQUARE_SIZE*randZ);
 		}
 	}
 	

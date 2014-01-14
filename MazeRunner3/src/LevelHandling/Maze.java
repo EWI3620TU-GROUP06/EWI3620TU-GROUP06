@@ -79,7 +79,8 @@ public class Maze implements VisibleObject {
 
 	/**
 	 * the method removeRedundantFaces removes all the non-visible faces from the levels. this is needed to
-	 * remain a framerate around 60.
+	 * increase the performance of the game: otherwise a lot of redundant face are drawn and added to the 
+	 * physics world.
 	 */
 	public void removeRedundantFaces()
 	{
@@ -96,6 +97,14 @@ public class Maze implements VisibleObject {
 			}
 		}
 	}
+	
+	/**
+	 * Checks whether the given position is inside the bounds of the Finish tile
+	 * @param x	x coordinate of the player location
+	 * @param y	y coordinate of the player location
+	 * @param z	z coordinate of the player location
+	 * @return	boolean that states whether the given position is the finish position.
+	 */
 
 	public boolean isFinish(double x, double y, double z)
 	{
@@ -145,19 +154,31 @@ public class Maze implements VisibleObject {
 	}
 
 	/**
-	 * Returns the size of the maze in opengl units
-	 * @return	the size of the maze in opengl units
+	 * Returns the size of the maze in the x direction in opengl units
+	 * @return	the size of the maze in the x direction in opengl units
 	 */
 
 	public double getSizeX()
 	{
 		return MAZE_SIZE_X * SQUARE_SIZE;
 	}
+	
+	/**
+	 * Returns the size of the maze in the z direction in opengl units
+	 * @return 	the size of the maze in the z direction in opengl units
+	 */
 
 	public double getSizeZ()
 	{
 		return  MAZE_SIZE_Z * SQUARE_SIZE;
 	}
+	
+	/**
+	 * Returns the height of a certain stack in th maze
+	 * @param x	x coordinate of the stack
+	 * @param z	z coordinate of the stack
+	 * @return	Height in opengl units of the Maze stack.
+	 */
 
 	public float getHeight(int x, int z)
 	{
@@ -165,8 +186,9 @@ public class Maze implements VisibleObject {
 	}
 
 	/**
-	 * Gets the start position in opengl units and the initiial orientation of the player in the maze.
-	 * @return	double array containing 1: the x and 2: the z coordinate of the startposition and 3: the initial angle. 
+	 * Gets the start position in opengl units and the initial orientation of the player in the maze.
+	 * @return	double array containing 1: the x, 2: the y coordinate  and 3: the z coordinate of the 
+	 * start position and 4: the initial angle. 
 	 */
 
 	public double[] getStart()
@@ -192,8 +214,9 @@ public class Maze implements VisibleObject {
 	}
 
 	/**
-	 * Changes the size of the maze with the given amount. The maze must alway contain at least one square.
-	 * @param n	the amount by which the maze size needs to be changed. 
+	 * Sets the maze size to the given value
+	 * @param x	new maze size in the x direction . 
+	 * @param z	new maze size in the z direction . 
 	 */
 
 	public void setSize(int x, int z)
@@ -223,7 +246,7 @@ public class Maze implements VisibleObject {
 	}
 
 	/**
-	 * Sets the 'selected' flag of all elements in the maze to false.
+	 * Sets the 'selected' flag of all elements in the maze to -1, which means: not selected.
 	 */
 
 	public void clearSelected()
@@ -232,6 +255,10 @@ public class Maze implements VisibleObject {
 			for( int j = 0; j < maze[0].length; j++ )
 				selected[i][j] = -1;
 	}
+	
+	/**
+	 * Sets the 'selected' flag of all elements in the maze to -2, which means: all selected.
+	 */
 
 	public void selectedAll()
 	{
@@ -239,12 +266,28 @@ public class Maze implements VisibleObject {
 			for( int j = 0; j < maze[0].length; j++ )
 				selected[i][j] = -2;
 	}
+	
+	/**
+	 * Removes the top MazeObject on the given location 
+	 * @param x	x coordinate of the removed object
+	 * @param z z coordinate of the removed object
+	 */
 
 	public void removeTop(int x, int z)
 	{
 		if(x >= 0 && x < MAZE_SIZE_X && z >= 0 && z < MAZE_SIZE_Z)
-			maze[x][z].removeTop();
+			maze[x][z].pop();
 	}
+	
+	/**
+	 * Rotates the top MazeObject on the given location around any of the three axes.
+	 * @param x		x coordinate of the rotated object
+	 * @param z		z coordinate of the rotated object
+	 * @param angle	rotated angle
+	 * @param xAxis	boolean specifying whether the rotation is around the x axis.
+	 * @param yAxis	boolean specifying whether the rotation is around the y axis.
+	 * @param zAxis	boolean specifying whether the rotation is around the z axis.
+	 */
 
 	public void rotateTop(int x, int z, int angle, boolean xAxis, boolean yAxis, boolean zAxis)
 	{
@@ -255,6 +298,15 @@ public class Maze implements VisibleObject {
 		if(zAxis)
 			maze[x][z].rotateTopZ(((float)x+ 0.5f) * SQUARE_SIZE, angle);
 	}
+	
+	/**
+	 * Removes one MazeObject of a specific type from each stack in the maze, if possible.
+	 * <p>
+	 * Is only used to remove start of finish tiles from the maze, so there is never more that one of the 
+	 * object in the maze. 
+	 * 
+	 * @param drawMode	byte specifying which MazeObject needs to be removed
+	 */
 
 	public void removeBlocks(byte drawMode)
 	{
@@ -405,8 +457,8 @@ public class Maze implements VisibleObject {
 	}
 
 	/**
-	 * Draws the maze.
-	 * TODO: betere beschrijving.
+	 * Draws the maze. First the textures of all custom maze objects are initialized, if the were not already.
+	 * Then each object gets a color depending on wheter or not it was selected.
 	 */
 	public void display(GL gl) {
 		if(customSize != customs.size())
@@ -445,13 +497,29 @@ public class Maze implements VisibleObject {
 			}
 		}
 	}
+	
+	/**
+	 * Gets the Maze Object on a certain index on a certain stack, if it exists.
+	 * @param x	x coordinate of the stack
+	 * @param y	index of the object in the stack.
+	 * @param z z coordinate of the stack
+	 * @return	The requested mazeObject, if it exists, else a Floor object without dimensions.
+	 */
 
 	public MazeObject get(int x, int y, int z)
 	{
 		if(x >= 0 && x < MAZE_SIZE_X && z >= 0 && z < MAZE_SIZE_Z)
-			return maze[x][z].get().get(y);
+			if(y >= 0 && y < maze[x][z].size())
+				return maze[x][z].get().get(y);
 		return new Floor(0, 0, 0, 0);
 	}
+	
+	/**
+	 * Gets all maze Objects in a certain stack in the maze.
+	 * @param x x coordinate of the stack
+	 * @param z z coordinate of the stack
+	 * @return	ArrayList of the objects in the requested stack, this list is empty if the stack doent exists.
+	 */
 
 	public ArrayList<MazeObject> get(int x, int z)
 	{
@@ -459,22 +527,42 @@ public class Maze implements VisibleObject {
 			return maze[x][z].get();
 		return new ArrayList<MazeObject>();
 	}
+	
+	/**
+	 * Adds the given mazeObject to a selected stack
+	 * @param mazeObject	Maze Object that is added
+	 * @param x				x coordinate of the stack
+	 * @param z				z coordinate of the stack
+	 */
 
 	public void set(MazeObject mazeObject, int x, int z)
 	{
 		if(x >= 0 && x < MAZE_SIZE_X && z >= 0 && z < MAZE_SIZE_Z)
 			maze[x][z].add(mazeObject); 
 	}
+	
+	public float getFloorHeight(int x, int z)
+	{
+		if(x >= 0 && x < MAZE_SIZE_X && z >= 0 && z < MAZE_SIZE_Z)
+		{
+			MazeObject floor =  maze[x][z].getInstanceOf(standards.get(ObjectMode.ADD_FLOOR));
+			if(floor != null)
+			{
+				return maze[x][z].getHeight();
+			}
+		}
+		return -1;
+	}
 
-	public MazeObject[] getNeighbourTiles(int x, int z){
+	public MazeObject[] getNeighbourTiles(int x, int z, int height){
 		MazeObject[] res = new MazeObject[4];
 		// The lines below work for the tile relative
 		// to the middle tile according to the comment behind it
 		// but this assumes that x is vertical in the maze-array and z is horizontal
-		res[0] = get((int)x-1, 0, (int)z); // up
-		res[1] = get((int)x, 0, (int)z-1); // left
-		res[2] = get((int)x+1, 0, (int)z); // down
-		res[3] = get((int)x, 0, (int)z+1); // right
+		res[0] = maze[(int)x-1][(int)z].getAtHeight(height); // up
+		res[1] = maze[(int)x][(int)z-1].getAtHeight(height); // left
+		res[2] = maze[(int)x+1][(int)z].getAtHeight(height); // down
+		res[3] = maze[(int)x][(int)z+1].getAtHeight(height); // right
 		return res;
 	}
 

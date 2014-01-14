@@ -38,7 +38,7 @@ public class Physics {
 
 	private float angularDamping = 10f;
 
-	private float mass = 10f;
+	private float mass = 25f;
 
 	boolean previous = false;
 
@@ -47,6 +47,8 @@ public class Physics {
 	private CollisionShape partBallShape;
 	private static int diff;
 	private float partradius;
+	
+	static RigidBody camera;
 
 	static ArrayList<RigidBody> particles;
 	ArrayList<RigidBody> movingBoxes = new ArrayList<RigidBody>();
@@ -140,6 +142,11 @@ public class Physics {
 		playerBall.setActivationState(CollisionObject.DISABLE_DEACTIVATION);
 		// Add the control ball to the JBullet world.
 		dynamicsWorld.addRigidBody(playerBall);
+		
+		CollisionShape cameraShape = new SphereShape(0.4f);
+		RigidBodyConstructionInfo cameraConstructionInfo = new RigidBodyConstructionInfo(mass, ballMotion, cameraShape, ballInertia);
+		camera = new RigidBody(cameraConstructionInfo);
+		dynamicsWorld.addRigidBody(camera);
 	}
 
 	public void initContactHandling(){
@@ -311,6 +318,15 @@ public class Physics {
 
 	public static ArrayList<RigidBody> getParticles(){
 		return particles;
+	}
+	
+	public void setCameraPosition(float cameraX, float cameraY, float cameraZ)
+	{
+		Vector3f translation = new Vector3f();
+		Vector3f currentPos = new Vector3f();
+		camera.getCenterOfMassPosition(currentPos);
+		translation.sub(new Vector3f(cameraX, cameraY, cameraZ), currentPos);
+		camera.translate(translation);
 	}
 
 	public boolean cameraInWall(float cameraX, float cameraY, float cameraZ)
