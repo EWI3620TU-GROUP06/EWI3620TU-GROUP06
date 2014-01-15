@@ -107,5 +107,10 @@ public class TextEditBox extends TextBox {
 		else
 			return null;
 	}
+	
+	public void setConfirm()
+	{
+		confirm = true;
+	}
 
 }
