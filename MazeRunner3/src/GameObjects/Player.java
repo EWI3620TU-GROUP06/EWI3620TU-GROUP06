@@ -219,11 +219,13 @@ public class Player extends GameObject implements VisibleObject {
 		
 		sphereTexture.enable(); // Enable the ball texture
 		sphereTexture.bind(); 
-		float[] ballColour = new float[]{1.0f, 1.0f, 1.0f, 1.0f};
+		float[] ballColour = new float[]{0.5f, 0.5f, 0.5f, 1.0f};
+		float[] diffColour = new float[]{0.2f, 0.2f, 0.2f, 1.0f};
+		float[] specColour = new float[]{1f, 1f, 1f, 1f};
 		gl.glMaterialfv( GL.GL_FRONT, GL.GL_AMBIENT, ballColour, 0);
-		gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, ballColour, 0);
-		gl.glMaterialfv( GL.GL_FRONT, GL.GL_SPECULAR, ballColour, 0);
-		gl.glMaterialf( GL.GL_FRONT, GL.GL_SHININESS, 128f);
+		gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, diffColour, 0);
+		gl.glMaterialfv( GL.GL_FRONT, GL.GL_SPECULAR, specColour, 0);
+		gl.glMateriali( GL.GL_FRONT, GL.GL_SHININESS, 128);
 		gl.glPushMatrix();
 		double pos[] = new double[3];
 		location.get(pos);
