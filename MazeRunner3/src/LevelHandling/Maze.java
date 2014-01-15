@@ -86,11 +86,11 @@ public class Maze implements VisibleObject {
 	{
 		for(int i = 0; i < maze.length; i++){
 			for(int j  = 0; j < maze[0].length; j++){
-				if(i != maze[0].length - 1)
+				if(i < maze[0].length - 1)
 				{
 					maze[i][j].removeRedundantFaces(maze[i + 1][j]);
 				}
-				if(j != maze.length - 1)
+				if(j < maze[0].length - 1)
 				{
 					maze[i][j].removeRedundantFaces(maze[i][j + 1]);
 				}
@@ -430,7 +430,7 @@ public class Maze implements VisibleObject {
 			}
 			sc.next();
 			for (int i = 0; i < res.maze.length; i++) {
-				for (int j = 0; j < res.maze.length; j++) {
+				for (int j = 0; j < res.maze[0].length; j++) {
 					String line = sc.next();
 					String[] codes = line.split("[;]");
 					for(String code : codes)
