@@ -102,7 +102,7 @@ public class TextBoxManager extends ClickBoxManager{
 				}
 			}
 			if(commands[i].equals("Difficulty:")){
-				res.AddBox(new TextBox(0.7f, posY, screenWidth, screenHeight, textScale, "Arial", 0, gsm.getState(gStateMan.PLAYSTATE).getDifficulty(), 
+				res.AddBox(new TextBox(0.7f, posY, screenWidth, screenHeight, textScale, "Easy 3D", 0, gsm.getState(gStateMan.PLAYSTATE).getDifficulty(), 
 						1f, 1f, 1f, 1f, false, TextBox.ALIGN_MIDDLE, true));
 				res.setCommand(i + 1, new DifficultyCommand(gsm, res));
 			}

@@ -81,7 +81,7 @@ public class Player extends GameObject implements VisibleObject {
 		sphere.setTextureFlag(true);
 		sphere.setDrawStyle(GLU.GLU_FILL);
 		sphere.setOrientation(0);
-		sphereTexture = DrawingUtil.initTexture(gl, "ball");
+		sphereTexture = DrawingUtil.initTexture(gl, "8ball");
 	}
 
 	/**
@@ -219,11 +219,11 @@ public class Player extends GameObject implements VisibleObject {
 		
 		sphereTexture.enable(); // Enable the ball texture
 		sphereTexture.bind(); 
-		float[] ballColour = new float[]{0.774597f, 0.774597f, 0.774597f, 1.0f};
+		float[] ballColour = new float[]{1.0f, 1.0f, 1.0f, 1.0f};
 		gl.glMaterialfv( GL.GL_FRONT, GL.GL_AMBIENT, ballColour, 0);
 		gl.glMaterialfv( GL.GL_FRONT, GL.GL_DIFFUSE, ballColour, 0);
 		gl.glMaterialfv( GL.GL_FRONT, GL.GL_SPECULAR, ballColour, 0);
-		gl.glMateriali( GL.GL_FRONT, GL.GL_SHININESS, 77);
+		gl.glMaterialf( GL.GL_FRONT, GL.GL_SHININESS, 128f);
 		gl.glPushMatrix();
 		double pos[] = new double[3];
 		location.get(pos);
