@@ -3,12 +3,12 @@ package Physics;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import javax.vecmath.Vector3d;
+//import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
 import Audio.Audio;
 import LevelHandling.Maze;
-import MainGame.MazeRunner;
+//import MainGame.MazeRunner;
 
 import com.bulletphysics.ContactProcessedCallback;
 import com.bulletphysics.collision.dispatch.CollisionObject;
