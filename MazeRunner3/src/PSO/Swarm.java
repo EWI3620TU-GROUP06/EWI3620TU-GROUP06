@@ -42,6 +42,7 @@ public class Swarm {
 		}
 	}
 	
+	//Creates the swarm, generates random positions for each particle
 	public void generate(int numberOfParticles){
 		int n = 0;
 		while(n != (numberOfParticles)){
@@ -51,12 +52,14 @@ public class Swarm {
 		}
 	}
 	
+	//to make sure the objects are drawn
 	public void AddToVisible(ArrayList<VisibleObject> a){
 		for(Particle s: swarm){
 			a.add(s);
 		}
 	}
 	
+	//Generates random locations which are not allowed to be inside any object, and have to be inside the bounds of a Maze
 	private Vector3f genLocation(float Bound){
 		float randX = Bound*((float) Math.random());
 		float randZ = Bound*((float) Math.random());
@@ -124,6 +127,15 @@ public class Swarm {
 			s.pause();
 		}
 	}
+	
+	/*
+	 * Global part of the PSO algorithm. The algorithm was changed to keep the globalbest to the player, 
+	 * such that the the PSO algorithm can never end. Else the algorithm would stop when the player is found!
+	 * We didn't want that.
+	 * Also, instead of actually altering the velocity in the search-space (in this case being euclidian space),
+	 * we apply a force to the particles, which in turn changes the velocity. This way the particles stay subject
+	 * to the physics engine!
+	 */
 	
 	public void update(int deltaTime){
 		int index = 0;

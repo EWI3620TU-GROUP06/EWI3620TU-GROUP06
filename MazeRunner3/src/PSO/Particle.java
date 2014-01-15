@@ -41,6 +41,7 @@ public class Particle extends GameObject implements VisibleObject{
 		this.id = id;
 		this.diff = difficulty;
 		
+		//set appropriate particle scale according to difficulty
 		switch(diff){
 		default:
 			scale = 0.75f;
@@ -75,6 +76,17 @@ public class Particle extends GameObject implements VisibleObject{
 	public Vector3f getBest(){
 		return localbest;
 	}
+	
+	/*
+	 * This is where the magic happens for the particles themselves.
+	 * First off, they do the rotation-calculations like the playerball
+	 * Then the first actual PSO is done, namely setting the appropriate localbest value
+	 * Then the appropriate distances are calculated to use the rules for activation and raytesting
+	 * Also, a multiplier for calculations based on difficulty is calc'd
+	 * Finally different behavior schemes are followed according to the activation rules (line-of-sight stuff)
+	 * Where the behavior corresponding to the playerball being in range IS THE ACTUAL PSO (velocity changes). 
+	 * Based on globalbest and localbest, coefficients etc etc.
+	 */
 	
 	public void update(int deltaTime){
 		
@@ -168,11 +180,16 @@ public class Particle extends GameObject implements VisibleObject{
 		sphereTexture = DrawingUtil.initTexture(gl, "ball");
 	}
 	
+	//Stops the rotation stuff on pause
 	public void pause(){
 		dX = 0;
 		dZ = 0;
 	}
 
+	/*
+	 * The method below displays the ball according to all the stuff similar to the playerball. Materials and colours and such are done here.
+	 */
+	
 	@Override
 	public void display(GL gl) {
 		GLU glu = new GLU();
