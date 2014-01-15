@@ -143,10 +143,11 @@ public class Physics {
 		// Add the control ball to the JBullet world.
 		dynamicsWorld.addRigidBody(playerBall);
 		
-		CollisionShape cameraShape = new SphereShape(0.4f);
+		/*CollisionShape cameraShape = new SphereShape(0.4f);
 		RigidBodyConstructionInfo cameraConstructionInfo = new RigidBodyConstructionInfo(mass, ballMotion, cameraShape, ballInertia);
 		camera = new RigidBody(cameraConstructionInfo);
 		dynamicsWorld.addRigidBody(camera);
+		*/
 	}
 
 	public void initContactHandling(){
@@ -331,7 +332,7 @@ public class Physics {
 		return particles;
 	}
 	
-	public void setCameraPosition(float cameraX, float cameraY, float cameraZ)
+/*	public void setCameraPosition(float cameraX, float cameraY, float cameraZ)
 	{
 		Vector3f translation = new Vector3f();
 		Vector3f currentPos = new Vector3f();
@@ -339,7 +340,7 @@ public class Physics {
 		translation.sub(new Vector3f(cameraX, cameraY, cameraZ), currentPos);
 		camera.translate(translation);
 	}
-
+*/
 	public boolean cameraInWall(float cameraX, float cameraY, float cameraZ)
 	{
 		Vector3f cameraPos = new Vector3f(cameraX, cameraY, cameraZ);
