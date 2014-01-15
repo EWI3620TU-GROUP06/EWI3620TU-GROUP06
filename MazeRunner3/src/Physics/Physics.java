@@ -205,6 +205,17 @@ public class Physics {
 		// Apply the force to the controllable ball.
 		playerBall.applyCentralForce(force);
 	}
+	
+	public void applyTorque(float x, float y, float z)
+	{
+		Vector3f force = new Vector3f(x, y, z);
+		Vector3f torque = new Vector3f();
+		torque.cross(new Vector3f(0,1,0), force);
+		// Wake the controllable ball if it is sleeping.
+		playerBall.activate(true);
+		// Apply the force to the controllable ball.
+		playerBall.applyTorque(torque);
+	}
 
 	public Vector3f getParticleLocation(int index){
 		Vector3f out = new Vector3f();

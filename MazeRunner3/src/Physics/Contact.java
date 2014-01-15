@@ -139,7 +139,7 @@ public class Contact extends ContactProcessedCallback {
 			prevTimePartWalls[id] = currentTimePartWall;
 		}
 		
-		if(body1.equals(Physics.camera)|| body2.equals(Physics.camera))
+		/*if(body1.equals(Physics.camera)|| body2.equals(Physics.camera))
 		{
 			Vector3f posPlayer = new Vector3f();
 			Vector3f posCam = new Vector3f();
@@ -150,7 +150,8 @@ public class Contact extends ContactProcessedCallback {
 			double z = posCam.z + (posPlayer.z - posCam.z)*0.5;
 			MazeRunner.camera.setLocation(new Vector3d(x,y,z));
 			MazeRunner.camColl = true;
-		}
+			System.out.println("iets gedaan");
+		}*/
 		
 		return false;
 	}

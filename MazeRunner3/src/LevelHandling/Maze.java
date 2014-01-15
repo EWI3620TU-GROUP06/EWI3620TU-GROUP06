@@ -458,7 +458,7 @@ public class Maze implements VisibleObject {
 
 	/**
 	 * Draws the maze. First the textures of all custom maze objects are initialized, if the were not already.
-	 * Then each object gets a color depending on wheter or not it was selected.
+	 * Then each object gets a color depending on whether or not it was selected.
 	 */
 	public void display(GL gl) {
 		if(customSize != customs.size())
@@ -469,8 +469,11 @@ public class Maze implements VisibleObject {
 					for(int j = 0; j < maze[0].length; j++)
 					{
 						MazeObject object = maze[i][j].getInstanceOf(obj);
-						CustomMazeObject that = (CustomMazeObject) object;
-						that.setTexNum(obj.getTexNum());
+						if(object != null)
+						{
+							CustomMazeObject that = (CustomMazeObject) object;
+							that.setTexNum(obj.getTexNum());
+						}
 					}
 				}
 			}

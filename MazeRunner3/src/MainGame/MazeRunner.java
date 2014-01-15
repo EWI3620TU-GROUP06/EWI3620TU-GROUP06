@@ -474,13 +474,13 @@ public class MazeRunner implements GLEventListener {
 	 */
 
 	private void updateCamera() {
-		
+		distance = 4;
 		Vector3d cameraPos = new Vector3d(distance * Math.sin( Math.toRadians(player.getHorAngle())) * Math.cos( Math.toRadians(player.getVerAngle())),
 				Math.sin(Math.toRadians(player.getVerAngle())) + 1.5,
 				distance * Math.cos( Math.toRadians(player.getHorAngle())) * Math.cos(Math.toRadians(player.getVerAngle()))); 
 		cameraPos.add(player.getLocation());
 		
-		physics.setCameraPosition((float)cameraPos.x, (float)cameraPos.y, (float)cameraPos.z);
+		/*physics.setCameraPosition((float)cameraPos.x, (float)cameraPos.y, (float)cameraPos.z);
 		
 		if(!camColl)
 		{
@@ -489,7 +489,30 @@ public class MazeRunner implements GLEventListener {
 		else
 			camColl = false;
 		
-		camera.setHorAngle( player.getHorAngle() );
+		camera.setHorAngle( player.getHorAngle() );*/
+
+		
+		if(!physics.cameraInWall((float) cameraPos.x, (float) cameraPos.y, (float) cameraPos.z)){
+			camera.setLocation( cameraPos);
+			camera.setHorAngle( player.getHorAngle() );
+		}
+		else{
+			while(physics.cameraInWall((float) cameraPos.x, (float) cameraPos.y, (float) cameraPos.z) && distance >=0){
+				distance -= 0.1f;
+				cameraPos = new Vector3d(distance *Math.sin( Math.toRadians(player.getHorAngle())) * Math.cos( Math.toRadians(player.getVerAngle())),
+					Math.sin(Math.toRadians(player.getVerAngle())) + 1.5,
+					distance *Math.cos( Math.toRadians(player.getHorAngle())) * Math.cos(Math.toRadians(player.getVerAngle())));
+				cameraPos.add(player.getLocation());
+			}
+			distance -= 0.5f;
+			cameraPos = new Vector3d(distance *Math.sin( Math.toRadians(player.getHorAngle())) * Math.cos( Math.toRadians(player.getVerAngle())),
+				Math.sin(Math.toRadians(player.getVerAngle())) + 1.5,
+				distance *Math.cos( Math.toRadians(player.getHorAngle())) * Math.cos(Math.toRadians(player.getVerAngle())));
+			cameraPos.add(player.getLocation());
+			camera.setLocation( cameraPos);
+			camera.setHorAngle( player.getHorAngle() );
+		}
+		
 		camera.setVerAngle( player.getVerAngle() );
 		camera.calculateVRP();
 		
