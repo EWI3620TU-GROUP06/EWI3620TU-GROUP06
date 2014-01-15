@@ -47,7 +47,6 @@ public class TextBox extends ClickBox {
 		}
 		if(!contains){
 			String res = "/Fonts/" + Font + ".ttf";
-			System.out.println(res);
 			try{
 				InputStream Stream = DrawingUtil.class.getResourceAsStream(res);
 				Font fnt = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT, Stream);
