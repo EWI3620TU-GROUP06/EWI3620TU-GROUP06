@@ -128,20 +128,20 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	public void keyPressed(KeyEvent event)
 	{
 		typedKey = event.getKeyCode();
-		if(typedKey == KeyEvent.VK_CAPS_LOCK)
-			upperCase = !upperCase;
+		if(typedKey == KeyEvent.VK_CAPS_LOCK){
+			upperCase = !upperCase;}
 		
 		if (this.gsm.getCurState() != 0){
-			if (event.getKeyChar() == 'w'){
+			if ((event.getKeyChar() == 'w') || (event.getKeyChar() == 'W')){
 				this.forward = true;
 			}
-			else if (event.getKeyChar() == 'a'){
+			else if ((event.getKeyChar() == 'a') || (event.getKeyChar() == 'A')){
 				this.left = true;
 			}
-			else if (event.getKeyChar() == 's'){
+			else if ((event.getKeyChar() == 's') || (event.getKeyChar() == 'S')){
 				this.back = true;
 			}
-			else if (event.getKeyChar() == 'd'){
+			else if ((event.getKeyChar() == 'd') || (event.getKeyChar() == 'D')){
 				this.right = true;
 			}
 			else if (event.getKeyCode() == KeyEvent.VK_SPACE){
@@ -164,16 +164,16 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 	@Override
 	public void keyReleased(KeyEvent event)
 	{
-		if (event.getKeyChar() == 'w'){
+		if ((event.getKeyChar() == 'w') || (event.getKeyChar() == 'W')){
 			this.forward = false;
 		}
-		else if (event.getKeyChar() == 'a'){
+		else if ((event.getKeyChar() == 'a') || (event.getKeyChar() == 'A')){
 			this.left = false;
 		}
-		else if (event.getKeyChar() == 's'){
+		else if ((event.getKeyChar() == 's') || (event.getKeyChar() == 'S')){
 			this.back = false;
 		}
-		else if (event.getKeyChar() == 'd'){
+		else if ((event.getKeyChar() == 'd') || (event.getKeyChar() == 'D')){
 			this.right = false;
 		}
 		else if (event.getKeyCode() ==  KeyEvent.VK_SPACE){

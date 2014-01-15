@@ -102,7 +102,7 @@ public class TextBoxManager extends ClickBoxManager{
 				}
 			}
 			if(commands[i].equals("Difficulty:")){
-				res.AddBox(new TextBox(0.7f, posY, screenWidth, screenHeight, textScale, "Arial", 0, gsm.getState(gStateMan.PLAYSTATE).getDifficulty(), 
+				res.AddBox(new TextBox(0.8f, posY, screenWidth, screenHeight, textScale, "Easy 3D", 0, gsm.getState(gStateMan.PLAYSTATE).getDifficulty(), 
 						1f, 1f, 1f, 1f, false, TextBox.ALIGN_MIDDLE, true));
 				res.setCommand(i + 1, new DifficultyCommand(gsm, res));
 			}
@@ -158,27 +158,26 @@ public class TextBoxManager extends ClickBoxManager{
 	}
 	
 	public static TextBoxManager createDeadMenu(int screenWidth, int screenHeight, gStateMan gsm, Control input){
-		int textScale = 18;
+		int textScale = 24;
 		TextBoxManager res = new TextBoxManager();
 		
 		float[] white = {1, 1, 1, 1};
 		
 		res.AddBox(TextBox.createTitle(0.5f, 0.5f,
-				screenWidth, screenHeight, 6, "Game Over!"));
+				screenWidth, screenHeight, 8, "Game Over!"));
+
 		TextEditBox editBox = new TextEditBox(0.5f, 0.25f, 
 				screenWidth, screenHeight, 14, 1f, 1f, 1f, 1f);
 		res.AddBox(editBox);
-		res.AddBox(TextBox.createHighscoreBox(0.05f, 
-				0.25f, screenWidth, screenHeight, 14, "Enter Name:", white));
-		TextBox newBox = TextBox.createMenuBox(0.2f, 0.1f, 
+		res.AddBox(TextBox.createHighscoreBox(0.05f, 0.25f, screenWidth, screenHeight, 16, "Enter Name:", white));
+		TextBox newBox = TextBox.createMenuBox(0.225f, 0.1f, 
 				screenWidth, screenHeight, textScale, "Save Highscore");
 		newBox.setCommand(new ScoreCommand(res, gsm));
 		res.AddBox(newBox);
-		newBox = TextBox.createMenuBox(0.7f, 0.1f, 
+		newBox = TextBox.createMenuBox(0.71f, 0.1f, 
 				screenWidth, screenHeight, textScale, "Don't Save Highscore");
 		newBox.setCommand(new HighscoreCommand(gsm));
 		res.AddBox(newBox);
-
 		return res;
 	}
 	
@@ -208,16 +207,16 @@ public class TextBoxManager extends ClickBoxManager{
 			float posY =  (float)(0.75 - 0.65 * (i  - 4) / 7);
 			res.addHighScore(screenWidth, screenHeight, 0.5f, posY, i, highscoreColour);
 		}
-		TextBox mainMenu = TextBox.createMenuBox(0.15f,  0.15f, 
+		TextBox mainMenu = TextBox.createMenuBox(0.14f,  0.15f, 
 				screenWidth, screenHeight, textScale, "Main Menu");
 		mainMenu.setCommand(new MainMenuCommand(gsm));
-		TextBox play = TextBox.createMenuBox(0.36f, 0.15f, 
+		TextBox play = TextBox.createMenuBox(0.35f, 0.15f, 
 				screenWidth, screenHeight, textScale, "New Game");
 		play.setCommand(new PlayCommand(gsm));
-		TextBox DeleteHighscores = TextBox.createMenuBox(0.6f, 0.15f,
-				screenWidth, screenHeight, textScale, "Delete Higscores");
+		TextBox DeleteHighscores = TextBox.createMenuBox(0.64f, 0.15f,
+				screenWidth, screenHeight, textScale, "Delete Highscores");
 		DeleteHighscores.setCommand(new DeleteHighscoresCommand(gsm));
-		TextBox quit = TextBox.createMenuBox(0.85f, 0.15f, 
+		TextBox quit = TextBox.createMenuBox(0.88f, 0.15f, 
 				screenWidth, screenHeight, textScale, "Quit");
 		quit.setCommand(new QuitCommand());
 		res.AddBox(mainMenu);
@@ -233,11 +232,11 @@ public class TextBoxManager extends ClickBoxManager{
 		int textScale = 22;
 		ArrayList<Score> scores = SqlReadWrite.highscores;
 		if(!scores.isEmpty()){
-		this.AddBox(TextBox.createHighscoreBox(x + 0.02f, y, 
+		this.AddBox(TextBox.createHighscoreBox(x + 0.04f, y, 
 				screenWidth, screenHeight, textScale, (ranking + 1) + ".", colour));
 		this.AddBox(TextBox.createHighscoreBox(x + 0.1f, y, 
 				screenWidth, screenHeight, textScale, scores.get(ranking).getName(), colour));
-		this.AddBox(TextBox.createHighscoreBox(x + 0.3f, y, 
+		this.AddBox(TextBox.createHighscoreBox(x + 0.40f, y, 
 				screenWidth, screenHeight, textScale, Integer.toString((int)scores.get(ranking).getScr()), colour));
 		}
 	}

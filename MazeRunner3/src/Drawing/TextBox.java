@@ -1,7 +1,9 @@
 package Drawing;
 
 import java.awt.Font;
+import java.awt.GraphicsEnvironment;
 import java.awt.geom.Rectangle2D;
+import java.io.InputStream;
 
 import com.sun.opengl.util.j2d.TextRenderer;
 
@@ -24,7 +26,6 @@ public class TextBox extends ClickBox {
 	protected byte alignment;
 	protected float relativePos[];
 	private boolean changable;
-
 	protected float[] color;
 
 	public TextBox(float x, float y, int screenWidth, int screenHeight, 
@@ -35,6 +36,30 @@ public class TextBox extends ClickBox {
 		this.color = new float[]{red, green, blue, alpha};
 		this.textScale = textScale;
 		this.Font = Font;
+		
+		//This section provides custom fonts
+		GraphicsEnvironment ge = GraphicsEnvironment
+	            .getLocalGraphicsEnvironment(); 
+		Font[] systemfonts = ge.getAllFonts();
+		boolean contains = false;
+		for(Font f: systemfonts){
+			if(f.getFontName().equalsIgnoreCase(Font)){
+				contains = true;
+			}
+		}
+		if(!contains){
+			String res = "/Fonts/" + Font + ".ttf";
+			try{
+				InputStream Stream = DrawingUtil.class.getResourceAsStream(res);
+				Font fnt = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT, Stream);
+				Stream.close();
+				ge.registerFont(fnt);
+			}
+			catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		
 		renderer = new TextRenderer(new Font(Font, fontStyle, screenWidth/textScale));
 		this.Text = Text;
 		this.alignment = alignment;
@@ -97,20 +122,20 @@ public class TextBox extends ClickBox {
 	
 	public static TextBox createTitle(float x, float y, int screenWidth, int screenHeight, int titleScale, String title)
 	{
-		return new TextBox(x, y, screenWidth, screenHeight, titleScale, "Impact", 0, title, 
-				0.9f, 0.4f, 0.4f, 1f, false, ALIGN_MIDDLE, false); 
+		return new TextBox(x, y, screenWidth, screenHeight, titleScale, "Easy 3D", 0, title, 
+				1.0f, 0.2f, 0.2f, 1f, false, ALIGN_MIDDLE, false); 
 	}
 	
 	public static TextBox createMenuBox(float x, float y, int screenWidth, int screenHeight, int textScale, String caption)
 	{
-		return new TextBox(x, y, screenWidth, screenHeight, textScale, "Arial", 0, caption, 
+		return new TextBox(x, y, screenWidth, screenHeight, textScale, "Easy 3D", 0, caption, 
 				1f, 1f, 1f, 1f, true, TextBox.ALIGN_MIDDLE, false);
 	}
 	
 	public static TextBox createHighscoreBox(float x, float y, int screenWidth, int screenHeight, int textScale, 
 			String caption, float[] colour)
 	{
-		return new TextBox( x, y, screenWidth, screenHeight, textScale, "Arial", 0, caption, 
+		return new TextBox( x, y, screenWidth, screenHeight, textScale, "Easy 3D", 0, caption, 
 				colour[0], colour[1], colour[2], colour[3], false,TextBox.ALIGN_LEFT, false);
 	}
 

@@ -219,17 +219,17 @@ public class MazeRunner implements GLEventListener {
 		this.clkbxman = TextBoxManager.createMenu(screenWidth, screenHeight, "Pause", commands, this.state.getGSM());
 		this.optclkbxman = TextBoxManager.createOptionsMenu(screenWidth, screenHeight, "Options", optcommands, this.state.getGSM());
 		this.finishclkbxman = new TextBoxManager();
-		finishclkbxman.AddBox(TextBox.createTitle(0.5f, 0.85f, screenWidth, screenHeight, 12, "Level clear!"));
-		finishclkbxman.AddBox(TextBox.createHighscoreBox(0.3f, 0.6f, screenWidth, screenHeight, 20, "Score on this level:", white));
-		finishScoreBox = TextBox.createHighscoreBox(0.7f, 0.6f, screenWidth, screenHeight, 20, "0", white);
+		finishclkbxman.AddBox(TextBox.createTitle(0.5f, 0.60f, screenWidth, screenHeight, 12, "Level clear!"));
+		finishclkbxman.AddBox(TextBox.createHighscoreBox(0.1f, 0.4f, screenWidth, screenHeight, 20, "Score on this level:", white));
+		finishScoreBox = TextBox.createHighscoreBox(0.7f, 0.4f, screenWidth, screenHeight, 20, "0", white);
 		finishclkbxman.AddBox(finishScoreBox);
 		if(state.getLevel() != 0){
-			TextBox newBox = TextBox.createMenuBox(0.5f, 0.4f, screenWidth, screenHeight, 20, "Next Level");
+			TextBox newBox = TextBox.createMenuBox(0.5f, 0.2f, screenWidth, screenHeight, 20, "Next Level");
 			newBox.setCommand(new NextLevelCommand(this.state.getGSM()));
 			finishclkbxman.AddBox(newBox);
 		}
 		else{
-			TextBox newBox = TextBox.createMenuBox(0.5f, 0.4f, screenWidth, screenHeight, 20, "To Highscores");
+			TextBox newBox = TextBox.createMenuBox(0.5f, 0.2f, screenWidth, screenHeight, 20, "To Highscores");
 			newBox.setCommand(new HighscoreCommand(this.state.getGSM()));
 			finishclkbxman.AddBox(newBox);
 		}
