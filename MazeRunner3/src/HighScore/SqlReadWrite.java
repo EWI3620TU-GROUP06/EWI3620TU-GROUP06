@@ -120,4 +120,16 @@ public class SqlReadWrite {
 			e.printStackTrace();
 		}
 	}
+	
+	public static Connection getConnection(){
+		return connect;
+	}
+	
+	public static ArrayList<Score> getHighscores(){
+		return highscores;
+	}
+	public static Score getMostRecentScore(){
+		return mostRecentScore;
+	}
+
 }
