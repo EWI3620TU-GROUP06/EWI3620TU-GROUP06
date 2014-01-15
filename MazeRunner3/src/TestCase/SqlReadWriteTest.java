@@ -30,6 +30,7 @@ public class SqlReadWriteTest {
 		scoreList.add(testScore1);
 		SqlReadWrite.Read();
 		saveHighscores = SqlReadWrite.getHighscores();
+		SqlReadWrite.DeleteHigHscores();
 		SqlReadWrite.startConnection();
 
 	}
@@ -71,6 +72,7 @@ public class SqlReadWriteTest {
 	
 	@After
 	public void after(){
+		SqlReadWrite.DeleteHigHscores();
 		for(Score s: saveHighscores){
 			SqlReadWrite.Write(s);	
 		}
