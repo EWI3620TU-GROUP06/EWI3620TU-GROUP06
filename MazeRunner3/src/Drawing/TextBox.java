@@ -36,6 +36,8 @@ public class TextBox extends ClickBox {
 		this.color = new float[]{red, green, blue, alpha};
 		this.textScale = textScale;
 		this.Font = Font;
+		
+		//This section provides custom fonts
 		GraphicsEnvironment ge = GraphicsEnvironment
 	            .getLocalGraphicsEnvironment(); 
 		Font[] systemfonts = ge.getAllFonts();
@@ -121,7 +123,7 @@ public class TextBox extends ClickBox {
 	public static TextBox createTitle(float x, float y, int screenWidth, int screenHeight, int titleScale, String title)
 	{
 		return new TextBox(x, y, screenWidth, screenHeight, titleScale, "Easy 3D", 0, title, 
-				0.9f, 0.4f, 0.4f, 1f, false, ALIGN_MIDDLE, false); 
+				1.0f, 0.2f, 0.2f, 1f, false, ALIGN_MIDDLE, false); 
 	}
 	
 	public static TextBox createMenuBox(float x, float y, int screenWidth, int screenHeight, int textScale, String caption)
