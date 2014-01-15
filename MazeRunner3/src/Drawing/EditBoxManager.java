@@ -9,6 +9,7 @@ import GameObjects.Editor;
 import GameObjects.PowerUp;
 import Listening.*;
 
+import com.sun.opengl.util.GLUT;
 import com.sun.opengl.util.texture.Texture;
 
 /**
@@ -24,7 +25,7 @@ public class EditBoxManager extends ClickBoxManager {
 
 	private static final int numStandardButtons = 3;
 	private static final int numObjectButtons = 9;
-	private static final int numChangeButtons = 5;
+	private static final int numChangeButtons = 6;
 	private static final int numAddButtons = 5;
 	private int numButtons;
 	private int buttonSize;
@@ -66,6 +67,7 @@ public class EditBoxManager extends ClickBoxManager {
 		commands.add(new EditModeCommand(editor, new RotateObject(editor.getLevel(), 0)));
 		commands.add(new EditModeCommand(editor, new RotateObject(editor.getLevel(), 1)));
 		commands.add(new EditModeCommand(editor, new RotateObject(editor.getLevel(), 2)));
+		commands.add(new EditModeCommand(editor, new DeleteMode(editor.getLevel())));
 
 		addButtons(numChangeButtons, commands, changeBoxes, screenWidth, screenHeight);
 		

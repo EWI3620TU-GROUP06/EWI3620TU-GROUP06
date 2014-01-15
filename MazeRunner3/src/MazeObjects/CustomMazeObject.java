@@ -108,21 +108,8 @@ public class CustomMazeObject extends MazeObject{
 				res.texVertices.add(new Vector2f(0, 0));
 			}
 			
-			float yMin = Float.MAX_VALUE;
-			for (Vector3f vertex : res.vertices)
-			{
-				if(vertex.y < yMin)
-					yMin = vertex.y;
-			}
-			res.yMin = yMin;
-			
-			float yMax = Float.MIN_VALUE;
-			for (Vector3f vertex : res.vertices)
-			{
-				if(vertex.y > yMax)
-					yMax = vertex.y;
-			}
-			res.height = yMax - yMin;
+			res.calculateYMin();
+			res.calculateHeight();
 			
 			sc.close();
 		}
@@ -188,6 +175,7 @@ public class CustomMazeObject extends MazeObject{
 		CustomMazeObject res = (CustomMazeObject)this.clone();
 		for(Vector3f vertex : res.vertices)
 			vertex.add(new Vector3f(x, y, z));
+		res.calculateYMin();
 		return res;
 	}
 
@@ -198,7 +186,15 @@ public class CustomMazeObject extends MazeObject{
 		{
 			vertices.add((Vector3f)vertex.clone());
 		}
-		return new CustomMazeObject(vertices, this.texVertices, this.faces, this.texNum, file, hasTexture);
+		ArrayList<Face> faces = new ArrayList<Face>();
+		for(Face face : this.faces)
+		{
+			faces.add(face.clone());
+		}
+		for(Face face: faces){
+			calculateNormal(face);
+		}
+		return new CustomMazeObject(vertices, this.texVertices, faces, this.texNum, file, hasTexture);
 	}
 	
 	public boolean equals(Object other)

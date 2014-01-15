@@ -1,6 +1,7 @@
 package MazeObjects;
 
 import java.util.ArrayList;
+
 import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 
@@ -25,7 +26,7 @@ public class Box extends MazeObject{
 	 */
 	public Box(float width, float height, float x, float y, float z)
 	{
-		super(false);
+		super(true);
 		this.width = width;
 		this.height = height;
 		this.yMin = y;
@@ -37,24 +38,32 @@ public class Box extends MazeObject{
 		addVertex(new Vector3f(x+width, y, z+width));
 		addVertex(new Vector3f(x+width, y + height, z+width));
 		addVertex(new Vector3f(x, y + height, z+width));
+		texVertices.add(new Vector2f(0,0));
+		texVertices.add(new Vector2f(0,1));
+		texVertices.add(new Vector2f(1,1));
+		texVertices.add(new Vector2f(1,0));
+		texVertices.add(new Vector2f(0,height / width));
+		texVertices.add(new Vector2f(1,height / width));
 		
+		int[]  texFaceTop = {0,1,2,3};
+		int[] texFaceSide = {0,4,5,3};
 		int[] face0 = {0, 1, 5, 4};
-		addFace(face0);
+		addFace(face0, texFaceTop);
 		
 		int[] face1 = {1, 2, 6, 5};
-		addFace(face1);
+		addFace(face1, texFaceSide);
 		
 		int[] face2 = {0, 3, 2, 1};
-		addFace(face2);
+		addFace(face2, texFaceSide);
 		
 		int[] face3 = {4, 7, 3, 0};
-		addFace(face3);
+		addFace(face3, texFaceSide);
 		
 		int[] face4 = {5, 6, 7, 4};
-		addFace(face4);
+		addFace(face4, texFaceSide);
 		
 		int[] face5 = {3, 7, 6, 2};
-		addFace(face5);
+		addFace(face5, texFaceTop);
 		
 		restitution = 0.4f;
 	}
@@ -65,6 +74,7 @@ public class Box extends MazeObject{
 		restitution = 0.1f;
 		this.width = width;
 		this.height = height;
+		calculateYMin();
 	}
 	
 	public static void addTexture(Texture t)
@@ -95,6 +105,7 @@ public class Box extends MazeObject{
 		Box res = (Box)this.clone();
 		for(Vector3f vertex : res.vertices)
 			vertex.add(new Vector3f(x, y, z));
+		res.calculateYMin();
 		return res;
 	}
 	
@@ -108,8 +119,14 @@ public class Box extends MazeObject{
 		{
 			vertices.add((Vector3f)vertex.clone());
 		}
-		@SuppressWarnings("unchecked")
-		ArrayList<Face> faces = (ArrayList<Face>) this.faces.clone();
+		ArrayList<Face> faces = new ArrayList<Face>();
+		for(Face face : this.faces)
+		{
+			faces.add(face.clone());
+		}
+		for(Face face: faces){
+			calculateNormal(face);
+		}
 		return new Box(vertices, this.texVertices, faces, this.width, this.height);
 	}
 	

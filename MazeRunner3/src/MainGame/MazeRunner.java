@@ -56,7 +56,7 @@ public class MazeRunner implements GLEventListener {
 	private int screenWidth, screenHeight;					// Screen size for reshaping
 	private ArrayList<VisibleObject> visibleObjects;		// A list of objects that will be displayed on screen.
 	private Player player;									// The player object.
-	private Camera camera;
+	public static Camera camera;
 	private Physics physics;
 	private UserInput input;								// The user input object that controls the player.
 	private static Level level;									// The maze.
@@ -82,7 +82,10 @@ public class MazeRunner implements GLEventListener {
 	float lightPosition[] = { (float)level.getMaze().getSizeX()/2f, 50.0f, (float)level.getMaze().getSizeZ()/2f, 1.0f };
 	private SkyBox skybox;
 	private boolean playingsound;
-
+	
+	public static boolean camColl = false;
+	public static float distance = 4;
+	
 	/*
 	 * **********************************************
 	 * *		Initialization methods				*
@@ -324,7 +327,7 @@ public class MazeRunner implements GLEventListener {
 				dead = true;
 				state.getGSM().setPauseState();
 			}
-			if(!finished && (level.getMaze().isFinish(pos[0], pos[2])) && (pos[1] < 2))	
+			if(!finished && (level.getMaze().isFinish(pos[0], pos[1], pos[2])))	
 				{
 					finished = true;
 					if (state.getLevel() != 0)
@@ -466,18 +469,31 @@ public class MazeRunner implements GLEventListener {
 	 */
 
 	private void updateCamera() {
-		float distance = 4;
-		Vector3d cameraPos = new Vector3d(distance *Math.sin( Math.toRadians(player.getHorAngle())) * Math.cos( Math.toRadians(player.getVerAngle())),
+		distance = 4;
+		Vector3d cameraPos = new Vector3d(distance * Math.sin( Math.toRadians(player.getHorAngle())) * Math.cos( Math.toRadians(player.getVerAngle())),
 				Math.sin(Math.toRadians(player.getVerAngle())) + 1.5,
-				distance *Math.cos( Math.toRadians(player.getHorAngle())) * Math.cos(Math.toRadians(player.getVerAngle()))); 
+				distance * Math.cos( Math.toRadians(player.getHorAngle())) * Math.cos(Math.toRadians(player.getVerAngle()))); 
 		cameraPos.add(player.getLocation());
+		
+		/*physics.setCameraPosition((float)cameraPos.x, (float)cameraPos.y, (float)cameraPos.z);
+		
+		if(!camColl)
+		{
+			camera.setLocation(cameraPos);
+		}
+		else
+			camColl = false;
+		
+		camera.setHorAngle( player.getHorAngle() );*/
+
+		
 		if(!physics.cameraInWall((float) cameraPos.x, (float) cameraPos.y, (float) cameraPos.z)){
 			camera.setLocation( cameraPos);
 			camera.setHorAngle( player.getHorAngle() );
 		}
 		else{
 			while(physics.cameraInWall((float) cameraPos.x, (float) cameraPos.y, (float) cameraPos.z) && distance >=0){
-				distance -= 0.05f;
+				distance -= 0.1f;
 				cameraPos = new Vector3d(distance *Math.sin( Math.toRadians(player.getHorAngle())) * Math.cos( Math.toRadians(player.getVerAngle())),
 					Math.sin(Math.toRadians(player.getVerAngle())) + 1.5,
 					distance *Math.cos( Math.toRadians(player.getHorAngle())) * Math.cos(Math.toRadians(player.getVerAngle())));
@@ -491,6 +507,7 @@ public class MazeRunner implements GLEventListener {
 			camera.setLocation( cameraPos);
 			camera.setHorAngle( player.getHorAngle() );
 		}
+		
 		camera.setVerAngle( player.getVerAngle() );
 		camera.calculateVRP();
 		

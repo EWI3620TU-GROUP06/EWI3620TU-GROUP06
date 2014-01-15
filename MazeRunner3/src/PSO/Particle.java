@@ -156,7 +156,7 @@ public class Particle extends GameObject implements VisibleObject{
 	}
 	
 	public MazeObject[] getNeighbourTiles(int squaresize){
-		return swarm.getMaze().getNeighbourTiles((int)(location.x/squaresize), (int)(location.z/squaresize));
+		return swarm.getMaze().getNeighbourTiles((int)(location.x/squaresize), (int)(location.z/squaresize), (int)location.y);
 	}
 	
 	public void init(GL gl)

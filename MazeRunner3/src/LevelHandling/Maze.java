@@ -4,13 +4,7 @@ import javax.media.opengl.GL;
 import Drawing.DrawingUtil;
 import Drawing.VisibleObject;
 import EditorModes.ObjectMode;
-import MazeObjects.Box;
-import MazeObjects.CustomMazeObject;
-import MazeObjects.FinishTile;
-import MazeObjects.Floor;
-import MazeObjects.MazeObject;
-import MazeObjects.Ramp;
-import MazeObjects.StartTile;
+import MazeObjects.*;
 
 import com.sun.opengl.util.texture.Texture;
 
@@ -45,9 +39,9 @@ public class Maze implements VisibleObject {
 	public static int MAZE_SIZE_Z = 10;
 	public static final int SQUARE_SIZE = 5;
 
-	private boolean[][] selected = new boolean[MAZE_SIZE_X][MAZE_SIZE_Z];
+	private int[][] selected = new int[MAZE_SIZE_X][MAZE_SIZE_Z];
 
-	private MazeObject[][] maze = null;
+	private MazeStack[][] maze = null;
 	public static final ArrayList<MazeObject> standards = new ArrayList<MazeObject>(Arrays.asList(new MazeObject[]{
 			new Floor(SQUARE_SIZE, 0, 0, 0),
 			new Box(SQUARE_SIZE, SQUARE_SIZE, 0, 0, 0),
@@ -55,7 +49,9 @@ public class Maze implements VisibleObject {
 			new StartTile(SQUARE_SIZE, 0, 0, 0),
 			new FinishTile(SQUARE_SIZE, 0, 0, 0),
 			new Ramp(SQUARE_SIZE, SQUARE_SIZE, 0, 0, 0),
-			new Ramp(SQUARE_SIZE, (float)SQUARE_SIZE / 2,  0, 0, 0)	
+			new Ramp(SQUARE_SIZE, (float)SQUARE_SIZE / 2,  0, 0, 0),
+			new Pit(SQUARE_SIZE, 100, 0, -100, 0),
+			new Bottom(SQUARE_SIZE, 0, -100, 0)
 	}));
 
 
@@ -64,55 +60,60 @@ public class Maze implements VisibleObject {
 
 	public Maze()
 	{
-		maze = new MazeObject[MAZE_SIZE_X][MAZE_SIZE_Z];
+		maze = new MazeStack[MAZE_SIZE_X][MAZE_SIZE_Z];
 		for(int i = 0; i < maze.length; i++)
 			for(int j = 0; j < maze[0].length; j++)
-				maze[i][j] = new Floor(SQUARE_SIZE, i * SQUARE_SIZE, 0, j*SQUARE_SIZE);
+				maze[i][j] = MazeStack.standard(i * SQUARE_SIZE, j * SQUARE_SIZE);
 	}
 
-	public Maze(int mazeSizeX, int mazeSizeZ, byte[][] object, byte[][] rotation)
+	public Maze(int mazeSizeX, int mazeSizeZ)
 	{
 		MAZE_SIZE_X = mazeSizeX;
 		MAZE_SIZE_Z = mazeSizeZ;
-		maze = new MazeObject[MAZE_SIZE_X][MAZE_SIZE_Z];
-		for(int i = 0; i < maze.length; i++){
-			for(int j = 0; j < maze[0].length; j++){
-				if(object[i][j] < 0)
-					maze[i][j] = customs.get(-(object[i][j] + 1)).translate(SQUARE_SIZE * i, 0, SQUARE_SIZE * j);
-				else
-					maze[i][j] = standards.get(object[i][j]).translate(SQUARE_SIZE * i, 0, SQUARE_SIZE * j);
-				maze[i][j].rotateVerticesX(rotation[i][j]%4*90, 0, (float)(j + 0.5f)*SQUARE_SIZE);
-				maze[i][j].rotateVerticesY(rotation[i][j]/4*90, (float)(i + 0.5f)*SQUARE_SIZE, (float)(j + 0.5f)*SQUARE_SIZE);
-			}
-		}
-		selected = new boolean[MAZE_SIZE_X][MAZE_SIZE_Z];
+		maze = new MazeStack[MAZE_SIZE_X][MAZE_SIZE_Z];
+		for(int i = 0; i < maze.length; i++)
+			for(int j = 0; j < maze[0].length; j++)
+				maze[i][j] = new MazeStack(i * SQUARE_SIZE, j*SQUARE_SIZE);
+		selected = new int[MAZE_SIZE_X][MAZE_SIZE_Z];
 	}
-	
+
 	/**
 	 * the method removeRedundantFaces removes all the non-visible faces from the levels. this is needed to
-	 * remain a framerate around 60.
+	 * increase the performance of the game: otherwise a lot of redundant face are drawn and added to the 
+	 * physics world.
 	 */
-	
 	public void removeRedundantFaces()
 	{
 		for(int i = 0; i < maze.length; i++){
 			for(int j  = 0; j < maze[0].length; j++){
 				if(i != maze[0].length - 1)
 				{
-					maze[i][j].removeRedunantFaces(maze[i + 1][j]);
+					maze[i][j].removeRedundantFaces(maze[i + 1][j]);
 				}
 				if(j != maze.length - 1)
 				{
-					maze[i][j].removeRedunantFaces(maze[i][j + 1]);
+					maze[i][j].removeRedundantFaces(maze[i][j + 1]);
 				}
 			}
 		}
 	}
+	
+	/**
+	 * Checks whether the given position is inside the bounds of the Finish tile
+	 * @param x	x coordinate of the player location
+	 * @param y	y coordinate of the player location
+	 * @param z	z coordinate of the player location
+	 * @return	boolean that states whether the given position is the finish position.
+	 */
 
-	public boolean isFinish(double x, double z)
+	public boolean isFinish(double x, double y, double z)
 	{
-		if(x >= 0 && x < MAZE_SIZE_X*SQUARE_SIZE && z >= 0 && z < MAZE_SIZE_Z*SQUARE_SIZE)
-			return maze[(int)x / SQUARE_SIZE][(int)z / SQUARE_SIZE].equals(standards.get(ObjectMode.ADD_FINISH));
+		if(x >= 0 && x < MAZE_SIZE_X*SQUARE_SIZE && z >= 0 && z < MAZE_SIZE_Z*SQUARE_SIZE){
+			MazeObject finishTile = null;
+			if((finishTile = maze[(int)x / SQUARE_SIZE][(int)z / SQUARE_SIZE].getInstanceOf(standards.get(ObjectMode.ADD_FINISH))) != null){
+				return y > finishTile.getYMin() && y < finishTile.getYMax();
+			}
+		}
 		return false;
 	}
 
@@ -128,12 +129,16 @@ public class Maze implements VisibleObject {
 		Texture floorTexture = DrawingUtil.initTexture(gl, "floor");
 		Texture finishTexture = DrawingUtil.initTexture(gl, "finish");
 		Texture startTexture = DrawingUtil.initTexture(gl, "start");
+		Texture pitTexture = DrawingUtil.initTexture(gl, "pit");
+		Texture bottomTexture = DrawingUtil.initTexture(gl, "bottom");
 
 		Box.addTexture(boxTexture);
 		Floor.addTexture(floorTexture);
 		StartTile.addTexture(startTexture);
 		Ramp.addTexture(boxTexture);
 		FinishTile.addTexture(finishTexture);
+		Pit.addTexture(pitTexture);
+		Bottom.addTexture(bottomTexture);
 	}
 
 	/**
@@ -145,12 +150,12 @@ public class Maze implements VisibleObject {
 	public void select(int x, int z)
 	{
 		if(x >= 0 && x < MAZE_SIZE_X && z >= 0 && z < MAZE_SIZE_Z)
-			selected[x][z] = true;
+			selected[x][z] = maze[x][z].size() - 1;
 	}
 
 	/**
-	 * Returns the size of the maze in opengl units
-	 * @return	the size of the maze in opengl units
+	 * Returns the size of the maze in the x direction in opengl units
+	 * @return	the size of the maze in the x direction in opengl units
 	 */
 
 	public double getSizeX()
@@ -158,14 +163,32 @@ public class Maze implements VisibleObject {
 		return MAZE_SIZE_X * SQUARE_SIZE;
 	}
 	
+	/**
+	 * Returns the size of the maze in the z direction in opengl units
+	 * @return 	the size of the maze in the z direction in opengl units
+	 */
+
 	public double getSizeZ()
 	{
 		return  MAZE_SIZE_Z * SQUARE_SIZE;
 	}
+	
+	/**
+	 * Returns the height of a certain stack in th maze
+	 * @param x	x coordinate of the stack
+	 * @param z	z coordinate of the stack
+	 * @return	Height in opengl units of the Maze stack.
+	 */
+
+	public float getHeight(int x, int z)
+	{
+		return maze[x][z].getHeight();
+	}
 
 	/**
-	 * Gets the start position in opengl units and the initiial orientation of the player in the maze.
-	 * @return	double array containing 1: the x and 2: the z coordinate of the startposition and 3: the initial angle. 
+	 * Gets the start position in opengl units and the initial orientation of the player in the maze.
+	 * @return	double array containing 1: the x, 2: the y coordinate  and 3: the z coordinate of the 
+	 * start position and 4: the initial angle. 
 	 */
 
 	public double[] getStart()
@@ -174,12 +197,13 @@ public class Maze implements VisibleObject {
 		for(int i = 0; i <  maze[0].length; i++){
 			for(int j = 0; j < maze[0].length; j++)
 			{
-				if(maze[i][j].equals(standards.get(ObjectMode.ADD_START)))
+				MazeObject start = null;
+				if((start = maze[i][j].getInstanceOf(standards.get(ObjectMode.ADD_START))) != null)
 				{
-					res[0] = maze[i][j].getPos().x;
-					res[1] = maze[i][j].getPos().y;
-					res[2] = maze[i][j].getPos().z;
-					res[3] = maze[i][j].getRotation()[1];
+					res[0] = start.getPos().x;
+					res[1] = start.getPos().y;
+					res[2] = start.getPos().z;
+					res[3] = start.getRotation()[1];
 				}
 			}
 		}
@@ -190,8 +214,9 @@ public class Maze implements VisibleObject {
 	}
 
 	/**
-	 * Changes the size of the maze with the given amount. The maze must alway contain at least one square.
-	 * @param n	the amount by which the maze size needs to be changed. 
+	 * Sets the maze size to the given value
+	 * @param x	new maze size in the x direction . 
+	 * @param z	new maze size in the z direction . 
 	 */
 
 	public void setSize(int x, int z)
@@ -201,8 +226,8 @@ public class Maze implements VisibleObject {
 			// Create new maze and selected arrays
 			MAZE_SIZE_X = x;
 			MAZE_SIZE_Z = z;
-			MazeObject[][]newMaze = new MazeObject[MAZE_SIZE_X][MAZE_SIZE_Z];
-			boolean[][]newSelected = new boolean[MAZE_SIZE_X][MAZE_SIZE_Z];
+			MazeStack[][] newMaze = new MazeStack[MAZE_SIZE_X][MAZE_SIZE_Z];
+			int[][] newSelected = new int[MAZE_SIZE_X][MAZE_SIZE_Z];
 
 			for (int i = 0; i < newMaze.length; i++){
 				for (int j = 0; j < newMaze[0].length; j++)
@@ -210,8 +235,8 @@ public class Maze implements VisibleObject {
 					if(i < maze.length && j < maze[0].length)
 						newMaze[i][j] = maze[i][j];
 					else
-						newMaze[i][j] = new Floor(SQUARE_SIZE, i * SQUARE_SIZE, 0, j*SQUARE_SIZE);
-					newSelected[i][j] = false;
+						newMaze[i][j] = MazeStack.standard(i * SQUARE_SIZE, j * SQUARE_SIZE);
+					newSelected[i][j] = -1;
 				}
 			}
 
@@ -221,30 +246,73 @@ public class Maze implements VisibleObject {
 	}
 
 	/**
-	 * Sets the 'selected' flag of all elements in the maze to false.
+	 * Sets the 'selected' flag of all elements in the maze to -1, which means: not selected.
 	 */
 
 	public void clearSelected()
 	{
 		for( int i = 0; i < maze.length; i++ )
 			for( int j = 0; j < maze[0].length; j++ )
-				selected[i][j] = false;
+				selected[i][j] = -1;
 	}
+	
+	/**
+	 * Sets the 'selected' flag of all elements in the maze to -2, which means: all selected.
+	 */
 
 	public void selectedAll()
 	{
 		for( int i = 0; i < maze.length; i++ )
 			for( int j = 0; j < maze[0].length; j++ )
-				selected[i][j] = true;
+				selected[i][j] = -2;
 	}
+	
+	/**
+	 * Removes the top MazeObject on the given location 
+	 * @param x	x coordinate of the removed object
+	 * @param z z coordinate of the removed object
+	 */
+
+	public void removeTop(int x, int z)
+	{
+		if(x >= 0 && x < MAZE_SIZE_X && z >= 0 && z < MAZE_SIZE_Z)
+			maze[x][z].pop();
+	}
+	
+	/**
+	 * Rotates the top MazeObject on the given location around any of the three axes.
+	 * @param x		x coordinate of the rotated object
+	 * @param z		z coordinate of the rotated object
+	 * @param angle	rotated angle
+	 * @param xAxis	boolean specifying whether the rotation is around the x axis.
+	 * @param yAxis	boolean specifying whether the rotation is around the y axis.
+	 * @param zAxis	boolean specifying whether the rotation is around the z axis.
+	 */
+
+	public void rotateTop(int x, int z, int angle, boolean xAxis, boolean yAxis, boolean zAxis)
+	{
+		if(xAxis)
+			maze[x][z].rotateTopX(((float)z+ 0.5f) * SQUARE_SIZE, angle);
+		if(yAxis)
+			maze[x][z].rotateTopY(((float)x+ 0.5f) * SQUARE_SIZE, ((float)z+ 0.5f) * SQUARE_SIZE, angle);
+		if(zAxis)
+			maze[x][z].rotateTopZ(((float)x+ 0.5f) * SQUARE_SIZE, angle);
+	}
+	
+	/**
+	 * Removes one MazeObject of a specific type from each stack in the maze, if possible.
+	 * <p>
+	 * Is only used to remove start of finish tiles from the maze, so there is never more that one of the 
+	 * object in the maze. 
+	 * 
+	 * @param drawMode	byte specifying which MazeObject needs to be removed
+	 */
 
 	public void removeBlocks(byte drawMode)
 	{
 		for(int i = 0; i < maze.length; i++){
 			for (int j = 0; j < maze[0].length; j++){
-				if(maze[i][j].equals(standards.get(drawMode))){
-					maze[i][j] = standards.get(ObjectMode.ADD_FLOOR).translate(i * SQUARE_SIZE, 0, j * SQUARE_SIZE);
-				}
+				maze[i][j].remove(standards.get(drawMode));
 			}
 		}
 	}
@@ -258,33 +326,13 @@ public class Maze implements VisibleObject {
 	{			
 		for(int i = 0; i < maze.length; i++){
 			for (int j = 0; j < maze[0].length; j++){
-				if (selected[i][j] && !maze[i][j].equals(standards.get(ObjectMode.ADD_FINISH)) 
-						&& !maze[i][j].equals(standards.get(ObjectMode.ADD_START))) {
+				if (selected[i][j] != -1 ) {
+
 					if(drawMode < 0)
-						maze[i][j] = customs.get(-drawMode - 1).translate(i * SQUARE_SIZE, 0, j*SQUARE_SIZE);
+						maze[i][j].add(customs.get(-drawMode - 1).translate(i * SQUARE_SIZE, 0, j*SQUARE_SIZE));
 					else
-						maze[i][j] = standards.get(drawMode).translate(i * SQUARE_SIZE, 0, j*SQUARE_SIZE);
-					maze[i][j].rotateVerticesY(rotation, (float)(i + 0.5f) * SQUARE_SIZE, (float)(j + 0.5f) * SQUARE_SIZE);
-				}
-			}
-		}
-	}
-
-	/**
-	 * Rotates the selected element(s) by ninety degrees, is the selected element(s) can  be rotated.
-	 */
-
-	public void rotateSelected(boolean x, boolean y, boolean z)
-	{
-		for(int i = 0; i < maze.length; i++){
-			for (int j = 0; j < maze[0].length; j++){
-				if (selected[i][j]){
-					if(x)
-						maze[i][j].rotateVerticesX(90, 2.5, (j + 0.5) * SQUARE_SIZE);
-					if(y)
-						maze[i][j].rotateVerticesY(90, (i + 0.5) * SQUARE_SIZE, (j + 0.5) * SQUARE_SIZE);
-					if(z)
-						maze[i][j].rotateVerticesZ(90, (i + 0.5) * SQUARE_SIZE, 2.5);
+						maze[i][j].add(standards.get(drawMode).translate(i * SQUARE_SIZE, 0, j*SQUARE_SIZE));
+					maze[i][j].getTop().rotateVerticesY(rotation, (float)(i + 0.5f) * SQUARE_SIZE, (float)(j + 0.5f) * SQUARE_SIZE);
 				}
 			}
 		}
@@ -303,10 +351,10 @@ public class Maze implements VisibleObject {
 		for(int i = 0; i <  maze.length; i++){
 			for(int j = 0; j < maze[0].length; j++)
 			{
-				if(maze[i][j].equals(standards.get(ObjectMode.ADD_START))){
+				if(maze[i][j].getInstanceOf(standards.get(ObjectMode.ADD_START)) != null){
 					start = true;
 				}
-				if(maze[i][j].equals(standards.get(ObjectMode.ADD_FINISH))){
+				if(maze[i][j].getInstanceOf(standards.get(ObjectMode.ADD_FINISH)) != null){
 					finish = true;
 				}
 			}
@@ -323,12 +371,18 @@ public class Maze implements VisibleObject {
 				wr.write(0 + "\n");
 				for (int i = 0; i < maze.length; i++) {
 					for (int j = 0; j < maze[0].length; j++) {
-						if(customs.contains(maze[i][j]))
-							wr.print(-1 - customs.indexOf(maze[i][j]));
-						else
-							wr.print(standards.indexOf(maze[i][j]));
-						int[] rotation = maze[i][j].rotation;
-						wr.print("," + (rotation[0]/90%4 + 4*(rotation[1]/90%4) + 16*(rotation[2]/90%4)));
+						ArrayList<MazeObject> stack = maze[i][j].get();
+						for(int k = 0; k < stack.size(); k++)
+						{
+							if(customs.contains(stack.get(k)))
+								wr.print(-1 - customs.indexOf(stack.get(k)));
+							else
+								wr.print(standards.indexOf(stack.get(k)));
+							int[] rotation = stack.get(k).rotation;
+							wr.print("," + (rotation[0]/90%4 + 4*(rotation[1]/90%4) + 16*(rotation[2]/90%4)));
+							if(k != stack.size() - 1)
+								wr.print(";");
+						}
 						if (j < maze[0].length - 1)
 							wr.print(" ");
 						else
@@ -356,6 +410,7 @@ public class Maze implements VisibleObject {
 		try {
 			int mazeSizeX = sc.nextInt();
 			int mazeSizeZ = sc.nextInt();
+			Maze res = new Maze(mazeSizeX, mazeSizeZ);
 			customs = new ArrayList<CustomMazeObject>();
 			sc.nextLine();
 			while(!sc.hasNextByte()){
@@ -374,17 +429,27 @@ public class Maze implements VisibleObject {
 				customs.add(CustomMazeObject.readFromOBJ(new File(fileName)));
 			}
 			sc.next();
-			byte[][] objects = new byte[mazeSizeX][mazeSizeZ];
-			byte[][] rotation = new byte[mazeSizeX][mazeSizeZ];
-			for (int i = 0; i < objects.length; i++) {
-				for (int j = 0; j < objects[0].length; j++) {
+			for (int i = 0; i < res.maze.length; i++) {
+				for (int j = 0; j < res.maze.length; j++) {
 					String line = sc.next();
-					String[] objectElements = line.split("[,]");
-					objects[i][j] = Byte.parseByte(objectElements[0]);
-					rotation[i][j] = Byte.parseByte(objectElements[1]);
+					String[] codes = line.split("[;]");
+					for(String code : codes)
+					{
+						String[] objectElements = code.split("[,]");
+						byte object = Byte.parseByte(objectElements[0]);
+						byte rotation = Byte.parseByte(objectElements[1]);
+						if(object < 0)
+							res.maze[i][j].add(customs.get(-(object + 1)).translate(SQUARE_SIZE * i, 0, SQUARE_SIZE * j));
+						else if (object != 8)
+							res.maze[i][j].add(standards.get(object).translate(SQUARE_SIZE * i, 0, SQUARE_SIZE * j));
+						res.maze[i][j].rotateTopX(((float)j+ 0.5f) * SQUARE_SIZE, rotation%4*90);
+						res.maze[i][j].rotateTopY(((float)i+ 0.5f) * SQUARE_SIZE, ((float)j+ 0.5f) * SQUARE_SIZE, rotation/4*90);
+						res.maze[i][j].rotateTopZ(((float)i+ 0.5f) * SQUARE_SIZE, rotation/16*90);
+					}
 				}
 			}
-			return new Maze(mazeSizeX, mazeSizeZ, objects, rotation);
+
+			return res;
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new Maze();
@@ -392,8 +457,8 @@ public class Maze implements VisibleObject {
 	}
 
 	/**
-	 * Draws the maze.
-	 * TODO: betere beschrijving.
+	 * Draws the maze. First the textures of all custom maze objects are initialized, if the were not already.
+	 * Then each object gets a color depending on whether or not it was selected.
 	 */
 	public void display(GL gl) {
 		if(customSize != customs.size())
@@ -403,8 +468,9 @@ public class Maze implements VisibleObject {
 				for(int i = 0; i < maze.length; i++){
 					for(int j = 0; j < maze[0].length; j++)
 					{
-						MazeObject object = maze[i][j];
-						if(obj.equals(object)){
+						MazeObject object = maze[i][j].getInstanceOf(obj);
+						if(object != null)
+						{
 							CustomMazeObject that = (CustomMazeObject) object;
 							that.setTexNum(obj.getTexNum());
 						}
@@ -412,46 +478,94 @@ public class Maze implements VisibleObject {
 				}
 			}
 		}
+		//Define all colours and change them if the element is selected
+		float selectedColour[] = new float[]{1.0f, 1.0f, 1.0f, 1.0f};
+
+		float notSelectedColour[] = new float[]{0.6f, 0.6f, 0.6f, 1.0f};
 		customSize = customs.size();
 		for (int i = 0; i < maze.length; i++) {
 			for (int j = 0; j < maze[0].length; j++) {
-				//Define all colours and change them if the element is selected
-				float selectedColour[] = new float[]{1.0f, 1.0f, 1.0f, 1.0f};
-
-				float notSelectedColour[] = new float[]{0.6f, 0.6f, 0.6f, 1.0f};
-				if (selected[i][j]) {
-					maze[i][j].draw(gl,  selectedColour);
-				} else {
-					maze[i][j].draw(gl,  notSelectedColour);
+				ArrayList<MazeObject> stack = maze[i][j].get();
+				for(int k = 0; k < stack.size(); k++)
+				{
+					MazeObject object = stack.get(k);
+					if(!(selected[i][j] == -2 && object instanceof Bottom)){
+						if (selected[i][j] == k || selected[i][j] == -2) {
+							stack.get(k).draw(gl,  selectedColour);
+						} else {
+							stack.get(k).draw(gl,  notSelectedColour);
+						}
+					}
 				}
 			}
 		}
 	}
+	
+	/**
+	 * Gets the Maze Object on a certain index on a certain stack, if it exists.
+	 * @param x	x coordinate of the stack
+	 * @param y	index of the object in the stack.
+	 * @param z z coordinate of the stack
+	 * @return	The requested mazeObject, if it exists, else a Floor object without dimensions.
+	 */
 
-	public MazeObject get(int x, int z)
+	public MazeObject get(int x, int y, int z)
 	{
 		if(x >= 0 && x < MAZE_SIZE_X && z >= 0 && z < MAZE_SIZE_Z)
-			return maze[x][z];
+			if(y >= 0 && y < maze[x][z].size())
+				return maze[x][z].get().get(y);
 		return new Floor(0, 0, 0, 0);
 	}
+	
+	/**
+	 * Gets all maze Objects in a certain stack in the maze.
+	 * @param x x coordinate of the stack
+	 * @param z z coordinate of the stack
+	 * @return	ArrayList of the objects in the requested stack, this list is empty if the stack doent exists.
+	 */
 
-	public void set(MazeObject mazeObject)
+	public ArrayList<MazeObject> get(int x, int z)
 	{
-		for(int i = 0; i < maze.length; i++)
-			for(int j = 0; j < maze[0].length; j++)
-				if(selected[i][j])
-					maze[i][j] = mazeObject;
+		if(x >= 0 && x < MAZE_SIZE_X && z >= 0 && z < MAZE_SIZE_Z)
+			return maze[x][z].get();
+		return new ArrayList<MazeObject>();
+	}
+	
+	/**
+	 * Adds the given mazeObject to a selected stack
+	 * @param mazeObject	Maze Object that is added
+	 * @param x				x coordinate of the stack
+	 * @param z				z coordinate of the stack
+	 */
+
+	public void set(MazeObject mazeObject, int x, int z)
+	{
+		if(x >= 0 && x < MAZE_SIZE_X && z >= 0 && z < MAZE_SIZE_Z)
+			maze[x][z].add(mazeObject); 
+	}
+	
+	public float getFloorHeight(int x, int z)
+	{
+		if(x >= 0 && x < MAZE_SIZE_X && z >= 0 && z < MAZE_SIZE_Z)
+		{
+			MazeObject floor =  maze[x][z].getInstanceOf(standards.get(ObjectMode.ADD_FLOOR));
+			if(floor != null)
+			{
+				return maze[x][z].getHeight();
+			}
+		}
+		return -1;
 	}
 
-	public MazeObject[] getNeighbourTiles(int x, int z){
+	public MazeObject[] getNeighbourTiles(int x, int z, int height){
 		MazeObject[] res = new MazeObject[4];
 		// The lines below work for the tile relative
 		// to the middle tile according to the comment behind it
 		// but this assumes that x is vertical in the maze-array and z is horizontal
-		res[0] = get((int)x-1, (int)z); // up
-		res[1] = get((int)x, (int)z-1); // left
-		res[2] = get((int)x+1, (int)z); // down
-		res[3] = get((int)x, (int)z+1); // right
+		res[0] = maze[(int)x-1][(int)z].getAtHeight(height); // up
+		res[1] = maze[(int)x][(int)z-1].getAtHeight(height); // left
+		res[2] = maze[(int)x+1][(int)z].getAtHeight(height); // down
+		res[3] = maze[(int)x][(int)z+1].getAtHeight(height); // right
 		return res;
 	}
 

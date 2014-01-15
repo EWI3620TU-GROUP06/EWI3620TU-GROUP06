@@ -1,10 +1,11 @@
 package EditorModes;
 
+import java.util.ArrayList;
+
 import javax.vecmath.Vector3f;
 
 import LevelHandling.Level;
 import LevelHandling.Maze;
-import MazeObjects.Floor;
 import MazeObjects.MazeObject;
 
 /**
@@ -17,10 +18,10 @@ import MazeObjects.MazeObject;
  */
 
 public class MoveObject extends EditMode {
-	
+
 	MazeObject selected;
-	MazeObject previous;
-	
+	int pressedX, pressedZ;
+
 	public MoveObject(Level level)
 	{
 		super(level);
@@ -28,13 +29,18 @@ public class MoveObject extends EditMode {
 
 	@Override
 	public void mouseDragged(int mazeX, int mazeZ) {
-		level.getMaze().set(previous);
-		previous = level.getMaze().get(mazeX, mazeZ);
-		level.getMaze().clearSelected();
-		level.getMaze().select(mazeX,  mazeZ);
-		Vector3f pos = (Vector3f)selected.getPos().clone();
-		pos.sub(new Vector3f(mazeX*Maze.SQUARE_SIZE, 0, mazeZ*Maze.SQUARE_SIZE), pos);
-		level.getMaze().set(selected.translate(pos.x, pos.y, pos.z));
+		if(mazeX != pressedX || mazeZ != pressedZ)
+		{
+			level.getMaze().removeTop(pressedX, pressedZ);
+
+			level.getMaze().clearSelected();
+			level.getMaze().select(mazeX,  mazeZ);
+			Vector3f pos = (Vector3f)selected.getPos().clone();
+			pos.sub(new Vector3f(mazeX*Maze.SQUARE_SIZE, 0, mazeZ*Maze.SQUARE_SIZE), pos);
+			level.getMaze().set(selected.translate(pos.x, pos.y, pos.z), mazeX, mazeZ);
+			pressedX = mazeX;
+			pressedZ = mazeZ;
+		}
 	}
 
 	@Override
@@ -45,8 +51,10 @@ public class MoveObject extends EditMode {
 	@Override
 	public void mousePressed(int mazeX, int mazeZ) {
 		level.getMaze().select(mazeX, mazeZ);
-		selected = level.getMaze().get(mazeX,  mazeZ);
-		previous = new Floor(Maze.SQUARE_SIZE, mazeX * Maze.SQUARE_SIZE, 0, mazeZ * Maze.SQUARE_SIZE);
+		ArrayList<MazeObject> stack =	level.getMaze().get(mazeX, mazeZ);
+		selected = stack.get(stack.size() - 1);
+		pressedX = mazeX;
+		pressedZ = mazeZ;
 	}
 
 }

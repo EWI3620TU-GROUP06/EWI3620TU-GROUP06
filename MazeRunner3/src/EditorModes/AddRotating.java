@@ -14,6 +14,7 @@ import LevelHandling.Level;
 public class AddRotating extends ObjectMode {
 	
 	private int pressedX, pressedZ;
+	private int previousRotation = 0;
 
 	public AddRotating(Level level, byte drawMode)
 	{
@@ -26,7 +27,8 @@ public class AddRotating extends ObjectMode {
 		int dZ = mazeZ - pressedZ;
 		double unrounded = Math.atan2(dX, -dZ) / (0.5 * Math.PI);
 		rotation = 90 * (int)(Math.round(unrounded));
-		level.getMaze().addBlock(drawMode, rotation);
+		level.getMaze().rotateTop(pressedX, pressedZ, rotation - previousRotation, false, true, false);
+		previousRotation = rotation;
 	}
 	
 	@Override
@@ -40,7 +42,6 @@ public class AddRotating extends ObjectMode {
 	@Override
 	public void mouseReleased()
 	{
-		level.getMaze().addBlock(drawMode, rotation);
 	}
 
 }

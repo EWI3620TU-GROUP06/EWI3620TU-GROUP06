@@ -9,44 +9,37 @@ import LevelHandling.Maze;
 
 import com.sun.opengl.util.texture.Texture;
 
-public class StartTile extends MazeObject {
-
+public class Bottom extends MazeObject {
+	
 	private static Texture texture;
 
-	public StartTile(float width, float x, float y, float z)
-	{
+	public Bottom(float width, float x, float y, float z){
 		super(false);
-		this.yMin = y;
 		this.width = width;
-		this.height = width;
-		addVertex(new Vector3f(x, 0, z));
-		addVertex(new Vector3f(x, 0, z + width));
-		addVertex(new Vector3f(x + width, 0, z + width));
-		addVertex(new Vector3f(x + width, 0, z));
-		addVertex(new Vector3f(x+width, y + width, z));
-		addVertex(new Vector3f(x, y + width, z));
-		addVertex(new Vector3f(x+width, y + width, z+width));
-		addVertex(new Vector3f(x, y + width, z+width));
-		
+		height = 0;
+		this.yMin = y;
+		addVertex(new Vector3f(x, y, z));
+		addVertex(new Vector3f(x, y, z + width));
+		addVertex(new Vector3f(x + width, y, z + width));
+		addVertex(new Vector3f(x + width, y, z));
+
 		int face0[] = {0,1,2,3};
 		addFace(face0);
-
-		restitution = 0.1f;
+		
+		for(Face face: faces){
+			calculateNormal(face);
+		}
+		
+		restitution = 0.0f;
 	}
 	
-	public StartTile(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces)
+	public Bottom(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces)
 	{
 		super(vertices, texVertices, faces);
 		width = Maze.SQUARE_SIZE;
 		calculateYMin();
 		calculateHeight();
-		restitution = 0.1f;
-	}
-
-
-	public void setAngle(float angle)
-	{
-		rotateVerticesY(angle - rotation[1], 2.5, 2.5);
+		restitution = 0.8f;
 	}
 	
 	public static void addTexture(Texture t)
@@ -61,7 +54,7 @@ public class StartTile extends MazeObject {
 	
 	public MazeObject translate(float x, float y, float z)
 	{
-		StartTile res = (StartTile)this.clone();
+		Bottom res = (Bottom)this.clone();
 		for(Vector3f vertex : res.vertices)
 			vertex.add(new Vector3f(x, y, z));
 		res.calculateYMin();
@@ -83,12 +76,30 @@ public class StartTile extends MazeObject {
 		for(Face face: faces){
 			calculateNormal(face);
 		}
-		return new StartTile(vertices, this.texVertices, faces);
+		return new Bottom(vertices, this.texVertices, faces);
 	}
 	
 	public boolean equals(Object other)
 	{
-		return other instanceof StartTile;
+		return other instanceof Bottom;
 	}
-
+	
+	//The bottom cannot be rotated.
+		@Override
+		public void rotateVerticesX(float angle, double y, double z)
+		{
+			// Do Nothing
+		}
+		
+		@Override
+		public void rotateVerticesY(float angle, double x, double z)
+		{
+			// Do Nothing
+		}
+		
+		@Override
+		public void rotateVerticesZ(float angle, double x, double y)
+		{
+			// Do Nothing
+		}
 }

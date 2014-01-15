@@ -32,6 +32,7 @@ public class Level {
 	
 	public Level(Maze mz){
 		this.maze = mz;
+		maze.selectedAll();
 		PowerUp.initSprites();
 	}
 	
@@ -51,19 +52,19 @@ public class Level {
 		{
 			Vector3d l = pU.getLocation();
 			if(l.x > mazeX * Maze.SQUARE_SIZE && l.x < (mazeX + 1) * Maze.SQUARE_SIZE &&
-					l.z > mazeZ * Maze.SQUARE_SIZE && l.z < (mazeZ + 1) * Maze.SQUARE_SIZE)
+					l.z > mazeZ * Maze.SQUARE_SIZE && l.z < (mazeZ + 1) * Maze.SQUARE_SIZE
+					&& l.y > maze.getHeight(mazeX,  mazeZ))
 				return pU;
 		}
 		return null;
 	}
 	
 	public void addPowerUp(int mazeX, int mazeZ, byte type){
-		PowerUp pU = new PowerUp(new Vector3d(mazeX * Maze.SQUARE_SIZE + 2.5, 2.5, mazeZ * Maze.SQUARE_SIZE+2.5), type);
-		Vector3d l = pU.getLocation();
+		Vector3d l = new Vector3d(mazeX * Maze.SQUARE_SIZE + 2.5, 0, mazeZ * Maze.SQUARE_SIZE+2.5);
 		if(l.x > 0 && l.x < maze.getSizeX() && l.z > 0  && l.z < maze.getSizeZ() && getPowerUp(mazeX, mazeZ) == null){
-			this.powerUps.add(pU);
+			l.y = maze.getHeight(mazeX, mazeZ) + 0.5f * Maze.SQUARE_SIZE;
+			this.powerUps.add(new PowerUp(l, type));
 			changed = true;
-			System.out.println("added power up");
 		}
 	}
 	
@@ -75,19 +76,19 @@ public class Level {
 	{
 		for(MoveableBox mB : moveableBoxes)
 		{
-			Vector3d l = mB.getLocation();
-			if(l.x == mazeX * Maze.SQUARE_SIZE && l.z == mazeZ * Maze.SQUARE_SIZE )
+			Vector3d l = mB.getLocation(); 
+			if(l.x == mazeX * Maze.SQUARE_SIZE && l.z == mazeZ * Maze.SQUARE_SIZE &&
+					l.y >= maze.getHeight(mazeX,  mazeZ))
 				return mB;
 		}
 		return null;
 	}
 	
 	public void addMoveableBox(int mazeX, int mazeZ){
-		MoveableBox mB = new MoveableBox(new Vector3d(mazeX * Maze.SQUARE_SIZE, 0, mazeZ * Maze.SQUARE_SIZE), 
-				Maze.SQUARE_SIZE, Maze.SQUARE_SIZE);
-		Vector3d l = mB.getLocation();
+		Vector3d l = new Vector3d(mazeX * Maze.SQUARE_SIZE, 0, mazeZ * Maze.SQUARE_SIZE);
 		if(l.x >= 0 && l.x < maze.getSizeX() && l.z >= 0  && l.z < maze.getSizeZ() && getMoveableBox(mazeX, mazeZ) == null){
-			this.moveableBoxes.add(mB);
+			l.y = maze.getHeight(mazeX, mazeZ);
+			this.moveableBoxes.add(new MoveableBox(l, Maze.SQUARE_SIZE, Maze.SQUARE_SIZE));
 			changed = true;
 		}
 	}
@@ -124,7 +125,8 @@ public class Level {
 	
 	public void pause()
 	{
-		swarm.pause();
+		if(swarm != null)
+			swarm.pause();
 	}
 	
 	/**
