@@ -2,6 +2,7 @@ package Drawing;
 
 import java.util.ArrayList;
 
+import Audio.Audio;
 import GameStates.gStateMan;
 import HighScore.Score;
 import HighScore.SqlReadWrite;
@@ -25,6 +26,7 @@ public class TextBoxManager extends ClickBoxManager{
 		if(control.getClicked() != 0){
 			for(ClickBox a: Boxes){
 				if(a.isClickable() && a.isInBounds(control.getMouseX(), control.getMouseY())){
+					Audio.playSound("balldrop");
 					a.execute();
 				}
 			}

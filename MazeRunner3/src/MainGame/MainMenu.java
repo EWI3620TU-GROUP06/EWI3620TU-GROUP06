@@ -77,7 +77,7 @@ public class MainMenu implements GLEventListener {
 		this.clkbxman.setControl(input);
 		this.optclkbxman.setControl(input);
 		
-		String[] sounds = new String[]{"wallcollide","balldrop","ballcollide","test","test2"};
+		String[] sounds = new String[]{"balldrop"};
 		Audio.initSounds(sounds);
 	}
 	
