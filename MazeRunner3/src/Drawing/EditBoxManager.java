@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javax.media.opengl.GL;
 
+import Audio.Audio;
 import EditorModes.*;
 import GameObjects.Editor;
 import GameObjects.PowerUp;
@@ -139,6 +140,7 @@ public class EditBoxManager extends ClickBoxManager {
 					if(e.hasEditModeCommand())
 					{
 						e.setPressed(true);
+						Audio.playSound("balldrop");
 						for(int j = 0; j < Boxes.size(); j++)
 						{
 							if(j != i){

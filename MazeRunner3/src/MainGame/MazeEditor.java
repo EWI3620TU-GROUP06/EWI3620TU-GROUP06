@@ -4,6 +4,7 @@ import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
 import javax.vecmath.Vector3d;
 
+import Audio.Audio;
 import Drawing.*;
 import GameObjects.Camera;
 import GameObjects.Editor;
@@ -118,6 +119,9 @@ public class MazeEditor implements GLEventListener {
 		AddListening(input);
 
 		editBoxManager.setControl(input);
+		
+		String[] sounds = new String[]{"balldrop"};
+		Audio.initSounds(sounds);
 	}
 
 	/**
