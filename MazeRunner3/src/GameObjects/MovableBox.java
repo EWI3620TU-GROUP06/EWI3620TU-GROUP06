@@ -20,25 +20,26 @@ import Physics.Physics;
  *
  */
 
-public class MoveableBox extends GameObject implements VisibleObject {
+public class MovableBox extends GameObject implements VisibleObject {
 
 	private Box box;
 	private int id;
+	private Vector3f direction = new Vector3f();
 	private Physics physics;
 	private ArrayList<Integer> pathTime;
-	private ArrayList<Vector3f> pathDirection;
+	private ArrayList<Vector3f> pathPoints;
 	private int time = 0;
 	private int count = -1;
 	private int activationTileX, activationTileY, activationTileZ;
 	
 	/**
-	 * Creates a new moveable box of the given size on the given location.
-	 * @param pos			Position of the new moveable box
-	 * @param squareSize	Width of new the moveable box
-	 * @param height		height of the moveable box
+	 * Creates a new movable box of the given size on the given location.
+	 * @param pos			Position of the new movable box
+	 * @param squareSize	Width of new the movable box
+	 * @param height		height of the movable box
 	 */
 	
-	public MoveableBox(Vector3d pos, float squareSize, float height)
+	public MovableBox(Vector3d pos, float squareSize, float height)
 	{
 		this.location = pos;
 		box = new Box(squareSize, height, (float)location.x, (float) location.y, (float)location.z);
@@ -89,11 +90,11 @@ public class MoveableBox extends GameObject implements VisibleObject {
 		}
 	}
 
-	public void addToPath(int time, Vector3f direction)
+	public void addToPath(int time, Vector3f point)
 	{
 		if(pathTime.size() > 0)
 			time += pathTime.get(pathTime.size() - 1);
-		pathDirection.add(direction);
+		pathPoints.add(point);
 		pathTime.add(time);
 	}
 
@@ -124,7 +125,16 @@ public class MoveableBox extends GameObject implements VisibleObject {
 				while(i < pathTime.size() - 1 && time > pathTime.get(i) ){
 					i++;
 				}
-				Vector3f newLocation = physics.moveBox(id, pathDirection.get(i));
+				System.out.println(time - pathTime.get(i) );
+				if((time - pathTime.get(i))< -100 || direction.equals(new Vector3f()))
+				{
+				direction = new Vector3f();
+				direction.sub(box.getPos(), pathPoints.get(i));
+				
+				direction.scale(1f /((float)(time - pathTime.get(i)) / 1000f));
+				}
+				
+				Vector3f newLocation = physics.moveBox(id, direction);
 				newLocation.sub(new Vector3f(2.5f, 2.5f, 2.5f));
 				box.moveTo(newLocation);
 			}
@@ -140,7 +150,7 @@ public class MoveableBox extends GameObject implements VisibleObject {
 	public void clearPath()
 	{
 		pathTime = new ArrayList<Integer>();
-		pathDirection = new ArrayList<Vector3f>();
+		pathPoints = new ArrayList<Vector3f>();
 	}
 
 	public void setCount(int c)
@@ -153,9 +163,9 @@ public class MoveableBox extends GameObject implements VisibleObject {
 		try{
 			int previousTime = 0;
 			wr.write(location.x + " " + location.y + " " + location.z + " " + box.getWidth() + " " + box.getHeight() + " " + count + " " + activationTileX + " " + activationTileY + " " + activationTileZ + "\n");
-			for(int i = 0; i < pathDirection.size(); i++)
+			for(int i = 0; i < pathPoints.size(); i++)
 			{
-				wr.write(pathTime.get(i) - previousTime + "," + pathDirection.get(i).x + "," + pathDirection.get(i).y + "," + pathDirection.get(i).z + ";");
+				wr.write(pathTime.get(i) - previousTime + "," + pathPoints.get(i).x + "," + pathPoints.get(i).y + "," + pathPoints.get(i).z + ";");
 				previousTime = pathTime.get(i);
 			}
 			wr.write("\n");
@@ -166,7 +176,7 @@ public class MoveableBox extends GameObject implements VisibleObject {
 		}
 	}
 
-	public static MoveableBox read(Scanner sc)
+	public static MovableBox read(Scanner sc)
 	{
 		try{
 			String text = sc.next();
@@ -183,7 +193,7 @@ public class MoveableBox extends GameObject implements VisibleObject {
 			int aX = sc.nextInt();
 			int aY = sc.nextInt();
 			int aZ = sc.nextInt();
-			MoveableBox res = new MoveableBox(new Vector3d(x, y, z), width, height);
+			MovableBox res = new MovableBox(new Vector3d(x, y, z), width, height);
 			res.setCount(count);
 			res.setActivationTile(aX, aY, aZ);
 			sc.nextLine();
