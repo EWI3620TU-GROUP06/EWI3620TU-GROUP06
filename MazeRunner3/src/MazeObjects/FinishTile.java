@@ -15,7 +15,7 @@ import com.sun.opengl.util.texture.Texture;
  */
 public class FinishTile extends MazeObject {
 	private static Texture texture;
-	private static CustomMazeObject custom = CustomMazeObject.readFromOBJ(new File("src\\objects\\hole_01.obj"));
+	private static CustomMazeObject custom = CustomMazeObject.readFromOBJ(new File("src\\Objects\\hole_01.obj"));
 	
 	public FinishTile(float width, float x, float y, float z){
 		super(true);
