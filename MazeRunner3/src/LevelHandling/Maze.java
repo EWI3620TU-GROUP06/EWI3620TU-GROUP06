@@ -111,7 +111,7 @@ public class Maze implements VisibleObject {
 		if(x >= 0 && x < MAZE_SIZE_X*SQUARE_SIZE && z >= 0 && z < MAZE_SIZE_Z*SQUARE_SIZE){
 			MazeObject finishTile = null;
 			if((finishTile = maze[(int)x / SQUARE_SIZE][(int)z / SQUARE_SIZE].getInstanceOf(standards.get(ObjectMode.ADD_FINISH))) != null){
-				return y > finishTile.getYMin() && y < finishTile.getYMax();
+				return y > finishTile.getYMin()- 1 && y < finishTile.getYMin();
 			}
 		}
 		return false;
@@ -455,6 +455,25 @@ public class Maze implements VisibleObject {
 			return new Maze();
 		}
 	}
+	
+	public void setCustomTextures(GL gl)
+	{
+		for(CustomMazeObject obj : customs){
+			obj.setTexture(gl);
+			for(int i = 0; i < maze.length; i++){
+				for(int j = 0; j < maze[0].length; j++)
+				{
+					MazeObject object = maze[i][j].getInstanceOf(obj);
+					if(object != null)
+					{
+						System.out.println("Set texnum");
+						CustomMazeObject that = (CustomMazeObject) object;
+						that.setTexNum(obj.getTexNum());
+					}
+				}
+			}
+		}
+	}
 
 	/**
 	 * Draws the maze. First the textures of all custom maze objects are initialized, if the were not already.
@@ -463,20 +482,7 @@ public class Maze implements VisibleObject {
 	public void display(GL gl) {
 		if(customSize != customs.size())
 		{
-			for(CustomMazeObject obj : customs){
-				obj.setTexture(gl);
-				for(int i = 0; i < maze.length; i++){
-					for(int j = 0; j < maze[0].length; j++)
-					{
-						MazeObject object = maze[i][j].getInstanceOf(obj);
-						if(object != null)
-						{
-							CustomMazeObject that = (CustomMazeObject) object;
-							that.setTexNum(obj.getTexNum());
-						}
-					}
-				}
-			}
+			setCustomTextures(gl);
 		}
 		//Define all colours and change them if the element is selected
 		float selectedColour[] = new float[]{1.0f, 1.0f, 1.0f, 1.0f};

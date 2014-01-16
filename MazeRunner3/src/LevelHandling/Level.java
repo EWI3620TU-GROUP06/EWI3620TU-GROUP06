@@ -104,6 +104,7 @@ public class Level {
 	public void init(GL gl)
 	{
 		Maze.initTextures(gl);
+		maze.setCustomTextures(gl);
 		PowerUp.initTextures(gl);
 		for(PowerUp powerUp : powerUps)
 			powerUp.setTextNum();
