@@ -168,7 +168,7 @@ public class MazeRunner implements GLEventListener {
 		visibleObjects = new ArrayList<VisibleObject>();
 		state.setFinished(false);
 		
-		String[] sounds = new String[]{"tick","ballcollide","test","test2"};
+		String[] sounds = new String[]{"wallcollide","balldrop","ballcollide","test","test2"};
 		playingsound = false;
 		Audio.initSounds(sounds);
 		

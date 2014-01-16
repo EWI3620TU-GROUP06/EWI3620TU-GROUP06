@@ -53,8 +53,8 @@ public class Contact extends ContactProcessedCallback {
 			if(deltaTime > 100){
 				Vector3f out = new Vector3f();
 				Physics.getPlayerBody().getLinearVelocity(out);
-				Audio.setVolume("tick",out.length()-20f);
-				Audio.playSound("tick");
+				Audio.setVolume("balldrop",(out.length()/2)-20f);
+				Audio.playSound("balldrop");
 			}
 			prevTime = currentTime;
 		}
@@ -75,7 +75,7 @@ public class Contact extends ContactProcessedCallback {
 				Vector3f outPart = new Vector3f();
 				Physics.getPlayerBody().getLinearVelocity(out);
 				particles.get(id).getLinearVelocity(outPart);
-				Audio.setVolume("ballcollide",out.length()+outPart.length()-20f);
+				Audio.setVolume("ballcollide",((out.length()+outPart.length())/2)-20f);
 				Audio.playSound("ballcollide");
 			}
 			prevTimePartPlayer = currentTimePartPlayer;
@@ -92,8 +92,8 @@ public class Contact extends ContactProcessedCallback {
 			if(deltaTimeWall > 100){
 				Vector3f out = new Vector3f();
 				Physics.getPlayerBody().getLinearVelocity(out);
-				Audio.setVolume("tick", out.length()-20f);
-				Audio.playSound("tick");
+				Audio.setVolume("wallcollide", out.length()-20f);
+				Audio.playSound("wallcollide");
 			}
 			prevTimeWall = currentTimeWall;
 		}
@@ -122,8 +122,8 @@ public class Contact extends ContactProcessedCallback {
 				//now here partPos
 				dist.sub(playPos);
 				if(dist.length() < Mazesize*multiplier/10){
-					Audio.setVolume("tick", out.length() + Mazesize*multiplier/(10*dist.length())-30f);
-					Audio.playSound("tick");
+					Audio.setVolume("balldrop", out.length() + Mazesize*multiplier/(10*dist.length())-30f);
+					Audio.playSound("balldrop");
 				}	
 			}
 			prevTimeParticles[id] = currentTimePart;
@@ -155,8 +155,8 @@ public class Contact extends ContactProcessedCallback {
 				//now here partPos
 				dist.sub(playPos);
 				if(dist.length() < Mazesize*multiplier/10){
-					Audio.setVolume("tick", out.length() + Mazesize*multiplier/(10*dist.length())-30f);
-					Audio.playSound("tick");
+					Audio.setVolume("wallcollide", out.length() + Mazesize*multiplier/(10*dist.length())-30f);
+					Audio.playSound("wallcollide");
 				}
 			}
 			prevTimePartWalls[id] = currentTimePartWall;

@@ -38,7 +38,7 @@ public class Physics {
 
 	private float angularDamping = 0.9f;
 
-	private float mass = 10f;
+	private float mass = 25f;
 
 	boolean previous = false;
 

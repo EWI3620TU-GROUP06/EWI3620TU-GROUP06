@@ -14,8 +14,8 @@ public class Audio {
 	
 	public static void playMusic(String musicName) {
 		try{
-//			musicName = "src/Music/" + musicName + ".mp3";
-//			music = new BackgroundMusic(new File(musicName));
+			musicName = "src/Music/" + musicName + ".mp3";
+			music = new BackgroundMusic(new File(musicName));
 		}
 		catch(Exception e){
 			e.printStackTrace();

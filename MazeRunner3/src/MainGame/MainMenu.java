@@ -6,6 +6,7 @@ import javax.media.opengl.*;
 
 import com.sun.opengl.util.texture.Texture;
 
+import Audio.Audio;
 import Drawing.TextBoxManager;
 import Drawing.DrawingUtil;
 import GameStates.GameState;
@@ -75,6 +76,9 @@ public class MainMenu implements GLEventListener {
 		this.optclkbxman = TextBoxManager.createOptionsMenu(screenWidth, screenHeight, "Options", optcommands, this.state.getGSM());
 		this.clkbxman.setControl(input);
 		this.optclkbxman.setControl(input);
+		
+		String[] sounds = new String[]{"wallcollide","balldrop","ballcollide","test","test2"};
+		Audio.initSounds(sounds);
 	}
 	
 	/**
