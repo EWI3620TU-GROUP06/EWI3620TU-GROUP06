@@ -25,6 +25,7 @@ public class Contact extends ContactProcessedCallback {
 	ArrayList<RigidBody> particles = Physics.getParticles();
 	private long[] prevTimeParticles = new long[particles.size()];
 	private long[] prevTimePartWalls = new long[particles.size()];
+	private long prevTimePartPlayer;
 	private int diff = Physics.getDiff();
 	private float multiplier;
 	private int Mazesize = (Maze.MAZE_SIZE_X + Maze.MAZE_SIZE_X)/ 2 *Maze.SQUARE_SIZE;
@@ -56,6 +57,28 @@ public class Contact extends ContactProcessedCallback {
 				Audio.playSound("tick");
 			}
 			prevTime = currentTime;
+		}
+		
+		if(body1 == Physics.getPlayerBody() && particles.contains(body2) || body2 == Physics.getPlayerBody() && particles.contains(body1)){
+			long currentTimePartPlayer = Calendar.getInstance().getTimeInMillis();
+			int id = particles.indexOf(body1);
+			if(id == -1){
+				id = particles.indexOf(body2);
+			}
+			if(firstrun){
+				prevTimePartPlayer = currentTimePartPlayer;
+				firstrun = false;
+			}
+			int deltaTime = (int)(currentTimePartPlayer - prevTimePartPlayer);
+			if(deltaTime > 100){
+				Vector3f out = new Vector3f();
+				Vector3f outPart = new Vector3f();
+				Physics.getPlayerBody().getLinearVelocity(out);
+				particles.get(id).getLinearVelocity(outPart);
+				Audio.setVolume("ballcollide",out.length()+outPart.length()-20f);
+				Audio.playSound("ballcollide");
+			}
+			prevTimePartPlayer = currentTimePartPlayer;
 		}
 		
 		//Onderstaande afzonderlijke wall-checker moet er zijn, anders komt de deltaTime nooit > 100 voor muren!
