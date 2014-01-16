@@ -35,9 +35,8 @@ public class AddMovingBox extends EditMode {
 			long currentTime = now.getTimeInMillis();
 			float deltaTime = (float) (currentTime - previousTime);
 			previousTime = currentTime;
-			float dX = (mazeX - pressedX) * Maze.SQUARE_SIZE;
-			float dZ = (mazeZ - pressedZ) * Maze.SQUARE_SIZE;
-			level.getMoveableBoxes().get(num).addToPath((int)deltaTime, new Vector3f(dX/(deltaTime/1000f), 0, dZ/(deltaTime/1000f)));
+			level.getMoveableBoxes().get(num).addToPath((int)deltaTime, new Vector3f(
+					mazeX * Maze.SQUARE_SIZE, 0, mazeZ*Maze.SQUARE_SIZE));
 			level.getMaze().select(mazeX, mazeZ);
 			
 		}

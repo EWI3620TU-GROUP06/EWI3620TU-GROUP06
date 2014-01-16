@@ -13,6 +13,7 @@ import LevelHandling.Level;
 public class AddStart extends ObjectMode {
 
 	private int pressedX, pressedZ;
+	private int previousRotation = 0;
 
 	public AddStart(Level level){
 		super(level, ObjectMode.ADD_START);
@@ -20,15 +21,12 @@ public class AddStart extends ObjectMode {
 
 	@Override
 	public void mouseDragged(int mazeX, int mazeZ) {
-		if(mazeX != pressedX ||mazeZ != pressedZ)
-		{
-			int dX = mazeX - pressedX;
-			int dZ = mazeZ - pressedZ;
-			double unrounded = Math.atan2(dX, -dZ) / (0.5 * Math.PI);
-			rotation = 90 * (int)(Math.round(unrounded));
-			level.getMaze().rotateTop(pressedX, pressedZ, rotation, false, true, false);
-		}
-		
+		int dX = mazeX - pressedX;
+		int dZ = mazeZ - pressedZ;
+		double unrounded = Math.atan2(dX, -dZ) / (0.5 * Math.PI);
+		rotation = 90 * (int)(Math.round(unrounded));
+		level.getMaze().rotateTop(pressedX, pressedZ, rotation - previousRotation, false, true, false);
+		previousRotation = rotation;
 	}
 
 	@Override
