@@ -1,5 +1,6 @@
 package MazeObjects;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import javax.vecmath.Vector2f;
@@ -14,24 +15,17 @@ import com.sun.opengl.util.texture.Texture;
  */
 public class FinishTile extends MazeObject {
 	private static Texture texture;
+	private static CustomMazeObject custom = CustomMazeObject.readFromOBJ(new File("src\\objects\\hole_01.obj"));
 	
 	public FinishTile(float width, float x, float y, float z){
-		super(false);
+		super(true);
+		custom = (CustomMazeObject) custom.translate(x, y, z);
+		custom = (CustomMazeObject) custom.translate(0, -custom.height, 0);
+		this.vertices = custom.vertices;
+		this.texVertices = custom.texVertices;
+		this.faces = custom.faces;
 		this.yMin = y;
 		height = 0;
-		addVertex(new Vector3f(x, 0, z));
-		addVertex(new Vector3f(x, 0, z + width));
-		addVertex(new Vector3f(x + width, 0, z + width));
-		addVertex(new Vector3f(x + width, 0, z));
-		addVertex(new Vector3f(x+width, y + width, z));
-		addVertex(new Vector3f(x, y + width, z));
-		addVertex(new Vector3f(x+width, y + width, z+width));
-		addVertex(new Vector3f(x, y + width, z+width));
-		
-		int face0[] = {0,1,2,3};
-		addFace(face0);
-		
-		restitution = 0.8f;
 	}
 	
 	public FinishTile(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces)
@@ -40,6 +34,8 @@ public class FinishTile extends MazeObject {
 		width = Maze.SQUARE_SIZE;
 		calculateYMin();
 		calculateHeight();
+		yMin = yMin + height;
+		height = Maze.SQUARE_SIZE;
 		restitution = 0.8f;
 	}
 	
@@ -61,7 +57,10 @@ public class FinishTile extends MazeObject {
 		FinishTile res = (FinishTile)this.clone();
 		for(Vector3f vertex : res.vertices)
 			vertex.add(new Vector3f(x, y, z));
-		res.calculateYMin();
+		calculateYMin();
+		calculateHeight();
+		yMin = yMin + height;
+		height = Maze.SQUARE_SIZE;
 		return res;
 	}
 
@@ -87,5 +86,24 @@ public class FinishTile extends MazeObject {
 	{
 		return other instanceof FinishTile;
 	}
+	
+	//The pit cannot be rotated.
+		@Override
+		public void rotateVerticesX(float angle, double y, double z)
+		{
+			// Do Nothing
+		}
+		
+		@Override
+		public void rotateVerticesY(float angle, double x, double z)
+		{
+			// Do Nothing
+		}
+		
+		@Override
+		public void rotateVerticesZ(float angle, double x, double y)
+		{
+			// Do Nothing
+		}
 
 }
