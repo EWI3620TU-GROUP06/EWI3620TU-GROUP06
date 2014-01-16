@@ -64,7 +64,7 @@ public class HighscoreState extends GameState {
 	
 	public void playMusic()
 	{
-		Audio.playMusic("test");
+		Audio.playMusic("menu");
 	}
 	
 	public void stopMusic(){

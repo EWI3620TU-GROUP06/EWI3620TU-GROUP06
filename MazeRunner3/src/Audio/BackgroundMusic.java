@@ -20,10 +20,8 @@ public class BackgroundMusic implements Runnable{
 	{
 		try {
 			musicFile = file;
-			if(musicThread == null){
-				musicThread = new Thread(this);
-				musicThread.start();
-			}
+			musicThread = new Thread(this);
+			musicThread.start();
 		} 
 		catch(Exception e){
 			e.printStackTrace();
@@ -49,6 +47,7 @@ public class BackgroundMusic implements Runnable{
 	{
 		if(player != null)
 		{
+			loop = false;
 			player.close();
 			musicThread.interrupt();
 		}

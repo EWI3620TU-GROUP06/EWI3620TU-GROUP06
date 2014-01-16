@@ -168,7 +168,7 @@ public class MazeRunner implements GLEventListener {
 		visibleObjects = new ArrayList<VisibleObject>();
 		state.setFinished(false);
 		
-		String[] sounds = new String[]{"wallcollide","balldrop","ballcollide","test","test2"};
+		String[] sounds = new String[]{"wallcollide","balldrop","ballcollide","gameover","finish"};
 		playingsound = false;
 		Audio.initSounds(sounds);
 		
@@ -382,6 +382,10 @@ public class MazeRunner implements GLEventListener {
 			DrawingUtil.drawTrans(gl, 0, 0, screenWidth, screenHeight, 0.2f, 0.2f, 0.2f, 0.4f);
 			if(dead){
 				deadclkbxman.drawAllText(deltaTime);
+				if(!playingsound){
+					Audio.playSound("gameover");
+					playingsound = true;
+				}
 			}
 			else{
 				if(optpause){
@@ -395,7 +399,7 @@ public class MazeRunner implements GLEventListener {
 		}
 		if(finished){
 			if(!playingsound){
-				Audio.playSound("test2");
+				Audio.playSound("finish");
 				playingsound = true;
 			}
 			finishclkbxman.drawAllText(deltaTime);

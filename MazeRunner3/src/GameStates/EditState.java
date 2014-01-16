@@ -68,7 +68,8 @@ public class EditState extends GameState {
 	
 	public void playMusic()
 	{
-		Audio.playMusic("test2");
+		//Editing does not require awesome-o soundtrack
+		//Audio.playMusic("ingame");
 	}
 	
 	public void stopMusic(){

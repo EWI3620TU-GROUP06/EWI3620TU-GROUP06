@@ -69,7 +69,7 @@ public class PlayState extends GameState {
 	
 	public void playMusic()
 	{
-		Audio.playMusic("menu");
+		Audio.playMusic("ingame");
 	}
 	
 	public void stopMusic(){
