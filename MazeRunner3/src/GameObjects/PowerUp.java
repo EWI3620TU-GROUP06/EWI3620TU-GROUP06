@@ -98,10 +98,12 @@ public class PowerUp extends GameObject implements VisibleObject {
 	private void activate(boolean active)
 	{
 		float factor = 3;
+		boolean coinpicked = false;
 		if(active && !activated)
 		{
-			player.setColour(new float[] {0.5f, 1, 0.5f, 1});
+			coinpicked = true;
 		}
+
 		if(!active)
 		{
 			factor = (float)1 / factor;
@@ -110,10 +112,10 @@ public class PowerUp extends GameObject implements VisibleObject {
 		}
 		activated = active;
 		switch(type){
-		case SPEED: player.multiplySpeed(factor); player.multiplyJump((float)1 / factor);Audio.playSound("speedup");break;
-		case JUMP: player.multiplyJump(factor);Audio.playSound("jumpup");break;
-		case COIN: mazeRunner.addScore(10);Audio.playSound("coin");break;
-		default:;
+			case SPEED: player.multiplySpeed(factor);player.setColour(new float[] {1f, 0.5f, 0.5f, 1f});player.multiplyJump((float)1 / factor);Audio.playSound("speedup");break;
+			case JUMP: player.multiplyJump(factor);player.setColour(new float[] {0.5f, 1f, 0.5f, 1f});Audio.playSound("jumpup");break;
+			case COIN: if(coinpicked){mazeRunner.addScore(10);Audio.playSound("coin");};break;
+			default:;
 		}
 	}
 
