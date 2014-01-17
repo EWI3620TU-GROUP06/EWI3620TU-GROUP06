@@ -201,7 +201,6 @@ public class Contact extends ContactProcessedCallback {
 				particles.get(id2).getLinearVelocity(outPart);
 				Audio.setVolume("ballcollide",((out.length()+outPart.length())/2) - distanceToPlayer.length() - 30f);
 				Audio.playSound("ballcollide");
-				System.out.println("particle vs particle");
 			}
 			prevTimePartPlayer = currentTimePartPlayer;
 		}
