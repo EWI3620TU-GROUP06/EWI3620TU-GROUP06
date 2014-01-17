@@ -101,10 +101,6 @@ public class PowerUp extends GameObject implements VisibleObject {
 		if(active && !activated)
 		{
 			player.setColour(new float[] {0.5f, 1, 0.5f, 1});
-			if(type == COIN){
-				mazeRunner.addScore(10);
-			}
-			Audio.playSound("test");
 		}
 		if(!active)
 		{
@@ -114,8 +110,9 @@ public class PowerUp extends GameObject implements VisibleObject {
 		}
 		activated = active;
 		switch(type){
-		case SPEED: player.multiplySpeed(factor); player.multiplyJump((float)1 / factor);break;
-		case JUMP: player.multiplyJump(factor); break;
+		case SPEED: player.multiplySpeed(factor); player.multiplyJump((float)1 / factor);Audio.playSound("speedup");break;
+		case JUMP: player.multiplyJump(factor);Audio.playSound("jumpup");break;
+		case COIN: mazeRunner.addScore(10);Audio.playSound("coin");break;
 		default:;
 		}
 	}
