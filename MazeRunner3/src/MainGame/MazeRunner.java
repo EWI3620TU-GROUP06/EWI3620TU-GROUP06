@@ -12,9 +12,6 @@ import Drawing.*;
 import GameObjects.Camera;
 import GameObjects.Player;
 import GameStates.GameState;
-import GameStates.gStateMan;
-import HighScore.SqlReadWrite;
-import HighScore.Score;
 import LevelHandling.Level;
 import LevelHandling.Maze;
 import Listening.HighscoreCommand;
@@ -346,11 +343,10 @@ public class MazeRunner implements GLEventListener {
 			if(!finished && (level.getMaze().isFinish(pos[0], pos[1], pos[2])))	
 				{
 					finished = true;
-					finishScoreBox.setText(Integer.toString(currentScore - state.getScore()));
+					finishScoreBox.setText(Integer.toString(currentScore));
 					if (state.getLevel() != 0)
 						state.setScore(currentScore);
 				}	
-			
 		}
 		//Always change the camera and draw the game-world
 		double[] pos = new double[3];
@@ -429,18 +425,6 @@ public class MazeRunner implements GLEventListener {
 		
 		gl.glLoadIdentity();
 		gl.glFlush();
-		
-		if(dead && !finished){
-			if(!playingsound){
-				Audio.playSound("test2");
-				playingsound = true;
-			}
-			String name = null;
-			if((name = deadclkbxman.getText()) != null && state.getLevel() != 0){
-				SqlReadWrite.Write(new Score(name, state.getScore()));
-				state.getGSM().setState(gStateMan.HIGHSCORESTATE);
-			}			
-		}
 	}
 
 

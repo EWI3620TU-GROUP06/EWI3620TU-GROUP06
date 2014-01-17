@@ -20,7 +20,6 @@ public class ScoreCommand implements Command{
 	public void execute() {
 		txtbxman.setConfirm();
 		String name = txtbxman.getText();
-		System.out.println(name);
 		if(name != null){
 			PlayState playState = (PlayState) gsm.getState(gsm.getCurState());
 			SqlReadWrite.Write(new Score(name, playState.getScore()));
