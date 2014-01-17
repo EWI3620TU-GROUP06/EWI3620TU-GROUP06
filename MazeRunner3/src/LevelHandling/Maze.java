@@ -466,7 +466,6 @@ public class Maze implements VisibleObject {
 					MazeObject object = maze[i][j].getInstanceOf(obj);
 					if(object != null)
 					{
-						System.out.println("Set texnum");
 						CustomMazeObject that = (CustomMazeObject) object;
 						that.setTexNum(obj.getTexNum());
 					}

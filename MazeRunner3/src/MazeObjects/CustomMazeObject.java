@@ -93,8 +93,6 @@ public class CustomMazeObject extends MazeObject{
 				}
 			}
 			res.removeRedundantVertices();
-			System.out.println("Read in " + res.vertices.size() + " vertices.");
-			System.out.println("Read in " + res.faces.size() + " faces.");
 
 			res.file = file;
 			
