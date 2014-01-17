@@ -61,7 +61,7 @@ public class Level {
 	
 	public void addPowerUp(int mazeX, int mazeZ, byte type){
 		Vector3d l = new Vector3d(mazeX * Maze.SQUARE_SIZE + 2.5, 0, mazeZ * Maze.SQUARE_SIZE+2.5);
-		if(l.x > 0 && l.x < maze.getSizeX() && l.z > 0  && l.z < maze.getSizeZ() && getPowerUp(mazeX, mazeZ) == null){
+		if(l.x > 0 && l.x < maze.getSizeX() && l.z > 0  && l.z < maze.getSizeZ() && getPowerUp(mazeX, mazeZ) == null&& getMoveableBox(mazeX, mazeZ) == null){
 			l.y = maze.getHeight(mazeX, mazeZ) + 0.5f * Maze.SQUARE_SIZE;
 			this.powerUps.add(new PowerUp(l, type));
 			changed = true;
@@ -86,9 +86,17 @@ public class Level {
 	
 	public void addMoveableBox(int mazeX, int mazeZ){
 		Vector3d l = new Vector3d(mazeX * Maze.SQUARE_SIZE, 0, mazeZ * Maze.SQUARE_SIZE);
-		if(l.x >= 0 && l.x < maze.getSizeX() && l.z >= 0  && l.z < maze.getSizeZ() && getMoveableBox(mazeX, mazeZ) == null){
+		if(l.x >= 0 && l.x < maze.getSizeX() && l.z >= 0  && l.z < maze.getSizeZ() && getMoveableBox(mazeX, mazeZ) == null && getPowerUp(mazeX, mazeZ) == null){
 			l.y = maze.getHeight(mazeX, mazeZ);
 			this.moveableBoxes.add(new MovableBox(l, Maze.SQUARE_SIZE, Maze.SQUARE_SIZE));
+			changed = true;
+		}
+	}
+	
+	public void setButton(int mazeX, int mazeZ){
+		if(mazeX >= 0 && mazeX < maze.getSizeX() && mazeZ >= 0  && mazeZ < maze.getSizeZ() && getMoveableBox(mazeX, mazeZ) == null && getPowerUp(mazeX, mazeZ) == null){
+			float y = maze.getHeight(mazeX, mazeZ);
+			this.moveableBoxes.get(moveableBoxes.size() - 1).setActivationTile(mazeX, y, mazeZ);
 			changed = true;
 		}
 	}
@@ -106,8 +114,11 @@ public class Level {
 		Maze.initTextures(gl);
 		maze.setCustomTextures(gl);
 		PowerUp.initTextures(gl);
+		MovableBox.initTextures(gl);
 		for(PowerUp powerUp : powerUps)
 			powerUp.setTextNum();
+		for(MovableBox moveBox : moveableBoxes)
+			moveBox.setTextNum();
 		if(swarm != null)
 			swarm.init(gl);
 	}
@@ -149,7 +160,6 @@ public class Level {
 	public void resize(int x, int z)
 	{
 		maze.setSize(x, z);
-		System.out.println("new maze size: " + maze.getSizeX() + " " + maze.getSizeZ());
 		
 		for(int i = 0; i < powerUps.size(); i++)
 		{

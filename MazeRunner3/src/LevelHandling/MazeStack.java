@@ -37,8 +37,6 @@ public class MazeStack {
 	{
 		float yMin = mzObj.getYMin();
 		float yMax = getTop().getYMax();
-		if(mzObj instanceof FinishTile)
-			System.out.println(yMax+ ", "+ yMin);
 		mzObj = mzObj.translate(0, yMax - yMin, 0);
 		
 		if( mzObj.hasBottom(stack.get(stack.size() - 1).getYMax()) || mzObj.getHeight() == 0 || mzObj instanceof FinishTile){

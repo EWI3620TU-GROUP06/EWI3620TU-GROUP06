@@ -50,11 +50,12 @@ public class Physics {
 	
 	//static RigidBody camera;
 
-	static ArrayList<RigidBody> particles;
-	ArrayList<RigidBody> movingBoxes = new ArrayList<RigidBody>();
+	public static ArrayList<RigidBody> particles;
+	public ArrayList<RigidBody> movingBoxes = new ArrayList<RigidBody>();
 
-	static ObjectArrayList<CollisionObject> walls = new ObjectArrayList<CollisionObject>();
-	ObjectArrayList<CollisionObject> floors = new ObjectArrayList<CollisionObject>();
+	public static ObjectArrayList<CollisionObject> walls = new ObjectArrayList<CollisionObject>();
+	public ObjectArrayList<CollisionObject> floors = new ObjectArrayList<CollisionObject>();
+	public ObjectArrayList<CollisionObject> buttons = new ObjectArrayList<CollisionObject>();
 	/**
 	 * The container for the JBullet physics world. This represents the collision data and motion data, as well as the
 	 * algorithms for collision detection and reaction.
@@ -317,6 +318,27 @@ public class Physics {
 		Vector3f currentPosition = new Vector3f();
 		toBeMoved.getCenterOfMassPosition(currentPosition);
 		return currentPosition;
+	}
+	
+	public void addButton(MazeObject mazeObject)
+	{
+		for(int k = 0; k < mazeObject.getNumFaces(); k++)
+		{
+			ConvexHullShape thisShape = new ConvexHullShape(new ObjectArrayList<Vector3f>());
+			int[] face = mazeObject.getFace(k);
+			for(int l = 0; l < face.length; l++)
+			{
+				thisShape.addPoint(mazeObject.getVertex(face[l]));
+			}
+			MotionState faceMotionState = new DefaultMotionState(new Transform(new Matrix4f(new Quat4f(0, 0, 0, 1),
+					new Vector3f(0, 0, 0), 1.0f)));
+			RigidBodyConstructionInfo faceConstructionInfo = new RigidBodyConstructionInfo(0, faceMotionState, thisShape, new Vector3f(0, 0, 0));
+
+			faceConstructionInfo.restitution = mazeObject.getRestitution();
+			RigidBody faceRigidBody = new RigidBody(faceConstructionInfo);
+			buttons.add(faceRigidBody);
+			dynamicsWorld.addRigidBody(faceRigidBody);
+		}
 	}
 
 	public Vector3f getBoxLocation(int index)
