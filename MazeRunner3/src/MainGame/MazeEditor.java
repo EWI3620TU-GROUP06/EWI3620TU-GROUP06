@@ -268,7 +268,6 @@ public class MazeEditor implements GLEventListener {
 
 		// Flush the OpenGL buffer.
 		gl.glFlush();
-		level.getMaze().removeRedundantFaces();
 	}
 
 	public void displayChanged(GLAutoDrawable drawable, boolean modeChanged,
