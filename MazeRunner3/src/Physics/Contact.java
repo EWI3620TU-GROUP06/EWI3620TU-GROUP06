@@ -43,7 +43,17 @@ public class Contact extends ContactProcessedCallback {
 		
 		RigidBody body1 = (RigidBody) arg1;
 		RigidBody body2 = (RigidBody) arg2;
-		if(body1 == Physics.getPlayerBody() || body2 == Physics.getPlayerBody()){
+		
+		boolean body1IsPlayer = (body1 == Physics.getPlayerBody());
+		boolean body1IsWall = walls.contains(body1);
+		boolean body1IsParticle = particles.contains(body1);
+		
+		boolean body2IsPlayer = (body2 == Physics.getPlayerBody());
+		boolean body2IsWall = walls.contains(body2);
+		boolean body2IsParticle = particles.contains(body2);
+		
+		if((body1IsPlayer && !body2IsWall && !body2IsParticle) || (body2IsPlayer && !body1IsWall && !body1IsParticle))
+		{	
 			long currentTime = Calendar.getInstance().getTimeInMillis();
 			if(firstrun){
 				prevTime = currentTime;
@@ -59,7 +69,8 @@ public class Contact extends ContactProcessedCallback {
 			prevTime = currentTime;
 		}
 		
-		if(body1 == Physics.getPlayerBody() && particles.contains(body2) || body2 == Physics.getPlayerBody() && particles.contains(body1)){
+		if((body1IsPlayer && body2IsParticle) || (body2IsPlayer && body1IsParticle))
+		{
 			long currentTimePartPlayer = Calendar.getInstance().getTimeInMillis();
 			int id = particles.indexOf(body1);
 			if(id == -1){
@@ -82,7 +93,8 @@ public class Contact extends ContactProcessedCallback {
 		}
 		
 		//Onderstaande afzonderlijke wall-checker moet er zijn, anders komt de deltaTime nooit > 100 voor muren!
-		if((walls.contains(body1) && body2 == Physics.getPlayerBody()) || (walls.contains(body2) && body1 == Physics.getPlayerBody())){
+		if((body1IsWall && body2IsPlayer) || (body2IsWall && body1IsPlayer))
+		{
 			long currentTimeWall = Calendar.getInstance().getTimeInMillis();
 			if(firstrun){
 				prevTimeWall = currentTimeWall;
@@ -98,16 +110,20 @@ public class Contact extends ContactProcessedCallback {
 			prevTimeWall = currentTimeWall;
 		}
 		
-		if(particles.contains(body1) || particles.contains(body2)){
+		if((body1IsParticle && !body2IsWall && !body2IsPlayer) || (body2IsParticle && !body1IsWall && !body1IsPlayer))
+		{
 			long currentTimePart = Calendar.getInstance().getTimeInMillis();
 			int id = particles.indexOf(body1);
+			
 			if(id == -1){
 				id = particles.indexOf(body2);
 			}
+			
 			if(firstrun){
 				prevTimeParticles[id] = currentTimePart;
 				firstrun = false;
 			}
+			
 			int deltaTimePart = (int)(currentTimePart - prevTimeParticles[id]);
 			if(deltaTimePart > 100){
 				Vector3f out = new Vector3f();
@@ -131,7 +147,7 @@ public class Contact extends ContactProcessedCallback {
 		
 		
 		//Aparte wall checker again, alleen dan voor particles
-		if((walls.contains(body1) && particles.contains(body2)) || (walls.contains(body2) && particles.contains(body1))){
+		if((body1IsWall && body2IsParticle) || (body2IsWall && body1IsParticle)){
 			long currentTimePartWall = Calendar.getInstance().getTimeInMillis();
 			int id = particles.indexOf(body1);
 			if(id == -1){
@@ -160,6 +176,34 @@ public class Contact extends ContactProcessedCallback {
 				}
 			}
 			prevTimePartWalls[id] = currentTimePartWall;
+		}
+		
+		if(body1IsParticle && body2IsParticle)
+		{
+			long currentTimePartPlayer = Calendar.getInstance().getTimeInMillis();
+			int id1 = particles.indexOf(body1);
+			int	id2 = particles.indexOf(body2);
+			
+			if(firstrun){
+				prevTimePartPlayer = currentTimePartPlayer;
+				firstrun = false;
+			}
+			int deltaTime = (int)(currentTimePartPlayer - prevTimePartPlayer);
+			if(deltaTime > 100){
+				Vector3f out = new Vector3f();
+				Vector3f outPart = new Vector3f();
+				Vector3f distanceToPlayer = new Vector3f();
+				Vector3f collisionLocation = new Vector3f();
+				particles.get(id1).getCenterOfMassPosition(collisionLocation);
+				Physics.getPlayerBody().getCenterOfMassPosition(distanceToPlayer);
+				distanceToPlayer.sub(collisionLocation);
+				particles.get(id1).getLinearVelocity(out);
+				particles.get(id2).getLinearVelocity(outPart);
+				Audio.setVolume("ballcollide",((out.length()+outPart.length())/2) - distanceToPlayer.length() - 30f);
+				Audio.playSound("ballcollide");
+				System.out.println("particle vs particle");
+			}
+			prevTimePartPlayer = currentTimePartPlayer;
 		}
 		
 		/*if(body1.equals(Physics.camera)|| body2.equals(Physics.camera))
