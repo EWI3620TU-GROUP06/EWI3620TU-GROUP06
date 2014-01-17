@@ -233,6 +233,10 @@ public void draw(GL gl, float[] wallColour)
 	gl.glMaterialfv( GL.GL_FRONT, GL.GL_SPECULAR, wallColour, 0);
 	gl.glMateriali( GL.GL_FRONT, GL.GL_SHININESS, 50);
 
+	if(this instanceof Pit){
+		gl.glDisable(GL.GL_CULL_FACE);
+	}
+	
 	for(int j = 0; j < faces.size(); j++)
 	{
 		Face face = faces.get(j);
@@ -258,6 +262,9 @@ public void draw(GL gl, float[] wallColour)
 				}
 				Vector3f position = vertices.get(face.getVertex(i));
 				gl.glVertex3f(position.x, position.y, position.z);
+			}
+			if(this instanceof Pit){
+				gl.glEnable(GL.GL_CULL_FACE);
 			}
 			gl.glEnd();
 			if(texture != null)
