@@ -177,7 +177,9 @@ public class Particle extends GameObject implements VisibleObject{
 		sphere.setTextureFlag(true);
 		sphere.setDrawStyle(GLU.GLU_FILL);
 		sphere.setOrientation(0);
-		sphereTexture = DrawingUtil.initTexture(gl, "ball");
+		int a = (int) Math.ceil(Math.random()*7);
+		String texture = String.valueOf(a) + "ball";
+		sphereTexture = DrawingUtil.initTexture(gl, texture);
 	}
 	
 	//Stops the rotation stuff on pause
