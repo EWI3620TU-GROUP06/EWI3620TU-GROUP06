@@ -131,7 +131,7 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 		if(typedKey == KeyEvent.VK_CAPS_LOCK){
 			upperCase = !upperCase;}
 		
-		if (this.gsm.getCurState() != 0){
+		if (this.gsm.getCurState() != gStateMan.MENUSTATE){
 			if ((event.getKeyChar() == 'w') || (event.getKeyChar() == 'W')){
 				this.forward = true;
 			}
