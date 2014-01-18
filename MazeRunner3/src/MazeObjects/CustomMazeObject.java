@@ -106,6 +106,10 @@ public class CustomMazeObject extends MazeObject{
 				res.texVertices.add(new Vector2f(0, 0));
 			}
 			
+			for(Face face: res.faces){
+				res.calculateNormal(face);
+			}
+			
 			res.calculateYMin();
 			res.calculateHeight();
 			

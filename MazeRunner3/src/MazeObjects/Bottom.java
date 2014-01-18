@@ -22,13 +22,6 @@ public class Bottom extends MazeObject {
 		addVertex(new Vector3f(x, y, z + width));
 		addVertex(new Vector3f(x + width, y, z + width));
 		addVertex(new Vector3f(x + width, y, z));
-
-		int face0[] = {0,1,2,3};
-		addFace(face0);
-		
-		for(Face face: faces){
-			calculateNormal(face);
-		}
 		
 		restitution = 0.0f;
 	}
@@ -42,14 +35,9 @@ public class Bottom extends MazeObject {
 		restitution = 0.8f;
 	}
 	
-	public static void addTexture(Texture t)
-	{
-		texture = t;
-	}
-	
 	public Texture getTexture()
 	{
-		return texture;
+		return null;
 	}
 	
 	public MazeObject translate(float x, float y, float z)

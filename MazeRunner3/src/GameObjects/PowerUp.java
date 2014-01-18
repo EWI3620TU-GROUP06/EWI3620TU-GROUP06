@@ -163,8 +163,8 @@ public class PowerUp extends GameObject implements VisibleObject {
 	public static void initSprites()
 	{
 		sprites.clear();
-		sprites.add(CustomMazeObject.readFromOBJ(new File("src/Objects/mushroomspeed.obj")));
-		sprites.add(CustomMazeObject.readFromOBJ(new File("src/Objects/mushroomjump.obj")));
+		sprites.add(CustomMazeObject.readFromOBJ(new File("src/Objects/krijt_01.obj")));
+		sprites.add(CustomMazeObject.readFromOBJ(new File("src/Objects/krijt_02.obj")));
 		sprites.add(CustomMazeObject.readFromOBJ(new File("src/Objects/coin.obj")));
 	}
 	

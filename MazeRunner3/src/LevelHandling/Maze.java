@@ -51,7 +51,8 @@ public class Maze implements VisibleObject {
 			new Ramp(SQUARE_SIZE, SQUARE_SIZE, 0, 0, 0),
 			new Ramp(SQUARE_SIZE, (float)SQUARE_SIZE / 2,  0, 0, 0),
 			new Pit(SQUARE_SIZE, 20, 0, -20, 0),
-			new Bottom(SQUARE_SIZE, 0, -20, 0)
+			new Bottom(SQUARE_SIZE, 0, -20, 0),
+			new Empty(SQUARE_SIZE, 0, 0, 0)
 	}));
 
 
@@ -130,7 +131,6 @@ public class Maze implements VisibleObject {
 		Texture finishTexture = DrawingUtil.initTexture(gl, "finish");
 		Texture startTexture = DrawingUtil.initTexture(gl, "start");
 		Texture pitTexture = DrawingUtil.initTexture(gl, "pit");
-		Texture bottomTexture = DrawingUtil.initTexture(gl, "bottom");
 
 		Box.addTexture(boxTexture);
 		Floor.addTexture(floorTexture);
@@ -138,7 +138,6 @@ public class Maze implements VisibleObject {
 		Ramp.addTexture(boxTexture);
 		FinishTile.addTexture(finishTexture);
 		Pit.addTexture(pitTexture);
-		Bottom.addTexture(bottomTexture);
 	}
 
 	/**
@@ -494,13 +493,10 @@ public class Maze implements VisibleObject {
 				ArrayList<MazeObject> stack = maze[i][j].get();
 				for(int k = 0; k < stack.size(); k++)
 				{
-					MazeObject object = stack.get(k);
-					if(!(selected[i][j] == -2 && object instanceof Bottom)){
-						if (selected[i][j] == k || selected[i][j] == -2) {
-							stack.get(k).draw(gl,  selectedColour);
-						} else {
-							stack.get(k).draw(gl,  notSelectedColour);
-						}
+					if (selected[i][j] == k || selected[i][j] == -2) {
+						stack.get(k).draw(gl,  selectedColour);
+					} else {
+						stack.get(k).draw(gl,  notSelectedColour);
 					}
 				}
 			}

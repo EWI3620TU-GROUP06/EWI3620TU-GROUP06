@@ -250,7 +250,7 @@ public void draw(GL gl, float[] wallColour)
 			}
 			Vector3f normal = face.getNormal();
 
-			gl.glNormal3d(normal.x, normal.y, normal.z);
+			
 			gl.glBegin(GL.GL_POLYGON);
 
 			for(int i = 0; i < face.getLength(); i++)
@@ -260,6 +260,7 @@ public void draw(GL gl, float[] wallColour)
 					Vector2f texVertex = texVertices.get(face.getTexVertex(i));
 					gl.glTexCoord2f(texVertex.x, texVertex.y);
 				}
+				gl.glNormal3d(normal.x, normal.y, normal.z);
 				Vector3f position = vertices.get(face.getVertex(i));
 				gl.glVertex3f(position.x, position.y, position.z);
 			}
