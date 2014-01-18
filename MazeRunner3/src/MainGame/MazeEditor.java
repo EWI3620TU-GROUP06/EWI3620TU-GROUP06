@@ -153,7 +153,6 @@ public class MazeEditor implements GLEventListener {
 		GL gl = drawable.getGL();
 		GLU glu = new GLU();
 		
-		Maze.initTextures(gl);
 		editBoxManager.initTextures(gl);
 		
 		
@@ -214,6 +213,8 @@ public class MazeEditor implements GLEventListener {
 				level.removeFromVisible(visibleObjects);
 				level = editor.getLevel();
 				level.addToVisible(visibleObjects);
+				if(editor.getLevel() != level)
+					level.init(gl);
 			}
 			updateCamera();
 		}

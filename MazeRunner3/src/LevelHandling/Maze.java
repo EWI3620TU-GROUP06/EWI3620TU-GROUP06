@@ -50,8 +50,8 @@ public class Maze implements VisibleObject {
 			new FinishTile(SQUARE_SIZE, 0, 0, 0),
 			new Ramp(SQUARE_SIZE, SQUARE_SIZE, 0, 0, 0),
 			new Ramp(SQUARE_SIZE, (float)SQUARE_SIZE / 2,  0, 0, 0),
-			new Pit(SQUARE_SIZE, 100, 0, -100, 0),
-			new Bottom(SQUARE_SIZE, 0, -100, 0)
+			new Pit(SQUARE_SIZE, 20, 0, -20, 0),
+			new Bottom(SQUARE_SIZE, 0, -20, 0)
 	}));
 
 
@@ -122,7 +122,7 @@ public class Maze implements VisibleObject {
 	 * @param gl	instance of opengl.
 	 */
 
-	public static void initTextures(GL gl)
+	public void initTextures(GL gl)
 	{
 		CustomMazeObject.clearTextures();
 		Texture boxTexture = DrawingUtil.initTexture(gl, "wall");
@@ -458,6 +458,7 @@ public class Maze implements VisibleObject {
 	
 	public void setCustomTextures(GL gl)
 	{
+		CustomMazeObject.clearTextures();
 		for(CustomMazeObject obj : customs){
 			obj.setTexture(gl);
 			for(int i = 0; i < maze.length; i++){

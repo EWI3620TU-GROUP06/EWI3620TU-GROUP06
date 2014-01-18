@@ -29,7 +29,7 @@ public class DeleteMode extends EditMode {
 
 	@Override
 	public void mousePressed(int mazeX, int mazeZ) {
-		level.getMaze().removeTop(mazeX, mazeZ);
+		level.removeTop(mazeX, mazeZ);
 		pressedX = mazeX;
 		pressedZ = mazeZ;
 	}

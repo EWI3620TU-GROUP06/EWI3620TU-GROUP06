@@ -84,6 +84,23 @@ public class MovableBox extends GameObject implements VisibleObject {
 		activationTileZ = z;
 		count = 0;
 	}
+	
+	public void removeActivationTile(float x, float z)
+	{
+		if(activationTileX == x && activationTileZ == z)
+		{
+			activationTileX =-1;
+			activationTileY =-1;
+			activationTileZ =-1;
+			count = -1;
+			thisButton = null;
+		}
+	}
+	
+	public int[] getActivationTile()
+	{
+		return new int[]{activationTileX, activationTileY, activationTileZ};
+	}
 
 	public boolean isActivationTile(double x, double y, double z)
 	{

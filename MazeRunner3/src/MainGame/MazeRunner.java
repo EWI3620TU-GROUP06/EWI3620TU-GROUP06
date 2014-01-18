@@ -81,6 +81,7 @@ public class MazeRunner implements GLEventListener {
 	float lightPosition[] = { (float)level.getMaze().getSizeX()/2f, 50.0f, (float)level.getMaze().getSizeZ()/2f, 1.0f };
 	private SkyBox skybox;
 	private boolean playingsound;
+	private static boolean init = false;
 	
 	public static boolean camColl = false;
 	public static float distance = 4;
@@ -140,6 +141,7 @@ public class MazeRunner implements GLEventListener {
 
 	public static void setLevel(Level lvl){
 		level = lvl;
+		init = false;
 	}
 
 	/**
@@ -268,6 +270,7 @@ public class MazeRunner implements GLEventListener {
 		level.init(gl);
 		skybox.init(gl);
 		player.init(gl);
+		init = true;
 
 		gl.glClearColor(0, 0, 0, 0);								// Set the background color.
 
@@ -304,9 +307,15 @@ public class MazeRunner implements GLEventListener {
 	 * to draw overlays in the mazerunner when paused, finished or died.
 	 */
 	public void display(GLAutoDrawable drawable) {
-
+		
 		GL gl = drawable.getGL();
 		GLU glu = new GLU();
+		
+		if(!init)
+		{
+			level.init(gl);
+			init = true;
+		}
 
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT );
 		gl.glLoadIdentity();

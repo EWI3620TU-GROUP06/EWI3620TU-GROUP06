@@ -24,7 +24,7 @@ public class MazeStack {
 	public MazeStack(float x, float z)
 	{
 		stack = new ArrayList<MazeObject>();
-		stack.add(new Bottom(Maze.SQUARE_SIZE, x, -100, z));
+		stack.add(new Bottom(Maze.SQUARE_SIZE, x, -20, z));
 	}
 	/**
 	 * Adds a maze object to the top of the stack. If the previous top object of the stack had no height,
@@ -141,7 +141,14 @@ public class MazeStack {
 
 	public MazeObject getInstanceOf(MazeObject that)
 	{
-		int index = stack.indexOf(that);
+		int index = -1;
+		for(int i = 0; i < size(); i++)
+		{
+			if(that.equals(stack.get(i)))
+			{
+				index = i;
+			}
+		}
 		if(index >= 0 && index < stack.size())
 			return stack.get(index);
 		else
@@ -250,7 +257,7 @@ public class MazeStack {
 	public static MazeStack standard(float x, float z)
 	{
 		MazeStack res = new MazeStack(x, z);
-		res.stack.add(new Pit(Maze.SQUARE_SIZE, 100, x, -100, z));
+		res.stack.add(new Pit(Maze.SQUARE_SIZE, 20, x, -20, z));
 		res.add(new Floor(Maze.SQUARE_SIZE, x, 0, z));
 		return res;
 	}

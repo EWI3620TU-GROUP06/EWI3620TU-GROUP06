@@ -24,7 +24,7 @@ import Physics.Physics;
 public class Level {
 	private Maze maze;
 	private ArrayList<PowerUp> powerUps = new ArrayList<PowerUp>();
-	private ArrayList<MovableBox> moveableBoxes = new ArrayList<MovableBox>();
+	private ArrayList<MovableBox> movableBoxes = new ArrayList<MovableBox>();
 	private ArrayList<MovableBox> removedBoxes = new ArrayList<MovableBox>();
 	private ArrayList<PowerUp> removedPowerUps = new ArrayList<PowerUp>();
 	private Swarm swarm;
@@ -61,7 +61,7 @@ public class Level {
 	
 	public void addPowerUp(int mazeX, int mazeZ, byte type){
 		Vector3d l = new Vector3d(mazeX * Maze.SQUARE_SIZE + 2.5, 0, mazeZ * Maze.SQUARE_SIZE+2.5);
-		if(l.x > 0 && l.x < maze.getSizeX() && l.z > 0  && l.z < maze.getSizeZ() && getPowerUp(mazeX, mazeZ) == null&& getMoveableBox(mazeX, mazeZ) == null){
+		if(l.x > 0 && l.x < maze.getSizeX() && l.z > 0  && l.z < maze.getSizeZ() && getPowerUp(mazeX, mazeZ) == null&& getMovableBox(mazeX, mazeZ) == null){
 			l.y = maze.getHeight(mazeX, mazeZ) + 0.5f * Maze.SQUARE_SIZE;
 			this.powerUps.add(new PowerUp(l, type));
 			changed = true;
@@ -72,12 +72,12 @@ public class Level {
 		return this.powerUps;
 	}
 	
-	public MovableBox getMoveableBox(int mazeX, int mazeZ)
+	public MovableBox getMovableBox(int mazeX, int mazeZ)
 	{
-		for(MovableBox mB : moveableBoxes)
+		for(MovableBox mB : movableBoxes)
 		{
 			Vector3d l = mB.getLocation(); 
-			if(l.x == mazeX * Maze.SQUARE_SIZE && l.z == mazeZ * Maze.SQUARE_SIZE &&
+			if(Math.abs(l.x - mazeX * Maze.SQUARE_SIZE) < 0.1 && Math.abs(l.z - mazeZ * Maze.SQUARE_SIZE) < 0.1 &&
 					l.y >= maze.getHeight(mazeX,  mazeZ))
 				return mB;
 		}
@@ -86,23 +86,25 @@ public class Level {
 	
 	public void addMoveableBox(int mazeX, int mazeZ){
 		Vector3d l = new Vector3d(mazeX * Maze.SQUARE_SIZE, 0, mazeZ * Maze.SQUARE_SIZE);
-		if(l.x >= 0 && l.x < maze.getSizeX() && l.z >= 0  && l.z < maze.getSizeZ() && getMoveableBox(mazeX, mazeZ) == null && getPowerUp(mazeX, mazeZ) == null){
+		if(l.x >= 0 && l.x < maze.getSizeX() && l.z >= 0  && l.z < maze.getSizeZ() && getMovableBox(mazeX, mazeZ) == null && getPowerUp(mazeX, mazeZ) == null){
 			l.y = maze.getHeight(mazeX, mazeZ);
-			this.moveableBoxes.add(new MovableBox(l, Maze.SQUARE_SIZE, Maze.SQUARE_SIZE));
+			this.movableBoxes.add(new MovableBox(l, Maze.SQUARE_SIZE, Maze.SQUARE_SIZE));
 			changed = true;
 		}
 	}
 	
 	public void setButton(int mazeX, int mazeZ){
-		if(mazeX >= 0 && mazeX < maze.getSizeX() && mazeZ >= 0  && mazeZ < maze.getSizeZ() && getMoveableBox(mazeX, mazeZ) == null && getPowerUp(mazeX, mazeZ) == null){
+		if(movableBoxes.size() > 0 && mazeX >= 0 && mazeX < maze.getSizeX() 
+				&& mazeZ >= 0  && mazeZ < maze.getSizeZ() && getMovableBox(mazeX, mazeZ) == null
+				&& getPowerUp(mazeX, mazeZ) == null){
 			float y = maze.getHeight(mazeX, mazeZ);
-			this.moveableBoxes.get(moveableBoxes.size() - 1).setActivationTile(mazeX, y, mazeZ);
+			this.movableBoxes.get(movableBoxes.size() - 1).setActivationTile(mazeX, y, mazeZ);
 			changed = true;
 		}
 	}
 	
 	public ArrayList<MovableBox> getMoveableBoxes(){
-		return this.moveableBoxes;
+		return this.movableBoxes;
 	}
 	
 	public Maze getMaze(){
@@ -111,13 +113,13 @@ public class Level {
 	
 	public void init(GL gl)
 	{
-		Maze.initTextures(gl);
+		maze.initTextures(gl);
 		maze.setCustomTextures(gl);
 		PowerUp.initTextures(gl);
 		MovableBox.initTextures(gl);
 		for(PowerUp powerUp : powerUps)
 			powerUp.setTextNum();
-		for(MovableBox moveBox : moveableBoxes)
+		for(MovableBox moveBox : movableBoxes)
 			moveBox.setTextNum();
 		if(swarm != null)
 			swarm.init(gl);
@@ -127,7 +129,7 @@ public class Level {
 	{
 		if(swarm != null)
 			swarm.update(deltaTime);
-		for(MovableBox moveBox : moveableBoxes){
+		for(MovableBox moveBox : movableBoxes){
 			moveBox.update(deltaTime);
 			moveBox.activate(playerPos.x, playerPos.y, playerPos.z);
 		}
@@ -151,7 +153,7 @@ public class Level {
 		visibleObjects.add(maze);
 		if(swarm != null)
 			swarm.AddToVisible(visibleObjects);
-		for(MovableBox moveBox : moveableBoxes)
+		for(MovableBox moveBox : movableBoxes)
 			visibleObjects.add(moveBox);
 		for(PowerUp powerUp : powerUps)
 			visibleObjects.add(powerUp);
@@ -171,14 +173,18 @@ public class Level {
 			}
 		}
 		
-		for(int i = 0; i < moveableBoxes.size(); i++)
+		for(int i = 0; i < movableBoxes.size(); i++)
 		{
-			MovableBox mB = moveableBoxes.get(i);
+			MovableBox mB = movableBoxes.get(i);
 			Vector3d l = mB.getLocation();
 			if( l.x >= maze.getSizeX() || l.z >= maze.getSizeZ()){
 				removedBoxes.add(mB);
-				changed = true;
 			}
+			int aX = mB.getActivationTile()[0];
+			int aZ = mB.getActivationTile()[2];
+			if(aX > x || aZ > z)
+				mB.removeActivationTile(aX, aZ);
+			changed = true;
 		}
 	}
 	
@@ -197,14 +203,39 @@ public class Level {
 	public void removeFromVisible(ArrayList<VisibleObject> visibleObjects)
 	{
 		visibleObjects.remove(maze);
-		for(MovableBox moveBox : moveableBoxes)
+		for(MovableBox moveBox : movableBoxes)
 			visibleObjects.remove(moveBox);
 		for(PowerUp powerUp : powerUps)
 			visibleObjects.remove(powerUp);
-		moveableBoxes.removeAll(removedBoxes);
+		movableBoxes.removeAll(removedBoxes);
 		removedBoxes.clear();
 		powerUps.removeAll(removedPowerUps);
 		removedPowerUps.clear();
+	}
+	
+	public void removeTop(int x, int z)
+	{
+		float height = maze.getHeight(x, z);
+		PowerUp pU = getPowerUp(x,z);
+		MovableBox mB = getMovableBox(x,z);
+		System.out.println((pU == null) + ", " + (mB == null));
+		for(MovableBox mb : movableBoxes)
+		{
+			mb.removeActivationTile(x, z);
+		}
+		if(pU != null && pU.getLocation().y > height && pU.getLocation().y < height + 5)
+		{
+			removedPowerUps.add(pU);
+		}
+		else if(mB != null && Math.abs(mB.getLocation().y - height) < 0.1)
+		{
+			removedBoxes.add(mB);
+		}
+		else
+		{
+			maze.removeTop(x, z);
+		}
+		changed = true;
 	}
 	
 	/**
@@ -214,7 +245,7 @@ public class Level {
 	
 	public void setAttributes(Player player, Physics physics, MazeRunner mazeRunner)
 	{
-		for(MovableBox moveBox : moveableBoxes)
+		for(MovableBox moveBox : movableBoxes)
 			moveBox.setPhysics(physics);;
 		for(PowerUp powerUp : powerUps)
 		{
@@ -238,7 +269,7 @@ public class Level {
 				powerUp.write(wr);
 			}
 			wr.write("MoveableBoxes:\n");
-			for(MovableBox moveBox :  moveableBoxes){
+			for(MovableBox moveBox :  movableBoxes){
 				moveBox.write(wr);
 			}
 			wr.close();
@@ -269,7 +300,7 @@ public class Level {
 			while(sc.hasNext()){
 				MovableBox newMoveBox = MovableBox.read(sc);
 				if(newMoveBox != null)
-					res.moveableBoxes.add(newMoveBox);
+					res.movableBoxes.add(newMoveBox);
 			}
 			sc.close();	
 			return res;

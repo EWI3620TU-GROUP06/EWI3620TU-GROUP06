@@ -92,7 +92,7 @@ public class CustomMazeObject extends MazeObject{
 						res.addFace(faceArray);
 				}
 			}
-			res.removeRedundantVertices();
+			//res.removeRedundantVertices();
 
 			res.file = file;
 			
@@ -200,7 +200,7 @@ public class CustomMazeObject extends MazeObject{
 		if(other instanceof CustomMazeObject)
 		{
 			CustomMazeObject that = (CustomMazeObject) other;
-			return this.file.getAbsolutePath() == that.file.getAbsolutePath();
+			return this.file.getAbsolutePath().equals(that.file.getAbsolutePath());
 		}
 		return false;
 	}
