@@ -73,7 +73,7 @@ public class MazeRunner implements GLEventListener {
 	private TextBoxManager clkbxman;
 	private TextBoxManager optclkbxman;
 	private TextBoxManager finishclkbxman;
-	private TextBoxManager deadclkbxman;
+	private TextBoxManager finalclkbxman;
 	private TextBox scoreBox;
 	private TextBox totalScoreBox;
 	private TextBox finishScoreBox;
@@ -81,7 +81,8 @@ public class MazeRunner implements GLEventListener {
 	float lightPosition[] = { (float)level.getMaze().getSizeX()/2f, 50.0f, (float)level.getMaze().getSizeZ()/2f, 1.0f };
 	private SkyBox skybox;
 	private boolean playingsound;
-	private static boolean init = false;
+	
+	private final static int finalLevel = 1;
 	
 	public static boolean camColl = false;
 	public static float distance = 4;
@@ -141,7 +142,6 @@ public class MazeRunner implements GLEventListener {
 
 	public static void setLevel(Level lvl){
 		level = lvl;
-		init = false;
 	}
 
 	/**
@@ -232,11 +232,11 @@ public class MazeRunner implements GLEventListener {
 			newBox.setCommand(new HighscoreCommand(this.state.getGSM()));
 			finishclkbxman.AddBox(newBox);
 		}
-		deadclkbxman = TextBoxManager.createDeadMenu(screenWidth, screenHeight, this.state.getGSM(), input);
+		finalclkbxman = TextBoxManager.createDeadMenu(screenWidth, screenHeight, this.state.getGSM(), input);
 		this.clkbxman.setControl(input);
 		this.optclkbxman.setControl(input);
 		this.finishclkbxman.setControl(input);
-		this.deadclkbxman.setControl(input);
+		this.finalclkbxman.setControl(input);
 		
 		this.scoreBox = TextBox.createHighscoreBox(0.02f, 0.8f, 
 				screenWidth, screenHeight, 22, "Score: 0", white);
@@ -270,7 +270,6 @@ public class MazeRunner implements GLEventListener {
 		level.init(gl);
 		skybox.init(gl);
 		player.init(gl);
-		init = true;
 
 		gl.glClearColor(0, 0, 0, 0);								// Set the background color.
 
@@ -310,12 +309,6 @@ public class MazeRunner implements GLEventListener {
 		
 		GL gl = drawable.getGL();
 		GLU glu = new GLU();
-		
-		if(!init)
-		{
-			level.init(gl);
-			init = true;
-		}
 
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT );
 		gl.glLoadIdentity();
@@ -386,7 +379,7 @@ public class MazeRunner implements GLEventListener {
 
 			DrawingUtil.drawTrans(gl, 0, 0, screenWidth, screenHeight, 0.2f, 0.2f, 0.2f, 0.4f);
 			if(dead){
-				deadclkbxman.drawAllText(deltaTime);
+				finalclkbxman.drawAllText(deltaTime);
 				if(!playingsound){
 					Audio.playSound("gameover");
 					playingsound = true;
@@ -407,7 +400,15 @@ public class MazeRunner implements GLEventListener {
 				Audio.playSound("finish");
 				playingsound = true;
 			}
-			finishclkbxman.drawAllText(deltaTime);
+			if(state.getLevel() == finalLevel)
+			{
+				finalclkbxman.setTitle("Game Complete!", 10);
+				finalclkbxman.drawAllText(deltaTime);
+			}
+			else
+			{
+				finishclkbxman.drawAllText(deltaTime);
+			}
 			state.setFinished(true);
 			showCursor();
 		}
@@ -416,10 +417,13 @@ public class MazeRunner implements GLEventListener {
 		gl.glEnable(GL.GL_CULL_FACE);
 		
 		if(dead){
-			this.deadclkbxman.update();
+			this.finalclkbxman.update();
 		}
 		else if (finished){
-			this.finishclkbxman.update();
+			if(state.getLevel() == finalLevel)
+				this.finalclkbxman.update();
+			else
+				this.finishclkbxman.update();
 		}
 		else if(pause ){
 			if(optpause){
@@ -429,9 +433,7 @@ public class MazeRunner implements GLEventListener {
 				this.clkbxman.update();
 			}
 		}
-		
-		
-		
+
 		gl.glLoadIdentity();
 		gl.glFlush();
 	}
@@ -462,7 +464,7 @@ public class MazeRunner implements GLEventListener {
 		this.clkbxman.reshape(screenWidth, screenHeight);
 		this.optclkbxman.reshape(screenWidth, screenHeight);
 		this.finishclkbxman.reshape(screenWidth, screenHeight);
-		this.deadclkbxman.reshape(screenWidth, screenHeight);
+		this.finalclkbxman.reshape(screenWidth, screenHeight);
 
 		// Set the new projection matrix.
 		DrawingUtil.perspectiveProjection(gl, glu, FOV, screenWidth, screenHeight);

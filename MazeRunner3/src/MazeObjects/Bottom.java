@@ -10,8 +10,6 @@ import LevelHandling.Maze;
 import com.sun.opengl.util.texture.Texture;
 
 public class Bottom extends MazeObject {
-	
-	private static Texture texture;
 
 	public Bottom(float width, float x, float y, float z){
 		super(false);

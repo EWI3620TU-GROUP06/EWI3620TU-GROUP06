@@ -59,6 +59,14 @@ public class TextBoxManager extends ClickBoxManager{
 		}
 	}
 	
+	public void setTitle(String title, int textSize)
+	{
+		if(Boxes.size() > 0){
+			((TextBox)Boxes.get(0)).setText(title);
+			((TextBox)Boxes.get(0)).setTextSize(textSize);
+		}
+	}
+	
 	public static TextBoxManager createOptionsMenu(int screenWidth, int screenHeight, String title, String[] commands, gStateMan gsm){
 		
 		int titleScale = 10;

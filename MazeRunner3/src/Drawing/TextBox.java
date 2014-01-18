@@ -93,6 +93,12 @@ public class TextBox extends ClickBox {
 		this.color = new float[]{red,green,blue,alpha};
 	}
 	
+	public void setTextSize(int size)
+	{
+		textScale = size;
+		reshape(screenWidth, screenHeight);
+	}
+	
 	protected void updateLocation()
 	{
 		Rectangle2D temp = renderer.getBounds(Text);
