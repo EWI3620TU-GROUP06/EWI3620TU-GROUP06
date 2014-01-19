@@ -56,6 +56,8 @@ public class AddMovingBox extends EditMode {
 		pressedZ = mazeZ;
 		Calendar now = Calendar.getInstance();		
 		previousTime = now.getTimeInMillis();
+		level.getMoveableBoxes().get(num).addToPath(1000, new Vector3f(
+				mazeX * Maze.SQUARE_SIZE, 0, mazeZ*Maze.SQUARE_SIZE));
 	}
 
 }
