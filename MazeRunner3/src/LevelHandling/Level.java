@@ -13,6 +13,7 @@ import GameObjects.MovableBox;
 import GameObjects.Player;
 import GameObjects.PowerUp;
 import MainGame.MazeRunner;
+import MazeObjects.CustomMazeObject;
 import PSO.Swarm;
 import Physics.Physics;
 
@@ -113,6 +114,7 @@ public class Level {
 	
 	public void init(GL gl)
 	{
+		CustomMazeObject.clearTextures();
 		maze.initTextures(gl);
 		maze.setCustomTextures(gl);
 		PowerUp.initTextures(gl);

@@ -457,7 +457,7 @@ public class Maze implements VisibleObject {
 	
 	public void setCustomTextures(GL gl)
 	{
-		CustomMazeObject.clearTextures();
+		
 		for(CustomMazeObject obj : customs){
 			obj.setTexture(gl);
 			for(int i = 0; i < maze.length; i++){
