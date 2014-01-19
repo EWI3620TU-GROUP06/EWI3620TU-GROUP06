@@ -94,12 +94,12 @@ public class Level {
 		}
 	}
 	
-	public void setButton(int mazeX, int mazeZ){
+	public void setButton(int mazeX, int mazeZ, int move_once){
 		if(movableBoxes.size() > 0 && mazeX >= 0 && mazeX < maze.getSizeX() 
 				&& mazeZ >= 0  && mazeZ < maze.getSizeZ() && getMovableBox(mazeX, mazeZ) == null
 				&& getPowerUp(mazeX, mazeZ) == null){
 			float y = maze.getHeight(mazeX, mazeZ);
-			this.movableBoxes.get(movableBoxes.size() - 1).setActivationTile(mazeX, y, mazeZ);
+			this.movableBoxes.get(movableBoxes.size() - 1).setActivationTile(mazeX, y, mazeZ, move_once);
 			changed = true;
 		}
 	}
