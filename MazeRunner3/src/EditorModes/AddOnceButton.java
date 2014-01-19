@@ -2,16 +2,15 @@ package EditorModes;
 
 import LevelHandling.Level;
 
-public class AddButton  extends EditMode
-{
-
-	public AddButton(Level level) {
+public class AddOnceButton extends EditMode {
+	
+	public AddOnceButton(Level level) {
 		super(level);
 	}
 
 	@Override
 	public void mouseDragged(int mazeX, int mazeZ) {
-		level.setButton(mazeX, mazeZ, 0);
+		level.setButton(mazeX, mazeZ, 1);
 	}
 
 	@Override
@@ -21,7 +20,7 @@ public class AddButton  extends EditMode
 
 	@Override
 	public void mousePressed(int mazeX, int mazeZ) {
-		level.setButton(mazeX, mazeZ, 0);
+		level.setButton(mazeX, mazeZ, 1);
 	}
 
 }

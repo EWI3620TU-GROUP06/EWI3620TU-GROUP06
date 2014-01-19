@@ -35,6 +35,8 @@ public class MovableBox extends GameObject implements VisibleObject {
 	private int time = 0;
 	private int count = -1;
 	private int activationTileX, activationTileY, activationTileZ;
+	private int move_once = 0;
+	private boolean isActivated = false;
 
 	/**
 	 * Creates a new movable box of the given size on the given location.
@@ -75,9 +77,9 @@ public class MovableBox extends GameObject implements VisibleObject {
 	 * @param z	z coordinate of the new activation tile.
 	 */
 
-	public void setActivationTile(int x, float y, int z)
+	public void setActivationTile(int x, float y, int z, int move_once)
 	{
-
+		this.move_once = move_once;
 		thisButton = (CustomMazeObject) button.translate(x*Maze.SQUARE_SIZE, y, z*Maze.SQUARE_SIZE);
 		activationTileX = x;
 		activationTileY = (int)y;
@@ -99,7 +101,7 @@ public class MovableBox extends GameObject implements VisibleObject {
 	
 	public int[] getActivationTile()
 	{
-		return new int[]{activationTileX, activationTileY, activationTileZ};
+		return new int[]{activationTileX, activationTileY, activationTileZ, move_once};
 	}
 
 	public boolean isActivationTile(double x, double y, double z)
@@ -111,7 +113,18 @@ public class MovableBox extends GameObject implements VisibleObject {
 	public void activate(double x, double y, double z){
 		if (isActivationTile(x,y,z))
 		{
-			count = 1;
+			if(!isActivated && move_once == 0){
+				count = -1;
+				isActivated = true;
+			}
+			if(!isActivated && move_once == 1){
+				count = 1;
+				isActivated = true;
+			}
+			if(isActivated && move_once == 0){
+				count = 0;
+				isActivated = false;
+			}
 		}
 	}
 
@@ -202,7 +215,7 @@ public class MovableBox extends GameObject implements VisibleObject {
 	{
 		try{
 			int previousTime = 0;
-			wr.write(location.x + " " + location.y + " " + location.z + " " + box.getWidth() + " " + box.getHeight() + " " + count + " " + activationTileX + " " + activationTileY + " " + activationTileZ + "\n");
+			wr.write(location.x + " " + location.y + " " + location.z + " " + box.getWidth() + " " + box.getHeight() + " " + count + " " + activationTileX + " " + activationTileY + " " + activationTileZ + " " + move_once + " " + "\n");
 			for(int i = 0; i < pathPoints.size(); i++)
 			{
 				wr.write(pathTime.get(i) - previousTime + "," + pathPoints.get(i).x + "," + pathPoints.get(i).y + "," + pathPoints.get(i).z + ";");
@@ -233,9 +246,10 @@ public class MovableBox extends GameObject implements VisibleObject {
 			int aX = sc.nextInt();
 			int aY = sc.nextInt();
 			int aZ = sc.nextInt();
+			int moveonce = sc.nextInt();
 			MovableBox res = new MovableBox(new Vector3d(x, y, z), width, height);
 			if(!(aX < 0 || aY < 0 || aZ < 0))
-				res.setActivationTile(aX, aY, aZ);
+				res.setActivationTile(aX, aY, aZ, moveonce);
 			res.setCount(count);
 			sc.nextLine();
 			String line =  sc.nextLine();

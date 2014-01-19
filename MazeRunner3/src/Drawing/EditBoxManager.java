@@ -26,7 +26,7 @@ public class EditBoxManager extends ClickBoxManager {
 	private static final int numStandardButtons = 3;
 	private static final int numObjectButtons = 10;
 	private static final int numChangeButtons = 6;
-	private static final int numAddButtons = 6;
+	private static final int numAddButtons = 7;
 	private int numButtons;
 	private int buttonSize;
 	private ArrayList<ClickBox> objectBoxes;
@@ -79,6 +79,7 @@ public class EditBoxManager extends ClickBoxManager {
 		commands.add(new EditModeCommand(editor, new AddPowerUp(editor.getLevel(), PowerUp.COIN)));
 		commands.add(new EditModeCommand(editor, new AddMovingBox(editor.getLevel())));
 		commands.add(new EditModeCommand(editor, new AddButton(editor.getLevel())));
+		commands.add(new EditModeCommand(editor, new AddOnceButton(editor.getLevel())));
 		
 		addButtons(numAddButtons, commands, addBoxes, screenWidth, screenHeight);
 
