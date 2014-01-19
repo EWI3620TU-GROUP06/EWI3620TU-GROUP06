@@ -8,6 +8,7 @@ import java.util.Scanner;
 import javax.media.opengl.GL;
 import javax.vecmath.Vector3d;
 
+import Drawing.ErrorMessage;
 import Drawing.VisibleObject;
 import GameObjects.MovableBox;
 import GameObjects.Player;
@@ -277,7 +278,7 @@ public class Level {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			ErrorMessage.show("Exception while writing level.\n" + e.toString());
 		}
 	}
 	
@@ -308,7 +309,7 @@ public class Level {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			ErrorMessage.show("Exception while reading level.\n" + e.toString());
 			return null;
 		}
 	}

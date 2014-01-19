@@ -2,6 +2,7 @@ package LevelHandling;
 import javax.media.opengl.GL;
 
 import Drawing.DrawingUtil;
+import Drawing.ErrorMessage;
 import Drawing.VisibleObject;
 import EditorModes.ObjectMode;
 import MazeObjects.*;
@@ -368,9 +369,9 @@ public class Maze implements VisibleObject {
 			}
 		}
 		if(!start){
-			System.err.println("No start position defined");
+			ErrorMessage.show("No start position defined\nPlease input start position before saving.");
 		} else if(!finish){
-			System.err.println("No finish position defined");
+			ErrorMessage.show("No finish position defined\nPlease input finish position before saving.");
 		}else{
 			try {
 				wr.write(MAZE_SIZE_X + " " + MAZE_SIZE_Z + "\n");
@@ -400,7 +401,7 @@ public class Maze implements VisibleObject {
 				wr.write("\n");
 				return true;
 			} catch (Exception e) {
-				e.printStackTrace();
+				ErrorMessage.show("Exception while writing maze.\n" + e.toString());
 			}
 		}
 		return false;
@@ -459,7 +460,7 @@ public class Maze implements VisibleObject {
 
 			return res;
 		} catch (Exception e) {
-			e.printStackTrace();
+			ErrorMessage.show("Exception while reading maze.\n" + e.toString());
 			return new Maze();
 		}
 	}

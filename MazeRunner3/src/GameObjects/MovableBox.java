@@ -11,6 +11,7 @@ import javax.media.opengl.GL;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
+import Drawing.ErrorMessage;
 import Drawing.VisibleObject;
 import LevelHandling.Maze;
 import MazeObjects.Box;
@@ -252,7 +253,7 @@ public class MovableBox extends GameObject implements VisibleObject {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			ErrorMessage.show("Exception while writing movable box.\n" + e.toString());
 		}
 	}
 
@@ -293,7 +294,7 @@ public class MovableBox extends GameObject implements VisibleObject {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			ErrorMessage.show("Exception while reading movable box.\n" + e.toString());
 			return null;
 		}
 	}

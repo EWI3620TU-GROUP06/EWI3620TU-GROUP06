@@ -1,5 +1,6 @@
 package Main;
 
+import Drawing.ErrorMessage;
 import GameStates.gStateMan;
 
 import java.awt.*;
@@ -78,6 +79,11 @@ public class Game extends Frame{
 		
 		public static void main(String[] args) {
 			// Create and run MazeRunner.
-			new Game();
+			try{
+				new Game();
+			}
+			catch(Exception e){
+				ErrorMessage.show("Some Exception occured during execution.\n" + e.toString());
+			}
 		}
 	}

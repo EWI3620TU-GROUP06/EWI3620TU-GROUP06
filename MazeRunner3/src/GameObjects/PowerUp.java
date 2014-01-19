@@ -8,6 +8,7 @@ import javax.media.opengl.GL;
 import javax.vecmath.Vector3d;
 
 import Audio.Audio;
+import Drawing.ErrorMessage;
 import Drawing.VisibleObject;
 import MainGame.MazeRunner;
 import MazeObjects.CustomMazeObject;
@@ -134,7 +135,7 @@ public class PowerUp extends GameObject implements VisibleObject {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			ErrorMessage.show("Exception while writing power-up.\n" + e.toString());
 		}
 	}
 
@@ -155,7 +156,7 @@ public class PowerUp extends GameObject implements VisibleObject {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			ErrorMessage.show("Exception while reading power-up.\n" + e.toString());
 			return null;
 		}
 	}
