@@ -133,22 +133,18 @@ public class MovableBox extends GameObject implements VisibleObject {
 			{	
 				//TODO: fixen dat pad inkort ofzo
 				if(!isActivated && move_once == 0){
-					System.out.println("activated forever movebox");
 					count = -1;
 					isActivated = true;
 				}
 				else if(!isActivated && move_once == 1){
-					System.out.println("activate not-so-forever movebox");
 					count = 1;
 					isActivated = true;
 				}
 				else if(isActivated && move_once == 0){
-					System.out.println("deactivated forever movebox");
 					count = 0;
 					isActivated = false;
 				}
 				else if(isActivated && move_once == 1){
-					System.out.println("rerun movebox");
 					Collections.reverse(pathPoints);
 					count = 1;
 				}
@@ -210,7 +206,6 @@ public class MovableBox extends GameObject implements VisibleObject {
 					}
 					if((time - pathTime.get(i))< -100 || direction.equals(new Vector3f()))
 					{
-						System.out.println(i);
 						direction = new Vector3f();
 						direction.sub(box.getPos(), pathPoints.get(i));
 
