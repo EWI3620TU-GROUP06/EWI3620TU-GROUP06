@@ -90,5 +90,18 @@ public class StartTile extends MazeObject {
 	{
 		return other instanceof StartTile;
 	}
+	
+	//The startTile cannot be rotated around the x and z axes
+	@Override
+	public void rotateVerticesX(float angle, double y, double z)
+	{
+		// Do Nothing
+	}
+
+	@Override
+	public void rotateVerticesZ(float angle, double x, double y)
+	{
+		// Do Nothing
+	}
 
 }

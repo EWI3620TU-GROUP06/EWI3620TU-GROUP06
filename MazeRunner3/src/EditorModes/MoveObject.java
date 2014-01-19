@@ -35,9 +35,8 @@ public class MoveObject extends EditMode {
 
 			level.getMaze().clearSelected();
 			level.getMaze().select(mazeX,  mazeZ);
-			Vector3f pos = (Vector3f)selected.getPos().clone();
-			pos.sub(new Vector3f(mazeX*Maze.SQUARE_SIZE, 0, mazeZ*Maze.SQUARE_SIZE), pos);
-			level.getMaze().set(selected.translate(pos.x, pos.y, pos.z), mazeX, mazeZ);
+			Vector3f pos = (Vector3f)selected.getPos();
+			level.getMaze().set(selected.translate(-pos.x, -pos.y, -pos.z), mazeX, mazeZ);
 			pressedX = mazeX;
 			pressedZ = mazeZ;
 		}

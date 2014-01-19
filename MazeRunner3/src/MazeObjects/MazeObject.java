@@ -494,10 +494,16 @@ public void removeRedunantFaces(MazeObject that)
 
 public Vector3f getPos()
 {
-	Vector3f corner = new Vector3f(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
+	Vector3f corner = new Vector3f(1000, 1000, 1000);
+	Vector3f minPoint = new Vector3f(-1000, -1000, -1000);
 	for(Vector3f vertex : vertices)
 	{
-		if(vertex.length() < corner.length())
+		Vector3f dif1 = new Vector3f();
+		Vector3f dif2 = new Vector3f();
+		dif1.sub(vertex, minPoint);
+		dif2.sub(corner, minPoint);
+		
+		if(dif1.length() < dif2.length())
 			corner = vertex;
 	}
 	return corner;

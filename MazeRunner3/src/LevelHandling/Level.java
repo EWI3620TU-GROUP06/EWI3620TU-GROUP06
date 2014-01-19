@@ -220,7 +220,6 @@ public class Level {
 		float height = maze.getHeight(x, z);
 		PowerUp pU = getPowerUp(x,z);
 		MovableBox mB = getMovableBox(x,z);
-		System.out.println((pU == null) + ", " + (mB == null));
 		for(MovableBox mb : movableBoxes)
 		{
 			mb.removeActivationTile(x, z);
