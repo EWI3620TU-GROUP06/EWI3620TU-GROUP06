@@ -77,6 +77,11 @@ public class Maze implements VisibleObject {
 				maze[i][j] = new MazeStack(i * SQUARE_SIZE, j*SQUARE_SIZE);
 		selected = new int[MAZE_SIZE_X][MAZE_SIZE_Z];
 	}
+	
+	private boolean isInBounds(int x, int z)
+	{
+		return x >= 0 && x < MAZE_SIZE_X && z >= 0 && z < MAZE_SIZE_Z;
+	}
 
 	/**
 	 * the method removeRedundantFaces removes all the non-visible faces from the levels. this is needed to
@@ -109,9 +114,11 @@ public class Maze implements VisibleObject {
 
 	public boolean isFinish(double x, double y, double z)
 	{
-		if(x >= 0 && x < MAZE_SIZE_X*SQUARE_SIZE && z >= 0 && z < MAZE_SIZE_Z*SQUARE_SIZE){
+		int intX = (int)x / SQUARE_SIZE;
+		int intZ = (int)z / SQUARE_SIZE;
+		if(isInBounds(intX, intZ)){
 			MazeObject finishTile = null;
-			if((finishTile = maze[(int)x / SQUARE_SIZE][(int)z / SQUARE_SIZE].getInstanceOf(standards.get(ObjectMode.ADD_FINISH))) != null){
+			if((finishTile = maze[intX][intZ].getInstanceOf(standards.get(ObjectMode.ADD_FINISH))) != null){
 				return y > finishTile.getYMin()- 1 && y < finishTile.getYMin();
 			}
 		}
@@ -148,7 +155,7 @@ public class Maze implements VisibleObject {
 
 	public void select(int x, int z)
 	{
-		if(x >= 0 && x < MAZE_SIZE_X && z >= 0 && z < MAZE_SIZE_Z)
+		if(isInBounds(x, z))
 			selected[x][z] = maze[x][z].size() - 1;
 	}
 
@@ -274,7 +281,7 @@ public class Maze implements VisibleObject {
 
 	public void removeTop(int x, int z)
 	{
-		if(x >= 0 && x < MAZE_SIZE_X && z >= 0 && z < MAZE_SIZE_Z)
+		if(isInBounds(x, z))
 			maze[x][z].pop();
 	}
 	
@@ -290,19 +297,18 @@ public class Maze implements VisibleObject {
 
 	public void rotateTop(int x, int z, int angle, boolean xAxis, boolean yAxis, boolean zAxis)
 	{
+		if(isInBounds(x, z)){
 		if(xAxis)
 			maze[x][z].rotateTopX(((float)z+ 0.5f) * SQUARE_SIZE, angle);
 		if(yAxis)
 			maze[x][z].rotateTopY(((float)x+ 0.5f) * SQUARE_SIZE, ((float)z+ 0.5f) * SQUARE_SIZE, angle);
 		if(zAxis)
 			maze[x][z].rotateTopZ(((float)x+ 0.5f) * SQUARE_SIZE, angle);
+		}
 	}
 	
 	/**
-	 * Removes one MazeObject of a specific type from each stack in the maze, if possible.
-	 * <p>
-	 * Is only used to remove start of finish tiles from the maze, so there is never more that one of the 
-	 * object in the maze. 
+	 * Removes all MazeObjects of a specific type from each stack in the maze, if possible.
 	 * 
 	 * @param drawMode	byte specifying which MazeObject needs to be removed
 	 */
@@ -311,7 +317,9 @@ public class Maze implements VisibleObject {
 	{
 		for(int i = 0; i < maze.length; i++){
 			for (int j = 0; j < maze[0].length; j++){
-				maze[i][j].remove(standards.get(drawMode));
+				while(maze[i][j].getInstanceOf(standards.get(drawMode)) != null){
+					maze[i][j].remove(standards.get(drawMode));
+				}
 			}
 		}
 	}
@@ -513,10 +521,10 @@ public class Maze implements VisibleObject {
 
 	public MazeObject get(int x, int y, int z)
 	{
-		if(x >= 0 && x < MAZE_SIZE_X && z >= 0 && z < MAZE_SIZE_Z)
+		if(isInBounds(x, z))
 			if(y >= 0 && y < maze[x][z].size())
 				return maze[x][z].get().get(y);
-		return new Floor(0, 0, 0, 0);
+		return null;
 	}
 	
 	/**
@@ -528,7 +536,7 @@ public class Maze implements VisibleObject {
 
 	public ArrayList<MazeObject> get(int x, int z)
 	{
-		if(x >= 0 && x < MAZE_SIZE_X && z >= 0 && z < MAZE_SIZE_Z)
+		if(isInBounds(x, z))
 			return maze[x][z].get();
 		return new ArrayList<MazeObject>();
 	}
@@ -542,13 +550,13 @@ public class Maze implements VisibleObject {
 
 	public void set(MazeObject mazeObject, int x, int z)
 	{
-		if(x >= 0 && x < MAZE_SIZE_X && z >= 0 && z < MAZE_SIZE_Z)
-			maze[x][z].add(mazeObject); 
+		if(isInBounds(x, z))
+			maze[x][z].add(mazeObject.translate(x*SQUARE_SIZE, 0, z*SQUARE_SIZE)); 
 	}
 	
 	public float getFloorHeight(int x, int z)
 	{
-		if(x >= 0 && x < MAZE_SIZE_X && z >= 0 && z < MAZE_SIZE_Z)
+		if(isInBounds(x, z))
 		{
 			MazeObject floor =  maze[x][z].getInstanceOf(standards.get(ObjectMode.ADD_FLOOR));
 			if(floor != null)

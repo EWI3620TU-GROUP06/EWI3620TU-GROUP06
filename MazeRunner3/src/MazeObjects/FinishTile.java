@@ -49,18 +49,15 @@ public class FinishTile extends MazeObject {
 		return texture;
 	}
 	
-	/**
-	 * same as box
-	 */
 	public MazeObject translate(float x, float y, float z)
 	{
 		FinishTile res = (FinishTile)this.clone();
 		for(Vector3f vertex : res.vertices)
 			vertex.add(new Vector3f(x, y, z));
-		calculateYMin();
-		calculateHeight();
-		yMin = yMin + height;
-		height = Maze.SQUARE_SIZE;
+		res.calculateYMin();
+		res.calculateHeight();
+		res.yMin = res.yMin + res.height;
+		res.height = Maze.SQUARE_SIZE;
 		return res;
 	}
 
@@ -87,23 +84,23 @@ public class FinishTile extends MazeObject {
 		return other instanceof FinishTile;
 	}
 	
-	//The pit cannot be rotated.
-		@Override
-		public void rotateVerticesX(float angle, double y, double z)
-		{
-			// Do Nothing
-		}
-		
-		@Override
-		public void rotateVerticesY(float angle, double x, double z)
-		{
-			// Do Nothing
-		}
-		
-		@Override
-		public void rotateVerticesZ(float angle, double x, double y)
-		{
-			// Do Nothing
-		}
+	//The finish Tile cannot be rotated.
+	@Override
+	public void rotateVerticesX(float angle, double y, double z)
+	{
+		// Do Nothing
+	}
+
+	@Override
+	public void rotateVerticesY(float angle, double x, double z)
+	{
+		// Do Nothing
+	}
+
+	@Override
+	public void rotateVerticesZ(float angle, double x, double y)
+	{
+		// Do Nothing
+	}
 
 }

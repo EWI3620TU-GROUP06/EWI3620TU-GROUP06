@@ -18,6 +18,8 @@ public abstract class ObjectMode extends EditMode{
 	public static final byte ADD_FINISH = 4;
 	public static final byte ADD_RAMP = 5;
 	public static final byte ADD_LOW_RAMP = 6;
+	public static final byte ADD_PIT = 7;
+	public static final byte ADD_BOTTOM = 8;
 	public static final byte ADD_EMPTY = 9;
 	
 	protected byte drawMode;

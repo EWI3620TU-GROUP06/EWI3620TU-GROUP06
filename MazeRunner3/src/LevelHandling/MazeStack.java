@@ -2,6 +2,7 @@ package LevelHandling;
 
 import java.util.ArrayList;
 
+import EditorModes.ObjectMode;
 import MazeObjects.*;
 
 /**
@@ -14,6 +15,7 @@ import MazeObjects.*;
 public class MazeStack {
 
 	ArrayList<MazeObject> stack;
+	float mazeX, mazeZ;
 	
 	/**
 	 * Creates a new stack at the given location. the stack always has a bottom.
@@ -24,7 +26,9 @@ public class MazeStack {
 	public MazeStack(float x, float z)
 	{
 		stack = new ArrayList<MazeObject>();
-		stack.add(new Bottom(Maze.SQUARE_SIZE, x, -20, z));
+		stack.add(Maze.standards.get(ObjectMode.ADD_BOTTOM).translate(x,  0, z));
+		mazeX = x;
+		mazeZ = z;
 	}
 	/**
 	 * Adds a maze object to the top of the stack. If the previous top object of the stack had no height,
@@ -35,6 +39,10 @@ public class MazeStack {
 	
 	public void add(MazeObject mzObj)
 	{
+		if(size() == 1)
+		{
+			stack.add(Maze.standards.get(ObjectMode.ADD_PIT).translate(mazeX,  0, mazeZ));
+		}
 		float yMin = mzObj.getYMin();
 		float yMax = getTop().getYMax();
 		mzObj = mzObj.translate(0, yMax - yMin, 0);
@@ -129,8 +137,11 @@ public class MazeStack {
 	
 	public void remove(MazeObject mzObj)
 	{
-		if(stack.contains(mzObj))
-			stack.remove(mzObj);
+		int index = stack.indexOf(mzObj);
+		if(index >= 0 && index < size()){
+			stack.remove(index);
+			stack.get(index-1).setTop(true);
+		}
 	}
 	
 	/**
@@ -257,8 +268,8 @@ public class MazeStack {
 	public static MazeStack standard(float x, float z)
 	{
 		MazeStack res = new MazeStack(x, z);
-		res.stack.add(new Pit(Maze.SQUARE_SIZE, 20, x, -20, z));
-		res.add(new Floor(Maze.SQUARE_SIZE, x, 0, z));
+		res.stack.add(Maze.standards.get(ObjectMode.ADD_PIT).translate(res.mazeX,  0, res.mazeZ));
+		res.stack.add(Maze.standards.get(ObjectMode.ADD_FLOOR).translate(res.mazeX,  0, res.mazeZ));
 		return res;
 	}
 
