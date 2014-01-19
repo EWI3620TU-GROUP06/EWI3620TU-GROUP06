@@ -112,8 +112,8 @@ public class PowerUp extends GameObject implements VisibleObject {
 		}
 		activated = active;
 		switch(type){
-			case SPEED: player.multiplySpeed(factor);player.setColour(new float[] {1f, 0.5f, 0.5f, 1f});player.multiplyJump((float)1 / factor);Audio.playSound("speedup");break;
-			case JUMP: player.multiplyJump(factor);player.setColour(new float[] {0.5f, 1f, 0.5f, 1f});Audio.playSound("jumpup");break;
+			case SPEED: player.multiplySpeed(factor);player.setColour(new float[] {1f, 0.5f, 0.5f, 1f});player.multiplyJump((float)1 / factor);if(active){Audio.playSound("speedup");};break;
+			case JUMP: player.multiplyJump(factor);player.setColour(new float[] {0.5f, 1f, 0.5f, 1f});if(active){Audio.playSound("jumpup");};break;
 			case COIN: if(coinpicked){mazeRunner.addScore(10);Audio.playSound("coin");};break;
 			default:;
 		}
