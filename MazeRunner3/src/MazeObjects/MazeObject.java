@@ -477,9 +477,7 @@ public void removeRedunantFaces(MazeObject that)
 		for(int j  = 0; j < that.faces.size(); j++)
 		{
 			ArrayList<Vector3f> thatFacePoints = that.getFaceVertices(j);
-			@SuppressWarnings("unchecked")
-			ArrayList<Vector3f> commonVertices = (ArrayList<Vector3f>) thisFacePoints.clone();
-			commonVertices.retainAll(thatFacePoints);
+			ArrayList<Vector3f> commonVertices = retainAll(thisFacePoints, thatFacePoints);
 			if(commonVertices.size() == thatFacePoints.size() && commonVertices.size() == thisFacePoints.size())
 			{
 				if(!(this instanceof Floor || this instanceof StartTile || this instanceof FinishTile))
@@ -490,6 +488,25 @@ public void removeRedunantFaces(MazeObject that)
 			}
 		}
 	}
+}
+
+public ArrayList<Vector3f> retainAll(ArrayList<Vector3f> l1, ArrayList<Vector3f> l2)
+{
+	ArrayList<Vector3f> res = new ArrayList<Vector3f>();
+	
+	for(Vector3f v1 : l1)
+	{
+		for(Vector3f v2 : l2)
+		{
+			if(Math.abs(v1.x - v2.x) < 0.01 &&Math.abs(v1.y - v2.y) < 0.01 && Math.abs(v1.z - v2.z) < 0.01)
+			{
+				if(!res.contains(v1))
+					res.add(v1);
+			}
+		}
+	}
+	
+	return res;
 }
 
 public Vector3f getPos()

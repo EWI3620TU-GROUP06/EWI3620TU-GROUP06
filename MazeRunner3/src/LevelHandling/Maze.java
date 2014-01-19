@@ -77,7 +77,7 @@ public class Maze implements VisibleObject {
 				maze[i][j] = new MazeStack(i * SQUARE_SIZE, j*SQUARE_SIZE);
 		selected = new int[MAZE_SIZE_X][MAZE_SIZE_Z];
 	}
-	
+
 	private boolean isInBounds(int x, int z)
 	{
 		return x >= 0 && x < MAZE_SIZE_X && z >= 0 && z < MAZE_SIZE_Z;
@@ -103,7 +103,7 @@ public class Maze implements VisibleObject {
 			}
 		}
 	}
-	
+
 	/**
 	 * Checks whether the given position is inside the bounds of the Finish tile
 	 * @param x	x coordinate of the player location
@@ -168,7 +168,7 @@ public class Maze implements VisibleObject {
 	{
 		return MAZE_SIZE_X * SQUARE_SIZE;
 	}
-	
+
 	/**
 	 * Returns the size of the maze in the z direction in opengl units
 	 * @return 	the size of the maze in the z direction in opengl units
@@ -178,7 +178,7 @@ public class Maze implements VisibleObject {
 	{
 		return  MAZE_SIZE_Z * SQUARE_SIZE;
 	}
-	
+
 	/**
 	 * Returns the height of a certain stack in th maze
 	 * @param x	x coordinate of the stack
@@ -263,7 +263,7 @@ public class Maze implements VisibleObject {
 			for( int j = 0; j < maze[0].length; j++ )
 				selected[i][j] = -1;
 	}
-	
+
 	/**
 	 * Sets the 'selected' flag of all elements in the maze to -2, which means: all selected.
 	 */
@@ -274,7 +274,7 @@ public class Maze implements VisibleObject {
 			for( int j = 0; j < maze[0].length; j++ )
 				selected[i][j] = -2;
 	}
-	
+
 	/**
 	 * Removes the top MazeObject on the given location 
 	 * @param x	x coordinate of the removed object
@@ -286,7 +286,7 @@ public class Maze implements VisibleObject {
 		if(isInBounds(x, z))
 			maze[x][z].pop();
 	}
-	
+
 	/**
 	 * Rotates the top MazeObject on the given location around any of the three axes.
 	 * @param x		x coordinate of the rotated object
@@ -300,15 +300,15 @@ public class Maze implements VisibleObject {
 	public void rotateTop(int x, int z, int angle, boolean xAxis, boolean yAxis, boolean zAxis)
 	{
 		if(isInBounds(x, z)){
-		if(xAxis)
-			maze[x][z].rotateTopX(((float)z+ 0.5f) * SQUARE_SIZE, angle);
-		if(yAxis)
-			maze[x][z].rotateTopY(((float)x+ 0.5f) * SQUARE_SIZE, ((float)z+ 0.5f) * SQUARE_SIZE, angle);
-		if(zAxis)
-			maze[x][z].rotateTopZ(((float)x+ 0.5f) * SQUARE_SIZE, angle);
+			if(xAxis)
+				maze[x][z].rotateTopX(((float)z+ 0.5f) * SQUARE_SIZE, angle);
+			if(yAxis)
+				maze[x][z].rotateTopY(((float)x+ 0.5f) * SQUARE_SIZE, ((float)z+ 0.5f) * SQUARE_SIZE, angle);
+			if(zAxis)
+				maze[x][z].rotateTopZ(((float)x+ 0.5f) * SQUARE_SIZE, angle);
 		}
 	}
-	
+
 	/**
 	 * Removes all MazeObjects of a specific type from each stack in the maze, if possible.
 	 * 
@@ -463,10 +463,10 @@ public class Maze implements VisibleObject {
 			return new Maze();
 		}
 	}
-	
+
 	public void setCustomTextures(GL gl)
 	{
-		
+
 		for(CustomMazeObject obj : customs){
 			obj.setTexture(gl);
 			for(int i = 0; i < maze.length; i++){
@@ -511,7 +511,7 @@ public class Maze implements VisibleObject {
 			}
 		}
 	}
-	
+
 	/**
 	 * Gets the Maze Object on a certain index on a certain stack, if it exists.
 	 * @param x	x coordinate of the stack
@@ -527,7 +527,7 @@ public class Maze implements VisibleObject {
 				return maze[x][z].get().get(y);
 		return null;
 	}
-	
+
 	/**
 	 * Gets all maze Objects in a certain stack in the maze.
 	 * @param x x coordinate of the stack
@@ -541,7 +541,7 @@ public class Maze implements VisibleObject {
 			return maze[x][z].get();
 		return new ArrayList<MazeObject>();
 	}
-	
+
 	/**
 	 * Adds the given mazeObject to a selected stack
 	 * @param mazeObject	Maze Object that is added
@@ -554,7 +554,7 @@ public class Maze implements VisibleObject {
 		if(isInBounds(x, z))
 			maze[x][z].add(mazeObject.translate(x*SQUARE_SIZE, 0, z*SQUARE_SIZE)); 
 	}
-	
+
 	public float getFloorHeight(int x, int z)
 	{
 		if(isInBounds(x, z))
@@ -568,16 +568,24 @@ public class Maze implements VisibleObject {
 		return -1;
 	}
 
-	public MazeObject[] getNeighbourTiles(int x, int z, int height){
-		MazeObject[] res = new MazeObject[4];
-		// The lines below work for the tile relative
-		// to the middle tile according to the comment behind it
-		// but this assumes that x is vertical in the maze-array and z is horizontal
-		res[0] = maze[(int)x-1][(int)z].getAtHeight(height); // up
-		res[1] = maze[(int)x][(int)z-1].getAtHeight(height); // left
-		res[2] = maze[(int)x+1][(int)z].getAtHeight(height); // down
-		res[3] = maze[(int)x][(int)z+1].getAtHeight(height); // right
-		return res;
+	public MazeObject[] getNeighbourTiles(int x, int z, float height){
+		if(isInBounds(x, z))
+		{
+			MazeObject[] res = new MazeObject[4];
+			// The lines below work for the tile relative
+			// to the middle tile according to the comment behind it
+			// but this assumes that x is vertical in the maze-array and z is horizontal
+			if(x > 0)
+				res[0] = maze[(int)x-1][(int)z].getAtHeight(height); // up
+			if(z > 0)
+				res[1] = maze[(int)x][(int)z-1].getAtHeight(height); // left
+			if(x < MAZE_SIZE_X - 1)
+				res[2] = maze[(int)x+1][(int)z].getAtHeight(height); // down
+			if(z < MAZE_SIZE_Z - 1)
+				res[3] = maze[(int)x][(int)z+1].getAtHeight(height); // right
+			return res;
+		}
+		return null;
 	}
 
 }

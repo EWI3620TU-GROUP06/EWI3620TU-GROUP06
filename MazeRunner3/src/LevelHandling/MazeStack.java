@@ -102,7 +102,7 @@ public class MazeStack {
 		return stack.size();
 	}
 
-	public MazeObject getAtHeight(int height)
+	public MazeObject getAtHeight(float height)
 	{
 		for(int i = 0; i < size(); i++)
 		{

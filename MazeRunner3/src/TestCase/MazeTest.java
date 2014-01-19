@@ -240,7 +240,20 @@ public class MazeTest {
 		testMaze.removeRedundantFaces();
 		obj022 = testMaze.get(0, 2, 2);
 		assertTrue(obj022.getNumFaces() == 5);
-		assertTrue(testMaze.get(2, 2, 1).getNumFaces() == numTunnelFaces);
+		assertTrue(testMaze.get(2, 2, 1).getNumFaces() == numTunnelFaces - 2);
+	}
+	
+	@Test
+	public void testNeighbours()
+	{
+		MazeObject[] objArray = testMaze.getNeighbourTiles(0, 2, 2.5f);
+		assertEquals(objArray[0], null);
+		assertEquals(objArray[1], Maze.standards.get(ObjectMode.ADD_LOW_RAMP));
+		assertEquals(objArray[2], Maze.standards.get(ObjectMode.ADD_LOW_BOX));
+		assertEquals(objArray[0], null);
+		
+		MazeObject[] faultArray = testMaze.getNeighbourTiles(0, -1, 0);
+		assertTrue(faultArray == null);
 	}
 
 	@After
