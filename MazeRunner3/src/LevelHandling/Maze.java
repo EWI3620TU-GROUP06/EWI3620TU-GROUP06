@@ -188,7 +188,9 @@ public class Maze implements VisibleObject {
 
 	public float getHeight(int x, int z)
 	{
-		return maze[x][z].getHeight();
+		if(isInBounds(x,z))
+			return maze[x][z].getHeight();
+		return Integer.MIN_VALUE;
 	}
 
 	/**
@@ -334,7 +336,6 @@ public class Maze implements VisibleObject {
 		for(int i = 0; i < maze.length; i++){
 			for (int j = 0; j < maze[0].length; j++){
 				if (selected[i][j] != -1 ) {
-
 					if(drawMode < 0)
 						maze[i][j].add(customs.get(-drawMode - 1).translate(i * SQUARE_SIZE, 0, j*SQUARE_SIZE));
 					else

@@ -210,7 +210,6 @@ public class MovableBox extends GameObject implements VisibleObject {
 					}
 					if((time - pathTime.get(i))< -100 || direction.equals(new Vector3f()))
 					{
-						System.out.println(i);
 						direction = new Vector3f();
 						direction.sub(box.getPos(), pathPoints.get(i));
 

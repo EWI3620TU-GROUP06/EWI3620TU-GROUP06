@@ -125,15 +125,6 @@ public class MazeStack {
 	}
 
 	/**
-	 * Clears the stack.
-	 */
-
-	public void clear()
-	{
-		stack.clear();
-	}
-
-	/**
 	 * Removes one MazeObject of a certain kind from the stack.
 	 * @param mzObj	MazeObject type to be removed.
 	 */
@@ -271,7 +262,7 @@ public class MazeStack {
 	public static MazeStack standard(float x, float z)
 	{
 		MazeStack res = new MazeStack(x, z);
-		res.stack.add(Maze.standards.get(ObjectMode.ADD_FLOOR).translate(res.mazeX,  0, res.mazeZ));
+		res.add(Maze.standards.get(ObjectMode.ADD_FLOOR).translate(res.mazeX,  0, res.mazeZ));
 		return res;
 	}
 

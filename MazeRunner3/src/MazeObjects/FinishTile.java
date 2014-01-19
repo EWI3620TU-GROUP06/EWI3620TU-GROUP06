@@ -20,7 +20,6 @@ public class FinishTile extends MazeObject {
 	public FinishTile(float width, float x, float y, float z){
 		super(true);
 		custom = (CustomMazeObject) custom.translate(x, y, z);
-		custom = (CustomMazeObject) custom.translate(0, -custom.height, 0);
 		this.vertices = custom.vertices;
 		this.texVertices = custom.texVertices;
 		this.faces = custom.faces;
