@@ -139,7 +139,7 @@ public abstract class MazeObject {
 			int count = 0;
 			for(Vector3f vertex : vertices)
 			{
-				if(Math.abs(vertex.y - bottomHeight)< 0.01)
+				if(Math.abs(vertex.y - bottomHeight)< 0.1)
 				{
 					count++;
 				}

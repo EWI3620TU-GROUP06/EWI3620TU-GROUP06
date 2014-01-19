@@ -178,6 +178,7 @@ public class CustomMazeObject extends MazeObject{
 		for(Vector3f vertex : res.vertices)
 			vertex.add(new Vector3f(x, y, z));
 		res.calculateYMin();
+		res.calculateHeight();
 		return res;
 	}
 
