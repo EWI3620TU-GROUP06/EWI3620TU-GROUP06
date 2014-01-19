@@ -3,6 +3,8 @@ package GameObjects;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.Scanner;
 
 import javax.media.opengl.GL;
@@ -37,6 +39,8 @@ public class MovableBox extends GameObject implements VisibleObject {
 	private int activationTileX, activationTileY, activationTileZ;
 	private int move_once = 0;
 	private boolean isActivated = false;
+	private long previousTime;
+	private boolean firstrun = true;
 
 	/**
 	 * Creates a new movable box of the given size on the given location.
@@ -106,25 +110,50 @@ public class MovableBox extends GameObject implements VisibleObject {
 
 	public boolean isActivationTile(double x, double y, double z)
 	{
-		return ((int)(x/Maze.SQUARE_SIZE) == activationTileX) && ((int)(z/Maze.SQUARE_SIZE) == activationTileZ) &&
+		return  (x > (activationTileX*Maze.SQUARE_SIZE)) && 
+				(x < (activationTileX*Maze.SQUARE_SIZE + Maze.SQUARE_SIZE)) && 
+				(z > (activationTileZ*Maze.SQUARE_SIZE)) &&
+				(z < (activationTileZ*Maze.SQUARE_SIZE + Maze.SQUARE_SIZE)) &&
 				(Math.abs(y - activationTileY - 1) < button.getHeight() + 0.1);
 	}
 
 	public void activate(double x, double y, double z){
 		if (isActivationTile(x,y,z))
 		{
-			if(!isActivated && move_once == 0){
-				count = -1;
-				isActivated = true;
+			long time = Calendar.getInstance().getTimeInMillis();
+			int deltaTime;
+			if(firstrun){
+				deltaTime = 1001;
+				firstrun = false;
 			}
-			if(!isActivated && move_once == 1){
-				count = 1;
-				isActivated = true;
+			else{
+				deltaTime = (int)(time - previousTime);
 			}
-			if(isActivated && move_once == 0){
-				count = 0;
-				isActivated = false;
+			if(deltaTime > 1000)
+			{	
+				//TODO: fixen dat pad inkort ofzo
+				if(!isActivated && move_once == 0){
+					System.out.println("activated forever movebox");
+					count = -1;
+					isActivated = true;
+				}
+				else if(!isActivated && move_once == 1){
+					System.out.println("activate not-so-forever movebox");
+					count = 1;
+					isActivated = true;
+				}
+				else if(isActivated && move_once == 0){
+					System.out.println("deactivated forever movebox");
+					count = 0;
+					isActivated = false;
+				}
+				else if(isActivated && move_once == 1){
+					System.out.println("rerun movebox");
+					Collections.reverse(pathPoints);
+					count = 1;
+				}
 			}
+			previousTime = time;
 		}
 	}
 
@@ -158,6 +187,13 @@ public class MovableBox extends GameObject implements VisibleObject {
 	{
 		if(physics != null)
 		{
+			if(count == 0){
+				Vector3f newLocation = physics.moveBox(id, new Vector3f(0, 0, 0));
+				newLocation.sub(new Vector3f(2.5f, 2.5f, 2.5f));
+				box.moveTo(newLocation);
+				return;
+			}
+			
 			if(pathTime.size() > 0)
 			{
 				time += deltaTime;
@@ -165,12 +201,6 @@ public class MovableBox extends GameObject implements VisibleObject {
 					time -= pathTime.get(pathTime.size() - 1);
 					if(count > 0)
 						count--;
-					if(count == 0){
-						Vector3f newLocation = physics.moveBox(id, new Vector3f(0, 0, 0));
-						newLocation.sub(new Vector3f(2.5f, 2.5f, 2.5f));
-						box.moveTo(newLocation);
-						return;
-					}
 				}
 				if(count != 0)
 				{
@@ -196,6 +226,7 @@ public class MovableBox extends GameObject implements VisibleObject {
 				Vector3f newLocation = physics.getBoxLocation(id);
 				newLocation.sub(new Vector3f(2.5f, 2.5f, 2.5f));
 				box.moveTo(newLocation);
+				System.out.println(newLocation.toString());
 			}
 		}
 	}
