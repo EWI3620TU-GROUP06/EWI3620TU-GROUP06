@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import javax.vecmath.Vector3f;
 
 import LevelHandling.Level;
-import LevelHandling.Maze;
 import MazeObjects.MazeObject;
 
 /**
