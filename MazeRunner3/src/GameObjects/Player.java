@@ -219,7 +219,7 @@ public class Player extends GameObject implements VisibleObject {
 		
 		sphereTexture.enable(); // Enable the ball texture
 		sphereTexture.bind(); 
-		float[] ballColour = new float[]{0.5f, 0.5f, 0.5f, 1.0f};
+		float[] ballColour = new float[]{1f, 1f, 1f, 1.0f};
 		float[] diffColour = new float[]{0.2f, 0.2f, 0.2f, 1.0f};
 		float[] specColour = new float[]{1f, 1f, 1f, 1f};
 		gl.glMaterialfv( GL.GL_FRONT, GL.GL_AMBIENT, ballColour, 0);
