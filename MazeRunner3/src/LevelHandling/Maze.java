@@ -473,11 +473,13 @@ public class Maze implements VisibleObject {
 			for(int i = 0; i < maze.length; i++){
 				for(int j = 0; j < maze[0].length; j++)
 				{
-					MazeObject object = maze[i][j].getInstanceOf(obj);
-					if(object != null)
+					for(MazeObject object : maze[i][j].get())
 					{
-						CustomMazeObject that = (CustomMazeObject) object;
-						that.setTexNum(obj.getTexNum());
+						if(obj.equals(object))
+						{
+							CustomMazeObject that = (CustomMazeObject) object;
+							that.setTexNum(obj.getTexNum());
+						}
 					}
 				}
 			}

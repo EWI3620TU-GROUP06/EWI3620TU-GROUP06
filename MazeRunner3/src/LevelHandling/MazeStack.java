@@ -106,7 +106,7 @@ public class MazeStack {
 	{
 		for(int i = 0; i < size(); i++)
 		{
-			if(stack.get(i).getYMax() >= height)
+			if(stack.get(i).getYMax() > height)
 			{
 				return stack.get(i);
 			}
@@ -242,8 +242,8 @@ public class MazeStack {
 				thisObject.removeRedunantFaces(this.stack.get(i + 1));
 			for(MazeObject thatObject : that.stack)
 			{
-				if(thisObject.getHeight() == thatObject.getHeight() &&
-						thisObject.getYMin() == thatObject.getYMin())
+				if(Math.abs(thisObject.getHeight() - thatObject.getHeight()) < 0.0001 &&
+						Math.abs(thisObject.getYMin() - thatObject.getYMin()) < 0.0001)
 				{
 					thisObject.removeRedunantFaces(thatObject);
 				}

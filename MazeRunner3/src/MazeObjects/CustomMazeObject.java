@@ -205,7 +205,7 @@ public class CustomMazeObject extends MazeObject{
 		if(other instanceof CustomMazeObject)
 		{
 			CustomMazeObject that = (CustomMazeObject) other;
-			return this.file.getAbsolutePath().equals(that.file.getAbsolutePath());
+			return this.file.getPath().equals(that.file.getPath());
 		}
 		return false;
 	}

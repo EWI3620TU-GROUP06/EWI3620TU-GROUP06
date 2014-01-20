@@ -480,9 +480,9 @@ public void removeRedunantFaces(MazeObject that)
 			ArrayList<Vector3f> commonVertices = retainAll(thisFacePoints, thatFacePoints);
 			if(commonVertices.size() == thatFacePoints.size() && commonVertices.size() == thisFacePoints.size())
 			{
-				if(!(this instanceof Floor || this instanceof StartTile || this instanceof FinishTile))
+				if(!(this.height == 0 || this instanceof StartTile))
 					this.faces.remove(i);
-				if(!(that instanceof Floor || that instanceof StartTile || that instanceof FinishTile))
+				if(!(that.height == 0 || that instanceof StartTile))
 					that.faces.remove(j);
 				break;
 			}

@@ -130,6 +130,17 @@ public class MazeTest {
 		newMaze.removeTop(1, 1);
 
 		checkMazes(testMaze, newMaze);
+		
+		newMaze.selectedAll();
+		newMaze.addBlock(ObjectMode.ADD_BOX, 0);
+		assertEquals(newMaze.get(0, 3, 0), newMaze.get(1, 2, 1));
+		
+		testMaze.removeBlocks(ObjectMode.ADD_BOX);
+		assertTrue(testMaze.getHeight(2, 0) == Maze.SQUARE_SIZE);
+		MazeObject obj232 = testMaze.get(2, 3, 2);
+		assertEquals(obj232, Maze.standards.get(ObjectMode.ADD_FINISH));
+		checkVectors(obj232.getPos(), new Vector3f(Maze.SQUARE_SIZE * 2, Maze.SQUARE_SIZE * 1.5f, Maze.SQUARE_SIZE * 2));
+	
 	}
 
 	/**
@@ -156,6 +167,10 @@ public class MazeTest {
 		assertTrue(startPos[3] == 0);
 
 		testMaze.rotateTop(0, 0, 90, false, true, false);
+		startPos = testMaze.getStart();
+		assertTrue(startPos[3] == 90);
+		
+		testMaze.rotateTop(-1, 0, 90, true, true, true);
 		startPos = testMaze.getStart();
 		assertTrue(startPos[3] == 90);
 	}
@@ -191,6 +206,7 @@ public class MazeTest {
 			Maze faultMaze = Maze.read(sc);
 			checkMazes(faultMaze, new Maze());
 			sc.close();
+			
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -248,9 +264,15 @@ public class MazeTest {
 	{
 		MazeObject[] objArray = testMaze.getNeighbourTiles(0, 2, 2.5f);
 		assertEquals(objArray[0], null);
-		assertEquals(objArray[1], Maze.standards.get(ObjectMode.ADD_LOW_RAMP));
-		assertEquals(objArray[2], Maze.standards.get(ObjectMode.ADD_LOW_BOX));
-		assertEquals(objArray[0], null);
+		assertEquals(objArray[1], null);
+		assertEquals(objArray[2], Maze.standards.get(ObjectMode.ADD_RAMP));
+		assertEquals(objArray[3], null);
+		
+		objArray = testMaze.getNeighbourTiles(2, 0, 5f);
+		assertEquals(objArray[0],  null);
+		assertEquals(objArray[1], null);
+		assertEquals(objArray[2], null);
+		assertEquals(objArray[3],  tunnel);
 		
 		MazeObject[] faultArray = testMaze.getNeighbourTiles(0, -1, 0);
 		assertTrue(faultArray == null);
