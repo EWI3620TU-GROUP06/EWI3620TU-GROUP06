@@ -432,7 +432,7 @@ public class Maze implements VisibleObject {
 				i++;
 				while (i < splitLine.length)
 				{
-					fileName += "\\" + splitLine[i];
+					fileName += "/" + splitLine[i];
 					i++;
 				}
 				customs.add(CustomMazeObject.readFromOBJ(new File(fileName)));
