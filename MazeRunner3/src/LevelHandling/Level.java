@@ -265,16 +265,22 @@ public class Level {
 	{
 		try{
 			PrintWriter wr = new PrintWriter(file);
-			maze.write(wr);
-			wr.write("PowerUps:\n");
-			for(PowerUp powerUp:  powerUps){
-				powerUp.write(wr);
+			boolean gelukt = maze.write(wr);
+			if(gelukt){
+				wr.write("PowerUps:\n");
+				for(PowerUp powerUp:  powerUps){
+					powerUp.write(wr);
+				}
+				wr.write("MoveableBoxes:\n");
+				for(MovableBox moveBox :  movableBoxes){
+					moveBox.write(wr);
+				}
+				wr.close();
 			}
-			wr.write("MoveableBoxes:\n");
-			for(MovableBox moveBox :  movableBoxes){
-				moveBox.write(wr);
+			else{
+				wr.close();
+				file.delete();
 			}
-			wr.close();
 		}
 		catch(Exception e)
 		{

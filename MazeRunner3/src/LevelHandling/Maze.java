@@ -370,8 +370,10 @@ public class Maze implements VisibleObject {
 		}
 		if(!start){
 			ErrorMessage.show("No start position defined\nPlease input start position before saving.");
+			return false;
 		} else if(!finish){
 			ErrorMessage.show("No finish position defined\nPlease input finish position before saving.");
+			return false;
 		}else{
 			try {
 				wr.write(MAZE_SIZE_X + " " + MAZE_SIZE_Z + "\n");
