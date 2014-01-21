@@ -424,7 +424,12 @@ public class Maze implements VisibleObject {
 			sc.nextLine();
 			while(!sc.hasNextByte()){
 				String line = sc.nextLine();
+				
 				String[] splitLine = line.split("[\\\\]");
+				if(splitLine.length < 2){
+					splitLine = line.split("[////]");
+				}
+				
 				int i = 0;
 				while(i < splitLine.length && !splitLine[i].equals("src"))
 					i++;
