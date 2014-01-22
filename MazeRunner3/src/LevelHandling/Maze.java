@@ -433,9 +433,9 @@ public class Maze implements VisibleObject {
 				}
 				
 				int i = 0;
-				while(i < splitLine.length && !splitLine[i].equals("src"))
+				while(i < splitLine.length && !splitLine[i].equals("Objects"))
 					i++;
-				String fileName = "src";
+				String fileName = "Objects";
 				i++;
 				while (i < splitLine.length)
 				{
