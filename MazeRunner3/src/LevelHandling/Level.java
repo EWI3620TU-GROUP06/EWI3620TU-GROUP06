@@ -296,9 +296,6 @@ public class Level {
 			Scanner sc = new Scanner(file);
 			Maze maze =  Maze.read(sc);
 			Level res = new Level(maze);
-			while(!sc.nextLine().equals("PowerUps:")&& sc.hasNextLine()){
-				//loop
-			}
 			String line = "";
 			while(sc.hasNextLine()){
 				if((line = sc.nextLine()).equals("MoveableBoxes:"))
