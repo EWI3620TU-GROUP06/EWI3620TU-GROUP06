@@ -79,11 +79,7 @@ public class Game extends Frame{
 		
 		public static void main(String[] args) {
 			// Create and run MazeRunner.
-			try{
-				new Game();
-			}
-			catch(Exception e){
-				ErrorMessage.show("Some Exception occured during execution.\n" + e.toString());
-			}
+			new Game();
+	
 		}
 	}

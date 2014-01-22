@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import Drawing.ErrorMessage;
+
 /**
  * the class SqlReadWrite gives all the functionality to the sql database the methods used to read and write 
  * highscores in the sql database are stated in this class.
@@ -43,7 +45,7 @@ public class SqlReadWrite {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			ErrorMessage.show("SQL Exception while trying set up a connection wiht the high scores database.\n" + e.toString());
 		}
 	}
 	
@@ -68,7 +70,7 @@ public class SqlReadWrite {
 			connect.close();
 		}
 		catch(Exception e){
-			e.printStackTrace();
+			ErrorMessage.show("SQL Exception while trying to write to the high scores database.\n" + e.toString());
 		}
 	}
 
@@ -99,7 +101,7 @@ public class SqlReadWrite {
 			connect.close();
 		}
 		catch(Exception e){
-			e.printStackTrace();
+			ErrorMessage.show("SQL Exception while trying to read from the high scores database.\n" + e.toString());
 		}
 	}
 	
@@ -116,8 +118,7 @@ public class SqlReadWrite {
 			mostRecentScore = null;
 			connect.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			ErrorMessage.show("SQL Exception while trying to delete the high scores.\n" + e.toString());
 		}
 	}
 	
