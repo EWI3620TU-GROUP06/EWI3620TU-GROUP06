@@ -2,16 +2,16 @@ package GameObjects;
 import java.io.File;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.vecmath.Vector3d;
 
 
-import EditorModes.*;
 
+import EditorModes.*;
 import LevelHandling.Level;
 import LevelHandling.Maze;
-
 import Listening.Control;
 import MazeObjects.CustomMazeObject;
 
@@ -223,8 +223,18 @@ public class Editor extends GameObject{
 		int returnVal = fc.showDialog(fc, "Save");
 		File file = fc.getSelectedFile();
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			level.saveLevel(file);
-			return true;
+			int overwriteme = 10;
+			if(file.exists()){
+				overwriteme = JOptionPane.showConfirmDialog(fc, "Do you wish to overwrite this file?", "Do you wish to overwrite this file?", JOptionPane.YES_NO_OPTION);
+			}
+			
+			if(overwriteme == 10 || overwriteme == JOptionPane.YES_OPTION){
+				level.saveLevel(file);
+				return true;
+			}
+			else{
+				save();
+			}
 		}
 		return false;
 	}

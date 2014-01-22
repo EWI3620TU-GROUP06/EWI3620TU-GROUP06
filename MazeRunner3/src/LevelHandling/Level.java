@@ -279,7 +279,9 @@ public class Level {
 			}
 			else{
 				wr.close();
-				file.delete();
+				if(file.exists()){
+					file.delete();
+				}
 			}
 		}
 		catch(Exception e)
