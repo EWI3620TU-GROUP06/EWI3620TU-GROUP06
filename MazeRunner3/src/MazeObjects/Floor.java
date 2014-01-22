@@ -10,9 +10,9 @@ import LevelHandling.Maze;
 import com.sun.opengl.util.texture.Texture;
 
 public class Floor extends MazeObject {
-	
+
 	private static Texture texture;
-	
+
 	public Floor(float width, float x, float y, float z){
 		super(false);
 		this.width = width;
@@ -25,14 +25,14 @@ public class Floor extends MazeObject {
 
 		int face0[] = {0,1,2,3};
 		addFace(face0);
-		
+
 		for(Face face: faces){
 			calculateNormal(face);
 		}
-		
+
 		restitution = 0.8f;
 	}
-	
+
 	public Floor(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces)
 	{
 		super(vertices, texVertices, faces, new int[] {1,1,1});
@@ -41,17 +41,17 @@ public class Floor extends MazeObject {
 		calculateHeight();
 		restitution = 0.8f;
 	}
-	
+
 	public static void addTexture(Texture t)
 	{
 		texture = t;
 	}
-	
+
 	public Texture getTexture()
 	{
 		return texture;
 	}
-	
+
 	public MazeObject translate(float x, float y, float z)
 	{
 		Floor res = (Floor)this.clone();
@@ -78,10 +78,23 @@ public class Floor extends MazeObject {
 		}
 		return new Floor(vertices, this.texVertices, faces);
 	}
-	
+
 	public boolean equals(Object other)
 	{
 		return other instanceof Floor;
 	}
-	
+
+	//The Floor cannot be rotated around the x and z axes
+	@Override
+	public void rotateVerticesX(float angle, double y, double z)
+	{
+		// Do Nothing
+	}
+
+	@Override
+	public void rotateVerticesZ(float angle, double x, double y)
+	{
+		// Do Nothing
+	}
+
 }
