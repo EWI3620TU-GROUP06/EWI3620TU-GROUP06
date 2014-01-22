@@ -1,6 +1,5 @@
 package GameStates;
 
-import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCanvas;
 
 import Audio.Audio;
@@ -27,19 +26,6 @@ public class HighscoreState extends GameState {
 	
 	public void update(){
 		hm = new HighscoreMenu(game, this);
-	}
-	
-	public void init(GLAutoDrawable drawable) {
-		hm.init(drawable);
-	}
-	
-	@Override
-	public void draw(GLAutoDrawable drawable) {
-		hm.display(drawable);
-	}
-	
-	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height){
-		hm.reshape(drawable, x, y, width, height);
 	}
 	
 	public GLCanvas getCanvas(){

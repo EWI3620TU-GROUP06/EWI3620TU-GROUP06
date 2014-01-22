@@ -85,6 +85,12 @@ public class MazeTest {
 		assertEquals(faultObj, null);
 		faultObj = testMaze.get(0, 4, 0);
 		assertEquals(faultObj, null);
+		faultObj = testMaze.get(0, -1, 0);
+		assertEquals(faultObj, null);
+		
+		testMaze.set(Maze.standards.get(ObjectMode.ADD_BOX), 0, -1);
+		ArrayList<MazeObject> faultArrayList = testMaze.get(0, -1);
+		assertTrue(faultArrayList.size() == 0);
 	}
 
 	/**
@@ -131,6 +137,13 @@ public class MazeTest {
 
 		checkMazes(testMaze, newMaze);
 		
+		newMaze.select(-1, 0);
+		newMaze.addBlock(ObjectMode.ADD_FLOOR, 0);
+		assertEquals(newMaze.get(-1, 1, 0), null);
+		
+		newMaze.removeTop(-1, 0);
+		assertEquals(newMaze.get(-1, 0, 0), null);
+		
 		newMaze.selectedAll();
 		newMaze.addBlock(ObjectMode.ADD_BOX, 0);
 		assertEquals(newMaze.get(0, 3, 0), newMaze.get(1, 2, 1));
@@ -153,6 +166,7 @@ public class MazeTest {
 		// test isFinish
 		assertFalse(testMaze.isFinish(5, 5, 5));
 		assertFalse(testMaze.isFinish(12.5, -0.5, 12.5));
+		assertFalse(testMaze.isFinish(-1, 0 , -30));
 		assertTrue(testMaze.isFinish(12.5, 7, 12.5));
 
 		//test getStart
@@ -232,6 +246,10 @@ public class MazeTest {
 		assertTrue(testMaze.getSizeZ() == 2 * Maze.SQUARE_SIZE);
 		
 		testMaze.setSize(0, 3);
+		assertTrue(testMaze.getSizeX() == 1 * Maze.SQUARE_SIZE);
+		assertTrue(testMaze.getSizeZ() == 2 * Maze.SQUARE_SIZE);
+		
+		testMaze.setSize(1, -1);
 		assertTrue(testMaze.getSizeX() == 1 * Maze.SQUARE_SIZE);
 		assertTrue(testMaze.getSizeZ() == 2 * Maze.SQUARE_SIZE);
 	}

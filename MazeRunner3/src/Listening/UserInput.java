@@ -144,6 +144,8 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 			else if ((event.getKeyChar() == 'd') || (event.getKeyChar() == 'D')){
 				this.right = true;
 			}
+			else if((event.getKeyChar() == 'q'))
+				down = true;
 			else if (event.getKeyCode() == KeyEvent.VK_SPACE){
 				this.jump = true;
 			}
@@ -175,6 +177,9 @@ implements MouseListener, MouseMotionListener, KeyListener, MouseWheelListener
 		}
 		else if ((event.getKeyChar() == 'd') || (event.getKeyChar() == 'D')){
 			this.right = false;
+		}
+		else if (event.getKeyChar() == 'q'){
+			this.down = false;
 		}
 		else if (event.getKeyCode() ==  KeyEvent.VK_SPACE){
 			this.jump = false;

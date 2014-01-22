@@ -3,6 +3,8 @@ package Audio;
 import java.io.File;
 import java.util.HashMap;
 
+import Drawing.ErrorMessage;
+
 /**
  * in this class we enable the programm to use music during the game all the methods used are very straight forward.
  *
@@ -18,7 +20,7 @@ public class Audio {
 			music = new BackgroundMusic(new File(musicName));
 		}
 		catch(Exception e){
-			e.printStackTrace();
+			ErrorMessage.show("Exception while music texture " + musicName + ".\n" + e.toString());
 		}
 	}
 	
@@ -36,7 +38,7 @@ public class Audio {
 			}
 		}
 		catch(Exception e){
-			e.printStackTrace();
+			ErrorMessage.show("Exception while loading sounds.\n" + e.toString());
 		}
 	}
 

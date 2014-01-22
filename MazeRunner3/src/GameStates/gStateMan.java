@@ -2,8 +2,6 @@ package GameStates;
 
 import java.util.ArrayList;
 
-import javax.media.opengl.GLAutoDrawable;
-
 import Listening.UserInput;
 import Main.Game;
 
@@ -66,19 +64,6 @@ public class gStateMan {
 	
 	public void update(){
 		gameStates.get(currentState).update();
-	}
-	
-	public void draw(GLAutoDrawable drawable){
-		gameStates.get(currentState).draw(drawable);
-	}
-	
-	public void init(GLAutoDrawable drawable) {
-		gameStates.get(currentState).init(drawable);
-		
-	}
-	
-	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height){
-		gameStates.get(currentState).reshape(drawable,x,y,width,height);
 	}
 	
 	public Game getGame(){

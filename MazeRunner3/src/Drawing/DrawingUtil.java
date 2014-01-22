@@ -61,7 +61,7 @@ public abstract class DrawingUtil {
 			stream.close();
 		}
 		catch(Exception e){
-			e.printStackTrace();
+			ErrorMessage.show("Exception while loading texture " + textureName + ".\n" + e.toString());
 		}
 		return res;
 	}

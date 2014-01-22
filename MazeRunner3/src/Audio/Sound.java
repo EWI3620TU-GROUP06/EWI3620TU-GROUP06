@@ -7,6 +7,8 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 
+import Drawing.ErrorMessage;
+
 /**
  * the sound is used to play the several short sounds in the game like the finish sound.
  *
@@ -31,7 +33,7 @@ public class Sound implements Runnable{
 			audioInputStream.close();
 			
 		} catch(Exception e){
-			e.printStackTrace();
+			ErrorMessage.show("Exception while playing sound " + clipFile.getName() + ".\n" + e.toString());
 		}
 	}
 	

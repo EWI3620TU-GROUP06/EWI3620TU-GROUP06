@@ -1,6 +1,5 @@
 package GameStates;
 
-import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCanvas;
 
 import Audio.Audio;
@@ -27,20 +26,6 @@ public class MenuState extends GameState {
 	
 	public void update(){
 		mm = new MainMenu(game, this);
-	}
-	
-	public void init(GLAutoDrawable drawable) {
-		mm.init(drawable);
-		System.out.println("init gedaan mainmenu");
-	}
-	
-	@Override
-	public void draw(GLAutoDrawable drawable) {
-		mm.display(drawable);
-	}
-	
-	public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height){
-		mm.reshape(drawable, x, y, width, height);
 	}
 	
 	public GLCanvas getCanvas(){

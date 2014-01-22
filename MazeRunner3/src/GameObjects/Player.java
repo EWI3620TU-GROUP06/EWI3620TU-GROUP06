@@ -212,6 +212,8 @@ public class Player extends GameObject implements VisibleObject {
 				physics.applyForce(0, power*(jumpFactor-8*diff), 0);
 			}
 		}
+		if(control.getDown())
+			physics.applyForce(0, -10*power, 0);
 	}
 
 	public void display(GL gl) {

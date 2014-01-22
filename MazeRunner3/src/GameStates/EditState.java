@@ -2,7 +2,6 @@ package GameStates;
 
 import Audio.Audio;
 
-import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCanvas;
 
 import Main.Game;
@@ -21,25 +20,11 @@ public class EditState extends GameState {
 		this.paused = false;
 	}
 	
-	@Override
-	public void init(GLAutoDrawable drawable) {
-		me.init(drawable);
-	}
+
 
 	@Override
 	public void update() {
 		me = new MazeEditor(game, this);
-	}
-
-	@Override
-	public void draw(GLAutoDrawable drawable) {
-		me.display(drawable);
-	}
-
-	@Override
-	public void reshape(GLAutoDrawable drawable, int x, int y, int width,
-			int height) {
-		me.reshape(drawable,x, y, width, height);
 	}
 
 	@Override

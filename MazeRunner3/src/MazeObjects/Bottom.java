@@ -54,15 +54,8 @@ public class Bottom extends MazeObject {
 		{
 			vertices.add((Vector3f)vertex.clone());
 		}
-		ArrayList<Face> faces = new ArrayList<Face>();
-		for(Face face : this.faces)
-		{
-			faces.add(face.clone());
-		}
-		for(Face face: faces){
-			calculateNormal(face);
-		}
-		return new Bottom(vertices, this.texVertices, faces);
+		
+		return new Bottom(vertices, this.texVertices, new ArrayList<Face>());
 	}
 	
 	public boolean equals(Object other)
