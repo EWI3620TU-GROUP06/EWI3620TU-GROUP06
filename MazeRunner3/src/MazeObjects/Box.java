@@ -130,12 +130,13 @@ public class Box extends MazeObject{
 		return new Box(vertices, this.texVertices, faces, this.width, this.height, this.rotation);
 	}
 	
+	@Override
 	public boolean equals(Object other)
 	{
 		if( other instanceof Box)
 		{
 			Box that = (Box) other;
-			return this.height == that.height && this.width == that.width;
+			return Math.abs(this.height- that.height)< 0.1 && Math.abs(this.width- that.width)< 0.1;
 		}
 		return false;
 	}

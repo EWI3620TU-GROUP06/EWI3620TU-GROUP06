@@ -103,7 +103,7 @@ public class Ramp extends MazeObject{
 		if( other instanceof Ramp)
 		{
 			Ramp that = (Ramp) other;
-			return this.height == that.height && this.width == that.width;
+			return Math.abs(this.height- that.height)< 0.1 && Math.abs(this.width- that.width)< 0.1;
 		}
 		return false;
 	}

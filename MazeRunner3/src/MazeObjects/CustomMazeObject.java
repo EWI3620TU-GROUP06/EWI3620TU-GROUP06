@@ -9,6 +9,7 @@ import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;
 
 import Drawing.DrawingUtil;
+import Drawing.ErrorMessage;
 
 import com.sun.opengl.util.texture.Texture;
 
@@ -114,7 +115,7 @@ public class CustomMazeObject extends MazeObject{
 			sc.close();
 		}
 		catch (Exception e){
-			e.printStackTrace();
+			ErrorMessage.show("Exception read in CustomMaze Object.\n" + e.toString());
 		}
 
 		return res;
@@ -199,6 +200,7 @@ public class CustomMazeObject extends MazeObject{
 		return new CustomMazeObject(vertices, this.texVertices, faces, this.texNum, file, hasTexture, rotation);
 	}
 	
+	@Override
 	public boolean equals(Object other)
 	{
 		if(other instanceof CustomMazeObject)

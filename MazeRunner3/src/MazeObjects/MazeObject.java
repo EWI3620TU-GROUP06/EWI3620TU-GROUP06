@@ -445,6 +445,7 @@ public void removeRedundantVertices()
 public abstract Texture getTexture();
 public abstract MazeObject translate(float x, float y, float z);
 public abstract MazeObject clone();
+@Override
 public abstract boolean equals(Object other);
 
 /**

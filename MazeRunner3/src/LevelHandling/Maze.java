@@ -156,8 +156,9 @@ public class Maze implements VisibleObject {
 
 	public void select(int x, int z)
 	{
-		if(isInBounds(x, z))
+		if(isInBounds(x, z)){
 			selected[x][z] = maze[x][z].size() - 1;
+		}
 	}
 
 	/**
@@ -385,10 +386,10 @@ public class Maze implements VisibleObject {
 						ArrayList<MazeObject> stack = maze[i][j].get();
 						for(int k = 0; k < stack.size(); k++)
 						{
-							if(customs.contains(stack.get(k)))
-								wr.print(-1 - customs.indexOf(stack.get(k)));
-							else
+							if(standards.contains(stack.get(k)))
 								wr.print(standards.indexOf(stack.get(k)));
+							else
+								wr.print(-1 - customs.indexOf(stack.get(k)));
 							int[] rotation = stack.get(k).rotation;
 							wr.print("," + (rotation[0]/90%4 + 4*(rotation[1]/90%4) + 16*(rotation[2]/90%4)));
 							if(k != stack.size() - 1)
@@ -504,7 +505,7 @@ public class Maze implements VisibleObject {
 		}
 		//Define all colours and change them if the element is selected
 		float selectedColour[] = new float[]{1.0f, 1.0f, 1.0f, 1.0f};
-
+		
 		float notSelectedColour[] = new float[]{0.6f, 0.6f, 0.6f, 1.0f};
 		customSize = customs.size();
 		for (int i = 0; i < maze.length; i++) {
@@ -520,6 +521,7 @@ public class Maze implements VisibleObject {
 				}
 			}
 		}
+		
 	}
 
 	/**
