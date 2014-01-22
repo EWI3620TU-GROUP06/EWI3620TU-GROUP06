@@ -327,6 +327,7 @@ public class MazeEditor implements GLEventListener {
 
 	public void Pause(){
 		pause = true;
+		this.optpause = false;
 		input.reset();
 	}
 
