@@ -45,7 +45,7 @@ public class SqlReadWrite {
 		}
 		catch(Exception e)
 		{
-			ErrorMessage.show("SQL Exception while trying set up a connection wiht the high scores database.\n" + e.toString());
+			ErrorMessage.show("SQL Exception while trying set up a connection with the high scores database.\n" + e.toString());
 		}
 	}
 	

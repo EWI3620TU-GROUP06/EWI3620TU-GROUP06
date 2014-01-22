@@ -1,6 +1,5 @@
 package Main;
 
-import Drawing.ErrorMessage;
 import GameStates.gStateMan;
 
 import java.awt.*;
