@@ -119,9 +119,9 @@ public class Level {
 		maze.initTextures(gl);
 		maze.setCustomTextures(gl);
 		PowerUp.initTextures(gl);
-		MovableBox.initTextures(gl);
 		for(PowerUp powerUp : powerUps)
 			powerUp.setTextNum();
+		MovableBox.initTextures(gl);
 		for(MovableBox moveBox : movableBoxes)
 			moveBox.setTextNum();
 		if(swarm != null)

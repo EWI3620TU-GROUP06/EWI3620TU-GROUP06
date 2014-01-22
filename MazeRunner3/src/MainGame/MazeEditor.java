@@ -207,14 +207,17 @@ public class MazeEditor implements GLEventListener {
 				input.isLeftButtonDragged();
 				input.getMouseReleased();
 			}
+			
+			if(editor.getLevel() != level)
+			{
+				editor.getLevel().init(gl);
+			}
 
 			if(editor.getLevel() != level || level.changedSomething())
 			{
 				level.removeFromVisible(visibleObjects);
 				level = editor.getLevel();
 				level.addToVisible(visibleObjects);
-				if(editor.getLevel() != level)
-					level.init(gl);
 			}
 			updateCamera();
 		}
