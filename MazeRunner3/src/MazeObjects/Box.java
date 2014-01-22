@@ -70,7 +70,7 @@ public class Box extends MazeObject{
 	
 	public Box(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces, float width, float height)
 	{
-		super(vertices, texVertices, faces);
+		super(vertices, texVertices, faces, new int[] {0,0,0});
 		restitution = 0.1f;
 		this.width = width;
 		this.height = height;

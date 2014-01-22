@@ -29,9 +29,9 @@ public class CustomMazeObject extends MazeObject{
 		super(true);
 	}
 
-	public CustomMazeObject(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces, int texNum, File file, boolean hasTexture)
+	public CustomMazeObject(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces, int texNum, File file, boolean hasTexture, int[] rotation)
 	{
-		super(vertices, texVertices, faces);
+		super(vertices, texVertices, faces, rotation);
 		this.texNum = texNum;
 		this.file = file;
 		this.hasTexture = hasTexture;
@@ -197,7 +197,7 @@ public class CustomMazeObject extends MazeObject{
 		for(Face face: faces){
 			calculateNormal(face);
 		}
-		return new CustomMazeObject(vertices, this.texVertices, faces, this.texNum, file, hasTexture);
+		return new CustomMazeObject(vertices, this.texVertices, faces, this.texNum, file, hasTexture, rotation);
 	}
 	
 	public boolean equals(Object other)

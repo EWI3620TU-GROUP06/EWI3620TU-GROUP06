@@ -53,9 +53,9 @@ public class Ramp extends MazeObject{
 		restitution = 0.0f;
 	}
 	
-	public Ramp(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces, float width, float height)
+	public Ramp(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces, float width, float height, int[] rotation)
 	{
-		super(vertices, texVertices, faces);
+		super(vertices, texVertices, faces, rotation);
 		restitution = 0.0f;
 		
 		this.width = width;
@@ -95,7 +95,7 @@ public class Ramp extends MazeObject{
 		{
 			faces.add(face.clone());
 		}
-		return new Ramp(vertices, this.texVertices, faces, this.width, this.height);
+		return new Ramp(vertices, this.texVertices, faces, this.width, this.height, this.rotation);
 	}
 	
 	public boolean equals(Object other)

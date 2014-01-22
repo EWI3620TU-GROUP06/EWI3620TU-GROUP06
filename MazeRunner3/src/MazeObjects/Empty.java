@@ -21,7 +21,7 @@ public class Empty extends MazeObject {
 
 	public Empty(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices,
 			ArrayList<Face> faces, float height) {
-		super(vertices, texVertices, faces);
+		super(vertices, texVertices, faces, new int[] {0,0,0});
 		this.height = height;
 	}
 

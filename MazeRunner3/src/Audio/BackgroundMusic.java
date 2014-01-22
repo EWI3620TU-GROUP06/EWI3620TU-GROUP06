@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 
+import Drawing.ErrorMessage;
 import javazoom.jl.player.Player;
 /**
  * the class background music is used to play the music in the background of the game.
@@ -24,7 +25,7 @@ public class BackgroundMusic implements Runnable{
 			musicThread.start();
 		} 
 		catch(Exception e){
-			e.printStackTrace();
+			ErrorMessage.show("Exception while loading music " + file.getName() + ".\n" + e.toString());
 		}
 
 	}
@@ -39,7 +40,7 @@ public class BackgroundMusic implements Runnable{
 			}
 		}
 		catch (Exception e) { 
-			e.printStackTrace();
+			ErrorMessage.show("Exception while running music " + musicFile.getName() + ".\n" + e.toString());
 		}
 	}
 

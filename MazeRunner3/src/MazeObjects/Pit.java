@@ -46,7 +46,7 @@ public class Pit extends MazeObject {
 
 	public Pit(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices,
 			ArrayList<Face> faces, float width, float height) {
-		super(vertices, texVertices, faces);
+		super(vertices, texVertices, faces, new int[] {0,0,0});
 		this.width = width;
 		this.height = height;
 	}

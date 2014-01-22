@@ -42,11 +42,12 @@ public abstract class MazeObject {
 		}
 	}
 
-	public MazeObject(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces)
+	public MazeObject(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces, int[] rotation)
 	{
 		this.vertices = vertices;
 		this.texVertices = texVertices;
 		this.faces = faces;
+		this.rotation = rotation;
 	}
 
 	public float getWidth() {

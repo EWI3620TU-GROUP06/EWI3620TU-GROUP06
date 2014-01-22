@@ -35,7 +35,7 @@ public class Floor extends MazeObject {
 	
 	public Floor(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces)
 	{
-		super(vertices, texVertices, faces);
+		super(vertices, texVertices, faces, new int[] {1,1,1});
 		width = Maze.SQUARE_SIZE;
 		calculateYMin();
 		calculateHeight();

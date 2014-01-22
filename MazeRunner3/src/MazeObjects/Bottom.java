@@ -26,7 +26,7 @@ public class Bottom extends MazeObject {
 	
 	public Bottom(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces)
 	{
-		super(vertices, texVertices, faces);
+		super(vertices, texVertices, faces, new int[]{0,0,0});
 		width = Maze.SQUARE_SIZE;
 		calculateYMin();
 		calculateHeight();

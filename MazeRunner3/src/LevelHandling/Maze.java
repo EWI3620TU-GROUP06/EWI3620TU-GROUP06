@@ -91,13 +91,13 @@ public class Maze implements VisibleObject {
 	 */
 	public void removeRedundantFaces()
 	{
-		for(int i = 0; i < maze.length; i++){
-			for(int j  = 0; j < maze[0].length; j++){
-				if(i < maze[0].length - 1)
+		for(int i = 0; i < MAZE_SIZE_X; i++){
+			for(int j  = 0; j < MAZE_SIZE_Z; j++){
+				if(i < MAZE_SIZE_X - 1)
 				{
 					maze[i][j].removeRedundantFaces(maze[i + 1][j]);
 				}
-				if(j < maze[0].length - 1)
+				if(j < MAZE_SIZE_Z - 1)
 				{
 					maze[i][j].removeRedundantFaces(maze[i][j + 1]);
 				}
@@ -203,8 +203,8 @@ public class Maze implements VisibleObject {
 	public double[] getStart()
 	{
 		double[] res= new double[4];
-		for(int i = 0; i <  maze[0].length; i++){
-			for(int j = 0; j < maze[0].length; j++)
+		for(int i = 0; i <  MAZE_SIZE_X; i++){
+			for(int j = 0; j < MAZE_SIZE_Z; j++)
 			{
 				MazeObject start = null;
 				if((start = maze[i][j].getInstanceOf(standards.get(ObjectMode.ADD_START))) != null)

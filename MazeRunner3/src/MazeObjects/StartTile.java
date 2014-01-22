@@ -34,9 +34,9 @@ public class StartTile extends MazeObject {
 		restitution = 0.1f;
 	}
 	
-	public StartTile(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces)
+	public StartTile(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces, int[] rotation)
 	{
-		super(vertices, texVertices, faces);
+		super(vertices, texVertices, faces, rotation);
 		width = Maze.SQUARE_SIZE;
 		calculateYMin();
 		calculateHeight();
@@ -83,7 +83,7 @@ public class StartTile extends MazeObject {
 		for(Face face: faces){
 			calculateNormal(face);
 		}
-		return new StartTile(vertices, this.texVertices, faces);
+		return new StartTile(vertices, this.texVertices, faces, this.rotation);
 	}
 	
 	public boolean equals(Object other)
