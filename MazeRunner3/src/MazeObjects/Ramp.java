@@ -55,7 +55,7 @@ public class Ramp extends MazeObject{
 	
 	public Ramp(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces, float width, float height, int[] rotation)
 	{
-		super(vertices, texVertices, faces, rotation);
+		super(vertices, texVertices, faces, new int[]{rotation[0], rotation[1], rotation[2]});
 		restitution = 0.0f;
 		
 		this.width = width;

@@ -36,7 +36,7 @@ public class StartTile extends MazeObject {
 	
 	public StartTile(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces, int[] rotation)
 	{
-		super(vertices, texVertices, faces, rotation);
+		super(vertices, texVertices, faces, new int[]{rotation[0], rotation[1], rotation[2]});
 		width = Maze.SQUARE_SIZE;
 		calculateYMin();
 		calculateHeight();

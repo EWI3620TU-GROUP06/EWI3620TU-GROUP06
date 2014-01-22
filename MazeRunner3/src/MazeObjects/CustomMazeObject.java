@@ -31,7 +31,7 @@ public class CustomMazeObject extends MazeObject{
 
 	public CustomMazeObject(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces, int texNum, File file, boolean hasTexture, int[] rotation)
 	{
-		super(vertices, texVertices, faces, rotation);
+		super(vertices, texVertices, faces, new int[]{rotation[0], rotation[1], rotation[2]});
 		this.texNum = texNum;
 		this.file = file;
 		this.hasTexture = hasTexture;
@@ -96,8 +96,6 @@ public class CustomMazeObject extends MazeObject{
 
 			res.file = file;
 			
-			res.rotateVerticesX(90, 0, 0);
-			
 			if(!res.hasTexture)
 			{
 				res.texVertices.add(new Vector2f(1, 0));
@@ -147,7 +145,8 @@ public class CustomMazeObject extends MazeObject{
 			String fileName = file.getName();
 			String[] name = fileName.split("[.]");
 			texNum = textures.size();
-			addTexture(DrawingUtil.initTexture(gl, name[0]));
+			textures.add(DrawingUtil.initTexture(gl, name[0]));
+			//System.out.println(file.getName() + " gets textNum: " + texNum);
 		}
 		else{
 			addTexture(DrawingUtil.initTexture(gl, "wall"));
