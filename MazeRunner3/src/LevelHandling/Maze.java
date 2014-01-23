@@ -213,7 +213,7 @@ public class Maze implements VisibleObject {
 					res[0] = start.getPos().x;
 					res[1] = start.getPos().y;
 					res[2] = start.getPos().z;
-					res[3] = start.getRotation()[1];
+					res[3] = start.getRotation()[1]*90;
 				}
 			}
 		}
