@@ -185,11 +185,13 @@ public class MazeRunner implements GLEventListener {
 		player = new Player(playerPos, -level.getMaze().getStart()[3], -45, level.getMaze(), physics, state.getDiffNumber());
 		visibleObjects.add(player);
 
-		Swarm particles = new Swarm(physics, level.getMaze(), (int) (Maze.MAZE_SIZE_X*(state.getDiffNumber() + 1))/4, state.getDiffNumber());
+		int numberOfEnemies = (int) ((Maze.MAZE_SIZE_X + Maze.MAZE_SIZE_Z)/2 + 5)/(state.getDiffNumber() + 3);
+		System.out.println(numberOfEnemies);
+		Swarm particles = new Swarm(physics, level.getMaze(), numberOfEnemies, state.getDiffNumber());
 		particles.setCognitive(0.055f);
 		particles.setSocial(0.055f);
 		particles.setInertiaWeight(0.95f);
-		particles.generate((int) (Maze.MAZE_SIZE_X*(state.getDiffNumber() + 1))/4);
+		particles.generate(numberOfEnemies);
 		level.addSwarm(particles);
 		physics.initParticles(particles);
 		physics.initContactHandling(); //Initializes sound-handling. MUST BE AFTER initParticles() TO INCLUDE PARTICLE-SOUNDS
