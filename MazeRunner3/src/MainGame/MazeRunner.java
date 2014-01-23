@@ -186,7 +186,6 @@ public class MazeRunner implements GLEventListener {
 		visibleObjects.add(player);
 
 		int numberOfEnemies = (int) ((Maze.MAZE_SIZE_X + Maze.MAZE_SIZE_Z)/2 + 5)/(state.getDiffNumber() + 3);
-		System.out.println(numberOfEnemies);
 		Swarm particles = new Swarm(physics, level.getMaze(), numberOfEnemies, state.getDiffNumber());
 		particles.setCognitive(0.055f);
 		particles.setSocial(0.055f);
