@@ -136,7 +136,7 @@ public class MazeRunner implements GLEventListener {
 		/* We need to create an internal thread that instructs OpenGL to continuously repaint itself.
 		 * The Animator class handles that for JOGL.
 		 */
-		anim = new FPSAnimator(canvas,65);
+		anim = new FPSAnimator(canvas,50);
 		anim.start();
 	}
 

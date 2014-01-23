@@ -91,7 +91,7 @@ public class MazeEditor implements GLEventListener {
 		 * continuously repaint itself. The Animator class handles that for
 		 * JOGL.
 		 */
-		anim = new FPSAnimator(canvas, 60);
+		anim = new FPSAnimator(canvas, 50);
 		anim.start();
 	}
 

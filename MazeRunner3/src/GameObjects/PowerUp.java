@@ -98,7 +98,7 @@ public class PowerUp extends GameObject implements VisibleObject {
 	 */
 	private void activate(boolean active)
 	{
-		float factor = 3;
+		float factor = 2;
 		boolean coinpicked = false;
 		if(active && !activated)
 		{
