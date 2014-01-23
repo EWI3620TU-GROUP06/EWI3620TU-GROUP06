@@ -70,8 +70,8 @@ public class SkyBox extends MazeObject implements VisibleObject{
 		//rotateVerticesX(180, y, z);
 	}
 	
-	public SkyBox(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces, int[] rotation){
-		super(vertices, texVertices, faces, rotation);
+	public SkyBox(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces){
+		super(vertices, texVertices, faces);
 	}
 	
 	@Override
@@ -154,7 +154,7 @@ public class SkyBox extends MazeObject implements VisibleObject{
 		{
 			vertices.add((Vector3f)vertex.clone());
 		}
-		return new SkyBox(vertices, this.texVertices, this.faces, this.rotation);
+		return new SkyBox(vertices, this.texVertices, this.faces);
 	}
 	
 	public boolean equals(Object other)

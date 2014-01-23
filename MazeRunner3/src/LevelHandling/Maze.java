@@ -369,8 +369,8 @@ public class Maze implements VisibleObject {
 							wr.print(standards.indexOf(stack.get(k)));
 						else
 							wr.print(-1 - customs.indexOf(stack.get(k)));
-						int[] rotation = stack.get(k).rotation;
-						wr.print("," + (rotation[0]/90%4 + 4*(rotation[1]/90%4) + 16*(rotation[2]/90%4)));
+						int[] rotation = stack.get(k).getRotation();
+						wr.print("," + (rotation[0] + 4*(rotation[1]) + 16*(rotation[2])));
 						if(k != stack.size() - 1)
 							wr.print(";");
 					}

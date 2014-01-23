@@ -26,7 +26,7 @@ public class Bottom extends MazeObject {
 	
 	public Bottom(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces)
 	{
-		super(vertices, texVertices, faces, new int[]{0,0,0});
+		super(vertices, texVertices, faces);
 		width = Maze.SQUARE_SIZE;
 		calculateYMin();
 		calculateHeight();
@@ -54,8 +54,9 @@ public class Bottom extends MazeObject {
 		{
 			vertices.add((Vector3f)vertex.clone());
 		}
-		
-		return new Bottom(vertices, this.texVertices, new ArrayList<Face>());
+		Bottom res = new Bottom(vertices, this.texVertices, new ArrayList<Face>());
+		this.cloneNormals(res);
+		return res;
 	}
 	
 	public boolean equals(Object other)

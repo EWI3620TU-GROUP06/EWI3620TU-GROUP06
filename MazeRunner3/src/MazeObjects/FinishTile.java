@@ -29,7 +29,7 @@ public class FinishTile extends MazeObject {
 	
 	public FinishTile(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces)
 	{
-		super(vertices, texVertices, faces, new int[]{0,0,0});
+		super(vertices, texVertices, faces);
 		width = Maze.SQUARE_SIZE;
 		calculateYMin();
 		calculateHeight();

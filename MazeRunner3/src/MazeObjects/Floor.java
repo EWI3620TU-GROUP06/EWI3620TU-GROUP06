@@ -35,7 +35,7 @@ public class Floor extends MazeObject {
 
 	public Floor(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces)
 	{
-		super(vertices, texVertices, faces, new int[] {1,1,1});
+		super(vertices, texVertices, faces);
 		width = Maze.SQUARE_SIZE;
 		calculateYMin();
 		calculateHeight();
@@ -76,7 +76,10 @@ public class Floor extends MazeObject {
 		for(Face face: faces){
 			calculateNormal(face);
 		}
-		return new Floor(vertices, this.texVertices, faces);
+		
+		Floor res = new Floor(vertices, this.texVertices, faces);
+		this.cloneNormals(res);
+		return res;
 	}
 
 	public boolean equals(Object other)

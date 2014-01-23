@@ -68,9 +68,9 @@ public class Box extends MazeObject{
 		restitution = 0.4f;
 	}
 	
-	public Box(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces, float width, float height, int[] r)
+	public Box(ArrayList<Vector3f> vertices, ArrayList<Vector2f> texVertices, ArrayList<Face> faces, float width, float height)
 	{
-		super(vertices, texVertices, faces, new int[] {r[0],r[1],r[2]});
+		super(vertices, texVertices, faces);
 		restitution = 0.1f;
 		this.width = width;
 		this.height = height;
@@ -127,7 +127,10 @@ public class Box extends MazeObject{
 		for(Face face: faces){
 			calculateNormal(face);
 		}
-		return new Box(vertices, this.texVertices, faces, this.width, this.height, this.rotation);
+		
+		Box res = new Box(vertices, this.texVertices, faces, this.width, this.height);
+		this.cloneNormals(res);
+		return res;
 	}
 	
 	@Override
