@@ -115,9 +115,6 @@ public abstract class MazeObject {
 					if(isEqual(normalX, unityX) && 
 							isEqual(normalY, unityY) &&
 							isEqual(normalZ, unityZ)){
-						if(this instanceof CustomMazeObject){
-							System.out.println("found cmo rotation");
-						}
 						return new int[]{x,y,z};
 					}
 					rotateVectorZ(unityX);
