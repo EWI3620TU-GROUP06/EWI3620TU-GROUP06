@@ -192,6 +192,11 @@ public class EditBoxManager extends ClickBoxManager {
 
 	public void toggleMenuMode(byte mode)
 	{
+		for(ClickBox box: Boxes){
+			if(box instanceof EditBox){
+				((EditBox) box).setPressed(false);
+			}
+		}
 		switch(mode)
 		{
 		case OBJECT_MODE:
