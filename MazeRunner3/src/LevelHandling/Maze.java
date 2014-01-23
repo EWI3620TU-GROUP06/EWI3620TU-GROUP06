@@ -355,57 +355,35 @@ public class Maze implements VisibleObject {
 	 */
 
 	public boolean write(PrintWriter wr) {
-		boolean start = false;
-		boolean finish = false;
-
-		for(int i = 0; i <  maze.length; i++){
-			for(int j = 0; j < maze[0].length; j++)
-			{
-				if(maze[i][j].getInstanceOf(standards.get(ObjectMode.ADD_START)) != null){
-					start = true;
-				}
-				if(maze[i][j].getInstanceOf(standards.get(ObjectMode.ADD_FINISH)) != null){
-					finish = true;
-				}
-			}
-		}
-		if(!start){
-			ErrorMessage.show("No start position defined\nPlease input start position before saving.");
-			return false;
-		} else if(!finish){
-			ErrorMessage.show("No finish position defined\nPlease input finish position before saving.");
-			return false;
-		}else{
-			try {
-				wr.write(MAZE_SIZE_X + " " + MAZE_SIZE_Z + "\n");
-				for(CustomMazeObject custom: customs)
-					wr.write(custom.getFile().getCanonicalPath() + "\n");
-				wr.write(0 + "\n");
-				for (int i = 0; i < maze.length; i++) {
-					for (int j = 0; j < maze[0].length; j++) {
-						ArrayList<MazeObject> stack = maze[i][j].get();
-						for(int k = 0; k < stack.size(); k++)
-						{
-							if(standards.contains(stack.get(k)))
-								wr.print(standards.indexOf(stack.get(k)));
-							else
-								wr.print(-1 - customs.indexOf(stack.get(k)));
-							int[] rotation = stack.get(k).rotation;
-							wr.print("," + (rotation[0]/90%4 + 4*(rotation[1]/90%4) + 16*(rotation[2]/90%4)));
-							if(k != stack.size() - 1)
-								wr.print(";");
-						}
-						if (j < maze[0].length - 1)
-							wr.print(" ");
+		try {
+			wr.write(MAZE_SIZE_X + " " + MAZE_SIZE_Z + "\n");
+			for(CustomMazeObject custom: customs)
+				wr.write(custom.getFile().getCanonicalPath() + "\n");
+			wr.write(0 + "\n");
+			for (int i = 0; i < maze.length; i++) {
+				for (int j = 0; j < maze[0].length; j++) {
+					ArrayList<MazeObject> stack = maze[i][j].get();
+					for(int k = 0; k < stack.size(); k++)
+					{
+						if(standards.contains(stack.get(k)))
+							wr.print(standards.indexOf(stack.get(k)));
 						else
-							wr.print("\n");
+							wr.print(-1 - customs.indexOf(stack.get(k)));
+						int[] rotation = stack.get(k).rotation;
+						wr.print("," + (rotation[0]/90%4 + 4*(rotation[1]/90%4) + 16*(rotation[2]/90%4)));
+						if(k != stack.size() - 1)
+							wr.print(";");
 					}
+					if (j < maze[0].length - 1)
+						wr.print(" ");
+					else
+						wr.print("\n");
 				}
-				wr.write("\n");
-				return true;
-			} catch (Exception e) {
-				ErrorMessage.show("Exception while writing maze.\n" + e.toString());
 			}
+			wr.write("\n");
+			return true;
+		} catch (Exception e) {
+			ErrorMessage.show("Exception while writing maze.\n" + e.toString());
 		}
 		return false;
 	}
@@ -578,6 +556,10 @@ public class Maze implements VisibleObject {
 			}
 		}
 		return -1;
+	}
+	
+	public MazeStack[][] getMazeStacks(){
+		return this.maze;
 	}
 
 	public MazeObject[] getNeighbourTiles(int x, int z, float height){

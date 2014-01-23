@@ -203,19 +203,6 @@ public class MazeTest {
 			checkMazes(testMaze, readMaze);
 			sc.close();
 			
-			Maze noStartMaze = new Maze();
-			wr = new PrintWriter(testFile);
-			assertFalse(noStartMaze.write(wr));
-			wr.flush();
-			wr.close();
-			
-			Maze noFinishMaze = new Maze();
-			noFinishMaze.set(Maze.standards.get(ObjectMode.ADD_START), 0, 0);
-			wr = new PrintWriter(testFile);
-			assertFalse(noFinishMaze.write(wr));
-			wr.flush();
-			wr.close();
-			
 			sc = new Scanner(testFile);
 			Maze faultMaze = Maze.read(sc);
 			checkMazes(faultMaze, new Maze());

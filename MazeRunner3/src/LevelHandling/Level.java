@@ -10,6 +10,7 @@ import javax.vecmath.Vector3d;
 
 import Drawing.ErrorMessage;
 import Drawing.VisibleObject;
+import EditorModes.ObjectMode;
 import GameObjects.MovableBox;
 import GameObjects.Player;
 import GameObjects.PowerUp;
@@ -264,22 +265,40 @@ public class Level {
 	public void saveLevel(File file)
 	{
 		try{
-			PrintWriter wr = new PrintWriter(file);
-			boolean gelukt = maze.write(wr);
-			if(gelukt){
-				wr.write("PowerUps:\n");
-				for(PowerUp powerUp:  powerUps){
-					powerUp.write(wr);
+			boolean start = false;
+			boolean finish = false;
+
+			for(int i = 0; i <  maze.getMazeStacks().length; i++){
+				for(int j = 0; j < maze.getMazeStacks()[0].length; j++)
+				{
+					if(maze.getMazeStacks()[i][j].getInstanceOf(Maze.standards.get(ObjectMode.ADD_START)) != null){
+						start = true;
+					}
+					if(maze.getMazeStacks()[i][j].getInstanceOf(Maze.standards.get(ObjectMode.ADD_FINISH)) != null){
+						finish = true;
+					}
 				}
-				wr.write("MoveableBoxes:\n");
-				for(MovableBox moveBox :  movableBoxes){
-					moveBox.write(wr);
-				}
-				wr.close();
 			}
-			else{
-				wr.close();
-				if(file.exists()){
+			if(!start){
+				ErrorMessage.show("No start position defined\nPlease input start position before saving.");
+			} else if(!finish){
+				ErrorMessage.show("No finish position defined\nPlease input finish position before saving.");
+			}else{
+				PrintWriter wr = new PrintWriter(file);
+				boolean gelukt = maze.write(wr);
+				if(gelukt){
+					wr.write("PowerUps:\n");
+					for(PowerUp powerUp:  powerUps){
+						powerUp.write(wr);
+					}
+					wr.write("MoveableBoxes:\n");
+					for(MovableBox moveBox :  movableBoxes){
+						moveBox.write(wr);
+					}
+					wr.close();
+				}
+				else{
+					wr.close();
 					file.delete();
 				}
 			}
