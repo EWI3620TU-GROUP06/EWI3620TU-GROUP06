@@ -203,11 +203,17 @@ public class MazeTest {
 			checkMazes(testMaze, readMaze);
 			sc.close();
 			
+			PrintWriter wr2 = new PrintWriter(testFile);
+			wr2.println("Hello I Failed");
+			wr2.flush();
+			wr2.close();
+			
 			sc = new Scanner(testFile);
 			Maze faultMaze = Maze.read(sc);
 			checkMazes(faultMaze, new Maze());
 			sc.close();
 			
+			testFile.delete();
 		}
 		catch(Exception e){
 			e.printStackTrace();
