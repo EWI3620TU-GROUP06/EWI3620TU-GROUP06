@@ -96,6 +96,7 @@ public class SqlReadWrite {
 				Score newScore = new Score(name, scr);
 				if(timestamp.after(mostRecentTime))
 					mostRecentScore = newScore;
+					mostRecentTime = timestamp;
 				highscores.add(newScore);
 			}
 			connect.close();
