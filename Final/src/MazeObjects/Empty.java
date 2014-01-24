@@ -7,6 +7,17 @@ import javax.vecmath.Vector3f;
 
 import com.sun.opengl.util.texture.Texture;
 
+/**
+ * The empty MAzeObejcts adds a empty block of a given size to the maze. This  block is under all circumstances 
+ * invisible, and is used to make objects stacked on top of it seem as if they are floating.
+ *   <p>
+ * 
+ * Like all MazeObjects, it implements a translate method that returns a copy of the maze object moved to a 
+ * different location, and a very weak equals method that acts as a somewhat more specific version 
+ * of the instanceof operator.
+ *
+ */
+
 public class Empty extends MazeObject {
 	
 	public Empty (float height, float x, float y, float z)

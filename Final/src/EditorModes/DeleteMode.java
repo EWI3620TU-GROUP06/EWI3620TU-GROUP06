@@ -2,6 +2,13 @@ package EditorModes;
 
 import LevelHandling.Level;
 
+/**
+ * Removes the MazeObject, Movable Box or PowerUp on the top of the stack where the mouse was clicked.
+ * 
+ * @author Tom Hogervorst
+ *
+ */
+
 public class DeleteMode extends EditMode {
 	
 	int pressedX, pressedZ;

@@ -49,6 +49,13 @@ public class Level {
 		return swarm;
 	}
 	
+	/**
+	 * Get the powerUp on the given position, if one is on the given position. Else returns null.
+	 * @param mazeX	
+	 * @param mazeZ	
+	 * @return		
+	 */
+	
 	public PowerUp getPowerUp(int mazeX, int mazeZ)
 	{
 		for(PowerUp pU : powerUps)
@@ -61,6 +68,14 @@ public class Level {
 		}
 		return null;
 	}
+	
+	/**
+	 * Adds a powerUp of the given type on top of the mazeStack on the given position, if that position is 
+	 * inside the maze and no MovableBox or PowerUp already exists on that position.
+	 * @param mazeX
+	 * @param mazeZ
+	 * @param type
+	 */
 	
 	public void addPowerUp(int mazeX, int mazeZ, byte type){
 		Vector3d l = new Vector3d(mazeX * Maze.SQUARE_SIZE + 2.5, 0, mazeZ * Maze.SQUARE_SIZE+2.5);
@@ -75,6 +90,13 @@ public class Level {
 		return this.powerUps;
 	}
 	
+	/**
+	 * Get the MovableBox on the given position, if one is on the given position. Else returns null.
+	 * @param mazeX	
+	 * @param mazeZ	
+	 * @return		
+	 */
+	
 	public MovableBox getMovableBox(int mazeX, int mazeZ)
 	{
 		for(MovableBox mB : movableBoxes)
@@ -87,6 +109,13 @@ public class Level {
 		return null;
 	}
 	
+	/**
+	 * Adds a Movable Box on top of the mazeStack on the given position, if that position is 
+	 * inside the maze and no MovableBox or PowerUp already exists on that position.
+	 * @param mazeX
+	 * @param mazeZ
+	 */
+	
 	public void addMoveableBox(int mazeX, int mazeZ){
 		Vector3d l = new Vector3d(mazeX * Maze.SQUARE_SIZE, 0, mazeZ * Maze.SQUARE_SIZE);
 		if(l.x >= 0 && l.x < maze.getSizeX() && l.z >= 0  && l.z < maze.getSizeZ() && getMovableBox(mazeX, mazeZ) == null && getPowerUp(mazeX, mazeZ) == null){
@@ -95,6 +124,15 @@ public class Level {
 			changed = true;
 		}
 	}
+	
+	/**
+	 * Sets the button of the latest added Movable Box on top of the mazeStack on the given position, if that 
+	 * position is inside the maze and no MovableBox or PowerUp already exists on that position. This method 
+	 * does nothing if no Movable box is present in the level when it is called.
+	 * @param mazeX
+	 * @param mazeZ
+	 * @param move_once
+	 */
 	
 	public void setButton(int mazeX, int mazeZ, int move_once){
 		if(movableBoxes.size() > 0 && mazeX >= 0 && mazeX < maze.getSizeX() 
@@ -114,6 +152,11 @@ public class Level {
 		return this.maze;
 	}
 	
+	/**
+	 * Initializes the textures - and some sprites - of all objects in the level.
+	 * @param gl	Instance of OpenGL used.
+	 */
+	
 	public void init(GL gl)
 	{
 		CustomMazeObject.clearTextures();
@@ -128,6 +171,13 @@ public class Level {
 		if(swarm != null)
 			swarm.init(gl);
 	}
+	
+	/**
+	 * Calls the update of all Objects in the maze that need to be updated (which comes down to everything but 
+	 * the maze). 
+	 * @param deltaTime	Time elapsed since the previous update
+	 * @param playerPos	Current position of the player (to check is a button is activated)
+	 */
 	
 	public void update(int deltaTime, Vector3d playerPos)
 	{
@@ -163,6 +213,12 @@ public class Level {
 			visibleObjects.add(powerUp);
 	}
 	
+	/**
+	 * Resizes the maze and removes all objects that would fall outside of the maze.
+	 * @param x	New maze size in the x direction.
+	 * @param z	New maze size in the z direction.
+	 */
+	
 	public void resize(int x, int z)
 	{
 		maze.setSize(x, z);
@@ -192,6 +248,11 @@ public class Level {
 		}
 	}
 	
+	/**
+	 * The changed flag keeps track of whether the maze was changed, so th visible objects array can be updated.
+	 * @return
+	 */
+	
 	public boolean changedSomething()
 	{
 		boolean res = changed;
@@ -216,6 +277,13 @@ public class Level {
 		powerUps.removeAll(removedPowerUps);
 		removedPowerUps.clear();
 	}
+	
+	/**
+	 * Removes the top object in the stack on the selected position from the level. This can include buttons, 
+	 * power-ups, Movable Boxes or MazeObjects.
+	 * @param x	X Position of the object to be removed.
+	 * @param z	Z position of the object to be removed.
+	 */
 	
 	public void removeTop(int x, int z)
 	{
@@ -308,6 +376,12 @@ public class Level {
 			ErrorMessage.show("Exception while writing level.\n" + e.toString());
 		}
 	}
+	
+	/**
+	 * Reads a level from a given file and returns it, of returns null if the reading failed.
+	 * @param file	File to be read.
+	 * @return		Retuned maze, if read was succesfull.
+	 */
 	
 	public static Level readLevel(File file)
 	{

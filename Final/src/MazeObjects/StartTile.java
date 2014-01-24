@@ -9,6 +9,18 @@ import LevelHandling.Maze;
 
 import com.sun.opengl.util.texture.Texture;
 
+/**
+ * This Mazeobject defines the start position of the player, and its rotation defines the orientation of the 
+ * player ate the start of the level.
+ *  
+ *  <p>
+ * 
+ * Like all MazeObjects, it implements a translate method that returns a copy of the maze object moved to a 
+ * different location, and a very weak equals method that acts as a somewhat more specific version 
+ * of the instanceof operator.
+ *
+ */
+
 public class StartTile extends MazeObject {
 
 	private static Texture texture;

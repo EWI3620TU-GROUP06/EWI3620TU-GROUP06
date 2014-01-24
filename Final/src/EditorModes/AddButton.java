@@ -2,6 +2,13 @@ package EditorModes;
 
 import LevelHandling.Level;
 
+/**
+ * Adds a button to the maze that controls the movement of the last added Movable Box. 
+ * Activating this button will let the Movable Box it is connected to move continuously.
+ * @author Tom Hogervorst
+ *
+ */
+
 public class AddButton  extends EditMode
 {
 

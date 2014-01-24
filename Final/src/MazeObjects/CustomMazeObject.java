@@ -14,8 +14,14 @@ import Drawing.ErrorMessage;
 import com.sun.opengl.util.texture.Texture;
 
 /**
- * the class customMazeObject is used to place custom objects in the maze these objects are imported from
+ * the class customMazeObject is used to place custom objects in the maze that are imported from
  * a .obj file
+ * 
+ *  <p>
+ * 
+ * Like all MazeObjects, it implements a translate method that returns a copy of the maze object moved to a 
+ * different location, and a very weak equals method that acts as a somewhat more specific version 
+ * of the instanceof operator.
  */
 
 public class CustomMazeObject extends MazeObject{

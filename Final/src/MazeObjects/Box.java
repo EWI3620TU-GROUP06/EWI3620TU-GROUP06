@@ -9,6 +9,12 @@ import com.sun.opengl.util.texture.Texture;
 
 /**
  * the class box is used to put the maze object box in the maze. the box used to create walls.
+ * 
+ * <p>
+ * 
+ * Like all MazeObjects, it implements a translate method that returns a copy of the maze object moved to a 
+ * different location, and a very weak equals method that acts as a somewhat more specific version 
+ * of the instanceof operator.
  */
 
 public class Box extends MazeObject{

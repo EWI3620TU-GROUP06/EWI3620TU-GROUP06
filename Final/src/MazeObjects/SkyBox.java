@@ -11,6 +11,18 @@ import Drawing.VisibleObject;
 
 import com.sun.opengl.util.texture.Texture;
 
+/**
+ * The SkyBox is the mazeObject on which the surounding sky texture is projected. It is always translated so 
+ * that the middle of the Skybox is the player position.
+ * 
+ *  <p>
+ * 
+ * Like all MazeObjects, it implements a translate method that returns a copy of the maze object moved to a 
+ * different location, and a very weak equals method that acts as a somewhat more specific version 
+ * of the instanceof operator.
+ * 
+ */
+
 public class SkyBox extends MazeObject implements VisibleObject{
 	
 	private static Texture texture;

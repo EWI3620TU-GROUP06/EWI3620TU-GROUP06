@@ -480,7 +480,8 @@ public class MazeRunner implements GLEventListener {
 	/**
 	 * updateCamera() updates the camera position and orientation.
 	 * <p>
-	 * This is done by copying the locations from the Player, since MazeRunner runs on a third person view.
+	 * The camera is mostly 4 behind and 1.5 above the player ball, for better overview of the surroundings. 
+	 * However, it is moved closer to the player when the camera would move into a solid object.
 	 */
 
 	private void updateCamera() {
@@ -489,18 +490,6 @@ public class MazeRunner implements GLEventListener {
 				Math.sin(Math.toRadians(player.getVerAngle())) + 1.5,
 				distance * Math.cos( Math.toRadians(player.getHorAngle())) * Math.cos(Math.toRadians(player.getVerAngle()))); 
 		cameraPos.add(player.getLocation());
-		
-		/*physics.setCameraPosition((float)cameraPos.x, (float)cameraPos.y, (float)cameraPos.z);
-		
-		if(!camColl)
-		{
-			camera.setLocation(cameraPos);
-		}
-		else
-			camColl = false;
-		
-		camera.setHorAngle( player.getHorAngle() );*/
-
 		
 		if(!physics.cameraInWall((float) cameraPos.x, (float) cameraPos.y, (float) cameraPos.z)){
 			camera.setLocation( cameraPos);

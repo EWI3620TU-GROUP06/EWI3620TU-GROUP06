@@ -101,6 +101,13 @@ public class MazeStack {
 	{
 		return stack.size();
 	}
+	
+	/**
+	 * Returns the lowest MazeObject in the array that has its lowest point under the given height and its 
+	 * highest point above the given height. Null is returned when the stack is lower that the given height.
+	 * @param height	Height at which the MazeObject is requested
+	 * @return			MazeObject of on the given height, if it exists.
+	 */
 
 	public MazeObject getAtHeight(float height)
 	{

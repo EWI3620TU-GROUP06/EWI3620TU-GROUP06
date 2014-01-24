@@ -102,6 +102,12 @@ public abstract class MazeObject {
 	{
 		return vertices.size();
 	}
+	
+	/**
+	 * The rotation of the MazeObject is found by comparing its three normals to the three unity vectors after 
+	 * rotating the same amount as the object.
+	 * @return	rotation around the x, y and z axis stored in an array.
+	 */
 
 	public int[] getRotation()
 	{	
@@ -132,6 +138,13 @@ public abstract class MazeObject {
 		return new int[]{0,0,0};
 		//return rotation;
 	}
+	
+	/**
+	 * Compare is two vectors are very close to the same as each other.
+	 * @param one
+	 * @param other
+	 * @return
+	 */
 
 	private boolean isEqual(Vector3f one, Vector3f other)
 	{
@@ -139,6 +152,11 @@ public abstract class MazeObject {
 		dif.sub(one, other);
 		return dif.length() < 0.0001;
 	}
+	
+	/**
+	 * Rotates the given vector 90 degrees around the X axis.
+	 * @param toRot
+	 */
 
 	private void rotateVectorX(Vector3f toRot)
 	{
@@ -146,6 +164,12 @@ public abstract class MazeObject {
 		rot.rotX((float) Math.toRadians(90));
 		rot.transform(toRot);
 	}
+	
+	/**
+	 * Rotates the given vector 90 degrees around the Y axis.
+	 * @param toRot
+	 */
+
 
 	private void rotateVectorY(Vector3f toRot)
 	{
@@ -153,6 +177,12 @@ public abstract class MazeObject {
 		rot.rotY((float) Math.toRadians(90));
 		rot.transform(toRot);
 	}
+	
+	/**
+	 * Rotates the given vector 90 degrees around the X axis.
+	 * @param toRot
+	 */
+
 
 	private void rotateVectorZ(Vector3f toRot)
 	{
@@ -165,6 +195,12 @@ public abstract class MazeObject {
 	{
 		return faces.size();
 	}
+	
+	/**
+	 * Enables or disables the top face(s) of the mazeObject, if it has one. A top face is defined as a face that 
+	 * only connects vertices that are (almost) as high as the highest point of the MazeObject.
+	 * @param enabled	Boolean representing whether the top faces should be enabled or disabled.
+	 */
 
 	public void setTop(boolean enabled)
 	{
