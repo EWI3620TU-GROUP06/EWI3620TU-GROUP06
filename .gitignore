@@ -5,7 +5,6 @@
 *.pydevproject
 .project
 *.class
-lib/
 *.dll
 .metadata
 bin/
