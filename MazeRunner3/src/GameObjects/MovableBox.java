@@ -149,6 +149,7 @@ public class MovableBox extends GameObject implements VisibleObject {
 				else if(isActivated && move_once == 1){
 					Collections.reverse(pathPoints);
 					count = 1;
+					isActivated = false;
 				}
 				Audio.playSound("button");
 			}
