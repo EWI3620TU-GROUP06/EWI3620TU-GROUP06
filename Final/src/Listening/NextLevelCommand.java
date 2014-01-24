@@ -18,7 +18,7 @@ public class NextLevelCommand implements Command {
 	@Override
 	public void execute() {
 		int lvl = this.gsm.getState(this.gsm.getCurState()).getLevel() + 1;
-		if(lvl > 3)
+		if(lvl > MazeRunner.getFinalLevel())
 			lvl = 1;
 		this.gsm.getState(this.gsm.getCurState()).setLevel(lvl);
 		Level level = Level.readLevel(new File("src/Levels/level" + lvl + ".mz"));

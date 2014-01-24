@@ -582,4 +582,8 @@ public class MazeRunner implements GLEventListener {
 		canvas.addMouseMotionListener(input);
 		canvas.addKeyListener(input);
 	}
+	
+	public static int getFinalLevel(){
+		return finalLevel;
+	}
 }
