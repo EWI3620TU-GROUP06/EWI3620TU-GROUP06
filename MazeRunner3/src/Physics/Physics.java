@@ -34,6 +34,14 @@ import javax.vecmath.Matrix4f;
 import javax.vecmath.Quat4f;
 import javax.vecmath.Vector3f;
 
+/**
+ * Physics class handles the Physics of our game using method from the JBullet Physics library. This library can
+ * be found on www.bullet.advent.cz. As an example of how to use this library, we use use the tutorial on jBullet 
+ * from www.thecodinguniverse.com/lwjgl-tutorials.
+ * @author Jorne Boterman
+ *
+ */
+
 public class Physics {
 
 	private float angularDamping = 0.9f;
@@ -65,6 +73,13 @@ public class Physics {
 	 * The red spherical rigid body that can be pulled towards the camera by pressing the left mouse button.
 	 */
 	private static RigidBody playerBall;
+	
+	/**
+	 * Initializes the Physics engine by loading the player ball, and all face in the maze into the dynamic world.
+	 * 	
+	 * @param maze			Maze from which all faces are added to the dynamicsworld
+	 * @param difficulty	Difficulty of the level, which affects the size of the enemy balls and jump height.
+	 */
 
 	public Physics(Maze maze, int difficulty)
 	{		
@@ -157,6 +172,12 @@ public class Physics {
 		c.initMultiplier();
 		BulletGlobals.setContactProcessedCallback(c);
 	}
+	
+	/**
+	 * Adds the particle from the particle swarm optimalization to the maze, their size depending on the 
+	 * difficulty.
+	 * @param swarm
+	 */
 
 	public void initParticles(Swarm swarm){
 		switch(diff){
@@ -189,6 +210,11 @@ public class Physics {
 			particles.add(piet);
 		}
 	}
+	
+	/**
+	 * Calculate all collisions and movement since the last update.
+	 * @param deltaTime	Time since last update.
+	 */
 
 	public void update(int deltaTime)
 	{
@@ -199,6 +225,13 @@ public class Physics {
 	public static RigidBody getPlayerBody(){
 		return playerBall;
 	}
+	
+	/**
+	 * Apply force in the given directions ont he playerBall
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
 
 	public void applyForce(float x, float y, float z)
 	{
@@ -207,18 +240,6 @@ public class Physics {
 		playerBall.activate(true);
 		// Apply the force to the controllable ball.
 		playerBall.applyCentralForce(force);
-	}
-	
-	public void applyTorque(float x, float y, float z)
-	{
-		playerBall.clearForces();
-		Vector3f force = new Vector3f(x, y, z);
-		Vector3f torque = new Vector3f();
-		torque.cross(new Vector3f(0,1,0), force);
-		// Wake the controllable ball if it is sleeping.
-		playerBall.activate(true);
-		// Apply the force to the controllable ball.
-		playerBall.applyTorque(torque);
 	}
 
 	public Vector3f getParticleLocation(int index){
@@ -247,6 +268,11 @@ public class Physics {
 		playerBall.getCenterOfMassPosition(res);
 		return res;
 	}
+	
+	/**
+	 * Returns whether the playerball lies on a horizontal floor.
+	 * @return
+	 */
 
 	public boolean getLowerContact(){
 		Vector3f toVect = getPlayerPosition();
@@ -255,6 +281,12 @@ public class Physics {
 		dynamicsWorld.rayTest(getPlayerPosition(), toVect, a);
 		return a.hasHit();
 	}
+	
+	/**
+	 * Returns whether the particle on the given location lies on a horizontal floor.
+	 * @param particlelocation
+	 * @return
+	 */
 
 	public boolean getLowerParticleContact(Vector3f particlelocation){
 		Vector3f toVect = new Vector3f(particlelocation.x, particlelocation.y, particlelocation.z);
@@ -263,6 +295,13 @@ public class Physics {
 		dynamicsWorld.rayTest(particlelocation, toVect, a);
 		return a.hasHit();
 	}
+	
+	/**
+	 * Performs a line-of-sight check between to given positions.
+	 * @param fromVect
+	 * @param toVect
+	 * @return
+	 */
 
 	public CollisionObject getLineofSight(Vector3f fromVect, Vector3f toVect){
 		RayResultCallback a = new CollisionWorld.ClosestRayResultCallback(fromVect, toVect);
@@ -287,6 +326,14 @@ public class Physics {
 	public void clearForces(){
 		dynamicsWorld.clearForces();
 	}
+	
+	/**
+	 * Adds a movable box to the physics world
+	 * @param position	
+	 * @param size		
+	 * @param height	
+	 * @return			Index of the added movable box.
+	 */
 
 	public int addBox(Vector3f position, float size, float height)
 	{
@@ -309,6 +356,13 @@ public class Physics {
 
 		return movingBoxes.size() - 1;
 	}
+	
+	/**
+	 * Set the speed of a certain movableBox
+	 * @param index	number of the box to adjust speed from
+	 * @param speed	New speed of the box
+	 * @return		Current position of the box.
+	 */
 
 	public Vector3f moveBox(int index, Vector3f speed)
 	{
@@ -319,6 +373,11 @@ public class Physics {
 		toBeMoved.getCenterOfMassPosition(currentPosition);
 		return currentPosition;
 	}
+	
+	/**
+	 * Adds a button to the physics world, described by the given mazeObject
+	 * @param mazeObject
+	 */
 	
 	public void addButton(MazeObject mazeObject)
 	{
@@ -356,15 +415,13 @@ public class Physics {
 		return particles;
 	}
 
-/*	public void setCameraPosition(float cameraX, float cameraY, float cameraZ)
-
-	{
-		Vector3f translation = new Vector3f();
-		Vector3f currentPos = new Vector3f();
-		camera.getCenterOfMassPosition(currentPos);
-		translation.sub(new Vector3f(cameraX, cameraY, cameraZ), currentPos);
-
-	}*/
+	/**
+	 * Performs a ray test to check if the camera is inside a maze object.
+	 * @param cameraX
+	 * @param cameraY
+	 * @param cameraZ
+	 * @return
+	 */
 
 	public boolean cameraInWall(float cameraX, float cameraY, float cameraZ)
 	{

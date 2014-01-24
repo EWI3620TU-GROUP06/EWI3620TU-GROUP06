@@ -78,6 +78,13 @@ public class Maze implements VisibleObject {
 				maze[i][j] = new MazeStack(i * SQUARE_SIZE, j*SQUARE_SIZE);
 		selected = new int[MAZE_SIZE_X][MAZE_SIZE_Z];
 	}
+	
+	/**
+	 * Returns whether the given position is inside the maze.
+	 * @param x	X Position
+	 * @param z	Z position
+	 * @return	boolean showing if the position is in the maze (true) or not (false)
+	 */
 
 	private boolean isInBounds(int x, int z)
 	{
@@ -450,6 +457,13 @@ public class Maze implements VisibleObject {
 			return new Maze();
 		}
 	}
+	
+	/**
+	 * Set the custom textures and assign all custom maze objects their corresponding texture number.
+	 * This is necessary to do this because the CustomMazeObjects has a static array of textures, but
+	 * each Instance of a Custom Maze Objects needs its own number to know what texture it uses.
+	 * @param gl	Instance of OpenGL used.
+	 */
 
 	public void setCustomTextures(GL gl)
 	{
@@ -544,6 +558,14 @@ public class Maze implements VisibleObject {
 		if(isInBounds(x, z))
 			maze[x][z].add(mazeObject.translate(x*SQUARE_SIZE, 0, z*SQUARE_SIZE)); 
 	}
+	
+	/**
+	 * Get the height of the lowest MazeObject in the stack on the given position, or -1 if the position is 
+	 * outside of the maze.
+	 * @param x	X coordinate of the stack to check
+	 * @param z	Z coordinate of the stack to check
+	 * @return	height of the lowest floor tile in the stack.
+	 */
 
 	public float getFloorHeight(int x, int z)
 	{
@@ -561,6 +583,17 @@ public class Maze implements VisibleObject {
 	public MazeStack[][] getMazeStacks(){
 		return this.maze;
 	}
+	
+	/**
+	 * Returns an array containing all neighboring tile of the MazeObject of the selected height in the 
+	 * stack on the given position. The MazeObjects in the returned array all have a top that lies above 
+	 * the given height, and a bottom on or below it. If the neighboring stack does not exist, or the 
+	 * stack is lower that the given height, null is returned in the corresponding place in the array.
+	 * @param x			X coordinate of the stack of which the neighbors are checked
+	 * @param z			Z coordinate of the stack of which the neighbors are checked
+	 * @param height	height of the Objects to be returned in the array
+	 * @return			array of objected at the selected height.
+	 */
 
 	public MazeObject[] getNeighbourTiles(int x, int z, float height){
 		if(isInBounds(x, z))

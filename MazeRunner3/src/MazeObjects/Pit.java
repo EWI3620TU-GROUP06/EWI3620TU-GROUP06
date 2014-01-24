@@ -7,6 +7,18 @@ import javax.vecmath.Vector3f;
 
 import com.sun.opengl.util.texture.Texture;
 
+/**
+ * The pit objects is the abyss like MazeObject placed under the lowest visible block of the Maze. It makes it 
+ * seem as if the maze is standing on it from somewhere below.
+ * 
+ * <p>
+ * 
+ * Like all MazeObjects, it implements a translate method that returns a copy of the maze object moved to a 
+ * different location, and a very weak equals method that acts as a somewhat more specific version 
+ * of the instanceof operator.
+ *
+ */
+
 public class Pit extends MazeObject {
 	
 	private static Texture texture;

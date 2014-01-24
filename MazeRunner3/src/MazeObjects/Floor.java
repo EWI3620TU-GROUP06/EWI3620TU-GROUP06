@@ -9,6 +9,16 @@ import LevelHandling.Maze;
 
 import com.sun.opengl.util.texture.Texture;
 
+/**
+ * The Floor maze object defines a floor tile in the maze.
+ *  <p>
+ * 
+ * Like all MazeObjects, it implements a translate method that returns a copy of the maze object moved to a 
+ * different location, and a very weak equals method that acts as a somewhat more specific version 
+ * of the instanceof operator.
+ *
+ */
+
 public class Floor extends MazeObject {
 
 	private static Texture texture;

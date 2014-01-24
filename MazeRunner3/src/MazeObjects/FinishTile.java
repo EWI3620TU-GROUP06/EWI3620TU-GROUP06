@@ -11,7 +11,13 @@ import LevelHandling.Maze;
 import com.sun.opengl.util.texture.Texture;
 
 /**
- * the finishTile is the finish of the game when the player is on this tile the game is finished. 
+ * the finishTile is the finish of the game when the player is on this tile the game is finished.
+ * 
+ *  <p>
+ * 
+ * Like all MazeObjects, it implements a translate method that returns a copy of the maze object moved to a 
+ * different location, and a very weak equals method that acts as a somewhat more specific version 
+ * of the instanceof operator.
  */
 public class FinishTile extends MazeObject {
 	private static Texture texture;

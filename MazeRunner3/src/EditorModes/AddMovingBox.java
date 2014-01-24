@@ -8,9 +8,9 @@ import LevelHandling.Level;
 import LevelHandling.Maze;
 
 /**
- * AddMovingBox adds a movable box on the tile de mouse was clicked. By dragging, the path of the 
+ * AddMovingBox adds a movable box on the tile the mouse was clicked. By dragging, the path of the 
  * box can be selected: the box will move to all selected tiles in order,
- * the speed depents on the speed with which the tiles were dragged.
+ * the speed depends on the speed with which the tiles were dragged.
  * 
  * @author Tom Hogervorst
  *
