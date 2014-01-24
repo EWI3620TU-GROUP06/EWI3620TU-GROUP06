@@ -5,9 +5,7 @@
 *.pydevproject
 .project
 *.class
-*.dll
 .metadata
-lib/
 bin/
 tmp/
 doc/
