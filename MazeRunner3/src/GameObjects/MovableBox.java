@@ -11,6 +11,7 @@ import javax.media.opengl.GL;
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
+import Audio.Audio;
 import Drawing.ErrorMessage;
 import Drawing.VisibleObject;
 import LevelHandling.Maze;
@@ -149,6 +150,7 @@ public class MovableBox extends GameObject implements VisibleObject {
 					Collections.reverse(pathPoints);
 					count = 1;
 				}
+				Audio.playSound("button");
 			}
 			previousTime = time;
 		}
@@ -177,7 +179,12 @@ public class MovableBox extends GameObject implements VisibleObject {
 	public void display(GL gl) {
 		box.draw(gl, new float[] {1f, 1f, 1f, 1f});
 		if(thisButton != null)
-			thisButton.draw(gl, new float[] {1f, 1f, 1f, 1f});
+			if(!isActivated){
+				thisButton.draw(gl, new float[] {0.5f, 0.5f, 0.5f, 1f});
+			}
+			else{
+				thisButton.draw(gl, new float[] {1f, 1f, 1f, 1f});
+			}
 	}
 
 	public void update(int deltaTime)
