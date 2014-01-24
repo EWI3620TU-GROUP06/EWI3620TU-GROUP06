@@ -82,7 +82,7 @@ public class MazeRunner implements GLEventListener {
 	private SkyBox skybox;
 	private boolean playingsound;
 	
-	private final static int finalLevel = 5;
+	private final static int finalLevel = 6;
 	
 	public static boolean camColl = false;
 	public static float distance = 4;
